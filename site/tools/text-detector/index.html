@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#080b12">
-  <meta name="description" content="Analyze article and prompt text for AI-like writing signals with a self-hosted model. Text is processed in memory, not stored.">
+  <meta name="description" content="Coming soon: English-oriented probabilistic writing signals, not proof of AI authorship. Analysis hosting is not configured yet.">
   <title>AI Article &amp; Text Detector — AFTERHOURS TEXT SIGNAL</title>
   <link rel="stylesheet" href="/tools/text-detector/style.css?v=1">
-  <script defer src="/tools/text-detector/app.js?v=1"></script>
+  <script defer src="/tools/text-detector/app.js?v=2-setup"></script>
 </head>
 <body class="signal-page">
   <header class="site-header">
@@ -30,6 +30,8 @@
         <span class="art-coordinate">TEXT CLASSIFIER · SERVICE CHECK / 001</span>
       </div>
     </section>
+    <p class="mode-note" id="service-notice" role="status"><strong>COMING SOON — NOT LIVE.</strong> The interface is a source preview. Real analysis will be available only after a compatible inference host is configured and tested.</p>
+    <p class="report-disclaimer"><strong>Signals, not proof:</strong> Outputs are probabilistic writing signals, not verified AI-authorship probabilities. This detector is primarily optimized for English and can be wrong. Never use it alone for academic, employment or disciplinary decisions.</p>
     <section class="workspace" aria-labelledby="workspace-title">
       <div class="workspace-head">
         <div><div class="section-kicker">THE SIGNAL STATION / 01</div><h2 id="workspace-title">Bring in your text.</h2><p>Paste an article, essay, blog post or a longer prompt to begin.</p></div>
@@ -40,11 +42,13 @@
         <button class="mode-card" data-mode="prompt" type="button" aria-pressed="false"><span class="mode-index">02 / INSTRUCTIONS</span><strong>Prompt scan</strong><small>Longer writing or image-generation prompts</small></button>
       </div>
       <div class="mode-note" id="mode-note">Article mode needs at least 80 words. The current model is primarily trained for English prose.</div>
+      <p class="mode-note" aria-label="Input limits">Input limits: 8,000 words and 50,000 characters. Pasted and uploaded text is never silently truncated.</p>
       <div class="editor-shell">
         <div class="editor-top"><span><i class="editor-live"></i> TEXT INPUT / NOT SAVED</span><span id="char-count">0 / 50,000 CHARACTERS</span></div>
         <label class="visually-hidden" for="text-input">Text to analyze</label>
-        <textarea id="text-input" maxlength="50000" spellcheck="true" placeholder="Paste the article or longer text you want to analyze…" aria-describedby="input-help"></textarea>
+        <textarea id="text-input" spellcheck="true" placeholder="Paste the article or longer text you want to analyze…" aria-describedby="input-help input-limit-message"></textarea>
         <div class="editor-bottom"><span id="input-help">Text is only sent to the analysis server after you press Analyze.</span><span><strong id="word-count">0</strong> WORDS</span></div>
+        <p class="input-limit-message" id="input-limit-message" role="alert" style="font-weight:700" hidden></p>
         <div class="editor-actions">
           <div class="secondary-actions"><label class="button button-quiet upload-button" for="text-file"><span aria-hidden="true">↑</span> Open .TXT / .MD<input id="text-file" type="file" accept=".txt,.md,text/plain,text/markdown"></label><button class="button button-quiet" id="paste-button" type="button">Paste</button><button class="button button-quiet" id="sample-button" type="button">Try sample</button><button class="button button-quiet" id="clear-button" type="button">Clear</button></div>
           <button class="button button-main" id="analyze-button" type="button" disabled><span class="button-spark">✳</span> Analyze text <span aria-hidden="true">↗</span></button>
@@ -54,12 +58,13 @@
       <section class="result-section" id="result-section" aria-labelledby="result-title" hidden>
         <div class="result-heading"><div><div class="section-kicker">ANALYSIS REPORT / 02</div><h2 id="result-title">What the model signals.</h2></div><button class="button button-quiet" id="copy-report-button" type="button">Copy report ↗</button></div>
         <div class="result-grid">
-          <article class="assessment-card"><div class="assessment-top"><span>OVERALL ASSESSMENT</span><span id="assessment-index">AH / INCONCLUSIVE</span></div><div class="assessment-icon" id="assessment-icon" aria-hidden="true">?</div><h3 id="assessment-title">Inconclusive</h3><p id="assessment-description">The text does not provide a strong enough signal for a useful assessment.</p><div class="score-block"><div class="score-label"><span>AI-LIKE MODEL SIGNAL</span><strong id="signal-score">—</strong></div><div class="score-track" role="img" aria-label="AI-like model signal score"><span id="signal-score-bar"></span></div><small>Model score out of 100 — not a calibrated probability of authorship.</small></div></article>
-          <article class="stats-card"><div class="stat-row"><span>Words analyzed</span><strong id="stat-words">—</strong></div><div class="stat-row"><span>Text chunks</span><strong id="stat-segments">—</strong></div><div class="stat-row"><span>Estimated reading time</span><strong id="stat-reading">—</strong></div><div class="stat-row"><span>Model</span><strong id="stat-model">IS-IT-SLOP / ONNX</strong></div><div class="report-caveat"><strong>READ THIS BEFORE DRAWING A CONCLUSION</strong><p>AI detectors can misclassify human writing and miss AI-written or edited text. This report is a screening signal, not proof, and must not be used alone for academic, employment or disciplinary decisions.</p></div></article>
+          <article class="assessment-card"><div class="assessment-top"><span>OVERALL ASSESSMENT</span><span id="assessment-index">AH / INCONCLUSIVE</span></div><div class="assessment-icon" id="assessment-icon" aria-hidden="true">?</div><h3 id="assessment-title">Inconclusive</h3><p id="assessment-description">The text does not provide a strong enough signal for a useful assessment.</p><div class="score-block"><div class="score-label"><span>AI-LIKE MODEL SIGNAL</span><strong id="signal-score">—</strong></div><div class="score-track" role="img" aria-label="AI-like model signal score"><span id="signal-score-bar"></span></div><small>Model score out of 100 — not a probability, authorship percentage or proof.</small></div></article>
+          <article class="stats-card"><div class="stat-row"><span>Words analyzed</span><strong id="stat-words">—</strong></div><div class="stat-row"><span>Text chunks</span><strong id="stat-segments">—</strong></div><div class="stat-row"><span>Estimated reading time</span><strong id="stat-reading">—</strong></div><div class="stat-row"><span>Model</span><strong id="stat-model">RoBERTa / OpenAI detector</strong></div><div class="report-caveat"><strong>READ THIS BEFORE DRAWING A CONCLUSION</strong><p>AI detectors can misclassify human writing and miss AI-written or edited text. This report is a screening signal, not proof, and must not be used alone for academic, employment or disciplinary decisions.</p></div></article>
         </div>
         <div class="segments-head"><div><div class="section-kicker">SEGMENT REVIEW / 03</div><h3>Signals by section</h3><p>Chunk scores are model outputs, not verified authorship labels.</p></div><span id="segments-count">00 CHUNKS</span></div>
         <div class="segments-list" id="segments-list"></div>
         <p class="report-footer-note" id="report-footer-note"></p>
+        <p class="report-disclaimer"><strong>Important:</strong> This is a probability-like screening signal, not proof of AI authorship or human authorship. Results can be wrong, especially for translated, edited, short or non-English text; the detector is optimized for English.</p>
       </section>
       <section class="empty-report" id="empty-report" aria-label="No analysis yet"><div class="empty-icon"><span>?</span></div><strong>Your report will appear here.</strong><p>Choose a mode, add enough text and run an analysis to see model signals.</p></section>
       <p class="fine-print"><span aria-hidden="true">◇</span> PRIVACY NOTE / Text is transmitted to the configured AFTERHOURS inference service only when submitted. This application does not intentionally save submitted content or use it for training. Hosting infrastructure may retain limited request metadata unless its logging is configured otherwise.</p>
