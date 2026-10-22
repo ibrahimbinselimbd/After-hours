@@ -8,7 +8,7 @@ const stopButton = $('#stop-button');
 const zipButton = $('#zip-button');
 const qualitySelect = $('#quality-mode');
 const MAX_FILES = 100;
-const MAX_BYTES = 60 * 1024 * 1024;
+const MAX_BYTES = 40 * 1024 * 1024;
 const ACCEPTED = new Set(['image/png', 'image/jpeg', 'image/webp']);
 const EXTENSION_OK = /\.(png|jpe?g|webp)$/i;
 let queue = [];
@@ -70,7 +70,7 @@ function addFiles(fileList) {
   if (added) announce(added + (added === 1 ? ' image added to the queue.' : ' images added to the queue.'));
   const notes = [];
   if (rejected) notes.push(rejected + ' unsupported file(s) skipped');
-  if (tooLarge) notes.push(tooLarge + ' file(s) over 60 MB skipped');
+  if (tooLarge) notes.push(tooLarge + ' file(s) over 40 MB skipped');
   if (tooMany) notes.push('Queue limit is 100 images');
   if (notes.length) announce(notes.join(' · '));
 }
@@ -117,7 +117,7 @@ function renderQueue() {
       '<button type="button" class="tile-download" data-action="download" ' + (!item.resultBlob ? 'disabled' : '') + '>PNG ↓</button>' +
       '<button type="button" data-action="retry" ' + (item.status !== 'error' || isProcessing ? 'hidden' : '') + '>Retry</button>' +
       '<button type="button" data-action="remove" aria-label="Remove ' + escapeHTML(item.file.name) + '" ' + (isProcessing || isZipping ? 'disabled' : '') + '>×</button>' +
-      '</div><div class="tile-hint">' + escapeHTML(item.status === 'error' ? item.error : item.status === 'done' ? 'Original dimensions preserved where supported.' : item.status === 'processing' ? 'Running locally on this device.' : 'Ready for the cut engine.') + '</div></div></article>';
+      '</div><div class="tile-hint">' + escapeHTML(item.status === 'error' ? item.error : item.status === 'done' ? 'Original dimensions preserved where supported.' : item.status === 'processing' ? 'Processing in your browser.' : 'Ready for the cut engine.') + '</div></div></article>';
   }).join('');
 }
 
@@ -143,27 +143,27 @@ function setProgress(percent, title, detail) {
   $('#progress-percent').textContent = value + '%';
   $('#overall-progress-bar').style.width = value + '%';
   $('#overall-progress').setAttribute('aria-valuenow', String(value));
-  $('#progress-detail').textContent = detail || 'Processing is happening locally in this browser.';
+  $('#progress-detail').textContent = detail || 'Your browser is processing the image. Source images are not uploaded.';
 }
 function hideProgress() { $('#progress-panel').hidden = true; }
 function updateBatchProgress(completed, currentPercent, total) {
   const totalSafe = Math.max(total || 1, 1);
   const overall = ((completed + (currentPercent || 0) / 100) / totalSafe) * 100;
-  setProgress(overall, 'Processing image ' + Math.min(completed + 1, totalSafe) + ' of ' + totalSafe, 'The active image is being segmented locally. Other files wait in the queue.');
+  setProgress(overall, 'Processing image ' + Math.min(completed + 1, totalSafe) + ' of ' + totalSafe, 'Your browser is processing the current image. Other files wait in the queue.');
 }
 
 async function getEngine() {
   if (!enginePromise) {
-    $('#engine-status').textContent = 'LOADING LOCAL ENGINE';
+    $('#engine-status').textContent = 'PREPARING ENGINE';
     setProgress(0, 'Loading the cut engine…', 'First use downloads the model/runtime. Image pixels are not uploaded.');
     enginePromise = import('https://esm.sh/@bg0/browser@0.1.1');
     enginePromise = enginePromise.catch(error => {
       enginePromise = null;
-      throw new Error('Could not load the local AI engine. Check your connection, then retry. ' + (error && error.message ? error.message : ''));
+      throw new Error('Could not load the cut engine. Check your connection, then retry. ' + (error && error.message ? error.message : ''));
     });
   }
   const mod = await enginePromise;
-  if (typeof mod.removeBackground !== 'function') throw new Error('The local cut engine did not load correctly. Reload the page and retry.');
+  if (typeof mod.removeBackground !== 'function') throw new Error('The cut engine did not load correctly. Reload the page and retry.');
   return mod;
 }
 
@@ -234,8 +234,8 @@ async function processQueue() {
       announce(done + ' image(s) processed' + (failed ? ' · ' + failed + ' need a retry.' : '.'));
     }
   } catch (error) {
-    setProgress(0, 'The local engine could not start', String(error?.message || error));
-    announce(String(error?.message || 'Could not load the local engine.'));
+    setProgress(0, 'The cut engine could not start', String(error?.message || error));
+    announce(String(error?.message || 'Could not load the cut engine.'));
   } finally {
     isProcessing = false;
     activeController = null;
@@ -300,7 +300,7 @@ async function downloadZip() {
           } finally {
             reader.releaseLock();
           }
-          setProgress(((index + 1) / items.length) * 100, 'Packing image ' + (index + 1) + ' of ' + items.length, 'ZIP preparation is running locally on your device.');
+          setProgress(((index + 1) / items.length) * 100, 'Packing image ' + (index + 1) + ' of ' + items.length, 'Your browser is preparing the ZIP download.');
         }
         zip.end();
       })().catch(reject);
