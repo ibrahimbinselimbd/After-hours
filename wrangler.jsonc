@@ -1,0 +1,11 @@
+{
+  "name": "afterhours-district",
+  "account_id": "d7c6fd4ad1a090bcac15dde8a85b178c",
+  "compatibility_date": "2026-10-19",
+  "workers_dev": true,
+  "assets": {
+    "directory": "./site",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "none"
+  }
+}

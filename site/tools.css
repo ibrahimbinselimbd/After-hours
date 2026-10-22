@@ -8,3 +8,5 @@ body.tools-page{--lime:#d3fb56;--muted:#a2a6b5;--line:#ffffff16;--ink:#f3f3ed;ma
 .tool-live-link:hover{transform:translateY(-2px);border-color:#d3fb56}
 .tool-live-link>span{font-size:12px;font-weight:700}
 .tool-live-link>small{font:8px monospace;letter-spacing:.7px;color:#d3fb56;white-space:nowrap}
+/* Keep the hub inside narrow phone viewports without affecting editorial pages. */
+@media(max-width:760px){.tools-page .hub-hero{grid-template-columns:minmax(0,1fr)}.tools-page .hub-hero>div{min-width:0}.tools-page .hub-hero h1{font-size:clamp(54px,17vw,76px)}.tools-page .hero-links{flex-wrap:wrap}.tools-page .hero-object{overflow:hidden}}
