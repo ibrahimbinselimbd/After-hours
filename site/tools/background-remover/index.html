@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#080b12">
+  <meta name="description" content="Remove backgrounds from multiple images locally in your browser. Export transparent PNGs, individually or as a ZIP.">
+  <title>Bulk Image Background Remover — AFTERHOURS CUT</title>
+  <link rel="stylesheet" href="/tools/background-remover/style.css?v=1">
+  <script type="module" src="/tools/background-remover/app.js?v=1"></script>
+</head>
+<body class="cut-page">
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="AFTERHOURS home"><span class="brand-mark">a<span>h</span></span><span>AFTER<span class="brand-light">HOURS</span><i>®</i></span></a>
+    <nav aria-label="Breadcrumb navigation"><a href="/">Discover</a><span>/</span><a href="/tools">Tools Hub</a><span>/</span><a href="/tools#categories">Image &amp; Design</a></nav>
+    <div class="header-actions"><span class="local-pill"><i></i> ON-DEVICE AI</span><a class="back-link" href="/tools">← All tools</a></div>
+  </header>
+
+  <main class="page-main">
+    <div class="breadcrumb"><a href="/tools">THE UTILITY DISTRICT</a><span>/</span><span>IMAGE &amp; DESIGN</span><span>/</span><b>AH CUT — 001</b></div>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="pulse"></span> BULK IMAGE BACKGROUND REMOVER <span class="eyebrow-index">/ 001</span></div>
+        <h1>KEEP THE<br><span>SUBJECT.</span><br><em>LOSE THE NOISE.</em></h1>
+        <p>Clean cutouts. Batch by batch. Your images stay on your device while the AI does the work.</p>
+        <div class="hero-tags"><span>PNG WITH TRANSPARENCY</span><span>UP TO 100 IMAGES / BATCH</span><span>NO AI API</span></div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div>
+        <div class="art-glow"></div>
+        <div class="cutout-card"><div class="cutout-corner corner-a"></div><div class="cutout-corner corner-b"></div><svg viewBox="0 0 170 190" fill="none"><defs><linearGradient id="person" x1="35" y1="20" x2="130" y2="150" gradientUnits="userSpaceOnUse"><stop stop-color="#657b45"/><stop offset="1" stop-color="#18212e"/></linearGradient></defs><path d="M83 20c-22 0-38 17-38 40 0 14 6 25 15 32-3 13-13 22-29 30-10 5-15 14-17 25h142c-2-11-8-20-18-25-16-8-26-17-29-30 9-7 15-18 15-32 0-23-18-40-41-40Z" fill="url(#person)" stroke="#d8ff8a" stroke-width="1.5"/><path d="M46 55c10-20 34-28 57-15 5 3 10 8 13 14" stroke="#fff" stroke-opacity=".5" stroke-width="1.5"/><path d="M26 130c22-11 43-11 59-3 18-8 38-8 60 3" stroke="#d3fb56" stroke-opacity=".6" stroke-dasharray="3 5"/></svg><span class="scan-label">SUBJECT / ISOLATED</span></div>
+        <span class="art-coordinate">CUT ENGINE · LOCAL / 001</span>
+      </div>
+    </section>
+
+    <section class="workspace" aria-labelledby="workspace-title">
+      <div class="workspace-head">
+        <div><div class="section-kicker">THE CUT STATION / 01</div><h2 id="workspace-title">Bring in your images.</h2><p>Drop a whole folder's worth of product photos, portraits, or graphics.</p></div>
+        <div class="privacy-note"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 19 6v5c0 4.6-3 7.8-7 10-4-2.2-7-5.4-7-10V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg><span><strong>PRIVATE BY DESIGN</strong><small>Image pixels stay in this browser.</small></span></div>
+      </div>
+
+      <label class="drop-zone" id="drop-zone" for="file-input" tabindex="0" role="button" aria-label="Choose or drop images">
+        <input id="file-input" type="file" accept="image/png,image/jpeg,image/webp,.png,.jpg,.jpeg,.webp" multiple>
+        <span class="drop-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 21V4m-7 7 7-7 7 7M5 20v7h22v-7"/></svg></span>
+        <strong>Drop your images here</strong>
+        <span class="drop-caption">or tap to browse your device</span>
+        <span class="drop-formats">PNG · JPG · WEBP <i>•</i> UP TO 60 MB EACH</span>
+      </label>
+
+      <div class="control-row">
+        <div class="queue-summary"><strong id="queue-count">00</strong><span>IMAGES IN QUEUE</span><span class="summary-dot"></span><small id="queue-subtitle">Waiting for your first image</small></div>
+        <div class="actions">
+          <label class="quality-control" for="quality-mode"><span>EDGE MODE</span><select id="quality-mode"><option value="quality">Fine edges</option><option value="fast">Faster cut</option></select></label>
+          <button class="button button-quiet" id="clear-button" type="button" disabled>Clear all</button>
+          <button class="button button-main" id="process-button" type="button" disabled><span class="button-spark">✳</span> Remove backgrounds <span aria-hidden="true">↗</span></button>
+          <button class="button button-stop" id="stop-button" type="button" hidden>Stop queue</button>
+        </div>
+      </div>
+
+      <div class="progress-panel" id="progress-panel" hidden>
+        <div class="progress-copy"><span id="progress-title">Preparing local AI…</span><span id="progress-percent">0%</span></div>
+        <div class="progress-track" role="progressbar" id="overall-progress" aria-label="Batch progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="overall-progress-bar"></span></div>
+        <p id="progress-detail">The model may need to download on first use. No image upload is involved.</p>
+      </div>
+
+      <section class="results-section" aria-labelledby="results-title">
+        <div class="results-head">
+          <div><div class="section-kicker">OUTPUT / 02</div><h2 id="results-title">Your cutouts <span id="result-count">—</span></h2></div>
+          <div class="preview-controls" aria-label="Preview background">
+            <span>PREVIEW</span>
+            <button type="button" data-background="checker" aria-pressed="true">Grid</button>
+            <button type="button" data-background="white" aria-pressed="false">White</button>
+            <button type="button" data-background="dark" aria-pressed="false">Dark</button>
+            <label class="color-picker" title="Choose preview background"><input id="custom-background" type="color" value="#a7a7a7" aria-label="Custom preview background"></label>
+          </div>
+        </div>
+        <div class="empty-state" id="empty-state"><div class="empty-graphic"><span>+</span><i></i><b></b></div><strong>No images in the cut station yet.</strong><p>Your transparent results will appear here. Add a batch to begin.</p></div>
+        <div class="queue-grid" id="queue-grid" data-preview-bg="checker" aria-live="polite"></div>
+      </section>
+
+      <div class="export-bar">
+        <div class="export-copy"><span class="export-icon">↗</span><div><strong id="export-title">Ready when you are.</strong><small id="export-subtitle">Finished cutouts can be downloaded individually or packed together.</small></div></div>
+        <button class="button button-zip" type="button" id="zip-button" disabled><span>▧</span> Download all as ZIP <b id="zip-count">00</b></button>
+      </div>
+      <p class="fine-print"><span>ⓘ</span> Automatic cutouts can miss fine hair or transparent objects. Review each result before using it commercially. The first visit needs an internet connection to load the local model and runtime; your image files are not sent to an inference API.</p>
+    </section>
+
+    <section class="how-it-works">
+      <div class="section-kicker">BUILT FOR THE WORKFLOW / 03</div>
+      <h2>Less cleanup. <span>More creating.</span></h2>
+      <div class="steps">
+        <article><span>01</span><strong>Add a batch</strong><p>Choose up to 100 PNG, JPG, or WebP images. Large batches run one at a time to reduce memory pressure.</p></article>
+        <article><span>02</span><strong>Let the cut engine work</strong><p>Background segmentation runs inside your browser with WebGPU where available and a WebAssembly fallback.</p></article>
+        <article><span>03</span><strong>Export your cutouts</strong><p>Inspect the transparent preview, save selected PNGs, or package the finished batch into a ZIP.</p></article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><a href="/tools">← Back to the Utility District</a><span>AFTERHOURS / DESIGNED FOR THE CURIOUS.</span><span class="footer-status"><i></i><b id="engine-status">ENGINE STANDBY</b></span></footer>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

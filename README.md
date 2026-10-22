@@ -16,9 +16,9 @@ Routes: `/` (home), `/article?story=...` (article), `/info?page=...` (informatio
 
 ## Tools Hub status and access plan
 
-The Tools Hub is currently a design preview, with ten categories and 100 planned tools. Search and category dialogs work; individual utilities and credit accounting are not implemented yet.
+The Tools Hub remains a staged preview with ten categories and 100 planned tools. The first integrated utility is **Bulk Image Background Remover**, linked from Tools Hub → Image & Design. It processes images in the browser using a local model/runtime; remaining utilities and credit accounting are not implemented.
 
-The established launch plan remains: **10 free credits per user per day, every tool available through free credits, and no premium-only tier or premium-only tools.** Per-tool credit costs will be defined before launch. The preview does not issue or consume credits.
+The established launch plan remains: **10 free credits per user per day, every tool available through free credits, and no premium-only tier or premium-only tools.** Per-tool credit costs will be defined before launch. The preview does not issue or consume credits. The remover is accessed at `/tools/background-remover/`; the first run requires an internet connection to load its version-pinned browser engine and model. Selected images are processed locally and are not uploaded to an AI inference API.
 
 ## Production safety
 

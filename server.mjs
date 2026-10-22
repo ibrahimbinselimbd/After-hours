@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 const root = fileURLToPath(new URL('./site/', import.meta.url));
-const routes = new Map([['/', 'index.html'], ['/tools', 'tools.html'], ['/tools/', 'tools.html'], ['/article', 'article.html'], ['/article/', 'article.html'], ['/info', 'info.html'], ['/info/', 'info.html']]);
+const routes = new Map([['/', 'index.html'], ['/tools', 'tools.html'], ['/tools/', 'tools.html'], ['/tools/background-remover', 'tools/background-remover/index.html'], ['/tools/background-remover/', 'tools/background-remover/index.html'], ['/article', 'article.html'], ['/article/', 'article.html'], ['/info', 'info.html'], ['/info/', 'info.html']]);
 const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.json': 'application/json', '.txt': 'text/plain; charset=utf-8', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.png': 'image/png', '.ttf': 'font/ttf', '.svg': 'image/svg+xml' };
 const server = http.createServer(async (req, res) => {
   if (!['GET', 'HEAD'].includes(req.method)) {
