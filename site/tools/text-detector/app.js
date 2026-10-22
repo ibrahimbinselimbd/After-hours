@@ -8,6 +8,8 @@ const emptyReport = $("#empty-report");
 const segmentsList = $("#segments-list");
 const toast = $("#toast");
 const limitMessage = $("#input-limit-message");
+// Release gate: enable explicitly only after a real hosted API passes launch tests.
+const ANALYSIS_ENABLED = document.body?.dataset?.analysisEnabled === "true";
 let mode = "article";
 let lastReport = null;
 let toastTimer = 0;
@@ -63,7 +65,7 @@ function updateCounts() {
   $("#input-help").textContent = overLimit || (words < rules[mode].min
     ? `Add at least ${rules[mode].min} words for this scan. Short text cannot be attributed reliably.`
     : "Text is only sent to the analysis server after you press Analyze.");
-  analyzeButton.disabled = words === 0 || Boolean(overLimit);
+  analyzeButton.disabled = !ANALYSIS_ENABLED || words === 0 || Boolean(overLimit);
 }
 
 function setMode(nextMode) {
@@ -81,7 +83,7 @@ function setMode(nextMode) {
 
 function busy(value) {
   progressPanel.hidden = !value;
-  analyzeButton.disabled = value || countWords(textInput.value) === 0 || Boolean(limitError(countWords(textInput.value), textInput.value.length));
+  analyzeButton.disabled = !ANALYSIS_ENABLED || value || countWords(textInput.value) === 0 || Boolean(limitError(countWords(textInput.value), textInput.value.length));
   analyzeButton.innerHTML = value ? "Analyzing…" : '<span class="button-spark">✳</span> Analyze text <span aria-hidden="true">↗</span>';
 }
 
@@ -137,6 +139,7 @@ function renderReport(payload) {
 }
 
 async function analyze() {
+  if (!ANALYSIS_ENABLED) return announce("Analysis is coming soon. No text is sent while hosting is not configured.");
   const text = textInput.value.trim();
   const words = countWords(text);
   const chars = text.length;
@@ -201,6 +204,7 @@ async function health() {
         : "COMING SOON — NOT LIVE. Real analysis requires a configured, tested inference host. No simulated results are provided.";
     }
   };
+  if (!ANALYSIS_ENABLED) { setStatus("COMING SOON / ANALYSIS DISABLED"); return; }
   try {
     const response = await fetch("/api/v1/text/health", { cache: "no-store", credentials: "same-origin" });
     const payload = await response.json();

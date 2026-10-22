@@ -6,17 +6,17 @@
   <meta name="theme-color" content="#080b12">
   <meta name="description" content="Coming soon: English-oriented probabilistic writing signals, not proof of AI authorship. Analysis hosting is not configured yet.">
   <title>AI Article &amp; Text Detector — AFTERHOURS TEXT SIGNAL</title>
-  <link rel="stylesheet" href="/tools/text-detector/style.css?v=1">
-  <script defer src="/tools/text-detector/app.js?v=2-setup"></script>
+  <link rel="stylesheet" href="/tools/text-detector/style.css?v=3-preview">
+  <script defer src="/tools/text-detector/app.js?v=3-preview"></script>
 </head>
-<body class="signal-page">
+<body class="signal-page" data-analysis-enabled="false">
   <header class="site-header">
     <a class="brand" href="/" aria-label="AFTERHOURS home"><span class="brand-mark">a<span>h</span></span><span>AFTER<span class="brand-light">HOURS</span><i>®</i></span></a>
-    <nav aria-label="Breadcrumb navigation"><a href="/">Discover</a><span>/</span><a href="/tools/">Tools Hub</a><span>/</span><a href="/tools/#categories">AI &amp; Everyday Utilities</a></nav>
+    <nav aria-label="Breadcrumb navigation"><a href="/">Discover</a><span>/</span><a href="/tools/">Tools Hub</a><span>/</span><a href="/tools/?category=ai-everyday-utilities#categories">AI &amp; Everyday Utilities</a></nav>
     <div class="header-actions"><span class="local-pill"><i></i> NO CONTENT STORAGE</span><a class="back-link" href="/tools/">← All tools</a></div>
   </header>
   <main class="page-main">
-    <div class="breadcrumb"><a href="/tools/">THE UTILITY DISTRICT</a><span>/</span><span>AI &amp; EVERYDAY UTILITIES</span><span>/</span><b>AH TEXT SIGNAL — 010 / 001</b></div>
+    <div class="breadcrumb"><a href="/tools/">THE UTILITY DISTRICT</a><span>/</span><a href="/tools/?category=ai-everyday-utilities#categories">AI &amp; EVERYDAY UTILITIES</a><span>/</span><b>AH TEXT SIGNAL — 010 / 001</b></div>
     <section class="hero">
       <div class="hero-copy">
         <div class="eyebrow"><span class="pulse"></span> AI WRITING SIGNAL ANALYSIS <span class="eyebrow-index">/ 001</span></div>
@@ -51,7 +51,7 @@
         <p class="input-limit-message" id="input-limit-message" role="alert" style="font-weight:700" hidden></p>
         <div class="editor-actions">
           <div class="secondary-actions"><label class="button button-quiet upload-button" for="text-file"><span aria-hidden="true">↑</span> Open .TXT / .MD<input id="text-file" type="file" accept=".txt,.md,text/plain,text/markdown"></label><button class="button button-quiet" id="paste-button" type="button">Paste</button><button class="button button-quiet" id="sample-button" type="button">Try sample</button><button class="button button-quiet" id="clear-button" type="button">Clear</button></div>
-          <button class="button button-main" id="analyze-button" type="button" disabled><span class="button-spark">✳</span> Analyze text <span aria-hidden="true">↗</span></button>
+          <button class="button button-main" id="analyze-button" type="button" disabled aria-describedby="service-notice"><span class="button-spark">✳</span> Analysis coming soon</button>
         </div>
       </div>
       <div class="progress-panel" id="progress-panel" hidden><div class="progress-copy"><span id="progress-title">Analyzing text on the server…</span><span class="spinner" aria-hidden="true"></span></div><div class="progress-track"><span></span></div><p>Model inference is running on the analysis server. Your submitted text is not intentionally persisted.</p></div>
@@ -66,7 +66,7 @@
         <p class="report-footer-note" id="report-footer-note"></p>
         <p class="report-disclaimer"><strong>Important:</strong> This is a probability-like screening signal, not proof of AI authorship or human authorship. Results can be wrong, especially for translated, edited, short or non-English text; the detector is optimized for English.</p>
       </section>
-      <section class="empty-report" id="empty-report" aria-label="No analysis yet"><div class="empty-icon"><span>?</span></div><strong>Your report will appear here.</strong><p>Choose a mode, add enough text and run an analysis to see model signals.</p></section>
+      <section class="empty-report" id="empty-report" aria-label="Analysis coming soon"><div class="empty-icon"><span>?</span></div><strong>Real analysis is coming soon.</strong><p>Explore the editor and samples now. Reports will be available after inference hosting is configured and tested.</p></section>
       <p class="fine-print"><span aria-hidden="true">◇</span> PRIVACY NOTE / Text is transmitted to the configured AFTERHOURS inference service only when submitted. This application does not intentionally save submitted content or use it for training. Hosting infrastructure may retain limited request metadata unless its logging is configured otherwise.</p>
     </section>
     <section class="how-it-works"><div class="section-kicker">BUILT FOR A MORE CAREFUL READ / 04</div><h2>Signals, not <span>verdicts.</span></h2><div class="steps"><article><span>01</span><strong>Choose the right scan</strong><p>Article and prompt modes apply different minimum-length guidance. Very short text is not reliably attributable from style alone.</p></article><article><span>02</span><strong>Review the model signal</strong><p>The self-hosted classifier scores the submitted English text in bounded chunks and provides a cautious overall assessment.</p></article><article><span>03</span><strong>Use evidence responsibly</strong><p>Scores can be wrong, especially for short, translated, heavily edited or out-of-domain writing. Always consider context beyond this report.</p></article></div></section>

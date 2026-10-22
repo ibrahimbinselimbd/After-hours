@@ -30,6 +30,7 @@ const modeButtons = [new FakeElement("article-mode"), new FakeElement("prompt-mo
 modeButtons[0].dataset.mode = "article";
 modeButtons[1].dataset.mode = "prompt";
 const document = {
+  body: { dataset: { analysisEnabled: "true" } }, // TEST ONLY: exercise future hosted mode.
   querySelector(selector) {
     if (selector === ".assessment-card") return assessmentCard;
     if (selector.startsWith("#")) return elements[selector.slice(1)];
@@ -138,5 +139,15 @@ await analyze.dispatch("click");
 assert.equal(elements["result-section"].hidden, true, "partial analysis must not be shown as complete");
 assert.match(elements.toast.textContent, /complete text coverage/);
 context.fetch = errorFetch;
+
+// Production static preview is fail-closed even if analyze() is called directly.
+document.body.dataset.analysisEnabled = "false";
+let previewRequests = 0;
+const previewContext = vm.createContext({ document, fetch: async () => { previewRequests++; throw Error("must not send"); }, navigator: fakeNavigator, setTimeout, clearTimeout, console });
+vm.runInContext(source, previewContext);
+await vm.runInContext("analyze()", previewContext);
+assert.equal(previewRequests, 0, "static preview sends neither health nor analysis requests");
+assert.equal(analyze.disabled, true, "analysis remains disabled even with valid text");
+assert.match(elements.toast.textContent, /coming soon/);
 
 console.log("text-detector-client.test.mjs: all focused client tests passed (response payloads are TEST ONLY mocks)");

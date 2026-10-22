@@ -5,6 +5,7 @@ This directory contains a **source-only, not deployed** FastAPI inference servic
 ## Current status and safety boundary
 
 - The current Cloudflare site is static. It does **not** run `server.mjs`, Python, FastAPI, or model inference.
+- The English static frontend preview is published at `/tools/text-detector/`. Its `data-analysis-enabled="false"` release gate disables Analyze and all API requests. Preview/editor interaction is not inference. Keep Coming soon / Not live visible until the real launch checks below pass.
 - A future integration still needs an actual Worker/reverse proxy implementation for the `/api` routes (including upstream auth/timeouts); the static asset configuration alone is not a complete integration.
 - Do not point the public UI at this service until a host, private service boundary, authentication, rate limits, privacy policy, and a real smoke test are approved.
 - The tests in `tests/test_text_detector_backend.py` use explicit **TEST ONLY** tokenizer/model/torch stubs. They validate accounting and control flow, not the quality or validity of downloaded weights.
@@ -79,6 +80,8 @@ curl -sS -H "Content-Type: application/json" -H "X-API-Key: ${TEXT_DETECTOR_API_
 ```
 
 Verify `ok: true`, `coverage.complete: true`, `coverage.scored_words == word_count`, nonzero `token_windows`, and a plausible segment list. This proves host/model wiring only; it does not validate detector accuracy. Remove the sample and any logs containing it after testing.
+
+Before enabling browser analysis, obtain the owner's launch approval, validate real same-origin API success/failure, authentication and abuse controls, test 60/80-word minimums and the complete 8,000-word/50,000-character boundary with real model inference, and review desktop/mobile result rendering. Only then change the page's `data-analysis-enabled` flag to `true` and replace the static Coming soon notices/button copy with accurate live-service wording. Preserve the prominent English-oriented, probabilistic-signals-not-proof disclaimer. Re-run all tests and deploy the matching source; do not merely flip the flag on a static-only host.
 
 ## Privacy and operations checklist
 

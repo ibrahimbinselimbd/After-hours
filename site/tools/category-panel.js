@@ -49,3 +49,7 @@ document.querySelector('.modal-close').addEventListener('click', () => dialog.cl
 document.querySelector('#back-districts').addEventListener('click', () => { dialog.close(); document.querySelector('#categories').scrollIntoView({ behavior: 'smooth' }); });
 dialog.addEventListener('click', e => { if (e.target === dialog) { const r = dialog.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dialog.close(); } });
 dialog.addEventListener('close', () => opener?.focus({ preventScroll: true }));
+const requestedCategory = new URLSearchParams(location.search).get('category');
+if (requestedCategory && categories.some(category => category.id === requestedCategory)) {
+  openCategory(requestedCategory);
+}
