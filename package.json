@@ -1,0 +1,12 @@
+{
+  "name": "aftehour",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AFTERHOURS English editorial site and Tools Hub source",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

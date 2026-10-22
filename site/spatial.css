@@ -1,0 +1,73 @@
+/* AFTERHOURS / spatial edition — physical depth without sacrificing the interface. */
+:root{--spatial-edge:#a6eaff4a;--spatial-under:#040713;--spatial-rx:0deg;--spatial-ry:0deg}
+.spatial-surface{--spatial-rx:0deg;--spatial-ry:0deg;transform:perspective(1100px) rotateX(var(--spatial-rx)) rotateY(var(--spatial-ry));transform-style:preserve-3d;transition:transform .24s ease,box-shadow .24s ease;border-top-color:#d4f5ff55}
+.spatial-surface.spatial-tracking{transition:transform .09s linear,box-shadow .24s ease}
+.spatial-surface:focus-visible{outline:2px solid #7af3ff;outline-offset:5px}
+/* The city remains a background. Foreground hardware is visibly suspended. */
+.hero .touch-instrument{position:relative;perspective:900px;filter:drop-shadow(14px 25px 15px #0007)}
+.hero .touch-stage{transform:rotateY(-9deg) rotateX(5deg);border:1px solid #a9f7ff65;border-radius:18px;background:linear-gradient(130deg,#b4faff10,#050c1880 60%,#aa77ff12);box-shadow:inset 1px 2px 0 #e2ffff40,inset -2px -2px 0 #a483ff30,5px 5px 0 #162b3d,8px 9px 0 #060a15,12px 22px 35px #0007;transition:transform .35s ease,box-shadow .35s ease}
+.hero .touch-stage.is-held{transform:rotateY(0deg) rotateX(1deg) translateZ(8px)}
+.hero .core-word{text-shadow:1px 1px #31545c,2px 2px #31545c,3px 3px #15323d,5px 7px 15px #0009}
+.hero h1{text-shadow:1px 1px #8ba0b535,2px 3px #25334e,4px 6px #0b1228,10px 14px 26px #0008}
+.hero .outline{text-shadow:2px 3px #0a142a,4px 5px #b493ff38}
+.hero .city-hud{filter:drop-shadow(12px 24px 12px #0008)}
+.hero .hud-ring{box-shadow:inset 2px 2px 3px #d3faff22,2px 3px #06202a,5px 8px 20px #0005}
+.hero .primary,.feature-copy .primary{box-shadow:inset 0 2px #ffffff66,0 5px 0 #38858d,0 9px 18px #0006}
+header .brand-mark{box-shadow:2px 3px 0 #5e86a566,5px 7px 12px #0005}
+/* The console has a chassis, each channel a separate raised key. */
+.category-console{border-radius:6px;overflow:visible;border:1px solid #8db4d755;background:linear-gradient(140deg,#23364c,#0e1628 40%,#16142b);box-shadow:inset 2px 2px #f0ffff16,inset -2px -2px #0009,5px 6px 0 #152135,9px 11px 0 #050915,15px 24px 35px #0007}
+.category-console::before{border-radius:inherit}
+.category-stack{gap:9px;padding:16px 12px 19px;perspective:900px}
+.category-channel{overflow:visible;border:1px solid #9bb3cf20;border-radius:5px;background:linear-gradient(150deg,#202c40,#101828);box-shadow:inset 0 1px #e0faff18,0 4px 0 #050b17,0 6px 7px #0005;min-height:61px}
+.category-channel[aria-pressed=true]{border-color:color-mix(in srgb,var(--tone) 65%,transparent);box-shadow:inset 0 1px #fff2,0 4px 0 #050a13,0 7px 16px #0006,0 0 18px color-mix(in srgb,var(--tone) 10%,transparent)}
+.channel-glyph{border-radius:6px;background:linear-gradient(135deg,#3d536155,#080d1b);box-shadow:2px 3px 0 #030915,4px 6px 9px #0004;transform:translateZ(12px) rotateY(-10deg)}
+.channel-copy{transform:translateZ(9px)}
+.console-title{color:#f2f7ff;text-shadow:2px 3px 0 #020713}
+.console-caption{padding-left:18px;padding-right:14px;color:#a3b5cd}
+.console-orb{box-shadow:inset -6px -6px 9px #0009,inset 3px 3px 7px #e1ffff77,3px 7px 12px #0008,0 0 22px #53f5ff44}
+.frequency-search-launch{border-radius:10px;box-shadow:inset 0 1px #ffffff26,0 5px 0 #12152d,0 7px 0 #050916,0 18px 30px #0005}
+.search-orbit{transform:rotateY(-20deg);box-shadow:3px 3px 0 #163343,5px 7px 10px #0008,inset 2px 2px 5px #ffffff22}
+#stories{gap:36px 26px}
+#stories .card-visual{border-radius:9px;border:1px solid #c1e9ff3b;filter:none;box-shadow:inset 0 1px #fff3,4px 5px 0 #182439,7px 9px 0 #050916,13px 22px 25px #0007;transform:perspective(1100px) rotateX(var(--spatial-rx,0deg)) rotateY(var(--spatial-ry,0deg));transition:transform .24s ease,box-shadow .24s ease}
+#stories .card-visual:hover{box-shadow:inset 0 1px #fff3,4px 5px 0 #223951,7px 9px 0 #080d1c,14px 26px 30px #0008}
+.card-visual .art-word{transform:translateZ(30px);text-shadow:2px 3px #071020,4px 6px 12px #0008}
+.card-visual .visual-label,.card-visual .read-arrow{transform:translateZ(38px)}
+.feature-transmission{border:1px solid #9dd8ff44;border-radius:8px;box-shadow:inset 0 1px #fff3,6px 7px 0 #1a2137,10px 12px 0 #050915,16px 27px 40px #0007}
+.feature-art{perspective:800px}
+.feature-copy h2{text-shadow:2px 3px #030817}
+.district-grid{gap:18px;perspective:1100px}
+.district-grid button{border:1px solid #9dc5e040;border-radius:8px;background-image:linear-gradient(130deg,#d8f8ff0b,transparent 65%);box-shadow:inset 1px 1px #fff2,4px 5px 0 #172237,7px 9px 0 #030713,10px 18px 22px #0005;overflow:visible}
+.district-grid button::after{border-radius:4px}
+.district-grid button>*{position:relative;transform:translateZ(14px)}
+.signal-art{border-radius:14px;box-shadow:inset 1px 2px #d1ffff35,5px 6px 0 #17293c,9px 10px 0 #040815,15px 26px 35px #0008}
+.signal-art .core{filter:drop-shadow(8px 12px 5px #0009)}
+/* Search: a floating command deck, raised result cartridges, an actual CSS 3D cube. */
+#search-dialog.frequency-dialog{perspective:1000px;border:1px solid #bbdcff66;background:radial-gradient(ellipse at 95% 0,#a67aff22,transparent 45%),linear-gradient(145deg,#26364c,#111a2d 42%,#101426);box-shadow:inset 2px 2px #edffff25,inset -2px -2px #0007,4px 5px 0 #29344d,8px 10px 0 #0c1323,14px 17px 0 #040813,0 50px 130px #000c}
+#search-dialog .search-intro{position:relative;padding-right:132px;min-height:94px}
+#search-dialog .search-title{text-shadow:1px 2px #1b223d,2px 4px #080e20,4px 8px 15px #0007}
+#search-dialog .search-field{border-color:#a2cde966;background:linear-gradient(#050b16,#0c1526);box-shadow:inset 0 4px 8px #0009,0 1px #d2faff22,0 4px 0 #050b18}
+#search-dialog .search-field:focus-within{box-shadow:inset 0 4px 8px #0008,0 0 0 2px #7af3ff22,0 4px 0 #0a2530}
+#search-dialog .search-chips{padding-bottom:9px}
+#search-dialog .search-chips button{border:1px solid #c2d8fa15;background:linear-gradient(#2a3548,#172135);box-shadow:inset 0 1px #fff1,0 3px 0 #050c19}
+#search-dialog .search-chips button[aria-pressed=true]{background:linear-gradient(#24404e,#17313d);box-shadow:inset 0 1px #caffff44,0 3px 0 #061521,0 5px 10px #0004}
+#search-dialog #search-results{perspective:1000px;gap:11px;padding-top:3px;padding-bottom:15px}
+#search-dialog .search-result{background:linear-gradient(125deg,#25334a,#151e31 60%,#171d30);border:1px solid #b4cced29;box-shadow:inset 0 1px #ffffff12,0 3px 0 #070d19,0 6px 10px #0004;transform:perspective(1000px) rotateX(var(--spatial-rx,0deg)) rotateY(var(--spatial-ry,0deg));transform-style:preserve-3d;transition:transform .2s ease,border-color .2s,box-shadow .2s}
+#search-dialog .search-result:hover,#search-dialog .search-result[aria-selected=true]{background:linear-gradient(125deg,#294054,#19283b);border-color:#88ecff88;box-shadow:inset 0 1px #defdff35,0 4px 0 #0a1825,0 8px 15px #0006;transform:perspective(1000px) rotateX(var(--spatial-rx,0deg)) rotateY(var(--spatial-ry,0deg))}
+#search-dialog .result-glyph{box-shadow:inset 1px 1px #fff3,inset -1px -2px #0004,3px 4px 0 #040b18,6px 8px 10px #0005;transform:translateZ(16px) rotateY(-13deg) rotateX(6deg)}
+#search-dialog .result-copy{transform:translateZ(8px)}
+#search-dialog .result-arrow{transform:translateZ(18px)}
+#search-dialog .dialog-close{box-shadow:inset 0 1px #ffffff22,0 3px 0 #050b18;background:linear-gradient(#303b50,#1c2538)}
+.search-sculpture{position:absolute;right:37px;top:8px;width:64px;height:64px;perspective:500px;pointer-events:none}
+.search-cube{position:absolute;left:13px;top:10px;width:38px;height:38px;transform-style:preserve-3d;transform:rotateX(-24deg) rotateY(35deg) rotateZ(-8deg);animation:spatial-cube 14s ease-in-out infinite}
+.search-cube i{position:absolute;inset:0;border:1px solid #9afaffac;background:linear-gradient(135deg,#7af3ff33,#a58aff19);box-shadow:inset 0 0 12px #7af3ff15;backface-visibility:visible}
+.search-cube i:nth-child(1){transform:translateZ(19px)}.search-cube i:nth-child(2){transform:rotateY(90deg) translateZ(19px)}.search-cube i:nth-child(3){transform:rotateY(180deg) translateZ(19px)}.search-cube i:nth-child(4){transform:rotateY(-90deg) translateZ(19px)}.search-cube i:nth-child(5){transform:rotateX(90deg) translateZ(19px)}.search-cube i:nth-child(6){transform:rotateX(-90deg) translateZ(19px)}
+.search-sculpture::after{content:"";position:absolute;width:65px;height:18px;left:0;bottom:-10px;background:radial-gradient(ellipse,#7af3ff35,transparent 70%);transform:rotate(-10deg)}
+@keyframes spatial-cube{0%,100%{transform:rotateX(-24deg) rotateY(35deg) rotateZ(-8deg)}50%{transform:rotateX(-12deg) rotateY(215deg) rotateZ(6deg)}}
+body:not(.search-active) .search-cube{animation-play-state:paused}
+.spatial-pressed{filter:brightness(1.13)!important;box-shadow:inset 0 2px 8px #0008,0 2px 0 #050915!important}
+@media(hover:hover) and (pointer:fine){.category-channel:hover{transform:perspective(900px) rotateY(-4deg) translateX(3px)}.primary:hover{translate:0 -2px}}
+@media(max-width:700px){.hero .touch-stage{transform:rotateY(-6deg) rotateX(4deg);border-radius:13px;box-shadow:inset 1px 1px #e2ffff33,3px 4px 0 #172e3e,6px 7px 0 #060a15,8px 16px 22px #0006}.category-console{box-shadow:inset 1px 1px #fff2,3px 4px 0 #152135,6px 7px 0 #050915,9px 15px 24px #0006}.category-channel{min-height:61px}.category-stack{gap:9px}.district-grid{gap:15px}#stories{gap:32px 20px}#stories .card-visual{box-shadow:inset 0 1px #fff3,3px 4px 0 #182439,5px 7px 0 #050916,8px 14px 20px #0006}#search-dialog.frequency-dialog{box-shadow:inset 1px 1px #edffff25,3px 4px 0 #29344d,5px 7px 0 #060b17,0 30px 80px #000b}#search-dialog .search-intro{padding-right:95px}#search-dialog .search-subtitle{max-width:235px}.search-sculpture{right:17px;top:5px;scale:.8}#search-dialog .search-result{min-height:98px}.spatial-surface{transform:perspective(1100px) rotateX(0) rotateY(0)}}
+/* Stillness never removes physical shadows; only movement is disabled. */
+.reduce-motion .spatial-surface,.reduce-motion #stories .card-visual,.reduce-motion #search-dialog .search-result,.reduce-motion .category-channel:hover,.reduce-motion .hero .touch-stage{transform:none!important;transition:none!important}
+.reduce-motion .search-cube{animation:none!important}.reduce-motion .primary:hover{translate:none}
+@media(prefers-reduced-motion:reduce){.spatial-surface,#stories .card-visual,#search-dialog .search-result,.category-channel:hover,.hero .touch-stage{transform:none!important;transition:none!important}.search-cube{animation:none!important}.primary:hover{translate:none}}

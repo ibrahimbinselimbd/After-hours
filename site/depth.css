@@ -1,0 +1,245 @@
+/* AFTERHOURS / restrained physical depth layer
+   Integration: load after chromatic.css and touch.css.
+   This file intentionally leaves the search UI to its owning stylesheet. */
+
+:root {
+  --depth-ink: #050711;
+  --depth-edge: rgba(203, 224, 255, .16);
+  --depth-edge-soft: rgba(203, 224, 255, .08);
+  --depth-shadow: rgba(0, 0, 0, .34);
+  --depth-lift: rgba(115, 225, 255, .08);
+}
+
+/* Keep the hero as a scene: a quiet glass plane in front of the existing city. */
+.hero {
+  isolation: isolate;
+  perspective: 1100px;
+  perspective-origin: 68% 42%;
+}
+.hero .city {
+  transform-style: preserve-3d;
+}
+.hero .city::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(112deg, transparent 0 42%, rgba(174, 229, 255, .05) 49%, transparent 57%),
+    linear-gradient(180deg, rgba(1, 4, 13, .06), transparent 28%, rgba(2, 4, 12, .24));
+  mix-blend-mode: screen;
+  opacity: .7;
+}
+.hero .hero-grid {
+  transform: translateZ(8px);
+  transform-style: preserve-3d;
+  opacity: .8;
+}
+.hero .hero-copy,
+.hero .hero-top,
+.hero .hero-foot,
+.hero .city-hud,
+.hero .ambient-switch {
+  text-shadow: 0 1px 0 rgba(0, 0, 0, .4);
+}
+.hero .hero-copy {
+  filter: drop-shadow(0 16px 26px rgba(0, 0, 0, .17));
+}
+.hero .hero-copy::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: -2.5vw;
+  top: 15%;
+  width: min(43vw, 540px);
+  height: 64%;
+  border-left: 1px solid rgba(202, 238, 255, .1);
+  border-bottom: 1px solid rgba(202, 238, 255, .07);
+  background: linear-gradient(110deg, rgba(5, 9, 22, .16), transparent 68%);
+  box-shadow: 20px 22px 55px rgba(0, 0, 0, .1);
+  pointer-events: none;
+}
+
+/* The live instrument reads as a mounted object, without taking over its own tilt. */
+.touch-instrument {
+  filter: drop-shadow(0 22px 30px rgba(0, 0, 0, .22));
+}
+.touch-stage {
+  border: 1px solid rgba(186, 238, 255, .1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .08),
+    inset 0 -30px 50px rgba(0, 0, 0, .12),
+    0 18px 45px rgba(0, 0, 0, .11);
+}
+.touch-stage::before,
+.touch-stage::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  border-radius: inherit;
+}
+.touch-stage::before {
+  inset: 7%;
+  border: 1px solid rgba(170, 229, 255, .1);
+  clip-path: polygon(0 0, 25% 0, 25% 1px, 1px 1px, 1px 25%, 0 25%);
+}
+.touch-stage::after {
+  inset: 15% 8%;
+  background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, .07) 48%, transparent 57%);
+  opacity: .65;
+}
+
+/* Stories: a physical card stack, while leaving existing story animation/transform intact. */
+.stories {
+  perspective: 1000px;
+}
+.story {
+  filter: drop-shadow(0 14px 16px rgba(0, 0, 0, .13));
+}
+#stories .card-visual {
+  transform-style: preserve-3d;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, .08),
+    0 10px 0 -7px rgba(7, 9, 20, .72),
+    0 17px 0 -13px rgba(7, 9, 20, .46),
+    0 18px 26px rgba(0, 0, 0, .22);
+}
+.card-visual::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 10px;
+  border: 1px solid rgba(227, 247, 255, .14);
+  clip-path: polygon(0 0, 18% 0, 18% 1px, 1px 1px, 1px 18%, 0 18%, 0 0, 100% 100%, 82% 100%, 82% calc(100% - 1px), calc(100% - 1px) calc(100% - 1px), calc(100% - 1px) 82%, 100% 82%, 100% 100%);
+  pointer-events: none;
+  opacity: .8;
+}
+.story-meta {
+  position: relative;
+}
+.story-meta::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -9px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--card-accent, var(--cyan)), transparent 68%);
+  opacity: .28;
+}
+
+/* The category console is a shallow control deck, not a glowing block. */
+.category-console {
+  border: 1px solid var(--depth-edge);
+  background: linear-gradient(145deg, rgba(20, 27, 48, .72), rgba(8, 11, 25, .64));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .07),
+    14px 17px 0 -13px rgba(3, 5, 14, .8),
+    0 22px 35px rgba(0, 0, 0, .17);
+}
+.category-console::after {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgba(174, 230, 255, .07);
+  pointer-events: none;
+}
+.category-channel {
+  position: relative;
+  z-index: 1;
+}
+
+/* Featured story: frame the art as a mounted print. */
+.feature-transmission {
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, .08),
+    14px 16px 0 -12px rgba(4, 6, 16, .82),
+    0 24px 42px rgba(0, 0, 0, .2);
+  transform-style: preserve-3d;
+}
+.feature-art {
+  box-shadow: inset -18px 0 35px rgba(0, 0, 0, .2);
+}
+.feature-copy {
+  background: linear-gradient(135deg, rgba(255, 255, 255, .025), transparent 42%);
+}
+
+/* Districts are doors with a small physical lip, rather than floating cards. */
+.district-grid {
+  perspective: 900px;
+}
+.district-grid button {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .06),
+    0 8px 0 -6px rgba(2, 4, 13, .65);
+  transform-style: preserve-3d;
+}
+.district-grid button::after {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border: 1px solid color-mix(in srgb, var(--district-color, var(--cyan)) 20%, transparent);
+  pointer-events: none;
+  opacity: .7;
+}
+
+/* The manifesto signal has a physical bezel around the existing orbital art. */
+.signal-art {
+  border: 1px solid rgba(190, 231, 255, .14);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .08),
+    inset 0 -30px 45px rgba(0, 0, 0, .14),
+    0 17px 32px rgba(0, 0, 0, .19);
+}
+.signal-art::before {
+  content: "";
+  position: absolute;
+  inset: 13px;
+  border: 1px solid rgba(190, 231, 255, .1);
+  pointer-events: none;
+}
+
+/* Only fine pointers receive a modest hover lean; touch and coarse pointers do not. */
+@media (hover: hover) and (pointer: fine) and (min-width: 701px) {
+  #stories .card-visual:hover {
+    transform: translateY(-2px) rotateX(.65deg) rotateY(-.65deg);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, .1),
+      0 10px 0 -7px rgba(7, 9, 20, .72),
+      0 18px 0 -13px rgba(7, 9, 20, .46),
+      0 23px 32px rgba(0, 0, 0, .28);
+  }
+  .district-grid button:hover {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .11), 0 10px 0 -6px rgba(2, 4, 13, .55);
+  }
+}
+
+.reduce-motion .card-visual:hover {
+  transform: none;
+}
+
+@media (max-width: 700px) {
+  .hero { perspective: none; }
+  .hero .hero-copy::before { left: -6vw; width: 82vw; height: 58%; opacity: .65; }
+  .touch-stage { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .07), 0 12px 26px rgba(0, 0, 0, .16); }
+  .category-console { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06), 0 13px 25px rgba(0, 0, 0, .16); }
+  .feature-transmission { box-shadow: 0 1px 0 rgba(255, 255, 255, .08), 0 16px 28px rgba(0, 0, 0, .18); }
+  .district-grid button { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06), 0 6px 0 -5px rgba(2, 4, 13, .65); }
+}
+
+.reduce-motion .hero .hero-grid,
+.reduce-motion .card-visual,
+.reduce-motion .feature-transmission,
+.reduce-motion .district-grid button,
+.reduce-motion .signal-art {
+  transform-style: flat;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero .hero-grid,
+  .card-visual,
+  .feature-transmission,
+  .district-grid button,
+  .signal-art { transform-style: flat; }
+  #stories .card-visual:hover { transform: none; }
+  .hero .city::after { opacity: .45; }
+}
