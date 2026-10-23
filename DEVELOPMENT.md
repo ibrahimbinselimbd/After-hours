@@ -32,6 +32,17 @@ Optional browser scripts in `tests/` may require Playwright, Chromium, Pillow, o
 
 Unit tests that use explicit stubs or mock responses do **not** prove the quality or speed of a real AI model. The Passport & Visa Photo Studio background-removal model must be installed and tested on the approved self-hosted server separately. Test upload limits, concurrency, temporary-file cleanup, privacy headers/logging, and error handling before enabling it for public users.
 
+## Manual production deployment to Cloudflare
+
+Production deployment is deliberately manual. Before deploying, add these repository Actions secrets in Settings → Secrets and variables → Actions:
+
+- `CLOUDFLARE_API_TOKEN`: a Cloudflare API token with permission to deploy Workers and manage the required Worker assets for this account.
+- `CLOUDFLARE_ACCOUNT_ID`: the Cloudflare account ID that owns the `afterhours-district` Worker.
+
+Never paste either value into chat or commit it to the repository. After adding the secrets, open Actions → Deploy AFTERHOURS to Cloudflare Workers → Run workflow on `main`. Verify the workflow succeeds, then check the live Worker URL and test `/tools/` and `/tools/passport-photo-studio/`.
+
+The Passport & Visa Photo Studio's browser-local crop, resize, JPEG export and print-sheet functions do not require the AI service. AI background removal remains unavailable until the self-hosted model service is deployed and `PASSPORT_PHOTO_SERVICE_ORIGIN` plus `PASSPORT_PHOTO_SERVICE_TOKEN` are configured as Worker secrets/variables.
+
 ## Secrets and user data
 
 - Never commit API keys, SSH private keys, VPS credentials, real user photos, test uploads, or `.env` files.
