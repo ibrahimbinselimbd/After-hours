@@ -461,23 +461,20 @@ header .tools-entry small:where(:not(.ah-footer):not(.ah-footer *)){font-size:11
 @media (max-width: 700px){.hero-buttons .primary:where(:not(.ah-footer):not(.ah-footer *)){font-size:12.88px}}
 @media (max-width: 700px){.hero-buttons .text-button:where(:not(.ah-footer):not(.ah-footer *)){font-size:12.88px}}
 
-/* Mobile homepage navigation: compact labels with a restrained 3D edge. */
+/* Mobile homepage navigation: compact text links without card chrome. */
 @media (max-width:700px) {
   header #home-navigation > a {
-    border: 1px solid rgba(220,229,246,.36);
-    border-radius: 3px;
-    background: rgba(255,255,255,.018);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.18), inset 0 -1px 0 rgba(80,90,110,.28), 0 1px 0 rgba(255,255,255,.08);
-    transition: border-color .18s ease, box-shadow .18s ease;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    min-height: 44px;
+    transition: color .18s ease;
   }
   header #home-navigation > a:nth-child(1) { font-size: 13.5px; }
   header #home-navigation > a:nth-child(2) { font-size: 12.5px; }
   header #home-navigation > a:nth-child(3) { font-size: 13px; }
   header #home-navigation > a:nth-child(4) { font-size: 12px; }
-  header #home-navigation > a:hover, header #home-navigation > a:focus-visible {
-    border-color: rgba(235,241,252,.52);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.22), inset 0 -1px 0 rgba(80,90,110,.34), 0 1px 0 rgba(255,255,255,.10);
-  }
   header #home-navigation > a:focus-visible { outline: 2px solid rgba(220,229,246,.48); outline-offset: 2px; }
 }
 @media (prefers-reduced-motion: reduce) { header #home-navigation > a { transition: none; } }
