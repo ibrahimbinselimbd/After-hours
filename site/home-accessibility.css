@@ -72,3 +72,413 @@ header .tools-entry small {
 @media (min-width: 701px) and (max-width: 1000px) {
   .hero .ambient-switch { position: relative; inset: auto; align-self: flex-end; margin: 8px 0 16px; }
 }
+
+/* Homepage-only type scale: one step smaller for all explicit non-footer text; .ah-footer excluded. */
+:where(body > :not(.ah-footer)){font-size:92%}
+.brand:where(:not(.ah-footer):not(.ah-footer *)){font-size:17.48px}
+.brand i:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+.brand-mark:where(:not(.ah-footer):not(.ah-footer *)){font-size:36.8px}
+nav:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+#search-open:where(:not(.ah-footer):not(.ah-footer *)){font-size:18.4px}
+#search-open span:where(:not(.ah-footer):not(.ah-footer *)){font-size:10.12px}
+kbd:where(:not(.ah-footer):not(.ah-footer *)){font-size:10.12px}
+.motion:where(:not(.ah-footer):not(.ah-footer *)){font-size:19.32px}
+.hero-top:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}
+.hero-foot:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}
+.coordinates:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}
+.eyebrow:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}
+.issue:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+h1:where(:not(.ah-footer):not(.ah-footer *)){font-size:clamp(71.76px, 9.016vw, 147.2px)}
+.hero p:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.96px}
+.primary:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.primary span:where(:not(.ah-footer):not(.ah-footer *)){font-size:18.4px}
+.text-button:where(:not(.ah-footer):not(.ah-footer *)){font-size:10.12px}
+.discovery-icon:where(:not(.ah-footer):not(.ah-footer *)){font-size:41.4px}
+.discovery strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+.discovery small:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+.discovery #discovery-count:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+.hotspot > span:where(:not(.ah-footer):not(.ah-footer *)){font-size:21.16px}
+.hotspot small:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+.vertical-label:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+.hero-foot:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+.scroll-cue b:where(:not(.ah-footer):not(.ah-footer *)){font-size:18.4px}
+.ticker > div:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+.ticker span:where(:not(.ah-footer):not(.ah-footer *)){font-size:18.4px}
+h2:where(:not(.ah-footer):not(.ah-footer *)){font-size:44.16px}
+.editorial-note:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+.filter-row button:where(:not(.ah-footer):not(.ah-footer *)){font-size:10.12px}
+.filter-row button span:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+.art-word:where(:not(.ah-footer):not(.ah-footer *)){font-size:78.2px}
+.art-city .art-word:where(:not(.ah-footer):not(.ah-footer *)){font-size:62.56px}
+.visual-label:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+.read-arrow:where(:not(.ah-footer):not(.ah-footer *)){font-size:22.08px}
+.art-ai .art-word:where(:not(.ah-footer):not(.ah-footer *)){font-size:42.32px}
+.art-gear .art-word:where(:not(.ah-footer):not(.ah-footer *)){font-size:38.64px}
+.art-crypto .art-word:where(:not(.ah-footer):not(.ah-footer *)){font-size:38.64px}
+.story-meta:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+.bookmark:where(:not(.ah-footer):not(.ah-footer *)){font-size:16.56px}
+.story-title:where(:not(.ah-footer):not(.ah-footer *)){font-size:26.68px}
+.story p:where(:not(.ah-footer):not(.ah-footer *)){font-size:10.12px}
+.section-heading > p:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.district-grid span:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+.district-grid strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:46.92px}
+.district-grid i:where(:not(.ah-footer):not(.ah-footer *)){font-size:23px}
+.district-grid small:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}
+.manifesto h2:where(:not(.ah-footer):not(.ah-footer *)){font-size:61.64px}
+.manifesto p:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.core:where(:not(.ah-footer):not(.ah-footer *)){font-size:110.4px}
+.signal-art small:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+footer > .brand:where(:not(.ah-footer):not(.ah-footer *)){font-size:14.72px}
+footer > span:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+footer > small:where(:not(.ah-footer):not(.ah-footer *)){font-size:6.44px}
+footer > a:last-child:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+.dialog-close:where(:not(.ah-footer):not(.ah-footer *)){font-size:16.56px}
+#reader h2:where(:not(.ah-footer):not(.ah-footer *)){font-size:49.68px}
+#reader h3:where(:not(.ah-footer):not(.ah-footer *)){font-size:16.56px}
+#reader p:where(:not(.ah-footer):not(.ah-footer *)){font-size:12.88px}
+.reader-note:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}
+.search-head:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+#search-input:where(:not(.ah-footer):not(.ah-footer *)){font-size:22.08px}
+.search-result span:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+.search-hint:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+#terminal p:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+#terminal-form:where(:not(.ah-footer):not(.ah-footer *)){font-size:10.12px}
+#terminal-output:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+#toast:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+@media (max-width: 1000px){.district-grid strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:39.56px}}
+@media (max-width: 1000px){.manifesto h2:where(:not(.ah-footer):not(.ah-footer *)){font-size:53.36px}}
+@media (max-width: 700px){.brand:where(:not(.ah-footer):not(.ah-footer *)){font-size:13.8px}}
+@media (max-width: 700px){.brand-mark:where(:not(.ah-footer):not(.ah-footer *)){font-size:31.28px}}
+@media (max-width: 700px){.hero-top:where(:not(.ah-footer):not(.ah-footer *)){font-size:6.44px}}
+@media (max-width: 700px){.hero-copy > .eyebrow:where(:not(.ah-footer):not(.ah-footer *)){font-size:6.44px}}
+@media (max-width: 700px){h1:where(:not(.ah-footer):not(.ah-footer *)){font-size:clamp(55.2px, 11.776vw, 82.8px)}}
+@media (max-width: 700px){.hero p:where(:not(.ah-footer):not(.ah-footer *)){font-size:10.12px}}
+@media (max-width: 700px){.primary:where(:not(.ah-footer):not(.ah-footer *)){font-size:10.12px}}
+@media (max-width: 700px){.text-button:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}}
+@media (max-width: 700px){.discovery-icon:where(:not(.ah-footer):not(.ah-footer *)){font-size:29.44px}}
+@media (max-width: 700px){.discovery small:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}}
+@media (max-width: 700px){.hero-foot:where(:not(.ah-footer):not(.ah-footer *)){font-size:5.52px}}
+@media (max-width: 700px){.vertical-label:where(:not(.ah-footer):not(.ah-footer *)){font-size:5.52px}}
+@media (max-width: 700px){.ticker > div:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}}
+@media (max-width: 700px){h2:where(:not(.ah-footer):not(.ah-footer *)){font-size:33.12px}}
+@media (max-width: 700px){.eyebrow:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}}
+@media (max-width: 700px){.filter-row button:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}}
+@media (max-width: 700px){.story-title:where(:not(.ah-footer):not(.ah-footer *)){font-size:27.6px}}
+@media (max-width: 700px){.story p:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}}
+@media (max-width: 700px){.story-meta:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}}
+@media (max-width: 700px){.section-heading > p:where(:not(.ah-footer):not(.ah-footer *)){font-size:10.12px}}
+@media (max-width: 700px){.district-grid strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:40.48px}}
+@media (max-width: 700px){.district-grid small:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}}
+@media (max-width: 700px){.manifesto h2:where(:not(.ah-footer):not(.ah-footer *)){font-size:48.76px}}
+@media (max-width: 700px){.manifesto p:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}}
+@media (max-width: 700px){footer > span:where(:not(.ah-footer):not(.ah-footer *)){font-size:6.44px}}
+@media (max-width: 700px){footer > a:last-child:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}}
+@media (max-width: 700px){#reader h2:where(:not(.ah-footer):not(.ah-footer *)){font-size:35.88px}}
+@media (max-width: 700px){#reader p:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.96px}}
+@media (max-width: 700px){#terminal-form:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}}
+.hud-coordinate:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+.hud-coordinate strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:69.92px}
+.hud-caption:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+.city-status:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+.ambient-switch > span:where(:not(.ah-footer):not(.ah-footer *)){font-size:6.44px}
+.ambient-switch button:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+.live-experience p:where(:not(.ah-footer):not(.ah-footer *)){font-size:10.12px}
+.live-experience strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+.feature-art > span:where(:not(.ah-footer):not(.ah-footer *)){font-size:73.6px}
+.feature-copy h2:where(:not(.ah-footer):not(.ah-footer *)){font-size:55.2px}
+.feature-copy h3:where(:not(.ah-footer):not(.ah-footer *)){font-size:15.64px}
+.feature-copy p:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.96px}
+.feature-meta:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+.feature-tag:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+.read-full:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+.motion-note:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+@media (min-width: 1200px){.hero h1:where(:not(.ah-footer):not(.ah-footer *)){font-size:clamp(92px, 9.66vw, 156.4px)}}
+@media (max-width: 1000px){.feature-copy h2:where(:not(.ah-footer):not(.ah-footer *)){font-size:44.16px}}
+@media (max-width: 700px){.hud-coordinate strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:55.2px}}
+@media (max-width: 700px){.hud-caption:where(:not(.ah-footer):not(.ah-footer *)){font-size:5.52px}}
+@media (max-width: 700px){.hero h1:where(:not(.ah-footer):not(.ah-footer *)){font-size:clamp(53.36px, 11.776vw, 82.8px)}}
+@media (max-width: 700px){.hero p:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}}
+@media (max-width: 700px){.ambient-switch > span:where(:not(.ah-footer):not(.ah-footer *)){font-size:5.52px}}
+@media (max-width: 700px){.ambient-switch button:where(:not(.ah-footer):not(.ah-footer *)){font-size:6.44px}}
+@media (max-width: 700px){.city-status:where(:not(.ah-footer):not(.ah-footer *)){font-size:6.44px}}
+@media (max-width: 700px){.live-experience p:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}}
+@media (max-width: 700px){.feature-art > span:where(:not(.ah-footer):not(.ah-footer *)){font-size:66.24px}}
+@media (max-width: 700px){.feature-copy h2:where(:not(.ah-footer):not(.ah-footer *)){font-size:44.16px}}
+@media (max-width: 700px){.feature-copy h3:where(:not(.ah-footer):not(.ah-footer *)){font-size:14.72px}}
+@media (max-width: 700px){.feature-copy p:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}}
+.touch-heading:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}
+.core-word:where(:not(.ah-footer):not(.ah-footer *)){font-size:60.72px}
+.core-word small:where(:not(.ah-footer):not(.ah-footer *)){font-size:6.44px}
+.touch-hand:where(:not(.ah-footer):not(.ah-footer *)){font-size:22.08px}
+.touch-instruction strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}
+.touch-instruction small:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+.touch-meter:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+@media (max-width: 1000px) and (min-width: 701px){.hero h1:where(:not(.ah-footer):not(.ah-footer *)){font-size:82.8px}}
+@media (max-width: 1000px) and (min-width: 701px){.touch-instruction small:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}}
+@media (max-width: 700px){.hero .hero-copy > .eyebrow:where(:not(.ah-footer):not(.ah-footer *)){font-size:6.44px}}
+@media (max-width: 700px){.hero h1:where(:not(.ah-footer):not(.ah-footer *)){font-size:clamp(51.52px, 12.604vw, 82.8px)}}
+@media (max-width: 700px){.touch-heading:where(:not(.ah-footer):not(.ah-footer *)){font-size:6.44px}}
+@media (max-width: 700px){.core-word:where(:not(.ah-footer):not(.ah-footer *)){font-size:53.36px}}
+@media (max-width: 700px){.core-word small:where(:not(.ah-footer):not(.ah-footer *)){font-size:5.52px}}
+@media (max-width: 700px){.touch-instruction strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}}
+@media (max-width: 700px){.touch-instruction small:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}}
+@media (max-width: 700px){.touch-meter:where(:not(.ah-footer):not(.ah-footer *)){font-size:6.44px}}
+@media (max-width: 700px){.hero .hero-bottom p:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}}
+@media (max-width: 700px){.hero .hero-foot:where(:not(.ah-footer):not(.ah-footer *)){font-size:5.52px}}
+@media (max-width: 700px){.live-experience strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}}
+.story p:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.chromatic-stamp:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+@media (max-width: 700px){.chromatic-stamp:where(:not(.ah-footer):not(.ah-footer *)){font-size:6.44px}}
+@media (max-width: 700px){.live-experience p:where(:not(.ah-footer):not(.ah-footer *)){font-size:10.12px}}
+@media (max-width: 700px){.story p:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.96px}}
+.frequency-feed .section-heading .eyebrow:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+.console-top:where(:not(.ah-footer):not(.ah-footer *))::before{font-size:7.36px}
+.console-top > small:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}
+.console-title h3:where(:not(.ah-footer):not(.ah-footer *)){font-size:18.4px}
+.console-caption:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}
+.channel-copy strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.96px}
+.channel-copy small:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}
+.channel-count:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+.console-footer:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+.launch-copy strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.96px}
+.launch-copy small:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+.feed-status:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+.district-grid span:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}
+.district-grid strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:clamp(29.44px, 3.68vw, 48.76px)}
+.district-grid small:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+.district-grid i:where(:not(.ah-footer):not(.ah-footer *)){font-size:23.92px}
+.district-index:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}
+.search-head label:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+.search-version:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}
+.search-title h2:where(:not(.ah-footer):not(.ah-footer *)){font-size:clamp(29.44px, 5.52vw, 53.36px)}
+.search-subtitle:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.search-field-icon:where(:not(.ah-footer):not(.ah-footer *)){font-size:19.32px}
+#search-input:where(:not(.ah-footer):not(.ah-footer *)){font-size:13.8px}
+#search-clear:where(:not(.ah-footer):not(.ah-footer *)){font-size:15.64px}
+.search-chips button:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}
+#search-summary:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+.result-number:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+.result-copy span:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+.result-copy strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:14.72px}
+.result-copy small:where(:not(.ah-footer):not(.ah-footer *)){font-size:10.12px}
+.result-arrow:where(:not(.ah-footer):not(.ah-footer *)){font-size:20.24px}
+.search-empty strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:18.4px}
+.search-empty p:where(:not(.ah-footer):not(.ah-footer *)){font-size:10.12px}
+.search-footer:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}
+#search-trends button:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+.search-hint:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}
+@media (max-width: 760px){.district-grid strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:36.8px}}
+.console-top > span:first-child:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}
+h3.console-title:where(:not(.ah-footer):not(.ah-footer *)){font-size:29.44px}
+.console-caption:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+.channel-copy strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:13.8px}
+.channel-copy small:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+.search-orbit:where(:not(.ah-footer):not(.ah-footer *)){font-size:21.16px}
+.launch-copy strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:14.72px}
+.frequency-search-launch kbd:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.district-grid .district-index:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+.search-version:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+h2.search-title:where(:not(.ah-footer):not(.ah-footer *)){font-size:clamp(31.28px, 4.232vw, 49.68px)}
+#search-input:where(:not(.ah-footer):not(.ah-footer *)){font-size:13.8px}
+#search-trends > span:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+.search-result .result-number:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+.search-result .result-arrow:where(:not(.ah-footer):not(.ah-footer *)){font-size:22.08px}
+.result-copy strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:19.32px}
+@media (max-width: 760px){h3.console-title:where(:not(.ah-footer):not(.ah-footer *)){font-size:26.68px}}
+@media (max-width: 500px){.channel-copy strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.96px}}
+@media (max-width: 500px){.channel-copy small:where(:not(.ah-footer):not(.ah-footer *)){font-size:5.52px}}
+@media (max-width: 500px){.channel-count:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}}
+@media (max-width: 500px){.console-footer:where(:not(.ah-footer):not(.ah-footer *)){font-size:6.44px}}
+@media (max-width: 500px){.launch-copy strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:12.88px}}
+@media (max-width: 500px){.launch-copy small:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}}
+@media (max-width: 500px){.district-grid strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:33.12px}}
+@media (max-width: 500px){.search-head label:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}}
+@media (max-width: 500px){h2.search-title:where(:not(.ah-footer):not(.ah-footer *)){font-size:33.12px}}
+@media (max-width: 500px){.search-subtitle:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}}
+@media (max-width: 500px){#search-input:where(:not(.ah-footer):not(.ah-footer *)){font-size:14.72px}}
+@media (max-width: 500px){.search-chips button:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}}
+@media (max-width: 500px){#search-summary:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}}
+@media (max-width: 500px){.result-copy strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:17.48px}}
+#search-dialog .search-brand:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+#search-dialog .search-version:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}
+#search-dialog h2.search-title:where(:not(.ah-footer):not(.ah-footer *)){font-size:clamp(25.76px, 3.68vw, 33.12px)}
+#search-dialog .search-subtitle:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+#search-dialog #search-input:where(:not(.ah-footer):not(.ah-footer *)){font-size:14.72px}
+#search-dialog #search-clear:where(:not(.ah-footer):not(.ah-footer *)){font-size:14.72px}
+#search-dialog .search-chips button:where(:not(.ah-footer):not(.ah-footer *)){font-size:10.12px}
+#search-dialog #search-trends > span:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}
+#search-dialog #search-trends button:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+#search-dialog #search-summary:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+#search-dialog .search-result .result-copy > span:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}
+#search-dialog .search-result .result-copy strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:13.8px}
+#search-dialog .search-result .result-copy small:where(:not(.ah-footer):not(.ah-footer *)){font-size:10.12px}
+#search-dialog .search-result .result-arrow:where(:not(.ah-footer):not(.ah-footer *)){font-size:18.4px}
+#search-dialog .search-footer:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}
+#search-dialog .search-empty strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:17.48px}
+#search-dialog .search-empty p:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+@media (max-width: 600px){#search-dialog .search-brand:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}}
+@media (max-width: 600px){#search-dialog h2.search-title:where(:not(.ah-footer):not(.ah-footer *)){font-size:25.76px}}
+@media (max-width: 600px){#search-dialog .search-subtitle:where(:not(.ah-footer):not(.ah-footer *)){font-size:10.12px}}
+@media (max-width: 600px){#search-dialog #search-summary:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}}
+@media (max-width: 600px){#search-dialog .search-result .result-copy strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:12.88px}}
+@media (max-width: 600px){#search-dialog .search-result .result-copy > span:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}}
+@media (max-width: 600px){#search-dialog .search-footer:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}}
+.hero h1:where(:not(.ah-footer):not(.ah-footer *)){font-size:clamp(69.92px, 6.9vw, 101.2px)}
+.hero .touch-heading:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+.hero .touch-instruction strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+.hero .touch-instruction small:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+.hero .touch-hand:where(:not(.ah-footer):not(.ah-footer *)){font-size:17.48px}
+.hero .touch-meter:where(:not(.ah-footer):not(.ah-footer *)){font-size:6.44px}
+.hero .hero-foot:where(:not(.ah-footer):not(.ah-footer *)){font-size:6.44px}
+.footer-intro .brand:where(:not(.ah-footer):not(.ah-footer *)){font-size:23px}
+.footer-intro p:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.96px}
+.footer-signature:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+.footer-column h3:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+.footer-column a:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.96px}
+.footer-note:where(:not(.ah-footer):not(.ah-footer *)){font-size:10.12px}
+.footer-note b:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}
+.footer-bottom:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+@media (max-width: 1000px) and (min-width: 701px){.hero h1:where(:not(.ah-footer):not(.ah-footer *)){font-size:71.76px}}
+@media (max-width: 1000px) and (min-width: 701px){.hero .touch-heading:where(:not(.ah-footer):not(.ah-footer *)){font-size:5.52px}}
+@media (max-width: 700px){.hero .hero-top:where(:not(.ah-footer):not(.ah-footer *)){font-size:5.52px}}
+@media (max-width: 700px){.hero .hero-copy > .eyebrow:where(:not(.ah-footer):not(.ah-footer *)){font-size:5.52px}}
+@media (max-width: 700px){.hero h1:where(:not(.ah-footer):not(.ah-footer *)){font-size:clamp(46.92px, 11.408vw, 71.76px)}}
+@media (max-width: 700px){.hero .touch-heading:where(:not(.ah-footer):not(.ah-footer *)){font-size:5.52px}}
+@media (max-width: 700px){.hero .touch-instruction strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:6.44px}}
+@media (max-width: 700px){.hero .touch-instruction small:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}}
+@media (max-width: 700px){.hero .hero-bottom p:where(:not(.ah-footer):not(.ah-footer *)){font-size:10.12px}}
+@media (max-width: 700px){.hero-buttons .primary:where(:not(.ah-footer):not(.ah-footer *)){font-size:10.12px}}
+@media (max-width: 700px){.hero-buttons .text-button:where(:not(.ah-footer):not(.ah-footer *)){font-size:10.12px}}
+@media (max-width: 700px){.hero .ambient-switch:where(:not(.ah-footer):not(.ah-footer *)){font-size:5.52px}}
+@media (max-width: 700px){.hero .ambient-switch button:where(:not(.ah-footer):not(.ah-footer *)){font-size:6.44px}}
+@media (max-width: 700px){.hero .hero-foot:where(:not(.ah-footer):not(.ah-footer *)){font-size:4.6px}}
+@media (max-width: 700px){.live-experience strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}}
+@media (max-width: 700px){.live-experience p:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}}
+@media (max-width: 700px){.footer-intro p:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}}
+@media (max-width: 700px){.footer-column h3:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}}
+@media (max-width: 700px){.footer-column a:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}}
+@media (max-width: 700px){.footer-note:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}}
+@media (max-width: 700px){.footer-bottom:where(:not(.ah-footer):not(.ah-footer *)){font-size:6.44px}}
+.edition-note:where(:not(.ah-footer):not(.ah-footer *)){font-size:12.88px}
+.ah-footer__section-top h2:where(:not(.ah-footer):not(.ah-footer *)){font-size:29.44px}
+.ah-footer__all-link:where(:not(.ah-footer):not(.ah-footer *)){font-size:10.12px}
+.ah-footer__art > span:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+.ah-footer__cross:where(:not(.ah-footer):not(.ah-footer *)){font-size:84.64px}
+.ah-footer__story small:where(:not(.ah-footer):not(.ah-footer *)){font-size:6.44px}
+.ah-footer__story h3:where(:not(.ah-footer):not(.ah-footer *)){font-size:25.76px}
+.ah-footer__story p:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}
+.ah-footer__arrow:where(:not(.ah-footer):not(.ah-footer *)){font-size:13.8px}
+.ah-footer__station-label:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}
+.ah-footer__station-top button:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}
+.ah-footer__eyebrow:where(:not(.ah-footer):not(.ah-footer *)){font-size:6.44px}
+.ah-footer__intro h2:where(:not(.ah-footer):not(.ah-footer *)){font-size:clamp(34.96px, 3.864vw, 59.8px)}
+.ah-footer__description:where(:not(.ah-footer):not(.ah-footer *)){font-size:10.12px}
+.ah-footer__frequency:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+.ah-footer__world:where(:not(.ah-footer):not(.ah-footer *))::before{font-size:6.44px}
+.ah-footer__world:where(:not(.ah-footer):not(.ah-footer *))::after{font-size:9.2px}
+.ah-footer__world-tag:where(:not(.ah-footer):not(.ah-footer *)){font-size:5.52px}
+.ah-footer__world-help:where(:not(.ah-footer):not(.ah-footer *)){font-size:5.52px}
+.ah-footer__links h3:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+.ah-footer__links a:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+.ah-footer__channel-note:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}
+.ah-footer__policy-note:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+.ah-footer__wordmark:where(:not(.ah-footer):not(.ah-footer *)){font-size:25.76px}
+.ah-footer__wordmark sup:where(:not(.ah-footer):not(.ah-footer *)){font-size:6.44px}
+.ah-footer__bottom p:where(:not(.ah-footer):not(.ah-footer *)){font-size:6.44px}
+.ah-footer__back:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+.ah-footer__fineprint:where(:not(.ah-footer):not(.ah-footer *)){font-size:6.44px}
+@media (max-width: 1050px){.ah-footer__story h3:where(:not(.ah-footer):not(.ah-footer *)){font-size:23.92px}}
+@media (max-width: 1050px){.ah-footer__story small:where(:not(.ah-footer):not(.ah-footer *)){font-size:5.52px}}
+@media (max-width: 1050px){.ah-footer__intro h2:where(:not(.ah-footer):not(.ah-footer *)){font-size:51.52px}}
+@media (max-width: 1050px){.ah-footer__links a:where(:not(.ah-footer):not(.ah-footer *)){font-size:10.12px}}
+@media (max-width: 600px){.ah-footer__section-top h2:where(:not(.ah-footer):not(.ah-footer *)){font-size:25.76px}}
+@media (max-width: 600px){.ah-footer__all-link:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}}
+@media (max-width: 600px){.ah-footer__cross:where(:not(.ah-footer):not(.ah-footer *)){font-size:64.4px}}
+@media (max-width: 600px){.ah-footer__story h3:where(:not(.ah-footer):not(.ah-footer *)){font-size:21.16px}}
+@media (max-width: 600px){.ah-footer__story small:where(:not(.ah-footer):not(.ah-footer *)){font-size:5.98px}}
+@media (max-width: 600px){.ah-footer__story p:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}}
+@media (max-width: 600px){.ah-footer__station-label:where(:not(.ah-footer):not(.ah-footer *)){font-size:6.44px}}
+@media (max-width: 600px){.ah-footer__eyebrow:where(:not(.ah-footer):not(.ah-footer *)){font-size:5.52px}}
+@media (max-width: 600px){.ah-footer__intro h2:where(:not(.ah-footer):not(.ah-footer *)){font-size:40.48px}}
+@media (max-width: 600px){.ah-footer__description:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}}
+@media (max-width: 600px){.ah-footer__frequency:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}}
+@media (max-width: 600px){.ah-footer__world-tag:where(:not(.ah-footer):not(.ah-footer *)){font-size:4.14px}}
+@media (max-width: 600px){.ah-footer__world-help:where(:not(.ah-footer):not(.ah-footer *)){font-size:5.06px}}
+@media (max-width: 600px){.ah-footer__links > div:last-child .ah-footer__channel-note:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}}
+@media (max-width: 600px){.ah-footer__links h3:where(:not(.ah-footer):not(.ah-footer *)){font-size:6.44px}}
+@media (max-width: 600px){.ah-footer__links a:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}}
+@media (max-width: 600px){.ah-footer__wordmark:where(:not(.ah-footer):not(.ah-footer *)){font-size:22.08px}}
+@media (max-width: 600px){.ah-footer__bottom p:where(:not(.ah-footer):not(.ah-footer *)){font-size:5.52px}}
+@media (max-width: 600px){.ah-footer__back:where(:not(.ah-footer):not(.ah-footer *)){font-size:8.28px}}
+@media (max-width: 600px){.ah-footer__fineprint:where(:not(.ah-footer):not(.ah-footer *)){font-size:5.52px}}
+.ah-footer__feedback-status:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.96px}
+.ah-footer__feedback-status small:where(:not(.ah-footer):not(.ah-footer *)){font-size:10.12px}
+header .tools-entry:where(:not(.ah-footer):not(.ah-footer *)){font-size:9.2px}
+header .tools-entry small:where(:not(.ah-footer):not(.ah-footer *)){font-size:7.36px}
+header #home-navigation:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.96px}
+.hero .hero-top:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.hero .hero-copy > .eyebrow:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.hero .touch-heading:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.hero .touch-instruction strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.hero .touch-instruction small:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.hero .touch-meter:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.hero .hero-foot:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.hero .ambient-switch > span:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.hero .ambient-switch button:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.live-experience strong:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.live-experience p:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.live-experience .motion-note:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.frequency-feed .section-heading .eyebrow:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.section-heading .editorial-note:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.console-top:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.console-caption:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.channel-copy small:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.channel-count:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.console-bottom:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.console-footer:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.feed-status:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.story-meta:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.card-bottom:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.search-subtitle:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.search-footer:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.search-result .result-copy > span:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+header .tools-entry:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+header #search-open span:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.feature-tag:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.feature-copy .eyebrow:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.district-number:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.districts .eyebrow:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.about .eyebrow:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.footer-signature:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.footer-column h3:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.footer-note:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.footer-note b:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+.footer-bottom:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+header .tools-entry small:where(:not(.ah-footer):not(.ah-footer *)){font-size:11.04px}
+@media (max-width: 700px){header #home-navigation:where(:not(.ah-footer):not(.ah-footer *)){font-size:14.72px}}
+@media (max-width: 700px){.hero .hero-bottom p:where(:not(.ah-footer):not(.ah-footer *)){font-size:12.88px}}
+@media (max-width: 700px){.live-experience p:where(:not(.ah-footer):not(.ah-footer *)){font-size:12.88px}}
+@media (max-width: 700px){.hero-buttons .primary:where(:not(.ah-footer):not(.ah-footer *)){font-size:12.88px}}
+@media (max-width: 700px){.hero-buttons .text-button:where(:not(.ah-footer):not(.ah-footer *)){font-size:12.88px}}
+
+/* Homepage mobile nav: compact labels with a subtle luminous bevel. */
+@media (max-width:700px) {
+  header #home-navigation > a {
+    --nav-edge: rgba(143,248,255,.42);
+    --nav-bevel: rgba(143,248,255,.18);
+    --nav-tint: rgba(143,248,255,.045);
+    --nav-glow: rgba(143,248,255,.10);
+    border: 1px solid var(--nav-edge);
+    border-radius: 4px;
+    background: linear-gradient(155deg,var(--nav-tint),rgba(255,255,255,.012) 70%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.30), inset 0 -1px 0 var(--nav-bevel), 0 2px 0 var(--nav-bevel), 0 5px 12px var(--nav-glow);
+    transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+  }
+  header #home-navigation > a:nth-child(1) { font-size: 13.5px; --nav-edge: rgba(143,248,255,.50); --nav-bevel: rgba(143,248,255,.22); --nav-tint: rgba(143,248,255,.055); --nav-glow: rgba(143,248,255,.12); }
+  header #home-navigation > a:nth-child(2) { font-size: 12.5px; --nav-edge: rgba(191,156,255,.46); --nav-bevel: rgba(191,156,255,.20); --nav-tint: rgba(191,156,255,.05); --nav-glow: rgba(191,156,255,.11); }
+  header #home-navigation > a:nth-child(3) { font-size: 13px; --nav-edge: rgba(255,130,216,.44); --nav-bevel: rgba(255,130,216,.19); --nav-tint: rgba(255,130,216,.045); --nav-glow: rgba(255,130,216,.10); }
+  header #home-navigation > a:nth-child(4) { font-size: 12px; --nav-edge: rgba(138,244,194,.46); --nav-bevel: rgba(138,244,194,.20); --nav-tint: rgba(138,244,194,.05); --nav-glow: rgba(138,244,194,.11); }
+  header #home-navigation > a:hover, header #home-navigation > a:focus-visible { border-color: rgba(220,250,255,.8); box-shadow: inset 0 1px 0 rgba(255,255,255,.38), inset 0 -1px 0 var(--nav-bevel), 0 2px 0 var(--nav-bevel), 0 7px 16px var(--nav-glow); }
+  header #home-navigation > a:active { transform: translateY(1px); }
+}
+@media (prefers-reduced-motion: reduce) { header #home-navigation > a { transition: none; } }
