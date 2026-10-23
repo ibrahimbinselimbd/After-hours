@@ -52,9 +52,11 @@ with sync_playwright() as p:
         assert page.locator('.modal-status').inner_text() == '01 AVAILABLE'
         page.get_by_role('link', name='Open Bulk Image Background Remover', exact=True).click()
         assert '/tools/background-remover/' in page.url
+        page.wait_for_load_state('networkidle')
         # Preserve queue and clear behavior without downloading the inference model.
         assert page.locator('#process-button').is_disabled()
         page.locator('#file-input').set_input_files({'name': 'pixel.png', 'mimeType': 'image/png', 'buffer': base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=')})
+        page.wait_for_function("document.querySelector('#queue-count').textContent.trim() === '01'")
         assert page.locator('#queue-count').inner_text().strip() == '01'
         assert page.locator('#process-button').is_enabled()
         page.locator('#clear-button').click()
