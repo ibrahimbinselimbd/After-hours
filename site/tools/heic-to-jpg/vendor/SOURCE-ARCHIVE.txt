@@ -1,0 +1,9 @@
+Complete pinned upstream heic-to 1.6.6 npm package source archive, split only to satisfy the temporary host asset-size limit.
+
+Reassemble after downloading both parts:
+cat heic-to-1.6.6-source.tgz.part1 heic-to-1.6.6-source.tgz.part2 > heic-to-1.6.6-source.tgz
+
+SHA-256 of reconstructed archive: 6dc4703e62048c372ebef9632ce8613d53598ceaccf0d891fbe0a533909cf1a5
+Original upstream package: https://registry.npmjs.org/heic-to/-/heic-to-1.6.6.tgz
+
+No application files depend on this archive at runtime.

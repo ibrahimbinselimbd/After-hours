@@ -15,7 +15,7 @@ function openCategory(id, trigger) {
     const dot = document.createElement('span'); dot.className = 'title-dot'; dot.textContent = '.'; heading.append(dot);
   } else heading.textContent = d.title;
   document.querySelector('#dialog-description').textContent = d.description;
-  document.querySelector('.modal-status').textContent = image ? '03 AVAILABLE' : ai ? 'COMING SOON' : 'PLANNED';
+  document.querySelector('.modal-status').textContent = image ? '04 AVAILABLE' : ai ? 'COMING SOON' : 'PLANNED';
   const tools = document.querySelector('#dialog-tools');
   tools.replaceChildren();
   if (image) {
@@ -34,6 +34,11 @@ function openCategory(id, trigger) {
     qr.setAttribute('aria-label', 'Open QR Code Generator and Print Checker');
     qr.innerHTML = '<div class="tool-title-line"><span class="tool-icon" aria-hidden="true">▦</span><span class="tool-meta"><b>QR Code Generator &amp; Print Checker</b><small>Encode. Verify. Check your print. URL, Wi-Fi or text — entirely local.</small></span><span class="tool-arrow" aria-hidden="true">↗</span></div><span class="open-label">OPEN TOOL · FREE</span>';
     tools.append(qr);
+    const heic = document.createElement('a');
+    heic.className = 'featured-tool'; heic.href = '/tools/heic-to-jpg/';
+    heic.setAttribute('aria-label', 'Open HEIC to JPG Batch Converter');
+    heic.innerHTML = '<div class="tool-title-line"><span class="tool-icon" aria-hidden="true">▧</span><span class="tool-meta"><b>HEIC → JPG Batch Converter</b><small>Convert HEIC photos to JPG in your browser — no upload, with batch ZIP download.</small></span><span class="tool-arrow" aria-hidden="true">↗</span></div><span class="open-label">OPEN TOOL · FREE</span>';
+    tools.append(heic);
   }
   if (ai) {
     const preview = document.createElement('a');
