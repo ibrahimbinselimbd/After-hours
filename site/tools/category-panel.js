@@ -42,7 +42,7 @@ function openCategory(id, trigger) {
     const passport = document.createElement('a');
     passport.className = 'featured-tool'; passport.href = '/tools/passport-photo-studio/';
     passport.setAttribute('aria-label', 'Open Global Passport and Visa Photo Studio');
-    passport.innerHTML = '<div class="tool-title-line"><span class="tool-icon" aria-hidden="true">▣</span><span class="tool-meta"><b>Global Passport &amp; Visa Photo Studio</b><small>Worldwide document sizes, crop guides, exact pixels and print sheets. No photo archive.</small></span><span class="tool-arrow" aria-hidden="true">↗</span></div><span class="open-label">OPEN TOOL · FREE</span>';
+    passport.innerHTML = '<div class="tool-title-line"><span class="tool-icon" aria-hidden="true">▣</span><span class="tool-meta"><b>Global Passport &amp; Visa Photo Studio</b><small>Browser-local crop, exact pixels and print sheets. Photos are not uploaded; check current official requirements.</small></span><span class="tool-arrow" aria-hidden="true">↗</span></div><span class="open-label">OPEN TOOL · FREE</span>';
     tools.append(passport);
   }
   if (ai) {
