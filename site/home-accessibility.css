@@ -461,24 +461,23 @@ header .tools-entry small:where(:not(.ah-footer):not(.ah-footer *)){font-size:11
 @media (max-width: 700px){.hero-buttons .primary:where(:not(.ah-footer):not(.ah-footer *)){font-size:12.88px}}
 @media (max-width: 700px){.hero-buttons .text-button:where(:not(.ah-footer):not(.ah-footer *)){font-size:12.88px}}
 
-/* Homepage mobile nav: compact labels with a subtle luminous bevel. */
+/* Mobile homepage navigation: compact labels with a restrained 3D edge. */
 @media (max-width:700px) {
   header #home-navigation > a {
-    --nav-edge: rgba(143,248,255,.42);
-    --nav-bevel: rgba(143,248,255,.18);
-    --nav-tint: rgba(143,248,255,.045);
-    --nav-glow: rgba(143,248,255,.10);
-    border: 1px solid var(--nav-edge);
-    border-radius: 4px;
-    background: linear-gradient(155deg,var(--nav-tint),rgba(255,255,255,.012) 70%);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.30), inset 0 -1px 0 var(--nav-bevel), 0 2px 0 var(--nav-bevel), 0 5px 12px var(--nav-glow);
-    transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+    border: 1px solid rgba(220,229,246,.36);
+    border-radius: 3px;
+    background: rgba(255,255,255,.018);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.18), inset 0 -1px 0 rgba(80,90,110,.28), 0 1px 0 rgba(255,255,255,.08);
+    transition: border-color .18s ease, box-shadow .18s ease;
   }
-  header #home-navigation > a:nth-child(1) { font-size: 13.5px; --nav-edge: rgba(143,248,255,.50); --nav-bevel: rgba(143,248,255,.22); --nav-tint: rgba(143,248,255,.055); --nav-glow: rgba(143,248,255,.12); }
-  header #home-navigation > a:nth-child(2) { font-size: 12.5px; --nav-edge: rgba(191,156,255,.46); --nav-bevel: rgba(191,156,255,.20); --nav-tint: rgba(191,156,255,.05); --nav-glow: rgba(191,156,255,.11); }
-  header #home-navigation > a:nth-child(3) { font-size: 13px; --nav-edge: rgba(255,130,216,.44); --nav-bevel: rgba(255,130,216,.19); --nav-tint: rgba(255,130,216,.045); --nav-glow: rgba(255,130,216,.10); }
-  header #home-navigation > a:nth-child(4) { font-size: 12px; --nav-edge: rgba(138,244,194,.46); --nav-bevel: rgba(138,244,194,.20); --nav-tint: rgba(138,244,194,.05); --nav-glow: rgba(138,244,194,.11); }
-  header #home-navigation > a:hover, header #home-navigation > a:focus-visible { border-color: rgba(220,250,255,.8); box-shadow: inset 0 1px 0 rgba(255,255,255,.38), inset 0 -1px 0 var(--nav-bevel), 0 2px 0 var(--nav-bevel), 0 7px 16px var(--nav-glow); }
-  header #home-navigation > a:active { transform: translateY(1px); }
+  header #home-navigation > a:nth-child(1) { font-size: 13.5px; }
+  header #home-navigation > a:nth-child(2) { font-size: 12.5px; }
+  header #home-navigation > a:nth-child(3) { font-size: 13px; }
+  header #home-navigation > a:nth-child(4) { font-size: 12px; }
+  header #home-navigation > a:hover, header #home-navigation > a:focus-visible {
+    border-color: rgba(235,241,252,.52);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.22), inset 0 -1px 0 rgba(80,90,110,.34), 0 1px 0 rgba(255,255,255,.10);
+  }
+  header #home-navigation > a:focus-visible { outline: 2px solid rgba(220,229,246,.48); outline-offset: 2px; }
 }
 @media (prefers-reduced-motion: reduce) { header #home-navigation > a { transition: none; } }
