@@ -15,7 +15,7 @@ function openCategory(id, trigger) {
     const dot = document.createElement('span'); dot.className = 'title-dot'; dot.textContent = '.'; heading.append(dot);
   } else heading.textContent = d.title;
   document.querySelector('#dialog-description').textContent = d.description;
-  document.querySelector('.modal-status').textContent = image ? '01 AVAILABLE' : ai ? 'COMING SOON' : 'PLANNED';
+  document.querySelector('.modal-status').textContent = image ? '02 AVAILABLE' : ai ? 'COMING SOON' : 'PLANNED';
   const tools = document.querySelector('#dialog-tools');
   tools.replaceChildren();
   if (image) {
@@ -24,6 +24,11 @@ function openCategory(id, trigger) {
     link.setAttribute('aria-label', 'Open Bulk Image Background Remover');
     link.innerHTML = '<div class="tool-title-line"><span class="tool-icon" aria-hidden="true">✂</span><span class="tool-meta"><b>Bulk Image Background Remover</b><small>Isolate the subject. Keep the possibilities.</small></span><span class="tool-arrow" aria-hidden="true">↗</span></div><span class="open-label">OPEN TOOL</span>';
     tools.append(link);
+    const optimizer = document.createElement('a');
+    optimizer.className = 'featured-tool'; optimizer.href = '/tools/image-size-optimizer/';
+    optimizer.setAttribute('aria-label', 'Open Image Size Optimizer');
+    optimizer.innerHTML = '<div class="tool-title-line"><span class="tool-icon" aria-hidden="true">⌗</span><span class="tool-meta"><b>Image Size Optimizer</b><small>Resize. Compress. Convert. Keep every pixel in perspective.</small></span><span class="tool-arrow" aria-hidden="true">↗</span></div><span class="open-label">OPEN TOOL · FREE</span>';
+    tools.append(optimizer);
   }
   if (ai) {
     const preview = document.createElement('a');
@@ -32,7 +37,7 @@ function openCategory(id, trigger) {
     preview.innerHTML = '<div class="tool-title-line"><span class="tool-icon" aria-hidden="true">T</span><span class="tool-meta"><b>AI Article &amp; Text Detector</b><small>Coming soon. Analysis hosting is not configured.</small></span><span class="tool-arrow" aria-hidden="true">↗</span></div><span class="open-label">PREVIEW ONLY · NOT LIVE</span>';
     tools.append(preview);
   }
-  const planned = image ? ['Image Resizer', 'Palette Generator'] : ai ? ['Prompt Organizer', 'Decision Helper'] : d.example_planned_tools;
+  const planned = image ? ['Palette Generator'] : ai ? ['Prompt Organizer', 'Decision Helper'] : d.example_planned_tools;
   planned.forEach((title, index) => {
     const row = document.createElement('div'); row.className = 'planned-tool';
     const icon = document.createElement('span'); icon.className = 'planned-icon'; icon.setAttribute('aria-hidden', 'true'); icon.textContent = index === 0 ? '⌗' : '◈';
