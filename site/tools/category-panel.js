@@ -15,7 +15,7 @@ function openCategory(id, trigger) {
     const dot = document.createElement('span'); dot.className = 'title-dot'; dot.textContent = '.'; heading.append(dot);
   } else heading.textContent = d.title;
   document.querySelector('#dialog-description').textContent = d.description;
-  document.querySelector('.modal-status').textContent = image ? '02 AVAILABLE' : ai ? 'COMING SOON' : 'PLANNED';
+  document.querySelector('.modal-status').textContent = image ? '03 AVAILABLE' : ai ? 'COMING SOON' : 'PLANNED';
   const tools = document.querySelector('#dialog-tools');
   tools.replaceChildren();
   if (image) {
@@ -29,6 +29,11 @@ function openCategory(id, trigger) {
     optimizer.setAttribute('aria-label', 'Open Image Size Optimizer');
     optimizer.innerHTML = '<div class="tool-title-line"><span class="tool-icon" aria-hidden="true">⌗</span><span class="tool-meta"><b>Image Size Optimizer</b><small>Resize. Compress. Convert. Keep every pixel in perspective.</small></span><span class="tool-arrow" aria-hidden="true">↗</span></div><span class="open-label">OPEN TOOL · FREE</span>';
     tools.append(optimizer);
+    const qr = document.createElement('a');
+    qr.className = 'featured-tool'; qr.href = '/tools/qr-code-generator/';
+    qr.setAttribute('aria-label', 'Open QR Code Generator and Print Checker');
+    qr.innerHTML = '<div class="tool-title-line"><span class="tool-icon" aria-hidden="true">▦</span><span class="tool-meta"><b>QR Code Generator &amp; Print Checker</b><small>Encode. Verify. Check your print. URL, Wi-Fi or text — entirely local.</small></span><span class="tool-arrow" aria-hidden="true">↗</span></div><span class="open-label">OPEN TOOL · FREE</span>';
+    tools.append(qr);
   }
   if (ai) {
     const preview = document.createElement('a');

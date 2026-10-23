@@ -16,13 +16,23 @@ Routes: `/` (home), `/article?story=...` (article), `/info?page=...` (informatio
 
 ## Tools Hub status and access plan
 
-The Tools Hub is published on the English site at `/tools/`, with ten categories and 100 planned tools. The first integrated utility is **Bulk Image Background Remover**, linked from Tools Hub → Image & Design. It processes images in the browser using a local model/runtime; remaining utilities and credit accounting are not implemented.
+The Tools Hub is published on the English site at `/tools/`, with ten categories and 100 planned tools. **Bulk Image Background Remover**, **Image Size Optimizer**, and **QR Code Generator & Print Checker** are linked from Tools Hub → Image & Design. Remaining categories are planned, except for the explicitly gated Text Signal preview below.
 
 **Text Signal frontend preview is published; real analysis is Coming soon / Not live.** Open https://afterhours-district.bird-timimus.workers.dev/tools/text-detector/ or Tools Hub → AI & Everyday Utilities → Preview tool. The responsive editor, samples, word limits, and home/back/category navigation work. Analyze is disabled through an explicit `data-analysis-enabled="false"` release gate; this preview sends neither health nor analysis API requests and shows no simulated results. The current Cloudflare static site does not run `server.mjs`, Python, FastAPI, or model inference. Its backend remains source-only for a future approved host. See [`services/text-detector/README.md`](services/text-detector/README.md) for host, cache, privacy, licensing, and real-smoke-test requirements.
 
 Run `npm test` for safe client/proxy/backend logic tests without downloading a model. For optional browser smoke tests, install Python Playwright and Chromium, then run `python3 tests/browser-text-detector.py https://afterhours-district.bird-timimus.workers.dev`. The browser check covers 320/390/768/1280px layouts, assets, navigation, samples, maximum input warnings and the disabled analysis gate. Its temporary screenshots/reports do not belong in Git.
 
 The established launch plan remains: **10 free credits per user per day, every tool available through free credits, and no premium-only tier or premium-only tools.** Per-tool credit costs will be defined before launch. The preview does not issue or consume credits. The remover is accessed at `/tools/background-remover/`; the first run requires an internet connection to load its version-pinned browser engine and model. Selected images are processed locally and are not uploaded to an AI inference API.
+
+### QR Code Generator & Print Checker
+
+Open `/tools/qr-code-generator/` or Tools Hub → Image & Design. This static, entirely client-side tool supports HTTP(S) URLs, escaped Wi-Fi payloads (WPA/WPA2, WEP, open and hidden networks), and Unicode text. Locally vendored qrcode-generator 1.4.4 (MIT) and jsQR 1.4.0 (Apache-2.0) generate the code and independently decode the actual rendered canvas. Both decoded text and UTF-8 bytes must match before PNG/SVG downloads unlock. Exports have an enforced four-module quiet zone and matching colors. SVG uses the selected full print width in millimetres; PNG has integer-pixel modules. The Print action uses the selected full width, subject to the browser/printer settings.
+
+All features are free. One successful generate-and-verify operation consumes one of **10 daily browser-local credits**, shared with Image Size Optimizer through `afterhours:daily-credits`. Failed operations and repeat downloads consume none. Credits reset at local midnight, are not account-wide or server-enforced, and can be reset by clearing local storage. When storage is unavailable, a visible notice explains that counting lasts only for the open page. Web Locks serialize credit use across supported tabs. No payload, image, Wi-Fi credential, or destination URL is sent to a server by this tool; its page CSP explicitly disallows network connections. Static page/library/font loading still requires a normal initial page request. There are no dynamic redirects, tracking, analytics or paid backend services.
+
+Print advice checks the fixed quiet zone, a practical dark-on-light contrast heuristic of at least 4.5:1, and a practical minimum module size of 0.4 mm. These are advisory, not QR certification or an all-device scan guarantee. Test a physical print with the intended printers, paper, sizes and scanning devices.
+
+Optional real-browser QA: install Python Playwright, Pillow, CairoSVG and Chromium, then run `python3 tests/qr-browser.py http://127.0.0.1:4173 /tmp/afterhours-qr-qa` (or use the production origin). This checks payload round trips, downloads, quiet zone, credit behaviour, mobile/desktop layout, navigation and absence of payload network traffic. Test artifacts and credentials do not belong in Git.
 
 ## English production deployment
 
