@@ -1,0 +1,14 @@
+{
+  "name": "AFTERHOURS Dev & Test",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": { "version": "3.12" }
+  },
+  "forwardPorts": [4173],
+  "portsAttributes": {
+    "4173": { "label": "AFTERHOURS local preview", "onAutoForward": "openBrowser" }
+  },
+  "remoteEnv": { "HOST": "0.0.0.0", "PORT": "4173" },
+  "postCreateCommand": "npm test",
+  "shutdownAction": "stopContainer"
+}
