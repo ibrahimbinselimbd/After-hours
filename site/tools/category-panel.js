@@ -15,7 +15,7 @@ function openCategory(id, trigger) {
     const dot = document.createElement('span'); dot.className = 'title-dot'; dot.textContent = '.'; heading.append(dot);
   } else heading.textContent = d.title;
   document.querySelector('#dialog-description').textContent = d.description;
-  document.querySelector('.modal-status').textContent = image ? '04 AVAILABLE' : ai ? 'COMING SOON' : 'PLANNED';
+  document.querySelector('.modal-status').textContent = image ? '05 AVAILABLE' : ai ? 'COMING SOON' : 'PLANNED';
   const tools = document.querySelector('#dialog-tools');
   tools.replaceChildren();
   if (image) {
@@ -39,6 +39,11 @@ function openCategory(id, trigger) {
     heic.setAttribute('aria-label', 'Open HEIC to JPG Batch Converter');
     heic.innerHTML = '<div class="tool-title-line"><span class="tool-icon" aria-hidden="true">▧</span><span class="tool-meta"><b>HEIC → JPG Batch Converter</b><small>Convert HEIC photos to JPG in your browser — no upload, with batch ZIP download.</small></span><span class="tool-arrow" aria-hidden="true">↗</span></div><span class="open-label">OPEN TOOL · FREE</span>';
     tools.append(heic);
+    const passport = document.createElement('a');
+    passport.className = 'featured-tool'; passport.href = '/tools/passport-photo-studio/';
+    passport.setAttribute('aria-label', 'Open Global Passport and Visa Photo Studio');
+    passport.innerHTML = '<div class="tool-title-line"><span class="tool-icon" aria-hidden="true">▣</span><span class="tool-meta"><b>Global Passport &amp; Visa Photo Studio</b><small>Worldwide document sizes, crop guides, exact pixels and print sheets. No photo archive.</small></span><span class="tool-arrow" aria-hidden="true">↗</span></div><span class="open-label">OPEN TOOL · FREE</span>';
+    tools.append(passport);
   }
   if (ai) {
     const preview = document.createElement('a');
@@ -47,7 +52,7 @@ function openCategory(id, trigger) {
     preview.innerHTML = '<div class="tool-title-line"><span class="tool-icon" aria-hidden="true">T</span><span class="tool-meta"><b>AI Article &amp; Text Detector</b><small>Coming soon. Analysis hosting is not configured.</small></span><span class="tool-arrow" aria-hidden="true">↗</span></div><span class="open-label">PREVIEW ONLY · NOT LIVE</span>';
     tools.append(preview);
   }
-  const planned = image ? ['Palette Generator'] : ai ? ['Prompt Organizer', 'Decision Helper'] : d.example_planned_tools;
+  const planned = image ? ['Palette Generator', 'Batch Image Format Converter', 'Watermark Studio', 'Image Contact Sheet', 'Image Color Extractor'] : ai ? ['Prompt Organizer', 'Decision Helper'] : d.example_planned_tools;
   planned.forEach((title, index) => {
     const row = document.createElement('div'); row.className = 'planned-tool';
     const icon = document.createElement('span'); icon.className = 'planned-icon'; icon.setAttribute('aria-hidden', 'true'); icon.textContent = index === 0 ? '⌗' : '◈';
