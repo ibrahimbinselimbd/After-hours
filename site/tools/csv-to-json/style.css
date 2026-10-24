@@ -1,0 +1,1 @@
+.tool-form{display:grid;gap:16px}.tool-form textarea{min-height:240px}.mode{display:flex;gap:10px;flex-wrap:wrap}.mode label{border:1px solid #344052;border-radius:8px;padding:10px 12px;cursor:pointer}.mode input{accent-color:var(--lime)}.output-text{min-height:220px}

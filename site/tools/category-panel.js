@@ -1,11 +1,11 @@
-// Category details and same-site tool navigation. Text detector is not launched.
+// Category details and same-site tool navigation. AI Text Detector stays disabled.
 function openCategory(id, trigger) {
-  const d = categories.find(c => c.id === id);
-  if (!d) return;
+  const data = categories.find(item => item.id === id);
+  if (!data) return;
   const image = id === 'image-design';
   const ai = id === 'ai-everyday-utilities';
-  opener = trigger || document.querySelector('[data-category="' + id + '"]');
-  document.querySelector('#district-number').textContent = String(categories.indexOf(d) + 1).padStart(2, '0');
+  opener = trigger || document.querySelector(`[data-category="${id}"]`);
+  document.querySelector('#district-number').textContent = String(categories.indexOf(data) + 1).padStart(2, '0');
   const heading = document.querySelector('#dialog-title');
   heading.replaceChildren();
   if (image || ai) {
@@ -13,63 +13,52 @@ function openCategory(id, trigger) {
     if (image) { const amp = document.createElement('span'); amp.textContent = '&'; heading.append(amp); }
     heading.append(document.createElement('br'), image ? 'Design' : 'Everyday Utilities');
     const dot = document.createElement('span'); dot.className = 'title-dot'; dot.textContent = '.'; heading.append(dot);
-  } else heading.textContent = d.title;
-  document.querySelector('#dialog-description').textContent = d.description;
-  document.querySelector('.modal-status').textContent = image ? '05 AVAILABLE' : ai ? 'COMING SOON' : 'PLANNED';
+  } else heading.textContent = data.title;
+  document.querySelector('#dialog-description').textContent = data.description;
+  const status = document.querySelector('.modal-status');
+  status.textContent = ai ? `${data.availableTools.length} AVAILABLE · TEXT DETECTOR COMING SOON` : `${data.availableTools.length} AVAILABLE`;
   const tools = document.querySelector('#dialog-tools');
   tools.replaceChildren();
-  if (image) {
+  for (const item of data.availableTools) {
     const link = document.createElement('a');
-    link.className = 'featured-tool'; link.href = '/tools/background-remover/';
-    link.setAttribute('aria-label', 'Open Bulk Image Background Remover');
-    link.innerHTML = '<div class="tool-title-line"><span class="tool-icon" aria-hidden="true">✂</span><span class="tool-meta"><b>Bulk Image Background Remover</b><small>Isolate the subject. Keep the possibilities.</small></span><span class="tool-arrow" aria-hidden="true">↗</span></div><span class="open-label">OPEN TOOL</span>';
+    link.className = 'featured-tool'; link.href = item.href;
+    link.setAttribute('aria-label', `Open ${item.title} — free`);
+    const line = document.createElement('div'); line.className = 'tool-title-line';
+    const icon = document.createElement('span'); icon.className = 'tool-icon'; icon.setAttribute('aria-hidden','true'); icon.textContent = item.icon || '↗';
+    const meta = document.createElement('span'); meta.className = 'tool-meta';
+    const title = document.createElement('b'); title.textContent = item.title;
+    const description = document.createElement('small'); description.textContent = item.description;
+    meta.append(title, description);
+    const arrow = document.createElement('span'); arrow.className='tool-arrow'; arrow.setAttribute('aria-hidden','true'); arrow.textContent='↗';
+    line.append(icon, meta, arrow); link.append(line);
+    const label=document.createElement('span');label.className='open-label';label.textContent='OPEN TOOL · FREE';link.append(label);
     tools.append(link);
-    const optimizer = document.createElement('a');
-    optimizer.className = 'featured-tool'; optimizer.href = '/tools/image-size-optimizer/';
-    optimizer.setAttribute('aria-label', 'Open Image Size Optimizer');
-    optimizer.innerHTML = '<div class="tool-title-line"><span class="tool-icon" aria-hidden="true">⌗</span><span class="tool-meta"><b>Image Size Optimizer</b><small>Resize. Compress. Convert. Keep every pixel in perspective.</small></span><span class="tool-arrow" aria-hidden="true">↗</span></div><span class="open-label">OPEN TOOL · FREE</span>';
-    tools.append(optimizer);
-    const qr = document.createElement('a');
-    qr.className = 'featured-tool'; qr.href = '/tools/qr-code-generator/';
-    qr.setAttribute('aria-label', 'Open QR Code Generator and Print Checker');
-    qr.innerHTML = '<div class="tool-title-line"><span class="tool-icon" aria-hidden="true">▦</span><span class="tool-meta"><b>QR Code Generator &amp; Print Checker</b><small>Encode. Verify. Check your print. URL, Wi-Fi or text — entirely local.</small></span><span class="tool-arrow" aria-hidden="true">↗</span></div><span class="open-label">OPEN TOOL · FREE</span>';
-    tools.append(qr);
-    const heic = document.createElement('a');
-    heic.className = 'featured-tool'; heic.href = '/tools/heic-to-jpg/';
-    heic.setAttribute('aria-label', 'Open HEIC to JPG Batch Converter');
-    heic.innerHTML = '<div class="tool-title-line"><span class="tool-icon" aria-hidden="true">▧</span><span class="tool-meta"><b>HEIC → JPG Batch Converter</b><small>Convert HEIC photos to JPG in your browser — no upload, with batch ZIP download.</small></span><span class="tool-arrow" aria-hidden="true">↗</span></div><span class="open-label">OPEN TOOL · FREE</span>';
-    tools.append(heic);
-    const passport = document.createElement('a');
-    passport.className = 'featured-tool'; passport.href = '/tools/passport-photo-studio/';
-    passport.setAttribute('aria-label', 'Open Global Passport and Visa Photo Studio');
-    passport.innerHTML = '<div class="tool-title-line"><span class="tool-icon" aria-hidden="true">▣</span><span class="tool-meta"><b>Global Passport &amp; Visa Photo Studio</b><small>Browser-local crop, exact pixels and print sheets. Photos are not uploaded; check current official requirements.</small></span><span class="tool-arrow" aria-hidden="true">↗</span></div><span class="open-label">OPEN TOOL · FREE</span>';
-    tools.append(passport);
   }
-  if (ai) {
-    const preview = document.createElement('a');
-    preview.className = 'featured-tool'; preview.href = '/tools/text-detector/';
-    preview.setAttribute('aria-label', 'Preview AI Article and Text Detector — coming soon');
-    preview.innerHTML = '<div class="tool-title-line"><span class="tool-icon" aria-hidden="true">T</span><span class="tool-meta"><b>AI Article &amp; Text Detector</b><small>Coming soon. Analysis hosting is not configured.</small></span><span class="tool-arrow" aria-hidden="true">↗</span></div><span class="open-label">PREVIEW ONLY · NOT LIVE</span>';
-    tools.append(preview);
+  if (data.preview) {
+    const row=document.createElement('div');row.className='planned-tool disabled-tool';
+    const icon=document.createElement('span');icon.className='planned-icon';icon.setAttribute('aria-hidden','true');icon.textContent='T';
+    const label=document.createElement('b');label.textContent=data.preview.title;
+    const state=document.createElement('small');state.textContent='COMING SOON · DISABLED';
+    row.append(icon,label,state);tools.append(row);
+    const note=document.createElement('p');note.className='tool-note';note.textContent='Analysis hosting is not configured. This tool does not analyze text and is not available yet.';tools.append(note);
   }
-  const planned = image ? ['Palette Generator', 'Batch Image Format Converter', 'Watermark Studio', 'Image Contact Sheet', 'Image Color Extractor'] : ai ? ['Prompt Organizer', 'Decision Helper'] : d.example_planned_tools;
-  planned.forEach((title, index) => {
-    const row = document.createElement('div'); row.className = 'planned-tool';
-    const icon = document.createElement('span'); icon.className = 'planned-icon'; icon.setAttribute('aria-hidden', 'true'); icon.textContent = index === 0 ? '⌗' : '◈';
-    const label = document.createElement('b'); label.textContent = title;
-    const status = document.createElement('small'); status.textContent = 'PLANNED';
-    row.append(icon, label, status); tools.append(row);
-  });
+  for (const title of data.upcomingTools.filter(title => title !== data.preview?.title)) {
+    const row=document.createElement('div');row.className='planned-tool';
+    const icon=document.createElement('span');icon.className='planned-icon';icon.setAttribute('aria-hidden','true');icon.textContent='◈';
+    const label=document.createElement('b');label.textContent=title;
+    const state=document.createElement('small');state.textContent='PLANNED';
+    row.append(icon,label,state);tools.append(row);
+  }
   document.querySelector('.preview-note').open = false;
   if (!dialog.open) dialog.showModal();
   dialog.scrollTop = 0;
 }
-cards.forEach(c => c.addEventListener('click', () => openCategory(c.dataset.category, c)));
+cards.forEach(card => card.addEventListener('click', () => openCategory(card.dataset.category, card)));
 document.querySelector('.modal-close').addEventListener('click', () => dialog.close());
 document.querySelector('#back-districts').addEventListener('click', () => { dialog.close(); document.querySelector('#categories').scrollIntoView({ behavior: 'smooth' }); });
-dialog.addEventListener('click', e => { if (e.target === dialog) { const r = dialog.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dialog.close(); } });
-dialog.addEventListener('close', () => opener?.focus({ preventScroll: true }));
+dialog.addEventListener('click', event => {
+  if (event.target === dialog) { const rect=dialog.getBoundingClientRect(); if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom) dialog.close(); }
+});
+dialog.addEventListener('close', () => opener?.focus({preventScroll:true}));
 const requestedCategory = new URLSearchParams(location.search).get('category');
-if (requestedCategory && categories.some(category => category.id === requestedCategory)) {
-  openCategory(requestedCategory);
-}
+if (requestedCategory && categories.some(category => category.id === requestedCategory)) openCategory(requestedCategory);
