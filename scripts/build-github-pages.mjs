@@ -8,8 +8,14 @@ const toolsRoot = path.join(siteRoot, 'tools');
 const outputRoot = path.join(repoRoot, 'public');
 const basePath = (process.env.PAGES_BASE_PATH || '/After-hours').replace(/\/$/, '');
 const siteUrl = (process.env.PAGES_SITE_URL || `https://ibrahimbinselimbd.github.io${basePath}`).replace(/\/$/, '');
-const allowedAssetExtensions = new Set(['.css', '.js', '.mjs', '.json', '.webmanifest', '.ttf', '.otf', '.woff', '.woff2', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.svg', '.ico', '.wasm', '.mp3', '.wav', '.mp4']);
-const ignoredTopLevelRoutes = new Set(['api', 'districts', 'article', 'info', 'robots.txt']);
+const workerOrigin = 'https://afterhours-district.bird-timimus.workers.dev';
+const ignoredSourceFiles = new Set(['_headers', '_redirects', 'sitemap.xml']);
+const rootDirectories = new Set([
+  'tools', 'media', 'assets', 'images', 'fonts', 'api', 'districts', 'article', 'info',
+  'favicon', 'css', 'js',
+]);
+const allowedAssetExtensions = /\.(?:css|js|mjs|json|webmanifest|ttf|otf|woff2?|png|jpe?g|webp|gif|svg|ico|wasm|mp3|wav|mp4)$/i;
+const infoPages = ['about', 'privacy', 'disclaimer', 'advertising', 'terms', 'cookies', 'editorial', 'contact'];
 
 async function walk(directory) {
   const entries = await fs.readdir(directory, { withFileTypes: true });
@@ -22,115 +28,152 @@ async function walk(directory) {
   return result;
 }
 
-function referencedRootPaths(text) {
-  const found = new Set();
-  const quoted = /["'`]\/(?!\/)([^"'`\s?#)]+)(?=[?#"'`])/g;
-  const unquotedCss = /\burl\(\s*\/(?!\/)([^)'"\s?#]+)/g;
-  for (const match of text.matchAll(quoted)) found.add(match[1]);
-  for (const match of text.matchAll(unquotedCss)) found.add(match[1]);
-  return found;
+function mapStaticRoute(route) {
+  const clean = route.replace(/\\/g, '/');
+  const withoutTrailingSlash = clean.replace(/\/+$/, '');
+  if (withoutTrailingSlash === 'article') return 'article.html';
+  if (withoutTrailingSlash === 'info') return 'info.html';
+  return clean;
 }
 
-async function copyReferencedAssets(sourceFiles) {
-  const paths = new Set();
-  for (const file of sourceFiles) {
-    const ext = path.extname(file).toLowerCase();
-    if (!['.html', '.js', '.mjs', '.css', '.json', '.webmanifest'].includes(ext)) continue;
-    const text = await fs.readFile(file, 'utf8');
-    for (const rootPath of referencedRootPaths(text)) {
-      const clean = rootPath.replace(/\\/g, '/').replace(/^\/+/, '');
-      if (!clean || clean.startsWith('tools/')) continue;
-      const first = clean.split('/')[0];
-      if (ignoredTopLevelRoutes.has(first)) continue;
-      if (!allowedAssetExtensions.has(path.extname(clean).toLowerCase())) continue;
-      const source = path.resolve(siteRoot, clean);
-      if (!source.startsWith(siteRoot + path.sep)) continue;
-      try {
-        const stat = await fs.stat(source);
-        if (!stat.isFile()) continue;
-        const target = path.join(outputRoot, clean);
-        await fs.mkdir(path.dirname(target), { recursive: true });
-        await fs.copyFile(source, target);
-        paths.add(clean);
-      } catch {
-        // A route may reference an optional browser feature that has no static asset.
-      }
-    }
-  }
-  return [...paths];
+function isProjectPath(route) {
+  const mapped = mapStaticRoute(route);
+  const first = route.replace(/^\/+/, '').split('/')[0].replace(/\/+$/, '').toLowerCase();
+  return rootDirectories.has(first) || allowedAssetExtensions.test(mapped);
 }
 
 function applyProjectBase(text, filePath) {
   let result = text;
-  const rootDirectories = new Set(['tools', 'media', 'assets', 'images', 'fonts', 'api', 'districts', 'article', 'info', 'favicon', 'css', 'js']);
-  const isProjectPath = route => rootDirectories.has(route.split('/')[0].toLowerCase()) || /\.(?:css|js|mjs|json|webmanifest|ttf|otf|woff2?|png|jpe?g|webp|gif|svg|ico|wasm|mp3|wav|mp4)$/i.test(route);
-  // Replace quoted root-relative paths (but not external URLs or relative paths).
-  result = result.replace(/(["'`])\/(?!\/)([^"'`\s?#)]+)(?=[?#"'`])/g, (match, quote, route) => {
+  const quotedRootPath = /(["'`])\/(?!\/)([^"'`\s?#)]+)(?=[?#"'`])/g;
+  result = result.replace(quotedRootPath, (match, quote, route) => {
     const first = route.split('/')[0];
     if (first === 'After-hours' || first.startsWith('http') || !isProjectPath(route)) return match;
-    return `${quote}${basePath}/${route}`;
+    return `${quote}${basePath}/${mapStaticRoute(route)}`;
   });
-  // CSS commonly leaves root-relative URLs unquoted inside url(...).
+
   if (path.extname(filePath).toLowerCase() === '.css') {
-    result = result.replace(/(\burl\(\s*)\/(?!\/)([^)'"\s?#]+)/g, (match, prefix, route) => isProjectPath(route) ? `${prefix}${basePath}/${route}` : match);
+    result = result.replace(/(\burl\(\s*)\/(?!\/)([^)'"\s?#]+)/g, (match, prefix, route) =>
+      isProjectPath(route) ? `${prefix}${basePath}/${mapStaticRoute(route)}` : match);
   }
-  // The only exact-root navigation in the utility shell should stay inside this project site.
-  result = result.replace(/href=(['"])\/(\1)/g, `href=$1${basePath}/$2`);
+
+  result = result.replace(/href=(['"])\/\1/g, (_, quote) => `href=${quote}${basePath}/${quote}`);
   result = result.replace(/href=(['"])\/#/g, `href=$1${basePath}/#`);
-  result = result.replaceAll(`${basePath}/districts/`, `${basePath}/tools/`);
-  result = result.replaceAll(`${basePath}/#feed`, `${basePath}/tools/#categories`);
-  result = result.replace(/>The journal<\/a>/gi, '>Browse tools</a>');
-  result = result.replace(/>The districts<\/a>/gi, '>Tools Hub</a>');
   return result;
+}
+
+function upsertCanonical(html, href) {
+  const tag = `<link rel="canonical" href="${href}">`;
+  if (/<link\s+rel=["']canonical["'][^>]*>/i.test(html)) {
+    return html.replace(/<link\s+rel=["']canonical["'][^>]*>/i, tag);
+  }
+  return html.replace(/<\/head>/i, `${tag}</head>`);
+}
+
+function addPageCanonical(html, relativePath, storyIds) {
+  if (relativePath === 'index.html') return upsertCanonical(html, `${siteUrl}/`);
+
+  if (relativePath === 'article.html') {
+    const initialStory = storyIds[0] || '';
+    html = upsertCanonical(html, `${siteUrl}/article.html?story=${encodeURIComponent(initialStory)}`);
+    const script = `<script>(()=>{const ids=${JSON.stringify(storyIds)};const requested=new URLSearchParams(location.search).get('story');const id=ids.includes(requested)?requested:(ids[0]||'');const link=document.querySelector('link[rel="canonical"]');if(link&&id)link.href=${JSON.stringify(`${siteUrl}/article.html?story=`)}+encodeURIComponent(id)})()</script>`;
+    return html.replace(/<\/body>/i, `${script}</body>`);
+  }
+
+  if (relativePath === 'info.html') {
+    html = upsertCanonical(html, `${siteUrl}/info.html?page=about`);
+    const script = `<script>(()=>{const pages=${JSON.stringify(infoPages)};const requested=new URLSearchParams(location.search).get('page');const page=pages.includes(requested)?requested:'about';const link=document.querySelector('link[rel="canonical"]');if(link)link.href=${JSON.stringify(`${siteUrl}/info.html?page=`)}+encodeURIComponent(page)})()</script>`;
+    return html.replace(/<\/body>/i, `${script}</body>`);
+  }
+
+  return html;
 }
 
 await fs.rm(outputRoot, { recursive: true, force: true });
 await fs.mkdir(outputRoot, { recursive: true });
-await fs.cp(toolsRoot, path.join(outputRoot, 'tools'), { recursive: true });
-const sourceFiles = await walk(path.join(outputRoot, 'tools'));
-const copiedAssets = await copyReferencedAssets(sourceFiles);
+await fs.cp(siteRoot, outputRoot, {
+  recursive: true,
+  filter(source) {
+    const relative = path.relative(siteRoot, source).replace(/\\/g, '/');
+    return relative === '' || !ignoredSourceFiles.has(relative);
+  },
+});
+
+const storySource = await fs.readFile(path.join(outputRoot, 'content.js'), 'utf8');
+const storyMatch = storySource.match(/^window\.STORIES\s*=\s*([\s\S]*);\s*$/);
+if (!storyMatch) throw new Error('Could not read the English Journal story index for route generation.');
+const stories = JSON.parse(storyMatch[1]);
+const storyIds = stories.map(story => story.id).filter(Boolean);
+if (!storyIds.length || new Set(storyIds).size !== storyIds.length) {
+  throw new Error('The English Journal story index is empty or contains duplicate IDs.');
+}
 
 for (const file of await walk(outputRoot)) {
   const ext = path.extname(file).toLowerCase();
-  if (!['.html', '.js', '.mjs', '.css', '.json', '.webmanifest'].includes(ext)) continue;
+  if (!['.html', '.js', '.mjs', '.css', '.json', '.webmanifest', '.txt', '.xml'].includes(ext)) continue;
+  const relativePath = path.relative(outputRoot, file).replace(/\\/g, '/');
   let text = await fs.readFile(file, 'utf8');
+
   if (ext === '.html') {
-    text = text.replace(/<meta\s+name=["']robots["']\s+content=["']noindex\s*,\s*nofollow["']\s*\/?>/i, '<meta name="robots" content="index,follow">');
-    // The Journal taxonomy stays on the source branch and is deliberately absent from this Tools-only site.
-    text = text.replace(/<a\s+href=["']\/districts\/["'][^>]*>\s*JOURNAL MAP\s*↗\s*<\/a>/i, '<a href="/tools/#categories">EXPLORE TOOLS ↗</a>');
-    if (file.endsWith(path.join('heic-to-jpg', 'index.html'))) {
+    const isDetector = relativePath.startsWith('tools/text-detector/');
+    const isToolPage = relativePath.startsWith('tools/') && !isDetector;
+    if (isToolPage) {
+      text = text.replace(/<meta\s+name=["']robots["']\s+content=["']noindex\s*,\s*nofollow["']\s*\/?>/i, '<meta name="robots" content="index,follow">');
+    }
+    if (relativePath === 'tools/heic-to-jpg/index.html') {
       const csp = '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; script-src \'self\'; worker-src \'self\'; style-src \'self\'; font-src \'self\'; img-src \'self\' blob: data:; connect-src \'none\'; object-src \'none\'; base-uri \'none\'; form-action \'none\'">';
       text = text.replace(/<head([^>]*)>/i, `<head$1>${csp}<meta name="referrer" content="no-referrer">`);
     }
   }
+
   text = applyProjectBase(text, file);
+  text = text.replaceAll(workerOrigin, siteUrl);
+  if (ext === '.html') text = addPageCanonical(text, relativePath, storyIds);
   await fs.writeFile(file, text);
 }
 
 await fs.writeFile(path.join(outputRoot, '.nojekyll'), '');
-await fs.writeFile(path.join(outputRoot, 'index.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="index,follow"><meta http-equiv="refresh" content="0;url=${basePath}/tools/"><title>AFTERHOURS Tools</title><link rel="canonical" href="${siteUrl}/tools/"></head><body><main><h1>AFTERHOURS Tools</h1><p><a href="${basePath}/tools/">Open the Tools Hub</a></p></main><script>location.replace(${JSON.stringify(`${basePath}/tools/`)});</script></body></html>`);
-await fs.writeFile(path.join(outputRoot, 'tools.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="index,follow"><meta http-equiv="refresh" content="0;url=${basePath}/tools/"><title>AFTERHOURS Tools</title></head><body><p><a href="${basePath}/tools/">Open the Tools Hub</a></p><script>location.replace(${JSON.stringify(`${basePath}/tools/`)});</script></body></html>`);
-await fs.writeFile(path.join(outputRoot, '404.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Page not found · AFTERHOURS Tools</title></head><body><main><h1>Page not found</h1><p><a href="${basePath}/tools/">Return to the AFTERHOURS Tools Hub</a></p></main></body></html>`);
+await fs.writeFile(path.join(outputRoot, 'tools.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta http-equiv="refresh" content="0;url=${basePath}/tools/"><title>AFTERHOURS Tools</title></head><body><p><a href="${basePath}/tools/">Open the Tools Hub</a></p><script>location.replace(${JSON.stringify(`${basePath}/tools/`)});</script></body></html>`);
+await fs.writeFile(path.join(outputRoot, '404.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Page not found · AFTERHOURS</title></head><body><main><h1>Page not found</h1><p><a href="${basePath}/">Return to AFTERHOURS</a></p></main></body></html>`);
 
 const catalog = await fs.readFile(path.join(outputRoot, 'tools', 'catalog.js'), 'utf8');
 const escapedBase = basePath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const routePattern = new RegExp(`\\{title:'[^']+',href:'(?:${escapedBase})?(\\/tools\\/[^']+)'`, 'g');
 const routes = [...catalog.matchAll(routePattern)].map(match => match[1]).filter(route => route !== '/tools/text-detector/');
-for (const entry of await fs.readdir(path.join(toolsRoot), {withFileTypes: true})) {
+for (const entry of await fs.readdir(toolsRoot, { withFileTypes: true })) {
   if (!entry.isDirectory() || entry.name === '_shared' || entry.name === 'text-detector') continue;
   try {
     const page = await fs.stat(path.join(toolsRoot, entry.name, 'index.html'));
     if (page.isFile()) routes.push(`/tools/${entry.name}/`);
   } catch {
-    // Non-route folders have no page and are not sitemap entries.
+    // Folders without an index page are assets, not public routes.
   }
 }
 const uniqueRoutes = [...new Set(routes)];
-if (uniqueRoutes.length !== 256) throw new Error(`Expected 256 active tool routes in the sitemap; found ${uniqueRoutes.length}.`);
-const urls = [`${siteUrl}/tools/`, ...uniqueRoutes.map(route => `${siteUrl}${route}`)];
-const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(url => `  <url><loc>${url.replace(/&/g, '&amp;')}</loc></url>`).join('\n')}\n</urlset>\n`;
+if (uniqueRoutes.length !== 256) throw new Error(`Expected 256 active tool routes; found ${uniqueRoutes.length}.`);
+
+const urls = [
+  `${siteUrl}/`,
+  `${siteUrl}/districts/`,
+  ...infoPages.map(page => `${siteUrl}/info.html?page=${encodeURIComponent(page)}`),
+  ...storyIds.map(id => `${siteUrl}/article.html?story=${encodeURIComponent(id)}`),
+  `${siteUrl}/tools/`,
+  ...uniqueRoutes.map(route => `${siteUrl}${route}`),
+];
+const uniqueUrls = [...new Set(urls)];
+if (uniqueUrls.length !== urls.length) throw new Error('The GitHub Pages sitemap contains duplicate URLs.');
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${uniqueUrls.map(url => `  <url><loc>${url.replace(/&/g, '&amp;')}</loc></url>`).join('\n')}\n</urlset>\n`;
 await fs.writeFile(path.join(outputRoot, 'sitemap.xml'), sitemap);
 
-console.log(`Built GitHub Pages artifact at ${outputRoot}`);
-console.log(`Base path: ${basePath}; published tool routes: ${uniqueRoutes.length}; copied root assets: ${copiedAssets.length}`);
-console.log('Only site/tools and referenced non-HTML assets are included; Journal pages are excluded.');
+const robotsPath = path.join(outputRoot, 'robots.txt');
+try {
+  let robots = await fs.readFile(robotsPath, 'utf8');
+  robots = robots.replace(/Sitemap:\s*\S+/gi, `Sitemap: ${siteUrl}/sitemap.xml`);
+  if (!/^Sitemap:/im.test(robots)) robots = `${robots.trimEnd()}\nSitemap: ${siteUrl}/sitemap.xml\n`;
+  await fs.writeFile(robotsPath, robots);
+} catch {
+  await fs.writeFile(robotsPath, `User-agent: *\nAllow: /\nSitemap: ${siteUrl}/sitemap.xml\n`);
+}
+
+console.log(`Built complete English GitHub Pages artifact at ${outputRoot}`);
+console.log(`Base path: ${basePath}; published active tool routes: ${uniqueRoutes.length}; Journal stories: ${storyIds.length}; Info pages: ${infoPages.length}; sitemap URLs: ${uniqueUrls.length}`);
+console.log('The homepage, Journal map, article/info routes, Tools Hub and all active tools are included; the AI Text Detector preview is noindex and omitted from the sitemap.');

@@ -1,46 +1,117 @@
 import assert from 'node:assert/strict';
-import { spawnSync } from 'node:child_process';
 import { readdir, readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
+import { spawnSync } from 'node:child_process';
 import { test } from 'node:test';
 
 const root = path.resolve('.');
+const site = path.join(root, 'site');
 const output = path.join(root, 'public');
+const base = 'https://ibrahimbinselimbd.github.io/After-hours';
+
 async function filesUnder(directory) {
   const out = [];
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     const full = path.join(directory, entry.name);
-    if (entry.isDirectory()) out.push(...await filesUnder(full)); else out.push(full);
+    if (entry.isDirectory()) out.push(...await filesUnder(full));
+    else out.push(full);
   }
   return out;
 }
 
-test('GitHub Pages build contains only the English Tools Hub and 256 functioning routes', async () => {
-  const build = spawnSync(process.execPath, ['scripts/build-github-pages.mjs'], { cwd: root, encoding: 'utf8', timeout: 120_000 });
+async function storyIds() {
+  const source = await readFile(path.join(site, 'content.js'), 'utf8');
+  const match = source.match(/^window\.STORIES\s*=\s*([\s\S]*);\s*$/);
+  assert.ok(match, 'Journal story data should be parseable');
+  return JSON.parse(match[1]).map(story => story.id);
+}
+
+async function activeToolSlugs() {
+  const slugs = [];
+  for (const entry of await readdir(path.join(site, 'tools'), { withFileTypes: true })) {
+    if (!entry.isDirectory() || ['_shared', 'text-detector'].includes(entry.name)) continue;
+    try {
+      if ((await stat(path.join(site, 'tools', entry.name, 'index.html'))).isFile()) slugs.push(entry.name);
+    } catch {
+      // Folders without an index page are not published tool routes.
+    }
+  }
+  return slugs.sort();
+}
+
+test('GitHub Pages builds the complete English site, Journal, and all 256 active tools', async () => {
+  const build = spawnSync(process.execPath, ['scripts/build-github-pages.mjs'], {
+    cwd: root,
+    encoding: 'utf8',
+    timeout: 120_000,
+    env: { ...process.env, PAGES_BASE_PATH: '/After-hours', PAGES_SITE_URL: base },
+  });
   assert.equal(build.status, 0, `${build.stdout}\n${build.stderr}`);
+  assert.match(build.stdout, /published active tool routes: 256/);
+
+  for (const relative of [
+    'index.html', 'districts/index.html', 'article.html', 'info.html', 'tools/index.html',
+    'style.css', 'app.js', 'content.js', 'districts.js', 'sitemap.xml', 'robots.txt', '.nojekyll',
+  ]) {
+    assert.equal(await stat(path.join(output, relative)).then(() => true).catch(() => false), true, `${relative} should be published`);
+  }
+  assert.equal(await stat(path.join(output, '.env.example')).then(() => true).catch(() => false), false, 'repository environment examples must not be copied to the public artifact');
+
+  const slugs = await activeToolSlugs();
+  assert.equal(slugs.length, 256, 'source should contain exactly 256 active tool routes');
   const html = (await filesUnder(path.join(output, 'tools'))).filter(file => file.endsWith('.html'));
-  assert.equal(html.length, 258, 'expected one hub, 256 active tools, and the disabled AI detector preview');
-  const catalogData = await readFile(path.join(output, 'tools', '_shared', 'planner-catalog-data.js'), 'utf8');
-  const plannerSlugs = [...catalogData.matchAll(/"slug":"([^"]+)"/g)].map(match => match[1]);
-  assert.equal(plannerSlugs.length, 100, 'hub catalog data should contain exactly 100 planner routes');
-  for (const slug of plannerSlugs) assert.equal(await stat(path.join(output, 'tools', slug, 'index.html')).then(() => true), true, `${slug} planner page should be built`);
-  for (const slug of ['animated-gif-optimizer','json-schema-validator','image-cropper','video-trimmer','percentage-calculator','text-detector','toml-validator-formatter','cache-control-evaluator','github-actions-matrix-preview','kubernetes-manifest-validator','terraform-plan-explorer','har-privacy-waterfall','css-clamp-fluid-scale','cross-platform-game-backlog-session-tracker','stream-bitrate-recording-storage-planner','offline-travel-emergency-card-generator','phishing-message-explainer','font-pairing-type-scale-previewer','screenshot-photo-text-editor']) {
-    assert.equal(await stat(path.join(output,'tools',slug,'index.html')).then(()=>true),true,`${slug} page should be present`);
+  assert.equal(html.length, 258, 'expected the Tools Hub, 256 active tools, and the disabled detector preview');
+  for (const slug of slugs) {
+    assert.equal(await stat(path.join(output, 'tools', slug, 'index.html')).then(() => true), true, `${slug} should be published`);
   }
-  assert.match(await readFile(path.join(output,'tools','text-detector','index.html'),'utf8'),/coming soon/i);
-  assert.equal(await stat(path.join(output,'districts')).then(()=>true).catch(()=>false),false);
-  assert.equal(await stat(path.join(output,'journal')).then(()=>true).catch(()=>false),false);
-  const sitemap=await readFile(path.join(output,'sitemap.xml'),'utf8');
-  assert.equal((sitemap.match(/<loc>/g)||[]).length,257,'sitemap should contain the hub and 256 live tools, but not the disabled detector');
-  assert.doesNotMatch(sitemap,/text-detector/,'disabled AI Text Detector must not appear in the sitemap');
-  const allFiles=await filesUnder(path.join(output,'tools'));
-  for(const file of allFiles.filter(file=>/\.(?:html|js|mjs|css)$/.test(file))){
-    const source=await readFile(file,'utf8');
-    assert.doesNotMatch(source,/(?:href|src)=(['"])\/(?:tools|districts|journal)\//,`${path.relative(output,file)} retains a root-relative site route`);
-    assert.doesNotMatch(source,/\/districts\//i,`${path.relative(output,file)} retains a Journal taxonomy route`);
+
+  const hub = await readFile(path.join(output, 'tools', 'index.html'), 'utf8');
+  assert.match(hub, new RegExp(`rel=["']canonical["'] href=["']${base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/tools/`));
+  const detector = await readFile(path.join(output, 'tools', 'text-detector', 'index.html'), 'utf8');
+  assert.match(detector, /coming soon/i);
+  assert.match(detector, /<meta\s+name=["']robots["']\s+content=["']noindex,follow["']/i);
+
+  const home = await readFile(path.join(output, 'index.html'), 'utf8');
+  const district = await readFile(path.join(output, 'districts', 'index.html'), 'utf8');
+  const article = await readFile(path.join(output, 'article.html'), 'utf8');
+  const info = await readFile(path.join(output, 'info.html'), 'utf8');
+  assert.match(home, /AFTERHOURS/);
+  assert.match(home, new RegExp(`rel=["']canonical["'] href=["']${base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/["']`));
+  assert.match(district, /JOURNAL DISTRICT MAP/);
+  assert.match(district, new RegExp(`${base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/districts/`));
+  assert.match(article, /article\.html\?story=/);
+  assert.match(info, /info\.html\?page=/);
+
+  const storyRouteScript = await readFile(path.join(output, 'districts.js'), 'utf8');
+  const homeRouteScript = await readFile(path.join(output, 'app.js'), 'utf8');
+  assert.match(storyRouteScript, /\/After-hours\/article\.html\?story=/, 'Journal map story links should target the static article template');
+  assert.match(homeRouteScript, /\/After-hours\/article\.html\?story=/, 'homepage story links should target the static article template');
+
+  const ids = await storyIds();
+  const sitemap = await readFile(path.join(output, 'sitemap.xml'), 'utf8');
+  const locations = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1].replace(/&amp;/g, '&'));
+  const expected = [
+    `${base}/`, `${base}/districts/`,
+    ...['about', 'privacy', 'disclaimer', 'advertising', 'terms', 'cookies', 'editorial', 'contact'].map(page => `${base}/info.html?page=${page}`),
+    ...ids.map(id => `${base}/article.html?story=${encodeURIComponent(id)}`),
+    `${base}/tools/`, ...slugs.map(slug => `${base}/tools/${slug}/`),
+  ];
+  assert.equal(locations.length, 285, 'sitemap should include the homepage, map, 8 info pages, every Journal story, the Tools Hub, and 256 active tools');
+  assert.equal(new Set(locations).size, locations.length, 'sitemap URLs should be unique');
+  assert.deepEqual([...locations].sort(), [...expected].sort(), 'sitemap should match the complete English canonical route inventory');
+  assert.doesNotMatch(sitemap, /text-detector/i, 'disabled AI Text Detector must not appear in the sitemap');
+  assert.match(sitemap, /^<\?xml version="1\.0" encoding="UTF-8"\?>/);
+  assert.match(await readFile(path.join(output, 'robots.txt'), 'utf8'), new RegExp(`Sitemap: ${base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/sitemap\\.xml`));
+
+  const publicTextFiles = (await filesUnder(output)).filter(file => /\.(?:html|js|mjs|css|json|xml|txt)$/.test(file));
+  for (const file of publicTextFiles) {
+    const source = await readFile(file, 'utf8');
+    assert.doesNotMatch(source, /afterhours-district\.bird-timimus\.workers\.dev/i, `${path.relative(output, file)} should use GitHub Pages URLs`);
+    assert.doesNotMatch(source, /(?:href|src)=(['"])\/(?:tools|districts|journal|article|info)\//i, `${path.relative(output, file)} should not retain a root-relative project route`);
   }
-  for(const file of allFiles.filter(file=>file.endsWith('.js'))){
-    const check=spawnSync(process.execPath,['--check',file],{encoding:'utf8',timeout:15_000});
-    assert.equal(check.status,0,`${path.relative(output,file)} does not parse: ${check.stderr}`);
+
+  for (const file of (await filesUnder(path.join(output, 'tools'))).filter(file => file.endsWith('.js'))) {
+    const check = spawnSync(process.execPath, ['--check', file], { encoding: 'utf8', timeout: 15_000 });
+    assert.equal(check.status, 0, `${path.relative(output, file)} does not parse: ${check.stderr}`);
   }
 });
