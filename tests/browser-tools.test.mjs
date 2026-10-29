@@ -6,8 +6,10 @@ import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const catalogDataSource = fs.readFileSync(path.join(repoRoot, 'site/tools/_shared/planner-catalog-data.js'), 'utf8');
 const catalogSource = fs.readFileSync(path.join(repoRoot, 'site/tools/catalog.js'), 'utf8');
-const sandbox = { document: { querySelector: () => null, querySelectorAll: () => [] }, console };
+const sandbox = { window: {}, document: { querySelector: () => null, querySelectorAll: () => [] }, console };
+vm.runInNewContext(catalogDataSource, sandbox);
 vm.runInNewContext(`${catalogSource}\n;globalThis.__toolCategories = categories;`, sandbox);
 const categories = sandbox.__toolCategories;
 const catalogTools = categories.flatMap(category => category.availableTools);
@@ -174,10 +176,10 @@ const researchedIdeas = [
   ['CSS clamp() Fluid-Scale Calculator & Preview', 'css-clamp-fluid-scale'],
 ];
 
-test('catalog preserves 25 existing tools, 80 prepared additions, and adds exactly 50 researched tools', () => {
-  assert.equal(catalogTools.length, 155, 'expected 25 preserved tools plus 80 prepared and 50 researched additions');
-  assert.equal(new Set(catalogTools.map(tool => tool.href)).size, 155, 'tool routes must be unique');
-  assert.equal(new Set(catalogTools.map(tool => tool.title)).size, 155, 'tool titles must be unique');
+test('catalog preserves the 155-tool baseline and adds exactly 100 planners plus the screenshot editor', () => {
+  assert.equal(catalogTools.length, 256, 'expected 155 existing routes plus 100 planners and the screenshot editor');
+  assert.equal(new Set(catalogTools.map(tool => tool.href)).size, 256, 'tool routes must be unique');
+  assert.equal(new Set(catalogTools.map(tool => tool.title)).size, 256, 'tool titles must be unique');
   assert.equal(preserved.length, 25, 'the existing tool inventory must remain complete');
   assert.equal(additions.length, 80, 'the release must add exactly 80 tools');
   for (const [title, slug] of preserved) {

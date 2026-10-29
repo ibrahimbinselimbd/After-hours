@@ -116,10 +116,21 @@ const catalog = await fs.readFile(path.join(outputRoot, 'tools', 'catalog.js'), 
 const escapedBase = basePath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const routePattern = new RegExp(`\\{title:'[^']+',href:'(?:${escapedBase})?(\\/tools\\/[^']+)'`, 'g');
 const routes = [...catalog.matchAll(routePattern)].map(match => match[1]).filter(route => route !== '/tools/text-detector/');
-const urls = [`${siteUrl}/tools/`, ...new Set(routes.map(route => `${siteUrl}${route}`))];
+for (const entry of await fs.readdir(path.join(toolsRoot), {withFileTypes: true})) {
+  if (!entry.isDirectory() || entry.name === '_shared' || entry.name === 'text-detector') continue;
+  try {
+    const page = await fs.stat(path.join(toolsRoot, entry.name, 'index.html'));
+    if (page.isFile()) routes.push(`/tools/${entry.name}/`);
+  } catch {
+    // Non-route folders have no page and are not sitemap entries.
+  }
+}
+const uniqueRoutes = [...new Set(routes)];
+if (uniqueRoutes.length !== 256) throw new Error(`Expected 256 active tool routes in the sitemap; found ${uniqueRoutes.length}.`);
+const urls = [`${siteUrl}/tools/`, ...uniqueRoutes.map(route => `${siteUrl}${route}`)];
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(url => `  <url><loc>${url.replace(/&/g, '&amp;')}</loc></url>`).join('\n')}\n</urlset>\n`;
 await fs.writeFile(path.join(outputRoot, 'sitemap.xml'), sitemap);
 
 console.log(`Built GitHub Pages artifact at ${outputRoot}`);
-console.log(`Base path: ${basePath}; published tool routes: ${new Set(routes).size}; copied root assets: ${copiedAssets.length}`);
+console.log(`Base path: ${basePath}; published tool routes: ${uniqueRoutes.length}; copied root assets: ${copiedAssets.length}`);
 console.log('Only site/tools and referenced non-HTML assets are included; Journal pages are excluded.');

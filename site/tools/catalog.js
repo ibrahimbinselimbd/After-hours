@@ -1,4 +1,4 @@
-// English Tools Hub catalog and search. All live utilities are free; the 130 new
+// English Tools Hub catalog and search. All live utilities are free; the 231 new
 // browser-local tools share one daily, device-local credit counter.
 const categories = [
   {id:'pdf-documents',title:'PDF & Documents',description:'Create, inspect, convert, OCR, number, watermark, fill and sign documents locally.',accent_color:'#b5a0ff',availableTools:[
@@ -177,6 +177,16 @@ const categories = [
     {title:'Board Foot Calculator',href:'/tools/board-foot-calculator/',description:'Calculate lumber volume from inch dimensions and quantity.',icon:'▤'},
     {title:'Date Add/Subtract Planner',href:'/tools/date-add-subtract-planner/',description:'Add or subtract calendar days, weeks, months or years from a date.',icon:'◷'}],upcomingTools:['Prompt Organizer','Decision Helper','Time Duration Calculator','Number Base Converter'],preview:{title:'AI Article & Text Detector',href:'/tools/text-detector/',description:'Coming soon. Analysis hosting is not configured; this preview is disabled.'}}
 ];
+const plannerIcons={'pdf-documents':'▤','image-design':'✎','video-tools':'◉','audio-tools':'♫','web-seo':'◇','developer-utilities':'⌘','data-spreadsheets':'▦','files-archives':'▣','privacy-security':'◈','ai-everyday-utilities':'✦'};
+const plannedRoutes=new Set(categories.flatMap(category=>category.availableTools.map(tool=>tool.href)));
+const catalogAdditions=[...(window.AHPlannerTools||[]),{slug:'screenshot-photo-text-editor',title:'Screenshot & Photo Text Editor',categoryId:'image-design',description:'Detect and replace screenshot text locally with OCR, editable overlays and bounded manual clone repair.'}];
+for(const tool of catalogAdditions){
+  const category=categories.find(item=>item.id===tool.categoryId);
+  const href=`/tools/${tool.slug}/`;
+  if(!category||plannedRoutes.has(href)) continue;
+  category.availableTools.push({title:tool.title,href,description:tool.description,icon:plannerIcons[tool.categoryId]||'✦'});
+  plannedRoutes.add(href);
+}
 const search=document.querySelector('#category-search');
 const cards=[...document.querySelectorAll('.category')];
 const dialog=document.querySelector('#category-dialog');
@@ -195,10 +205,10 @@ for (const card of cards) {
 }
 const availableCount=categories.reduce((sum,item)=>sum+item.availableTools.length,0);
 const policy=document.querySelectorAll('.policy-item small');
-if(policy[0]) policy[0].textContent='Image Size Optimizer, QR Code Generator, Passport & Visa Photo Studio and the 130 new tools share one existing 10-credit daily browser-local counter. HEIC retains its separate existing 10-credit counter. Successful actions only; failed actions cost no credits. Credits reset at local midnight and are not account-wide or server-enforced.';
+if(policy[0]) policy[0].textContent='Image Size Optimizer, QR Code Generator, Passport & Visa Photo Studio and the 231 new tools share one existing 10-credit daily browser-local counter. HEIC retains its separate existing 10-credit counter. Successful actions only; failed actions cost no credits. Credits reset at local midnight and are not account-wide or server-enforced.';
 if(policy[1]) policy[1].textContent='All tools are free. No premium-only tiers or paid APIs.';
 const policyLabel=document.querySelector('.policy-label');
-if(policyLabel) policyLabel.textContent=`${availableCount} TOOLS AVAILABLE · 130 NEW TOOLS`;
+if(policyLabel) policyLabel.textContent=`${availableCount} TOOLS AVAILABLE · 231 NEW TOOLS`;
 const buildNote=document.querySelector('.build-note span:first-child');
 if(buildNote) buildNote.innerHTML=`<i></i>${availableCount} FREE TOOLS AVAILABLE. MORE WILL ARRIVE GRADUALLY.`;
 const districtNote=document.querySelector('.build-note span:last-child');
