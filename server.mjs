@@ -144,9 +144,15 @@ export function createAppServer({
     if (!['GET', 'HEAD'].includes(req.method)) { res.writeHead(405, { Allow: 'GET, HEAD' }); return res.end(); }
     try {
       const pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
-      const file = path.resolve(root, routes.get(pathname) || pathname.replace(/^\/+/, ''));
+      let file = path.resolve(root, routes.get(pathname) || pathname.replace(/^\/+/, ''));
       if (!file.startsWith(root)) { res.writeHead(403); return res.end('Forbidden'); }
-      const content = await readFile(file);
+      let content;
+      try { content = await readFile(file); }
+      catch {
+        file = path.resolve(file, 'index.html');
+        if (!file.startsWith(root)) { res.writeHead(403); return res.end('Forbidden'); }
+        content = await readFile(file);
+      }
       res.writeHead(200, { 'Content-Type': types[path.extname(file)] || 'application/octet-stream', 'X-Content-Type-Options': 'nosniff' });
       res.end(req.method === 'HEAD' ? undefined : content);
     } catch { res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' }); res.end('Not found'); }

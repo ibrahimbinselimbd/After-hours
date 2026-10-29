@@ -1,0 +1,408 @@
+{
+  "fixtures": [
+    {
+      "slug": "toml-validator-formatter",
+      "title": "TOML Validator & Formatter",
+      "input": {
+        "schema": "{\"required\":[\"server.port\"],\"properties\":{\"server.port\":{\"type\":\"number\"}}}",
+        "toml": "title = \"demo\"\n[server]\nport = 8080\nenabled = true\n"
+      }
+    },
+    {
+      "slug": "java-properties-inspector",
+      "title": "Java .properties Escape / Unescape & Inspector",
+      "input": {
+        "mode": "inspect",
+        "source": "name = Ada\ncontinued = first\\\n  second\nname=Grace\\u0020Hopper"
+      }
+    },
+    {
+      "slug": "ndjson-validator-repair",
+      "title": "NDJSON Validator & Repair Preview",
+      "input": {
+        "blankLinePolicy": "report",
+        "ndjson": "{\"ok\":true}\n{\"count\":2,}\nnot json\n",
+        "repairMode": "preview"
+      }
+    },
+    {
+      "slug": "jsonpath-query-tester",
+      "title": "JSONPath Query Tester",
+      "input": {
+        "json": "{\"users\":[{\"name\":\"Ada\"},{\"name\":\"Lin\"}]}",
+        "query": "$.users[*].name"
+      }
+    },
+    {
+      "slug": "json-pointer-tester",
+      "title": "JSON Pointer (RFC 6901) Tester",
+      "input": {
+        "document_json": "{\"a/b\":{\"~key\":[\"zero\",\"one\"]}}",
+        "pointer": "/a~1b/~0key/1"
+      }
+    },
+    {
+      "slug": "json-patch-preview",
+      "title": "JSON Patch Builder & Preview",
+      "input": {
+        "document": "{\"a\":1,\"items\":[]}",
+        "operations": "[{\"op\":\"replace\",\"path\":\"/a\",\"value\":2},{\"op\":\"add\",\"path\":\"/items/-\",\"value\":\"x\"}]"
+      }
+    },
+    {
+      "slug": "json-schema-testcase-generator",
+      "title": "JSON Schema Test-Case Generator",
+      "input": {
+        "draft": "2020-12",
+        "schema": "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":3},\"name\":{\"type\":\"string\",\"minLength\":2}},\"required\":[\"id\"]}"
+      }
+    },
+    {
+      "slug": "openapi-compatibility-checker",
+      "title": "OpenAPI Spec Compatibility & Breaking-Change Checker",
+      "input": {
+        "current": "{\"openapi\":\"3.0.3\",\"info\":{\"title\":\"Pets\",\"version\":\"2.0.0\"},\"paths\":{\"/pets\":{\"get\":{\"responses\":{\"200\":{\"description\":\"ok\"}}}}}}",
+        "previous": "{\"openapi\":\"3.0.3\",\"info\":{\"title\":\"Pets\",\"version\":\"1.0.0\"},\"paths\":{\"/pets\":{\"get\":{\"parameters\":[{\"name\":\"limit\",\"in\":\"query\"}],\"responses\":{\"200\":{\"description\":\"ok\"},\"404\":{\"description\":\"missing\"}}}}}}"
+      }
+    },
+    {
+      "slug": "asyncapi-channel-explorer",
+      "title": "AsyncAPI Spec Validator & Channel Explorer",
+      "input": {
+        "document": "{\"asyncapi\":\"2.6.0\",\"info\":{\"title\":\"Demo\",\"version\":\"1.0.0\"},\"channels\":{\"orders/created\":{\"publish\":{}},\"orders/updated\":{\"subscribe\":{}}}}"
+      }
+    },
+    {
+      "slug": "graphql-query-validator",
+      "title": "GraphQL Query / Variables Validator",
+      "input": {
+        "query": "query GetUser($id: ID!) { user(id: $id) { id name } }",
+        "schema": "type Query { user: User } type User { id: ID! name: String }",
+        "variables": "{\"id\":\"user-1\"}"
+      }
+    },
+    {
+      "slug": "protobuf-wire-explorer",
+      "title": "Protocol Buffers Schema & Wire-Field Explorer",
+      "input": {
+        "schema": "message User { int32 id = 1; string name = 2; }",
+        "wire": "08 2a 12 05 41 6c 69 63 65"
+      }
+    },
+    {
+      "slug": "http-header-inspector",
+      "title": "HTTP Request / Response Header Inspector",
+      "input": {
+        "rawHeaders": "HTTP/1.1 200 OK\nContent-Type: application/json\ncontent-type: text/plain\nAuthorization: Bearer example\nBad Header"
+      }
+    },
+    {
+      "slug": "cors-preflight-simulator",
+      "title": "CORS Preflight Request Simulator",
+      "input": {
+        "credentials": "include",
+        "headers": "Request headers:\nContent-Type: application/json\nX-Trace: demo\n\nResponse headers:\nAccess-Control-Allow-Origin: https://app.example\nAccess-Control-Allow-Methods: PUT\nAccess-Control-Allow-Headers: content-type, x-trace\nAccess-Control-Allow-Credentials: true",
+        "method": "PUT",
+        "origin": "https://app.example"
+      }
+    },
+    {
+      "slug": "content-negotiation-workbench",
+      "title": "Accept / Content-Type Negotiation Workbench",
+      "input": {
+        "accept": "text/html;q=0.8, application/json, */*;q=0.1",
+        "acceptCharset": "utf-8",
+        "acceptLanguage": "en-US, en;q=0.8",
+        "representations": "[{\"id\":\"html\",\"mediaType\":\"text/html\",\"charset\":\"utf-8\",\"language\":\"en\"},{\"id\":\"json\",\"mediaType\":\"application/json\",\"charset\":\"utf-8\",\"language\":\"en-US\"}]"
+      }
+    },
+    {
+      "slug": "cache-control-evaluator",
+      "title": "HTTP Cache-Control Policy Builder & Evaluator",
+      "input": {
+        "cacheControl": "public, max-age=300, s-maxage=60",
+        "relatedHeaders": "Age: 42\nVary: Accept-Encoding\nCF-Cache-Status: HIT"
+      }
+    },
+    {
+      "slug": "problem-details-validator",
+      "title": "RFC 9457 Problem Details Validator & Fixture Builder",
+      "input": {
+        "body": "{\"title\":\"Broken\"}",
+        "contentType": "application/json",
+        "status": "200"
+      }
+    },
+    {
+      "slug": "webhook-hmac-verifier",
+      "title": "Webhook HMAC Signature Verifier",
+      "input": {
+        "encoding": "hex",
+        "payload": "{\"ok\":true}",
+        "secret": "demo-secret",
+        "signature": "not-a-signature"
+      }
+    },
+    {
+      "slug": "sri-hash-generator",
+      "title": "Subresource Integrity Hash Generator",
+      "input": {
+        "algorithms": "sha-256",
+        "content": "console.log(\"hello\");"
+      }
+    },
+    {
+      "slug": "csp-policy-evaluator",
+      "title": "Content Security Policy Builder & Evaluator",
+      "input": {
+        "policy": "default-src 'self'; script-src 'self' https://cdn.example; object-src 'none'",
+        "resources": "script img connect"
+      }
+    },
+    {
+      "slug": "csp-report-analyzer",
+      "title": "CSP Violation Report Analyzer",
+      "input": {
+        "redaction": "account-id",
+        "reports": "{\"csp-report\":{\"violated-directive\":\"script-src\",\"blocked-uri\":\"https://cdn.example/x.js?user=alice\",\"document-uri\":\"https://app.example/page#frag\"}}\n{\"violated-directive\":\"script-src\",\"blocked-uri\":\"https://cdn.example/x.js?user=bob\",\"document-uri\":\"https://app.example/page\"}"
+      }
+    },
+    {
+      "slug": "gitignore-pattern-tester",
+      "title": "Git Ignore Pattern Tester",
+      "input": {
+        "paths": "build/app.js\nimportant.txt\nsrc/index.js",
+        "rules": "# generated\nbuild/\n!important.txt"
+      }
+    },
+    {
+      "slug": "dockerignore-context-preview",
+      "title": "Docker .dockerignore Matcher & Context Preview",
+      "input": {
+        "manifest": "[{\"path\":\"app.js\",\"bytes\":1200},{\"path\":\"debug.log\",\"bytes\":80},{\"path\":\"node_modules/a.js\",\"bytes\":500},{\"path\":\"node_modules/keep.txt\",\"bytes\":20}]",
+        "patterns": "node_modules\n*.log\n!node_modules/keep.txt"
+      }
+    },
+    {
+      "slug": "editorconfig-conflict-checker",
+      "title": "EditorConfig Parser, Preview & Conflict Checker",
+      "input": {
+        "config": "root = true\n\n[*.js]\nindent_size = 2\n\n[src/**.js]\nindent_size = 4\ntrim_trailing_whitespace = true",
+        "paths": "src/app.js\nREADME.md"
+      }
+    },
+    {
+      "slug": "github-actions-workflow-validator",
+      "title": "GitHub Actions Workflow Validator",
+      "input": {
+        "workflow": "name: Smoke\non:\n  push:\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout\n      - run: echo ok\n        uses: actions/foo@v1\n"
+      }
+    },
+    {
+      "slug": "github-actions-matrix-preview",
+      "title": "GitHub Actions Matrix Expander & Exclusion Preview",
+      "input": {
+        "cap": "20",
+        "matrix": "{\"os\":[\"ubuntu\",\"windows\"],\"node\":[18,20],\"include\":[{\"os\":\"ubuntu\",\"node\":22}],\"exclude\":[{\"os\":\"windows\",\"node\":18}]}"
+      }
+    },
+    {
+      "slug": "github-actions-expression-playground",
+      "title": "GitHub Actions Expression Playground",
+      "input": {
+        "context": "{\"github\":{\"ref\":\"refs/heads/release/v1\"},\"inputs\":{\"publish\":true}}",
+        "expression": "contains(github.ref, 'release') && inputs.publish == true"
+      }
+    },
+    {
+      "slug": "codeowners-match-simulator",
+      "title": "CODEOWNERS Coverage & Match Simulator",
+      "input": {
+        "codeowners": "# broad\n*.js @frontend\nsrc/** @platform\n",
+        "paths": "src/app.js\nREADME.md\n"
+      }
+    },
+    {
+      "slug": "dependabot-config-preview",
+      "title": "Dependabot Configuration Validator & Schedule Preview",
+      "input": {
+        "config": "version: 2\nupdates:\n  - package-ecosystem: npm\n    directory: \"/\"\n    schedule:\n      interval: weekly\n      day: monday\n      time: \"09:30\"\n      timezone: UTC"
+      }
+    },
+    {
+      "slug": "renovate-rule-trace",
+      "title": "Renovate Config Validator & Rule Trace",
+      "input": {
+        "context": "{\"packageName\":\"react\",\"manager\":\"npm\",\"datasource\":\"npm\",\"depType\":\"dependencies\",\"updateType\":\"minor\"}",
+        "packageRules": "[{\"matchManagers\":[\"npm\"],\"groupName\":\"npm deps\"},{\"matchPackageNames\":[\"react\"],\"enabled\":false},{\"matchPackagePrefixes\":[\"re\"],\"automerge\":true,\"mystery\":true}]"
+      }
+    },
+    {
+      "slug": "compose-service-graph",
+      "title": "Docker Compose Service Graph & Port Conflict Checker",
+      "input": {
+        "compose": "services:\n  web:\n    depends_on: [db]\n    ports:\n      - \"8080:80\"\n  api:\n    ports:\n      - \"8080:8080\"\n  db:\n    image: postgres:16"
+      }
+    },
+    {
+      "slug": "kubernetes-manifest-validator",
+      "title": "Kubernetes Manifest Schema & Cross-Resource Validator",
+      "input": {
+        "manifests": "apiVersion: v1\nkind: Service\nmetadata:\n  name: web\nspec:\n  selector:\n    app: web\n---\napiVersion: v1\nkind: Pod\nmetadata:\n  name: api\n  labels:\n    app: api"
+      }
+    },
+    {
+      "slug": "kubernetes-quantity-converter",
+      "title": "Kubernetes CPU / Memory Quantity Converter",
+      "input": {
+        "kind": "cpu",
+        "quantities": "500m\n1.5Gi",
+        "rounding": "3"
+      }
+    },
+    {
+      "slug": "terraform-plan-explorer",
+      "title": "Terraform Plan JSON Explorer & Change-Risk Filter",
+      "input": {
+        "planJson": "{\"format_version\":\"1.0\",\"resource_changes\":[{\"address\":\"aws_db_instance.example\",\"change\":{\"actions\":[\"delete\",\"create\"],\"before\":{\"engine\":\"old\",\"password\":\"secret\"},\"after\":{\"engine\":\"new\",\"password\":\"secret\"},\"before_sensitive\":{\"password\":true},\"after_sensitive\":{\"password\":true}}},{\"address\":\"aws_instance.web\",\"change\":{\"actions\":[\"update\"],\"before\":{\"size\":\"small\"},\"after\":{\"size\":\"large\"},\"after_unknown\":{\"id\":true}}}]}",
+        "sensitivePaths": ""
+      }
+    },
+    {
+      "slug": "terraform-lockfile-inspector",
+      "title": "Terraform Dependency Lockfile Inspector",
+      "input": {
+        "lockfile": "provider \"registry.terraform.io/hashicorp/aws\" {\n  version = \"5.0.0\"\n  constraints = \">= 4.0.0\"\n  hashes = [\n    \"h1:abc\",\n    \"zh:def\"\n  ]\n}",
+        "platforms": "linux_amd64, darwin_arm64"
+      }
+    },
+    {
+      "slug": "git-rebase-todo-visualizer",
+      "title": "Interactive Git Rebase Todo Visualizer",
+      "input": {
+        "todo": "# Rebase todo\npick a1b2c3 First commit\nsquash d4e5f6 Fold changes\nexec npm test\ndrop 789abc Unwanted commit"
+      }
+    },
+    {
+      "slug": "git-range-diff-explainer",
+      "title": "Git Range-Diff Review Explainer",
+      "input": {
+        "rangeDiff": "1: abc1234 = 1: def5678 Keep the release fix\n2: 111aaaa ! 2: 222bbbb Adjust validation\n-: ------- > 3: 333cccc Add regression test"
+      }
+    },
+    {
+      "slug": "git-patch-preflight",
+      "title": "Git Patch Apply Preflight Simulator",
+      "input": {
+        "patch": "--- a/example.txt\n+++ b/example.txt\n@@ -2,1 +2,1 @@\n-old\n+new",
+        "target": "header\nold\nfooter"
+      }
+    },
+    {
+      "slug": "conventional-commit-preview",
+      "title": "Conventional Commit Validator & Release-Type Preview",
+      "input": {
+        "message": "feat(parser): support quoted values\n\nBREAKING CHANGE: quoted values now preserve escapes."
+      }
+    },
+    {
+      "slug": "release-notes-draft-builder",
+      "title": "Git Log to Release Notes Draft Builder",
+      "input": {
+        "context": "v2.4.0",
+        "gitLog": "a1b2c3d feat(ui): add release view (#42)\n9f8e7d6 fix: handle empty changelog"
+      }
+    },
+    {
+      "slug": "npm-semver-range-tester",
+      "title": "npm SemVer Range Satisfaction Tester",
+      "input": {
+        "range": "^1.2.0 || >=2.0.0 <3.0.0",
+        "versions": "1.2.3\n1.5.0\n2.0.0-beta.1\n2.0.0"
+      }
+    },
+    {
+      "slug": "js-lockfile-consistency-checker",
+      "title": "JavaScript Lockfile Inspector & Cross-File Consistency Checker",
+      "input": {
+        "lockfile": "{\"lockfileVersion\":3,\"packages\":{\"\":{},\"node_modules/react\":{\"version\":\"18.2.0\"}}}",
+        "lockfileKind": "npm",
+        "packageJson": "{\"dependencies\":{\"react\":\"^18.0.0\",\"stale\":\"^1.0.0\"}}"
+      }
+    },
+    {
+      "slug": "typescript-path-resolver",
+      "title": "TypeScript Path Alias Resolver Simulator",
+      "input": {
+        "files": "src/app.ts\nsrc/utils/index.ts",
+        "requests": "src/app.ts | @/utils\n@/missing",
+        "tsconfig": "{\"compilerOptions\":{\"baseUrl\":\".\",\"paths\":{\"@/*\":[\"src/*\"]}}}"
+      }
+    },
+    {
+      "slug": "typescript-config-explorer",
+      "title": "TypeScript Config Inheritance & Effective Options Explorer",
+      "input": {
+        "referencedConfig": "{\"compilerOptions\":{\"target\":\"ES2022\",\"strict\":false,\"rootDir\":\".\"},\"include\":[\"lib\"]}",
+        "referencedPath": "tsconfig.base.json",
+        "rootConfig": "{\"extends\":\"./base.tsconfig.json\",\"compilerOptions\":{\"strict\":true,\"outDir\":\"dist\"},\"include\":[\"src\"]}",
+        "rootPath": "app/tsconfig.json"
+      }
+    },
+    {
+      "slug": "source-map-privacy-inspector",
+      "title": "Source Map Inspector & Embedded-Source Privacy Checker",
+      "input": {
+        "sourceMap": "{\"version\":3,\"sources\":[\"/home/alice/app.js\"],\"sourcesContent\":[\"const apiKey = \\\"not-a-real-secret\\\";\"],\"names\":[],\"mappings\":\"AAAA\"}"
+      }
+    },
+    {
+      "slug": "stack-trace-grouping",
+      "title": "Multi-Language Stack Trace Parser & Grouping Tool",
+      "input": {
+        "traces": "Error: boom\n    at handler (src/app.js:12:4)\n    at main (src/main.js:20:2)\n\nTraceback (most recent call last):\n  File \"worker.py\", line 12, in handler\n\njava.lang.IllegalStateException: bad\n\tat com.example.App.run(App.java:12)"
+      }
+    },
+    {
+      "slug": "har-privacy-waterfall",
+      "title": "HAR Waterfall & Privacy Analyzer",
+      "input": {
+        "har": "{\"log\":{\"version\":\"1.2\",\"entries\":[]}}"
+      }
+    },
+    {
+      "slug": "js-bundle-stats-explorer",
+      "title": "JavaScript Bundle Stats Explorer",
+      "input": {
+        "limit": "5",
+        "stats": "{\"modules\":[{\"name\":\"src/app.js\",\"size\":4200},{\"name\":\"src/vendor.js\",\"size\":12000}],\"chunks\":[{\"id\":0,\"names\":[\"main\"],\"size\":16200}]}"
+      }
+    },
+    {
+      "slug": "css-specificity-duel",
+      "title": "CSS Specificity Calculator & Selector Duel",
+      "input": {
+        "selectorA": "#app .card:is(:hover, .active)",
+        "selectorB": ".panel > article.card:hover",
+        "sourceOrder": "2"
+      }
+    },
+    {
+      "slug": "css-grid-areas-visualizer",
+      "title": "CSS Grid Template-Areas Visualizer & Validator",
+      "input": {
+        "gridTemplateAreas": "\"header header\"\n\"main sidebar\"\n\"footer footer\""
+      }
+    },
+    {
+      "slug": "css-clamp-fluid-scale",
+      "title": "CSS clamp() Fluid-Scale Calculator & Preview",
+      "input": {
+        "maxSize": "32px",
+        "maxViewport": "1280px",
+        "minSize": "16px",
+        "minViewport": "320px"
+      }
+    }
+  ]
+}

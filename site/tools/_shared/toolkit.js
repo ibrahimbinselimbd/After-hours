@@ -58,7 +58,7 @@
       remaining() { return drawCredits().remaining; },
       canRun(statusTarget) {
         const ok = drawCredits().remaining > 0;
-        if (!ok && statusTarget) api.status(statusTarget, 'The existing 10 local daily credits shared with Image Size Optimizer, QR Code Generator, Passport & Visa Photo Studio and these 20 tools are used. They reset at local midnight on this browser.', 'warn');
+        if (!ok && statusTarget) api.status(statusTarget, 'The existing 10 local daily credits shared with Image Size Optimizer, QR Code Generator, Passport & Visa Photo Studio and the new browser-local tools are used. They reset at local midnight on this browser.', 'warn');
         return ok;
       },
       charge() {
