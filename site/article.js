@@ -8,8 +8,26 @@
   if (!story) return;
   const esc = value => String(value || '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const date = d => new Date(d+'T12:00:00Z').toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'});
-  document.title = `AFTERHOURS — ${story.title}`;
-  document.querySelector('meta[name="description"]').content=story.excerpt;
+  const setMeta = (key, value, attribute = 'name') => {
+    let element = document.head.querySelector(`meta[${attribute}="${key}"]`);
+    if (!element) {
+      element = document.createElement('meta');
+      element.setAttribute(attribute, key);
+      document.head.appendChild(element);
+    }
+    element.content = value;
+  };
+  const canonicalUrl = new URL(location.pathname, location.origin);
+  canonicalUrl.searchParams.set('story', story.id);
+  let canonicalLink = document.head.querySelector('link[rel="canonical"]');
+  if (!canonicalLink) {
+    canonicalLink = document.createElement('link');
+    canonicalLink.rel = 'canonical';
+    document.head.appendChild(canonicalLink);
+  }
+  canonicalLink.href = canonicalUrl.href;
+  document.title = `${story.title} | AFTERHOURS`;
+  setMeta('description', story.excerpt);
   $('article-title').textContent=story.title;
   $('article-bangla').textContent=story.subtitle || '';
   $('article-excerpt').textContent=story.excerpt;
@@ -30,6 +48,21 @@
   };
   const genericImage={src:'city.jpg',alt:'City architecture at night',caption:'AFTERHOURS editorial atmosphere. Illustrative photography, not an event or product described in this story.'};
   const pictures=Array.isArray(story.images)&&story.images.length?story.images:[illustrations[story.category]||genericImage];
+  const imageUrls=pictures.map(image=>new URL(image.src,location.href).href);
+  setMeta('og:site_name','AFTERHOURS','property');
+  setMeta('og:type','article','property');
+  setMeta('og:title',`${story.title} | AFTERHOURS`,'property');
+  setMeta('og:description',story.excerpt,'property');
+  setMeta('og:url',canonicalUrl.href,'property');
+  setMeta('og:image',imageUrls[0],'property');
+  setMeta('og:image:alt',pictures[0].alt||story.title,'property');
+  setMeta('article:published_time',story.publishedAt,'property');
+  setMeta('article:section',categoryDisplay,'property');
+  setMeta('twitter:card','summary_large_image');
+  setMeta('twitter:title',`${story.title} | AFTERHOURS`);
+  setMeta('twitter:description',story.excerpt);
+  setMeta('twitter:image',imageUrls[0]);
+  setMeta('twitter:image:alt',pictures[0].alt||story.title);
   const heroImage=document.querySelector('.hero-image');
   if(heroImage&&Array.isArray(story.images)&&story.images.length){heroImage.style.backgroundImage='linear-gradient(90deg,#080a16f5,#080a16b0),url('+JSON.stringify(pictures[0].src)+')';heroImage.setAttribute('aria-label',pictures[0].alt||story.title);}
   const figure=document.createElement('div');figure.className='article-media';
@@ -57,5 +90,5 @@
   function syncMotion(){document.body.classList.toggle('reduce-motion',reduced);$('motion-toggle').setAttribute('aria-pressed',String(reduced));$('motion-toggle').setAttribute('aria-label',reduced?'Enable animations':'Reduce animations');}
   $('motion-toggle').addEventListener('click',()=>{reduced=!reduced;syncMotion();});media.addEventListener('change',e=>{reduced=e.matches;syncMotion();});syncMotion();
   document.addEventListener('keydown',e=>{if(e.key==='s'&&!/input|textarea/i.test(document.activeElement?.tagName||'')){e.preventDefault();toggle();}});
-  const jsonLd=document.createElement('script');jsonLd.type='application/ld+json';jsonLd.textContent=JSON.stringify({'@context':'https://schema.org','@type':'NewsArticle',headline:story.title,description:story.excerpt,datePublished:story.publishedAt,author:{'@type':'Organization',name:'AFTERHOURS'},inLanguage:'en',citation:story.sources.map(s=>s.url)});document.head.appendChild(jsonLd);
+  const jsonLd=document.createElement('script');jsonLd.type='application/ld+json';jsonLd.textContent=JSON.stringify({'@context':'https://schema.org','@type':'NewsArticle',headline:story.title,description:story.excerpt,datePublished:story.publishedAt,articleSection:categoryDisplay,inLanguage:'en',mainEntityOfPage:canonicalUrl.href,image:imageUrls,citation:story.sources.map(s=>s.url)});document.head.appendChild(jsonLd);
 })();
