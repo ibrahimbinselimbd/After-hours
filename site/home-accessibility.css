@@ -49,7 +49,7 @@ header .tools-entry small {
   header { height: auto; min-height: 74px; padding: 12px 5%; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 12px; }
   header .brand { grid-column: 1; grid-row: 1; width: fit-content; }
   header .header-actions { grid-column: 2; grid-row: 1; justify-content: flex-end; gap: 10px; }
-  header #home-navigation { grid-column: 1 / -1; grid-row: 2; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 8px; width: 100%; color: #dbe8f8; font-size: 16px; }
+  header #home-navigation { display: none; }
   header #home-navigation a { padding: 6px 8px; min-height: 44px; border-radius: 3px; color: #dbe8f8; }
   header #home-navigation a:hover, header #home-navigation a:focus-visible { color: #8ff8ff; }
   header #home-navigation .active::after { display: none; }
