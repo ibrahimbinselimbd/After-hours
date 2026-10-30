@@ -39,7 +39,7 @@ async function activeToolSlugs() {
   return slugs.sort();
 }
 
-test('GitHub Pages builds the complete English site, Journal, and all 256 active tools', async () => {
+test('GitHub Pages builds the complete English site, Journal, and all 500 active tools', async () => {
   const build = spawnSync(process.execPath, ['scripts/build-github-pages.mjs'], {
     cwd: root,
     encoding: 'utf8',
@@ -47,7 +47,7 @@ test('GitHub Pages builds the complete English site, Journal, and all 256 active
     env: { ...process.env, PAGES_BASE_PATH: '/After-hours', PAGES_SITE_URL: base },
   });
   assert.equal(build.status, 0, `${build.stdout}\n${build.stderr}`);
-  assert.match(build.stdout, /published active tool routes: 256/);
+  assert.match(build.stdout, /published active tool routes: 500/);
 
   for (const relative of [
     'index.html', 'districts/index.html', 'article.html', 'info.html', 'tools/index.html',
@@ -58,9 +58,9 @@ test('GitHub Pages builds the complete English site, Journal, and all 256 active
   assert.equal(await stat(path.join(output, '.env.example')).then(() => true).catch(() => false), false, 'repository environment examples must not be copied to the public artifact');
 
   const slugs = await activeToolSlugs();
-  assert.equal(slugs.length, 256, 'source should contain exactly 256 active tool routes');
+  assert.equal(slugs.length, 500, 'source should contain exactly 500 active tool routes');
   const html = (await filesUnder(path.join(output, 'tools'))).filter(file => file.endsWith('.html'));
-  assert.equal(html.length, 258, 'expected the Tools Hub, 256 active tools, and the disabled detector preview');
+  assert.equal(html.length, 502, 'expected the Tools Hub, 500 active tools, and the disabled detector preview');
   for (const slug of slugs) {
     assert.equal(await stat(path.join(output, 'tools', slug, 'index.html')).then(() => true), true, `${slug} should be published`);
   }
@@ -96,7 +96,7 @@ test('GitHub Pages builds the complete English site, Journal, and all 256 active
     ...ids.map(id => `${base}/article.html?story=${encodeURIComponent(id)}`),
     `${base}/tools/`, ...slugs.map(slug => `${base}/tools/${slug}/`),
   ];
-  assert.equal(locations.length, 285, 'sitemap should include the homepage, map, 8 info pages, every Journal story, the Tools Hub, and 256 active tools');
+  assert.equal(locations.length, 529, 'sitemap should include the homepage, map, 8 info pages, every Journal story, the Tools Hub, and 500 active tools');
   assert.equal(new Set(locations).size, locations.length, 'sitemap URLs should be unique');
   assert.deepEqual([...locations].sort(), [...expected].sort(), 'sitemap should match the complete English canonical route inventory');
   assert.doesNotMatch(sitemap, /text-detector/i, 'disabled AI Text Detector must not appear in the sitemap');

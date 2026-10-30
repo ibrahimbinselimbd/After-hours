@@ -1,0 +1,672 @@
+{
+  "category": {
+    "id": "writing-language",
+    "title": "Writing & Language",
+    "description": "Practical browser-local tools for drafting, editing, and inspecting English text without sending content anywhere.",
+    "accent_color": "#7C3AED"
+  },
+  "tools": [
+    {
+      "slug": "sentence-length-analyzer",
+      "title": "Sentence Length Analyzer",
+      "description": "Measure sentence lengths and identify passages that may be tiring or abrupt to read.",
+      "limitations": "Heuristics use punctuation to find sentence boundaries and cannot judge meaning or intentional style.",
+      "fields": [
+        {
+          "id": "text",
+          "label": "Text",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Paste a paragraph or draft",
+          "help": "Use ordinary punctuation for best results."
+        },
+        {
+          "id": "includeSuggestions",
+          "label": "Include editorial suggestions",
+          "type": "checkbox",
+          "required": false,
+          "default": true,
+          "help": "Adds a short review prompt to the result."
+        }
+      ],
+      "testValues": {
+        "text": "Short sentence. This is a somewhat longer sentence that gives the reader more context.",
+        "includeSuggestions": true
+      }
+    },
+    {
+      "slug": "paragraph-cohesion-transition-map",
+      "title": "Paragraph Cohesion Transition Map",
+      "description": "Map common connective words across paragraphs and flag paragraph openings that may need a clearer link.",
+      "limitations": "Presence of a transition word is only a proxy for cohesion; it does not assess factual or logical accuracy.",
+      "fields": [
+        {
+          "id": "text",
+          "label": "Paragraphs",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Separate paragraphs with blank lines"
+        },
+        {
+          "id": "includeSuggestions",
+          "label": "Include editorial suggestions",
+          "type": "checkbox",
+          "required": false,
+          "default": true,
+          "help": "Adds a short review prompt to the result."
+        }
+      ],
+      "testValues": {
+        "text": "The plan starts with research.\n\nHowever, the next step needs owners.\n\nFinally, we can review results.",
+        "includeSuggestions": true
+      }
+    },
+    {
+      "slug": "active-voice-pattern-checker",
+      "title": "Active-Voice Pattern Checker",
+      "description": "Find likely passive-voice constructions and suggest a compact active rewrite pattern.",
+      "limitations": "The detector is a lightweight English heuristic and may flag legitimate passive voice or miss unusual forms.",
+      "fields": [
+        {
+          "id": "text",
+          "label": "Text",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Paste sentences to inspect"
+        },
+        {
+          "id": "includeSuggestions",
+          "label": "Include editorial suggestions",
+          "type": "checkbox",
+          "required": false,
+          "default": true,
+          "help": "Adds a short review prompt to the result."
+        }
+      ],
+      "testValues": {
+        "text": "The report was prepared by the team. The editor approved the change.",
+        "includeSuggestions": true
+      }
+    },
+    {
+      "slug": "pronoun-clarity-checker",
+      "title": "Pronoun Clarity Checker",
+      "description": "Flag sentences with multiple nearby noun candidates for a pronoun, helping you spot ambiguous references.",
+      "limitations": "This is a pattern-based warning, not a syntactic parser; context may make every flagged sentence clear.",
+      "fields": [
+        {
+          "id": "text",
+          "label": "Text",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Paste prose with pronouns"
+        },
+        {
+          "id": "includeSuggestions",
+          "label": "Include editorial suggestions",
+          "type": "checkbox",
+          "required": false,
+          "default": true,
+          "help": "Adds a short review prompt to the result."
+        }
+      ],
+      "testValues": {
+        "text": "Maya told Jordan that they should revise it before Friday.",
+        "includeSuggestions": true
+      }
+    },
+    {
+      "slug": "hedging-intensity-analyzer",
+      "title": "Hedging Intensity Analyzer",
+      "description": "Count uncertainty and softening terms so you can decide where a claim should be more direct or more qualified.",
+      "limitations": "Words can be appropriate in context; the score does not determine whether a claim is true.",
+      "fields": [
+        {
+          "id": "text",
+          "label": "Text",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Paste an argument or explanation"
+        },
+        {
+          "id": "includeSuggestions",
+          "label": "Include editorial suggestions",
+          "type": "checkbox",
+          "required": false,
+          "default": true,
+          "help": "Adds a short review prompt to the result."
+        }
+      ],
+      "testValues": {
+        "text": "This may perhaps be a useful approach, although it might need more testing.",
+        "includeSuggestions": true
+      }
+    },
+    {
+      "slug": "rhetorical-question-finder",
+      "title": "Rhetorical Question Finder",
+      "description": "Locate question-shaped sentences and classify likely rhetorical cues versus information-seeking questions.",
+      "limitations": "Intent is inferred from wording and cannot be known reliably without author context.",
+      "fields": [
+        {
+          "id": "text",
+          "label": "Text",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Paste copy containing questions"
+        },
+        {
+          "id": "includeSuggestions",
+          "label": "Include editorial suggestions",
+          "type": "checkbox",
+          "required": false,
+          "default": true,
+          "help": "Adds a short review prompt to the result."
+        }
+      ],
+      "testValues": {
+        "text": "Who does not want a clearer plan? What time does the review begin?",
+        "includeSuggestions": true
+      }
+    },
+    {
+      "slug": "acronym-index-builder",
+      "title": "Acronym Index Builder",
+      "description": "Extract repeated all-capital abbreviations and build a compact first-use index for a document.",
+      "limitations": "Initialisms in ordinary prose can be missed, and all-capital words such as headings may be included.",
+      "fields": [
+        {
+          "id": "text",
+          "label": "Text",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Paste text containing acronyms"
+        },
+        {
+          "id": "includeSuggestions",
+          "label": "Include editorial suggestions",
+          "type": "checkbox",
+          "required": false,
+          "default": true,
+          "help": "Adds a short review prompt to the result."
+        }
+      ],
+      "testValues": {
+        "text": "The API uses JSON. Our QA team checks the API before release.",
+        "includeSuggestions": true
+      }
+    },
+    {
+      "slug": "capitalization-consistency-checker",
+      "title": "Capitalization Consistency Checker",
+      "description": "Compare repeated words with different capitalization and report candidates for a consistent editorial choice.",
+      "limitations": "Sentence starts and proper names can legitimately vary; review each suggestion manually.",
+      "fields": [
+        {
+          "id": "text",
+          "label": "Text",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Paste text to compare"
+        },
+        {
+          "id": "includeSuggestions",
+          "label": "Include editorial suggestions",
+          "type": "checkbox",
+          "required": false,
+          "default": true,
+          "help": "Adds a short review prompt to the result."
+        }
+      ],
+      "testValues": {
+        "text": "The Project begins today. Later, the project enters review.",
+        "includeSuggestions": true
+      }
+    },
+    {
+      "slug": "punctuation-spacing-cleaner",
+      "title": "Punctuation Spacing Cleaner",
+      "description": "Preview safe fixes for repeated spaces and incorrect spaces before common punctuation marks.",
+      "limitations": "Only conservative spacing patterns are changed; typography and intentional monospace formatting are not understood.",
+      "fields": [
+        {
+          "id": "text",
+          "label": "Text",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Paste text with punctuation spacing issues"
+        },
+        {
+          "id": "includeSuggestions",
+          "label": "Include editorial suggestions",
+          "type": "checkbox",
+          "required": false,
+          "default": true,
+          "help": "Adds a short review prompt to the result."
+        }
+      ],
+      "testValues": {
+        "text": "Hello  world !  Is this ready ? Yes, it is .",
+        "includeSuggestions": true
+      }
+    },
+    {
+      "slug": "list-parallelism-checker",
+      "title": "List Parallelism Checker",
+      "description": "Inspect comma- or line-separated list items for mixed opening forms such as verbs, nouns, and gerunds.",
+      "limitations": "The classifier uses leading-word patterns and cannot assess nuanced grammatical parallelism.",
+      "fields": [
+        {
+          "id": "items",
+          "label": "List items",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Put one item per line or separate with semicolons"
+        },
+        {
+          "id": "includeSuggestions",
+          "label": "Include editorial suggestions",
+          "type": "checkbox",
+          "required": false,
+          "default": true,
+          "help": "Adds a short review prompt to the result."
+        }
+      ],
+      "testValues": {
+        "items": "Review the brief\nCollect feedback\nWriting the summary",
+        "includeSuggestions": true
+      }
+    },
+    {
+      "slug": "abbreviation-first-use-checker",
+      "title": "Abbreviation First-Use Checker",
+      "description": "Check a passage for uppercase abbreviations and flag first use without a nearby spelled-out form; this is a heuristic.",
+      "limitations": "It uses simple local patterns, cannot know every proper noun or official expansion, and requires editorial review.",
+      "fields": [
+        {
+          "id": "text",
+          "label": "Text",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Paste text containing abbreviations"
+        },
+        {
+          "id": "ignoreList",
+          "label": "Abbreviations or names to ignore",
+          "type": "textarea",
+          "required": false,
+          "placeholder": "Optional: API, NASA, or proper names to ignore",
+          "help": "Separate entries with commas or new lines."
+        }
+      ],
+      "testValues": {
+        "text": "Application Programming Interface (API) helps teams. The API can simplify work. Use QZK in the report.",
+        "ignoreList": "QZK"
+      }
+    },
+    {
+      "slug": "number-style-consistency-checker",
+      "title": "Number Style Consistency Checker",
+      "description": "Compare nearby spelled-out and numeral forms to reveal inconsistent number presentation.",
+      "limitations": "Context-specific style guides may intentionally mix forms, and only common number words are recognized.",
+      "fields": [
+        {
+          "id": "text",
+          "label": "Text",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Paste prose containing numbers"
+        },
+        {
+          "id": "includeSuggestions",
+          "label": "Include editorial suggestions",
+          "type": "checkbox",
+          "required": false,
+          "default": true,
+          "help": "Adds a short review prompt to the result."
+        }
+      ],
+      "testValues": {
+        "text": "We reviewed three options and selected 3 finalists from twelve entries.",
+        "includeSuggestions": true
+      }
+    },
+    {
+      "slug": "quote-punctuation-checker",
+      "title": "Quote Punctuation Checker",
+      "description": "Inspect quoted sentences for likely missing punctuation inside or immediately after closing quotation marks.",
+      "limitations": "Quotation conventions differ by style guide and language variety; this tool does not rewrite dialogue.",
+      "fields": [
+        {
+          "id": "text",
+          "label": "Text",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Paste quoted material"
+        },
+        {
+          "id": "includeSuggestions",
+          "label": "Include editorial suggestions",
+          "type": "checkbox",
+          "required": false,
+          "default": true,
+          "help": "Adds a short review prompt to the result."
+        }
+      ],
+      "testValues": {
+        "text": "She said, \"The draft is ready\". Then he asked, \"Is it final?\"",
+        "includeSuggestions": true
+      }
+    },
+    {
+      "slug": "homophone-context-flagger",
+      "title": "Homophone Context Flagger",
+      "description": "Find common homophone mix-ups such as their/there/they're and explain the basic distinction beside each occurrence.",
+      "limitations": "The checker flags words without understanding the full sentence, so correct uses may appear in the report.",
+      "fields": [
+        {
+          "id": "text",
+          "label": "Text",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Paste text to proofread"
+        },
+        {
+          "id": "includeSuggestions",
+          "label": "Include editorial suggestions",
+          "type": "checkbox",
+          "required": false,
+          "default": true,
+          "help": "Adds a short review prompt to the result."
+        }
+      ],
+      "testValues": {
+        "text": "Their team left they're notes over there for review.",
+        "includeSuggestions": true
+      }
+    },
+    {
+      "slug": "us-uk-spelling-variant-auditor",
+      "title": "US/UK Spelling Variant Auditor",
+      "description": "Detect common US and UK spelling pairs and show which variants appear so a document can follow one house style.",
+      "limitations": "The pair list is intentionally small and does not determine the audience’s preferred regional standard.",
+      "fields": [
+        {
+          "id": "text",
+          "label": "Text",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Paste English text"
+        },
+        {
+          "id": "includeSuggestions",
+          "label": "Include editorial suggestions",
+          "type": "checkbox",
+          "required": false,
+          "default": true,
+          "help": "Adds a short review prompt to the result."
+        }
+      ],
+      "testValues": {
+        "text": "The colour of the center is recorded in the catalog.",
+        "includeSuggestions": true
+      }
+    },
+    {
+      "slug": "verb-tense-shift-scanner",
+      "title": "Verb Tense Shift Scanner",
+      "description": "Scan sentences for mixed past and present-tense markers that may indicate an accidental narrative shift.",
+      "limitations": "Legitimate tense changes are common in analysis and instructions; markers are approximate rather than grammatical proof.",
+      "fields": [
+        {
+          "id": "text",
+          "label": "Text",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Paste narrative or explanation"
+        },
+        {
+          "id": "includeSuggestions",
+          "label": "Include editorial suggestions",
+          "type": "checkbox",
+          "required": false,
+          "default": true,
+          "help": "Adds a short review prompt to the result."
+        }
+      ],
+      "testValues": {
+        "text": "Yesterday the team reviewed the draft and now they approve the final version.",
+        "includeSuggestions": true
+      }
+    },
+    {
+      "slug": "sentence-variety-planner",
+      "title": "Sentence Variety Planner",
+      "description": "Classify sentence openings and lengths to show whether a passage relies too heavily on one repeated rhythm.",
+      "limitations": "Variety is a stylistic choice; the planner does not judge quality or recommend a single voice.",
+      "fields": [
+        {
+          "id": "text",
+          "label": "Text",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Paste several sentences"
+        },
+        {
+          "id": "includeSuggestions",
+          "label": "Include editorial suggestions",
+          "type": "checkbox",
+          "required": false,
+          "default": true,
+          "help": "Adds a short review prompt to the result."
+        }
+      ],
+      "testValues": {
+        "text": "We planned the launch. We checked the files. We sent the update after lunch.",
+        "includeSuggestions": true
+      }
+    },
+    {
+      "slug": "paragraph-balance-analyzer",
+      "title": "Paragraph Balance Analyzer",
+      "description": "Compare paragraph word counts and sentence counts to identify unusually dense or underdeveloped sections.",
+      "limitations": "Uneven paragraphs can be intentional; density alone does not measure clarity or importance.",
+      "fields": [
+        {
+          "id": "text",
+          "label": "Paragraphs",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Separate paragraphs with blank lines"
+        },
+        {
+          "id": "includeSuggestions",
+          "label": "Include editorial suggestions",
+          "type": "checkbox",
+          "required": false,
+          "default": true,
+          "help": "Adds a short review prompt to the result."
+        }
+      ],
+      "testValues": {
+        "text": "A short introduction.\n\nThis paragraph contains several sentences that develop the central explanation with supporting detail.",
+        "includeSuggestions": true
+      }
+    },
+    {
+      "slug": "instruction-clarity-checker",
+      "title": "Instruction Clarity Checker",
+      "description": "Evaluate procedural text for action verbs, ordered steps, and vague references that can make instructions harder to follow.",
+      "limitations": "The scores are editorial signals, not a usability study or a substitute for testing with real users.",
+      "fields": [
+        {
+          "id": "instructions",
+          "label": "Instructions",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Paste a procedure or how-to"
+        },
+        {
+          "id": "includeSuggestions",
+          "label": "Include editorial suggestions",
+          "type": "checkbox",
+          "required": false,
+          "default": true,
+          "help": "Adds a short review prompt to the result."
+        }
+      ],
+      "testValues": {
+        "instructions": "First, open the settings. Then select the backup option. Do it there when ready.",
+        "includeSuggestions": true
+      }
+    },
+    {
+      "slug": "claim-evidence-gap-reviewer",
+      "title": "Claim & Evidence Gap Reviewer",
+      "description": "Count assertive claim cues and evidence cues to highlight paragraphs that may need support or qualification.",
+      "limitations": "Keyword counts cannot verify evidence, sources, or truth; review the flagged claims yourself.",
+      "fields": [
+        {
+          "id": "text",
+          "label": "Text",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Paste an argument or report section"
+        },
+        {
+          "id": "includeSuggestions",
+          "label": "Include editorial suggestions",
+          "type": "checkbox",
+          "required": false,
+          "default": true,
+          "help": "Adds a short review prompt to the result."
+        }
+      ],
+      "testValues": {
+        "text": "This method is the best choice. The survey found that 64% preferred it, according to the results.",
+        "includeSuggestions": true
+      }
+    },
+    {
+      "slug": "call-to-action-strength-checker",
+      "title": "Call-to-Action Strength Checker",
+      "description": "Assess whether copy contains a clear action, an understandable object, and a useful time or next-step cue.",
+      "limitations": "The score reflects wording signals only and cannot predict conversion or audience motivation.",
+      "fields": [
+        {
+          "id": "text",
+          "label": "Copy",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Paste a call to action or closing"
+        },
+        {
+          "id": "includeSuggestions",
+          "label": "Include editorial suggestions",
+          "type": "checkbox",
+          "required": false,
+          "default": true,
+          "help": "Adds a short review prompt to the result."
+        }
+      ],
+      "testValues": {
+        "text": "Download the checklist today and review the first step before Friday.",
+        "includeSuggestions": true
+      }
+    },
+    {
+      "slug": "meeting-summary-structure-builder",
+      "title": "Meeting Summary Structure Builder",
+      "description": "Turn supplied notes into a structured local summary with decisions, open questions, and next steps detected from labeled lines.",
+      "limitations": "Only explicit labels and simple sentence cues are recognized; this does not infer missing decisions or owners.",
+      "fields": [
+        {
+          "id": "notes",
+          "label": "Notes",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Use lines such as Decision:, Question:, Next:"
+        },
+        {
+          "id": "includeSuggestions",
+          "label": "Include editorial suggestions",
+          "type": "checkbox",
+          "required": false,
+          "default": true,
+          "help": "Adds a short review prompt to the result."
+        }
+      ],
+      "testValues": {
+        "notes": "Decision: Ship the draft Monday\nQuestion: Who owns QA?\nNext: Priya checks the links",
+        "includeSuggestions": true
+      }
+    },
+    {
+      "slug": "reading-time-segment-planner",
+      "title": "Reading-Time Segment Planner",
+      "description": "Estimate reading time and divide a passage into balanced word-count segments for review or publishing checkpoints.",
+      "limitations": "Reading time is an estimate based on the selected speed and does not account for complexity, skimming, or accessibility needs.",
+      "fields": [
+        {
+          "id": "text",
+          "label": "Text",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Paste the passage"
+        },
+        {
+          "id": "wordsPerMinute",
+          "label": "Reading speed (words/minute)",
+          "type": "number",
+          "required": true,
+          "min": 80,
+          "max": 600,
+          "step": 1,
+          "default": 220
+        },
+        {
+          "id": "segments",
+          "label": "Number of segments",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 12,
+          "step": 1,
+          "default": 3
+        }
+      ],
+      "testValues": {
+        "text": "This passage contains enough words to demonstrate a simple reading-time estimate and balanced review checkpoints.",
+        "wordsPerMinute": 220,
+        "segments": 3
+      }
+    },
+    {
+      "slug": "text-metadata-brief-builder",
+      "title": "Text Metadata Brief Builder",
+      "description": "Create a compact local brief containing word count, sentence count, headings, and an excerpt from supplied copy.",
+      "limitations": "Heading detection recognizes lines ending in a colon or short title-like lines; it is not a document parser.",
+      "fields": [
+        {
+          "id": "text",
+          "label": "Text",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Paste copy for a quick brief"
+        },
+        {
+          "id": "includeSuggestions",
+          "label": "Include editorial suggestions",
+          "type": "checkbox",
+          "required": false,
+          "default": true,
+          "help": "Adds a short review prompt to the result."
+        }
+      ],
+      "testValues": {
+        "text": "Project update\nThe team finished the first review.\nRisks:\nOne dependency remains.",
+        "includeSuggestions": true
+      }
+    }
+  ]
+}

@@ -149,7 +149,7 @@ for (const entry of await fs.readdir(toolsRoot, { withFileTypes: true })) {
   }
 }
 const uniqueRoutes = [...new Set(routes)];
-if (uniqueRoutes.length !== 256) throw new Error(`Expected 256 active tool routes; found ${uniqueRoutes.length}.`);
+if (uniqueRoutes.length !== 500) throw new Error(`Expected 500 active tool routes; found ${uniqueRoutes.length}.`);
 
 const urls = [
   `${siteUrl}/`,

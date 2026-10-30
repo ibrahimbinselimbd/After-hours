@@ -1,0 +1,854 @@
+{
+  "category": {
+    "id": "learning-study",
+    "title": "Learning & Study",
+    "description": "Browser-local tools for planning, practicing, checking, and reflecting on learning.",
+    "accent_color": "#4F46E5"
+  },
+  "tools": [
+    {
+      "slug": "study-session-blueprint",
+      "title": "Study Session Blueprint",
+      "description": "Turn a topic, available time, and preferred learning modes into a timed session sequence with concrete outputs.",
+      "limitations": "It is a planning aid, not a guarantee of retention; adjust for your energy, accessibility needs, and course requirements.",
+      "fields": [
+        {
+          "id": "topic",
+          "label": "Topic or goal",
+          "type": "text",
+          "required": true,
+          "placeholder": "e.g., Photosynthesis"
+        },
+        {
+          "id": "minutes",
+          "label": "Available minutes",
+          "type": "number",
+          "required": true,
+          "min": 15,
+          "max": 480,
+          "step": 5,
+          "default": 60
+        },
+        {
+          "id": "mode",
+          "label": "Primary mode",
+          "type": "select",
+          "required": true,
+          "options": [
+            "reading",
+            "practice",
+            "discussion",
+            "project"
+          ],
+          "default": "practice"
+        },
+        {
+          "id": "breakMinutes",
+          "label": "Break minutes",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 30,
+          "step": 1,
+          "default": 5
+        }
+      ],
+      "testValues": {
+        "topic": "test",
+        "minutes": "60",
+        "mode": "practice",
+        "breakMinutes": "5"
+      }
+    },
+    {
+      "slug": "exam-topic-prioritizer",
+      "title": "Exam Topic Prioritizer",
+      "description": "Rank exam topics using your confidence, importance, and estimated minutes so the next study block targets the highest-value gaps.",
+      "limitations": "Scores reflect only the topics you enter and are not a prediction of exam questions or grades.",
+      "fields": [
+        {
+          "id": "topics",
+          "label": "Topics, one per line as Topic | confidence 1-5 | importance 1-5",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Cell respiration | 2 | 5"
+        },
+        {
+          "id": "minutes",
+          "label": "Minutes available",
+          "type": "number",
+          "required": true,
+          "min": 10,
+          "max": 1000,
+          "step": 5,
+          "default": 120
+        }
+      ],
+      "testValues": {
+        "topics": "Cell respiration | 2 | 5",
+        "minutes": "120"
+      }
+    },
+    {
+      "slug": "practice-problem-coverage-matrix",
+      "title": "Practice Problem Coverage Matrix",
+      "description": "Compare manually tagged practice problems with a list of concepts, show coverage counts, untested concepts, and overrepresented concepts.",
+      "limitations": "Tags must be supplied by the user; it does not grade answers or predict mastery.",
+      "fields": [
+        {
+          "id": "concepts",
+          "label": "Concepts, one per line",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "problems",
+          "label": "Problems, one per line as Problem label | concept1, concept2",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "minimumCoverage",
+          "label": "Minimum coverage count",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 20,
+          "default": 1
+        }
+      ],
+      "testValues": {
+        "concepts": "Algebra\nGraphs\nLimits",
+        "problems": "Solve equation | Algebra\nRead graph | Graphs, Algebra\nEstimate limit | Limits",
+        "minimumCoverage": "1"
+      }
+    },
+    {
+      "slug": "active-recall-cue-builder",
+      "title": "Active Recall Cue Builder",
+      "description": "Create varied, answerable recall cues from a compact list of topics, definitions, and examples without generating answers for you.",
+      "limitations": "Cues are structural prompts, not verified questions; review them for course-specific accuracy.",
+      "fields": [
+        {
+          "id": "items",
+          "label": "Study items, one per line as Term | definition or fact",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Osmosis | movement of water across a membrane"
+        },
+        {
+          "id": "cueStyle",
+          "label": "Cue mix",
+          "type": "select",
+          "required": true,
+          "options": [
+            "balanced",
+            "explain",
+            "compare",
+            "apply"
+          ],
+          "default": "balanced"
+        }
+      ],
+      "testValues": {
+        "items": "Osmosis | movement of water across a membrane",
+        "cueStyle": "balanced"
+      }
+    },
+    {
+      "slug": "problem-set-pacing-planner",
+      "title": "Problem-Set Pacing Planner",
+      "description": "Break a problem set into timed rounds with review buffers based on problem count, difficulty mix, and a target completion time.",
+      "limitations": "Actual solving time varies by subject and problem; the plan does not assess correctness.",
+      "fields": [
+        {
+          "id": "problems",
+          "label": "Number of problems",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 500,
+          "step": 1,
+          "default": 20
+        },
+        {
+          "id": "easyPercent",
+          "label": "Easy percentage",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 40
+        },
+        {
+          "id": "minutes",
+          "label": "Target minutes",
+          "type": "number",
+          "required": true,
+          "min": 10,
+          "max": 1000,
+          "step": 5,
+          "default": 120
+        },
+        {
+          "id": "reviewPercent",
+          "label": "Review buffer percentage",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "default": 15
+        }
+      ],
+      "testValues": {
+        "problems": "20",
+        "easyPercent": "40",
+        "minutes": "120",
+        "reviewPercent": "15"
+      }
+    },
+    {
+      "slug": "study-break-pattern-designer",
+      "title": "Study Break Pattern Designer",
+      "description": "Design a repeatable study-and-break rhythm from a total window and maximum uninterrupted focus time.",
+      "limitations": "This is not medical or ergonomic advice; take additional breaks whenever needed.",
+      "fields": [
+        {
+          "id": "windowMinutes",
+          "label": "Total study window",
+          "type": "number",
+          "required": true,
+          "min": 20,
+          "max": 720,
+          "step": 5,
+          "default": 120
+        },
+        {
+          "id": "focusCap",
+          "label": "Maximum focus minutes",
+          "type": "number",
+          "required": true,
+          "min": 5,
+          "max": 120,
+          "step": 5,
+          "default": 25
+        },
+        {
+          "id": "breakMinutes",
+          "label": "Break length",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 30,
+          "step": 1,
+          "default": 5
+        }
+      ],
+      "testValues": {
+        "windowMinutes": "120",
+        "focusCap": "25",
+        "breakMinutes": "5"
+      }
+    },
+    {
+      "slug": "course-grade-target-planner",
+      "title": "Course Grade Target Planner",
+      "description": "Calculate the average score needed on remaining assessments to reach a target course percentage from completed weighted work.",
+      "limitations": "This is arithmetic only; grading policies, rounding, dropped scores, and extra credit may change the real result.",
+      "fields": [
+        {
+          "id": "completedWeight",
+          "label": "Completed weight percent",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 99,
+          "step": 1,
+          "default": 40
+        },
+        {
+          "id": "completedAverage",
+          "label": "Average on completed work percent",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 82
+        },
+        {
+          "id": "target",
+          "label": "Target course percent",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 85
+        }
+      ],
+      "testValues": {
+        "completedWeight": "40",
+        "completedAverage": "82",
+        "target": "85"
+      }
+    },
+    {
+      "slug": "vocabulary-encounter-planner",
+      "title": "Vocabulary Encounter Planner",
+      "description": "Schedule varied encounters with a set of vocabulary items across a short study window, including context, retrieval, and usage checks.",
+      "limitations": "It does not provide translations or judge language proficiency; supply accurate meanings yourself.",
+      "fields": [
+        {
+          "id": "words",
+          "label": "Words, one per line",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "abate\ncoherent\nmitigate"
+        },
+        {
+          "id": "days",
+          "label": "Study days",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 30,
+          "step": 1,
+          "default": 7
+        },
+        {
+          "id": "itemsPerDay",
+          "label": "New items per day",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 100,
+          "step": 1,
+          "default": 3
+        }
+      ],
+      "testValues": {
+        "words": "abate\ncoherent\nmitigate",
+        "days": "7",
+        "itemsPerDay": "3"
+      }
+    },
+    {
+      "slug": "lab-report-checklist-scorer",
+      "title": "Lab Report Checklist Scorer",
+      "description": "Score the completeness of a lab-report draft against weighted sections and identify the sections with the largest point opportunities.",
+      "limitations": "A checklist score is not a scientific validity review and cannot replace instructor requirements or safety review.",
+      "fields": [
+        {
+          "id": "sections",
+          "label": "Sections, one per line as Section | earned points | possible points",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Methods | 8 | 10"
+        },
+        {
+          "id": "threshold",
+          "label": "Ready threshold percent",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 85
+        }
+      ],
+      "testValues": {
+        "sections": "Methods | 8 | 10",
+        "threshold": "85"
+      }
+    },
+    {
+      "slug": "research-question-refiner",
+      "title": "Research Question Refiner",
+      "description": "Test a proposed research question for focus, scope signals, and observable evidence terms, then suggest a tighter question pattern.",
+      "limitations": "It evaluates wording heuristically and does not establish disciplinary significance or ethics approval needs.",
+      "fields": [
+        {
+          "id": "question",
+          "label": "Draft research question",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "How does sleep duration relate to memory recall in first-year students?"
+        },
+        {
+          "id": "population",
+          "label": "Population or context",
+          "type": "text",
+          "required": true,
+          "placeholder": "First-year students"
+        },
+        {
+          "id": "timeframe",
+          "label": "Timeframe",
+          "type": "text",
+          "required": true,
+          "placeholder": "One semester"
+        }
+      ],
+      "testValues": {
+        "question": "How does sleep duration relate to memory recall in first-year students?",
+        "population": "test",
+        "timeframe": "test"
+      }
+    },
+    {
+      "slug": "source-synthesis-matrix",
+      "title": "Source Synthesis Matrix",
+      "description": "Compare sources across claims, evidence types, and agreement so a literature review can reveal convergence and gaps.",
+      "limitations": "The comparison is based on your labels and excerpts; it does not verify sources or citations.",
+      "fields": [
+        {
+          "id": "sources",
+          "label": "Sources, one per line as Source | claim | evidence type | stance",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Smith 2024 | practice improves recall | experiment | supports"
+        },
+        {
+          "id": "focus",
+          "label": "Review focus",
+          "type": "text",
+          "required": true,
+          "placeholder": "retrieval practice"
+        }
+      ],
+      "testValues": {
+        "sources": "Smith 2024 | practice improves recall | experiment | supports",
+        "focus": "test"
+      }
+    },
+    {
+      "slug": "practice-exam-blueprint",
+      "title": "Practice Exam Blueprint",
+      "description": "Build a balanced practice-exam outline from total questions, topic weights, and cognitive-level targets.",
+      "limitations": "The blueprint is a distribution aid and does not predict an instructor’s exam or validate item quality.",
+      "fields": [
+        {
+          "id": "topics",
+          "label": "Topics, one per line as Topic | weight percent",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Algebra | 40"
+        },
+        {
+          "id": "questions",
+          "label": "Total questions",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 300,
+          "step": 1,
+          "default": 30
+        },
+        {
+          "id": "levels",
+          "label": "Cognitive levels as recall,apply,analyze percentages",
+          "type": "text",
+          "required": true,
+          "placeholder": "recall 30, apply 50, analyze 20"
+        }
+      ],
+      "testValues": {
+        "topics": "Algebra | 40",
+        "questions": "30",
+        "levels": "test"
+      }
+    },
+    {
+      "slug": "error-log-analyzer",
+      "title": "Study Error-Log Analyzer",
+      "description": "Classify a problem-solving error log by error type and recommend a targeted review action for the most frequent pattern.",
+      "limitations": "Recommendations are generic study prompts; the tool cannot inspect the original problems or determine why an error occurred.",
+      "fields": [
+        {
+          "id": "errors",
+          "label": "Errors, one per line as item | type | note",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Q1 | concept | confused conditional probability"
+        },
+        {
+          "id": "typeNames",
+          "label": "Expected type names, comma-separated",
+          "type": "text",
+          "required": true,
+          "placeholder": "concept,reading,calculation,careless"
+        }
+      ],
+      "testValues": {
+        "errors": "Q1 | concept | confused conditional probability",
+        "typeNames": "test"
+      }
+    },
+    {
+      "slug": "learning-objective-checker",
+      "title": "Learning Objective Measurability Checker",
+      "description": "Inspect learning objectives for observable action verbs, an object, and a measurable condition, then flag vague wording.",
+      "limitations": "Verb heuristics are language-based and may not fit every discipline or legitimate exploratory objective.",
+      "fields": [
+        {
+          "id": "objectives",
+          "label": "Objectives, one per line",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Compare two sampling methods using three criteria"
+        },
+        {
+          "id": "verbSet",
+          "label": "Preferred observable verbs, comma-separated",
+          "type": "text",
+          "required": true,
+          "placeholder": "define,compare,calculate,design,justify,analyze"
+        }
+      ],
+      "testValues": {
+        "objectives": "Compare two sampling methods using three criteria",
+        "verbSet": "test"
+      }
+    },
+    {
+      "slug": "skill-prerequisite-roadmap",
+      "title": "Skill Prerequisite Roadmap",
+      "description": "Turn a skill ladder into milestones with prerequisite checks and a practical demonstration for each stage.",
+      "limitations": "The order is inferred from your numbering and prerequisite labels, not from external standards.",
+      "fields": [
+        {
+          "id": "skills",
+          "label": "Skills, one per line as level | skill | prerequisite",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "1 | variables | none"
+        },
+        {
+          "id": "target",
+          "label": "Target skill",
+          "type": "text",
+          "required": true,
+          "placeholder": "debugging"
+        }
+      ],
+      "testValues": {
+        "skills": "1 | variables | none",
+        "target": "test"
+      }
+    },
+    {
+      "slug": "distraction-protocol-builder",
+      "title": "Study Distraction Protocol Builder",
+      "description": "Create a before/during/after protocol from your top distractions and the study context, with a measurable return-to-task rule.",
+      "limitations": "It cannot change device settings or address clinical attention concerns; use it as a personal experiment.",
+      "fields": [
+        {
+          "id": "distractions",
+          "label": "Distractions, one per line",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "phone notifications\nunclear next step\nroom noise"
+        },
+        {
+          "id": "context",
+          "label": "Study context",
+          "type": "select",
+          "required": true,
+          "options": [
+            "library",
+            "home",
+            "classroom",
+            "online"
+          ],
+          "default": "home"
+        },
+        {
+          "id": "sessionMinutes",
+          "label": "Session minutes",
+          "type": "number",
+          "required": true,
+          "min": 10,
+          "max": 480,
+          "step": 5,
+          "default": 60
+        }
+      ],
+      "testValues": {
+        "distractions": "phone notifications\nunclear next step\nroom noise",
+        "context": "home",
+        "sessionMinutes": "60"
+      }
+    },
+    {
+      "slug": "peer-review-rubric-builder",
+      "title": "Peer Review Rubric Builder",
+      "description": "Create a weighted peer-review rubric from criteria and weights, with scoring anchors that make feedback more consistent.",
+      "limitations": "It produces a draft rubric; instructors should adapt criteria, accessibility, and grading consequences.",
+      "fields": [
+        {
+          "id": "criteria",
+          "label": "Criteria, one per line as Criterion | weight percent",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Evidence | 40"
+        },
+        {
+          "id": "scale",
+          "label": "Score scale maximum",
+          "type": "number",
+          "required": true,
+          "min": 2,
+          "max": 10,
+          "step": 1,
+          "default": 4
+        },
+        {
+          "id": "assignment",
+          "label": "Assignment type",
+          "type": "text",
+          "required": true,
+          "placeholder": "argument essay"
+        }
+      ],
+      "testValues": {
+        "criteria": "Evidence | 40",
+        "scale": "4",
+        "assignment": "test"
+      }
+    },
+    {
+      "slug": "office-hours-question-organizer",
+      "title": "Office Hours Question Organizer",
+      "description": "Transform rough questions into an office-hours agenda grouped by concept, attempted work, and the specific help requested.",
+      "limitations": "It organizes your notes but does not answer questions or replace course communication policies.",
+      "fields": [
+        {
+          "id": "questions",
+          "label": "Questions, one per line as Topic | what I tried | question",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Derivatives | chain rule example | Where does the inner derivative enter?"
+        },
+        {
+          "id": "minutes",
+          "label": "Meeting minutes",
+          "type": "number",
+          "required": true,
+          "min": 5,
+          "max": 180,
+          "step": 5,
+          "default": 30
+        }
+      ],
+      "testValues": {
+        "questions": "Derivatives | chain rule example | Where does the inner derivative enter?",
+        "minutes": "30"
+      }
+    },
+    {
+      "slug": "tutorial-sequence-planner",
+      "title": "Tutorial Sequence Planner",
+      "description": "Arrange a lesson sequence with an activate, model, practice, check, and transfer phase within a fixed duration.",
+      "limitations": "It is a generic instructional structure and does not assess learner needs or subject-specific pedagogy.",
+      "fields": [
+        {
+          "id": "topic",
+          "label": "Lesson topic",
+          "type": "text",
+          "required": true,
+          "placeholder": "Balancing chemical equations"
+        },
+        {
+          "id": "minutes",
+          "label": "Lesson minutes",
+          "type": "number",
+          "required": true,
+          "min": 15,
+          "max": 300,
+          "step": 5,
+          "default": 60
+        },
+        {
+          "id": "priorKnowledge",
+          "label": "Prior knowledge to activate",
+          "type": "text",
+          "required": true,
+          "placeholder": "Conservation of atoms"
+        },
+        {
+          "id": "transferTask",
+          "label": "Transfer task",
+          "type": "text",
+          "required": true,
+          "placeholder": "Balance an unfamiliar reaction"
+        }
+      ],
+      "testValues": {
+        "topic": "test",
+        "minutes": "60",
+        "priorKnowledge": "test",
+        "transferTask": "test"
+      }
+    },
+    {
+      "slug": "project-rubric-self-assessor",
+      "title": "Learning Project Rubric Self-Assessor",
+      "description": "Score project criteria against weighted evidence and produce a prioritized revision list before submission.",
+      "limitations": "Self-scores are subjective and should be checked against the official rubric and instructor feedback.",
+      "fields": [
+        {
+          "id": "criteria",
+          "label": "Criteria, one per line as Criterion | weight | score 0-4 | evidence note",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Method | 30 | 3 | clear sample description"
+        },
+        {
+          "id": "project",
+          "label": "Project name",
+          "type": "text",
+          "required": true,
+          "placeholder": "Water quality investigation"
+        }
+      ],
+      "testValues": {
+        "criteria": "Method | 30 | 3 | clear sample description",
+        "project": "test"
+      }
+    },
+    {
+      "slug": "concept-comparison-table",
+      "title": "Concept Comparison Table",
+      "description": "Build a compact comparison table from concepts and distinguishing dimensions to expose similarities, differences, and blank cells.",
+      "limitations": "It only formats the comparisons you provide and does not determine which dimensions matter in your field.",
+      "fields": [
+        {
+          "id": "concepts",
+          "label": "Concepts, comma-separated",
+          "type": "text",
+          "required": true,
+          "placeholder": "mitosis, meiosis, binary fission"
+        },
+        {
+          "id": "dimensions",
+          "label": "Dimensions, one per line",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "purpose\nnumber of divisions\ngenetic similarity"
+        },
+        {
+          "id": "entries",
+          "label": "Entries, one per line as Concept | Dimension | note",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "mitosis | purpose | growth and repair"
+        }
+      ],
+      "testValues": {
+        "concepts": "test",
+        "dimensions": "purpose\nnumber of divisions\ngenetic similarity",
+        "entries": "mitosis | purpose | growth and repair"
+      }
+    },
+    {
+      "slug": "learning-objective-verb-classifier",
+      "title": "Learning Objective Verb Classifier",
+      "description": "Heuristically group supplied learning-objective sentences by recognizable action verbs (recall, explain, apply, analyze, evaluate, create).",
+      "limitations": "Verb dictionaries are incomplete and context matters; this is an editable teaching aid, not an assessment.",
+      "fields": [
+        {
+          "id": "objectives",
+          "label": "Learning objectives, one per line",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "focusLevel",
+          "label": "Focus level",
+          "type": "select",
+          "required": false,
+          "options": [
+            "all",
+            "recall",
+            "explain",
+            "apply",
+            "analyze",
+            "evaluate",
+            "create"
+          ],
+          "default": "all"
+        }
+      ],
+      "testValues": {
+        "objectives": "Define a term\nExplain a process\nApply a formula\nAnalyze a graph\nEvaluate an argument\nDesign an experiment\nUnderstand the topic",
+        "focusLevel": "all"
+      }
+    },
+    {
+      "slug": "knowledge-confidence-calibrator",
+      "title": "Knowledge Confidence Calibrator",
+      "description": "Compare confidence ratings with quiz results for topics and calculate a simple calibration gap to reveal over- or under-confidence.",
+      "limitations": "It is meaningful only for the topics and scores you enter; a small sample is noisy and not a measure of ability.",
+      "fields": [
+        {
+          "id": "records",
+          "label": "Records, one per line as Topic | confidence 0-100 | result 0-100",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Fractions | 80 | 60"
+        },
+        {
+          "id": "targetGap",
+          "label": "Acceptable absolute gap",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 15
+        }
+      ],
+      "testValues": {
+        "records": "Fractions | 80 | 60",
+        "targetGap": "15"
+      }
+    },
+    {
+      "slug": "study-question-ladder",
+      "title": "Study Question Ladder",
+      "description": "Turn a broad study topic into progressively more specific questions that move from recall to explanation, application, and evaluation.",
+      "limitations": "The ladder is a prompt sequence, not a complete lesson or a guarantee that each question matches your curriculum.",
+      "fields": [
+        {
+          "id": "topic",
+          "label": "Topic",
+          "type": "text",
+          "required": true,
+          "placeholder": "Climate feedback loops"
+        },
+        {
+          "id": "anchor",
+          "label": "Known fact or definition",
+          "type": "text",
+          "required": true,
+          "placeholder": "A warmer atmosphere can hold more water vapor"
+        },
+        {
+          "id": "context",
+          "label": "Application context",
+          "type": "text",
+          "required": true,
+          "placeholder": "Explain a recent temperature trend"
+        }
+      ],
+      "testValues": {
+        "topic": "test",
+        "anchor": "test",
+        "context": "test"
+      }
+    }
+  ]
+}
