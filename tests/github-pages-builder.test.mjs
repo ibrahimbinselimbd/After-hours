@@ -43,6 +43,12 @@ function decodeHtml(value = '') {
   return value.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;|&#x27;/gi, "'");
 }
 
+function referrerMetaValues(html) {
+  return [...html.matchAll(/<meta\b[^>]*>/gi)]
+    .filter(([tag]) => /\bname=["']referrer["']/i.test(tag))
+    .map(([tag]) => tag.match(/\bcontent=["']([^"']+)["']/i)?.[1] || '');
+}
+
 test('unknown Journal story IDs render a truthful noindex state and never fall back to the first story', async () => {
   const vm = await import('node:vm');
   const source = await readFile(path.join(site, 'article.js'), 'utf8');
@@ -241,6 +247,11 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
   const publicTextFiles = (await filesUnder(output)).filter(file => /\.(?:html|js|mjs|css|json|xml|txt)$/.test(file));
   for (const file of publicTextFiles) {
     const source = await readFile(file, 'utf8');
+    const relative = path.relative(output, file);
+    if (file.endsWith('.html')) {
+      const expectedPolicy = relative === 'tools/heic-to-jpg/index.html' ? 'no-referrer' : 'strict-origin-when-cross-origin';
+      assert.deepEqual(referrerMetaValues(source), [expectedPolicy], `${relative} should have one safe document-level referrer policy`);
+    }
     assert.doesNotMatch(source, /afterhours-district\.bird-timimus\.workers\.dev/i, `${path.relative(output, file)} should use GitHub Pages URLs`);
     assert.doesNotMatch(source, /(?:href|src)=(['"])\/(?:tools|districts|journal|article|info)\//i, `${path.relative(output, file)} should not retain a root-relative project route`);
   }

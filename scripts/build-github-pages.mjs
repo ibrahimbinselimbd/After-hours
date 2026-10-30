@@ -87,6 +87,13 @@ function upsertMeta(html, attribute, name, content) {
   return html.replace(/<\/head>/i, `${tag}</head>`);
 }
 
+function ensureDocumentReferrerMeta(html) {
+  // This browser-side fallback is not an HTTP response header; preserve any page-specific policy.
+  if (/<meta\b(?=[^>]*\bname=["']referrer["'])[^>]*>/i.test(html)) return html;
+  const tag = '<meta name="referrer" content="strict-origin-when-cross-origin">';
+  return html.replace(/<head\b[^>]*>/i, head => `${head}\n  ${tag}`);
+}
+
 function staticFieldMarkup(field, slug) {
   const key = field?.id || field?.name || '';
   if (!/^[a-zA-Z][\w-]{0,40}$/.test(key) || !['text', 'textarea', 'number', 'date', 'select', 'checkbox'].includes(field.type)) return '';
@@ -204,6 +211,7 @@ for (const file of await walk(outputRoot)) {
       const csp = '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; script-src \'self\'; worker-src \'self\'; style-src \'self\'; font-src \'self\'; img-src \'self\' blob: data:; connect-src \'none\'; object-src \'none\'; base-uri \'none\'; form-action \'none\'">';
       text = text.replace(/<head([^>]*)>/i, `<head$1>${csp}<meta name="referrer" content="no-referrer">`);
     }
+    if (ext === '.html') text = ensureDocumentReferrerMeta(text);
   }
 
   text = applyProjectBase(text, file);
@@ -215,6 +223,11 @@ for (const file of await walk(outputRoot)) {
 await fs.writeFile(path.join(outputRoot, '.nojekyll'), '');
 await fs.writeFile(path.join(outputRoot, 'tools.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta http-equiv="refresh" content="0;url=${basePath}/tools/"><title>AFTERHOURS Tools</title></head><body><p><a href="${basePath}/tools/">Open the Tools Hub</a></p><script>location.replace(${JSON.stringify(`${basePath}/tools/`)});</script></body></html>`);
 await fs.writeFile(path.join(outputRoot, '404.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Page not found · AFTERHOURS</title></head><body><main><h1>Page not found</h1><p><a href="${basePath}/districts/">Browse the Journal</a></p><p><a href="${basePath}/">Return to AFTERHOURS</a></p></main></body></html>`);
+for (const route of ['tools.html', '404.html']) {
+  const file = path.join(outputRoot, route);
+  const html = await fs.readFile(file, 'utf8');
+  await fs.writeFile(file, ensureDocumentReferrerMeta(html));
+}
 
 const catalog = await fs.readFile(path.join(outputRoot, 'tools', 'catalog.js'), 'utf8');
 const escapedBase = basePath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
