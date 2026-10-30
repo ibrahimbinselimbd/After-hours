@@ -23,9 +23,16 @@ with sync_playwright() as p:
         def feedback():
             status = page.locator('.ah-footer__feedback-status')
             assert status.count() == 1
-            assert 'Feedback contact coming soon' in status.inner_text()
+            assert status.evaluate('(el) => el.tagName') == 'A'
+            assert status.get_attribute('href') == 'https://github.com/ibrahimbinselimbd/After-hours/issues'
+            assert 'posts are public' in status.inner_text().lower()
             assert status.locator('a, input, textarea, button').count() == 0
-            assert page.locator('a[href^="mailto:"], a[href*="github.com"][href*="issues"]').count() == 0
+            assert page.locator('a[href^="mailto:"]').count() == 0
+            assert page.locator('a[href*="github.com"][href*="issues"]').count() >= 1
+        def font_px(selector):
+            element = page.locator(selector).first
+            assert element.count() > 0, f'missing font-size target: {selector}'
+            return float(element.evaluate('(el) => parseFloat(getComputedStyle(el).fontSize)'))
         for route in ['/', '/tools/']:
             go(route)
             journal = page.get_by_role('link', name='The journal', exact=True, include_hidden=True)
@@ -49,8 +56,12 @@ with sync_playwright() as p:
         page.locator('#category-dialog').wait_for(state='visible')
         assert 'image' in page.locator('#dialog-title').inner_text().lower()
         assert 'design' in page.locator('#dialog-title').inner_text().lower()
-        assert page.locator('.modal-status').inner_text() == '01 AVAILABLE'
-        page.get_by_role('link', name='Open Bulk Image Background Remover', exact=True).click()
+        modal_count, modal_label = page.locator('.modal-status').inner_text().split()
+        assert modal_label == 'AVAILABLE'
+        assert int(modal_count) == page.locator('#category-dialog a[href^="/tools/"]').count()
+        tool_link = page.locator('#category-dialog a[href="/tools/background-remover/"]')
+        assert tool_link.count() == 1
+        tool_link.click()
         assert '/tools/background-remover/' in page.url
         page.wait_for_load_state('networkidle')
         # Preserve queue and clear behavior without downloading the inference model.
@@ -59,29 +70,70 @@ with sync_playwright() as p:
         page.wait_for_function("document.querySelector('#queue-count').textContent.trim() === '01'")
         assert page.locator('#queue-count').inner_text().strip() == '01'
         assert page.locator('#process-button').is_enabled()
+        assert font_px('.tile-buttons button') >= 8
         page.locator('#clear-button').click()
         assert page.locator('#queue-count').inner_text().strip() == '00'
         for key in ['about', 'privacy', 'disclaimer', 'advertising', 'terms', 'cookies', 'editorial', 'contact']:
-            go('/info?page=' + key)
+            go('/info.html?page=' + key)
             assert page.locator('.notice strong').inner_text().lower() == 'draft'
             assert 'not treat it as a final legal or operational policy' in page.locator('.notice').inner_text()
             assert page.locator(f'#page-nav a[aria-current="page"][href="info.html?page={key}"]').count() == 1
             assert page.locator('.link-row a[href="/#feed"]').count() == 1
             assert page.locator('form, textarea, input:not([type="hidden"])').count() == 0
             feedback()
-        assert 'Feedback contact coming soon' in page.locator('.contact-status').inner_text()
-        go('/info?page=contact#corrections')
+        assert 'public corrections route' in page.locator('.contact-status').inner_text().lower()
+        go('/info.html?page=contact#corrections')
         assert page.locator('#corrections').is_visible()
-        assert 'No text is collected or submitted' in page.locator('#corrections').inner_text()
+        assert page.locator('#corrections a[href="https://github.com/ibrahimbinselimbd/After-hours/issues"]').count() == 1
+        assert 'does not submit text' in page.locator('#corrections').inner_text()
         if width in [390, 1280]:
             page.screenshot(path=str(out / f'contact-{width}.png'), full_page=True)
-        go('/info?page=contact#%ZZ')
-        go('/info?page=unknown')
+        go('/info.html?page=contact#%ZZ')
+        go('/info.html?page=unknown')
         assert page.locator('#crumb').inner_text() == 'ABOUT'
+        if width == 320:
+            for slug in ['animated-gif-optimizer', 'audio-format-converter', 'video-compressor', 'video-to-gif']:
+                go(f'/tools/{slug}/')
+                assert page.locator('h1').count() == 1, slug
+                assert page.locator('h1').inner_text().strip(), slug
+            aria_controls = [
+                ('/tools/base64-encoder-decoder/', '#mode', 'Base64 operation'),
+                ('/tools/file-hash/', '#fh-expected', 'Expected SHA-256 hex (optional)'),
+                ('/tools/json-yaml-converter/', '#dir', 'Conversion direction'),
+                ('/tools/speech-to-text/', '#st-text', 'Transcribed text output'),
+                ('/tools/sql-formatter/', '#case', 'SQL keyword case'),
+                ('/tools/sql-formatter/', '#dialect', 'SQL dialect'),
+                ('/tools/subtitle-converter/', '#source', 'Subtitle text'),
+                ('/tools/url-encoder-decoder-parser/', '#mode', 'URL operation'),
+                ('/tools/xml-formatter-validator/', '#mode', 'XML operation'),
+            ]
+            for route, selector, name in aria_controls:
+                go(route)
+                assert page.locator(selector).get_attribute('aria-label') == name, [route, selector]
+            go('/tools/passport-photo-studio/')
+            for control, label in [('zoom', 'Zoom'), ('panx', 'Horizontal position'), ('pany', 'Vertical position')]:
+                assert page.locator(f'label[for="{control}"]').inner_text().startswith(label), control
+            go('/tools/pdf-to-images/')
+            assert page.locator('label.field').filter(has_text='Output format').locator('#pti-format').count() == 1
+            assert page.locator('label.field').filter(has_text='Output scale (DPI)').locator('#pti-scale').count() == 1
+        if width in [320, 1280]:
+            go('/')
+            assert font_px('.hero-foot') >= 8
+            assert font_px('.vertical-label') >= 8
+            assert font_px('.ah-footer__world-help') >= 8
+            go('/tools/')
+            assert font_px('.planned') >= 8
+            go('/districts/')
+            assert font_px('.cat-label small') >= 8
+            assert font_px('.cat-plan small') >= 8
+            go('/tools/heic-to-jpg/')
+            assert font_px('.file-card > span') >= 8
+            go('/tools/background-remover/')
+            assert font_px('.local-pill') >= 8
         assert not errors, errors
         assert not bad, bad
         assert not submissions, submissions
-        records.append({'width': width, 'journal': 'feed', 'image_design': 'correct modal', 'feedback': 'no collection; coming soon', 'info_pages': '8 visible drafts', 'queue': 'add/clear passed', 'overflow': False, 'errors': errors, 'failed_requests': bad, 'submissions': submissions})
+        records.append({'width': width, 'journal': 'feed', 'image_design': 'correct modal', 'feedback': 'public issue tracker; no sensitive form', 'info_pages': '8 visible drafts', 'queue': 'add/clear passed', 'overflow': False, 'errors': errors, 'failed_requests': bad, 'submissions': submissions})
         print(f'{width}px: all four fixes and queue regression passed', flush=True)
         page.close()
     browser.close()

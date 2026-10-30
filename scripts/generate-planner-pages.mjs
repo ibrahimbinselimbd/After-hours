@@ -63,8 +63,9 @@ if (newCatalogSource) vm.runInNewContext(newCatalogSource, catalogSandbox, {file
 vm.runInNewContext(`${catalogSource}\n;globalThis.__categories = categories;`, catalogSandbox, {filename: catalogPath, timeout: 3000});
 const categories = catalogSandbox.__categories;
 const activeTools = categories.flatMap(category => category.availableTools);
-const expectedActiveCount = 256 + (browserWindow.AHNewToolCatalog?.tools?.length || 0);
-if (activeTools.length !== expectedActiveCount) throw new Error(`Expected ${expectedActiveCount} active catalog routes after integration; found ${activeTools.length}.`);
+const expectedActiveCount = activeTools.length;
+const newToolCount = browserWindow.AHNewToolCatalog?.tools?.length || 0;
+if (!expectedActiveCount) throw new Error('The active catalog is empty.');
 const routes = activeTools.map(tool => tool.href);
 if (new Set(routes).size !== expectedActiveCount || new Set(activeTools.map(tool => tool.title)).size !== expectedActiveCount) throw new Error('Catalog routes and titles must be unique.');
 const routeSet = new Set(routes);
@@ -95,6 +96,31 @@ for (let index = 0; index < tools.length; index++) {
 // Refresh the hub's crawlable metadata and truthful active-tool ItemList.
 const hubPath = path.join(root, 'site/tools/index.html');
 let hub = await fs.readFile(hubPath, 'utf8');
+const categoryById = new Map(categories.map((category, index) => [category.id, { ...category, index }]));
+let renderedCategoryCards = 0;
+hub = hub.replace(/<button class="category"([^>]*data-category="([^"]+)"[^>]*)>([\s\S]*?)<\/button>/g, (full, rawAttributes, id, content) => {
+  const category = categoryById.get(id);
+  if (!category) return full;
+  renderedCategoryCards++;
+  const count = category.availableTools.length;
+  const number = String(category.index + 1).padStart(2, '0');
+  const attributes = rawAttributes.replace(/aria-label="[^"]*"/i, `aria-label="${escapeHtml(category.title)} — ${count} available tools"`);
+  const updatedContent = content
+    .replace(/\d{2}\s*\/\s*DISTRICT/i, `${number} / CATEGORY`)
+    .replace(/\d+\s+TOOLS AVAILABLE/i, `${count} TOOLS AVAILABLE`)
+    .replace(/\d+\s+TOOLS READY/i, `${count} TOOLS READY`);
+  return `<button class="category"${attributes}>${updatedContent}</button>`;
+});
+if (renderedCategoryCards !== categories.length) throw new Error(`Expected ${categories.length} static category cards; updated ${renderedCategoryCards}.`);
+hub = hub.replace(/A home for \d+ useful tools across (?:ten|\d+) carefully built districts/i, `A home for ${expectedActiveCount} active browser tools across ${categories.length} useful categories`);
+hub = hub.replace(/\b\d+ new tools share\b/gi, `${newToolCount} new tools share`);
+hub = hub.replace(/\b\d+ TOOLS AVAILABLE\s*\/\s*\d+ CATEGORIES\b/gi, `${expectedActiveCount} TOOLS AVAILABLE / ${categories.length} CATEGORIES`);
+hub = hub.replace(/\b\d+ TOOLS AVAILABLE\s*·\s*\d+ NEW FREE UTILITIES\b/gi, `${expectedActiveCount} ACTIVE TOOLS · ${categories.length} CATEGORIES`);
+hub = hub.replace(/FIND YOUR NEXT SHORTCUT \/ 01—\d+/i, `FIND YOUR NEXT SHORTCUT / 01—${String(categories.length).padStart(2, '0')}`);
+hub = hub.replace(/\bTEN DISTRICTS\b/gi, `${categories.length} CATEGORIES`);
+hub = hub.replace(/\b\d+ DISTRICTS\s*·\s*\d+ TOOLS AVAILABLE\b/gi, `${categories.length} CATEGORIES · ${expectedActiveCount} TOOLS AVAILABLE`);
+hub = hub.replace(/All \d+ districts/gi, `All ${categories.length} categories`);
+hub = hub.replace(/catalog is organized into \d+ categories/gi, `catalog is organized into ${categories.length} categories`);
 hub = hub.replace(/Explore \d+ free browser-based tools/gi, `Explore ${expectedActiveCount} free browser-based tools`);
 hub = hub.replace(/\d+ active AFTERHOURS browser tools/g, `${expectedActiveCount} active AFTERHOURS browser tools`);
 hub = hub.replace(/\d+ free browser-based tools/gi, `${expectedActiveCount} free browser-based tools`);
@@ -110,7 +136,7 @@ list.numberOfItems = expectedActiveCount;
 list.itemListElement = activeTools.slice().sort((a, b) => a.title.localeCompare(b.title)).map((tool, index) => ({'@type':'ListItem',position:index + 1,name:tool.title,url:`${siteOrigin}${tool.href}`}));
 hub = hub.replace(schemaMatch[0], `<script type="application/ld+json">${safeJson(schema)}</script>`);
 hub = hub.replace(/\d+ FREE TOOLS AVAILABLE/g, `${expectedActiveCount} FREE TOOLS AVAILABLE`);
-hub = hub.replace(/\d+ DISTRICTS · \d+ TOOLS AVAILABLE/g, `${categories.length} DISTRICTS · ${expectedActiveCount} TOOLS AVAILABLE`);
+hub = hub.replace(/\d+ DISTRICTS · \d+ TOOLS AVAILABLE/g, `${categories.length} CATEGORIES · ${expectedActiveCount} TOOLS AVAILABLE`);
 hub = hub.replace(/(<meta name="description" content=")[^"]*(">)/i, `$1Explore ${expectedActiveCount} free browser-local tools across ${categories.length} useful categories for everyday work and life. Process your inputs on this device; no paid APIs or live lookups are required.$2`);
 hub = hub.replace(/(<meta property="og:description" content=")[^"]*(">)/i, `$1Explore ${expectedActiveCount} free browser-local tools across ${categories.length} useful categories. Use practical local utilities for everyday work and life.$2`);
 hub = hub.replace(/(<meta name="twitter:description" content=")[^"]*(">)/i, `$1Browse ${expectedActiveCount} free browser-local tools across ${categories.length} categories for everyday work, home, travel, learning and more.$2`);
