@@ -117,7 +117,7 @@ test('planner pages contain unique crawlable metadata and use the existing local
   assert.equal(canonicalSet.size, 100);
 });
 
-test('hub catalog data, ItemList schema, and screenshot editor route reflect exactly 256 active tools', () => {
+test('hub catalog data, ItemList schema, and screenshot editor route reflect exactly 500 active tools', () => {
   const dataSource = fs.readFileSync(path.join(root, 'site/tools/_shared/planner-catalog-data.js'), 'utf8');
   const dataWindow = {};
   vm.runInNewContext(dataSource, {window: dataWindow});
@@ -129,8 +129,8 @@ test('hub catalog data, ItemList schema, and screenshot editor route reflect exa
   assert.ok(schemaText, 'hub has crawlable JSON-LD');
   const schema = JSON.parse(schemaText);
   const itemList = schema['@graph'].find(item => item['@type'] === 'ItemList');
-  assert.equal(itemList.numberOfItems, 256);
-  assert.equal(itemList.itemListElement.length, 256);
+  assert.equal(itemList.numberOfItems, 500);
+  assert.equal(itemList.itemListElement.length, 500);
   assert.ok(itemList.itemListElement.some(item => item.url.endsWith('/tools/screenshot-photo-text-editor/')));
   assert.ok(!itemList.itemListElement.some(item => item.url.endsWith('/tools/text-detector/')));
   const editorPage = fs.readFileSync(path.join(toolFolder('screenshot-photo-text-editor'), 'index.html'), 'utf8');

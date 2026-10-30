@@ -1,0 +1,1440 @@
+{
+  "category": {
+    "id": "money-shopping",
+    "title": "Money & Shopping",
+    "description": "Practical browser-local tools for comparing purchases, planning spending, and understanding shopping trade-offs from numbers you provide.",
+    "accent_color": "#0F766E"
+  },
+  "tools": [
+    {
+      "slug": "price-per-use-planner",
+      "title": "Price-Per-Use Planner",
+      "description": "Estimate the effective cost of an item from its purchase price, expected uses, and remaining resale value.",
+      "limitations": "This is a simple estimate, not a prediction of durability or resale demand; enter realistic use and resale assumptions.",
+      "fields": [
+        {
+          "id": "itemName",
+          "label": "Item name",
+          "type": "text",
+          "required": true,
+          "placeholder": "Reusable water bottle"
+        },
+        {
+          "id": "purchasePrice",
+          "label": "Purchase price",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 80
+        },
+        {
+          "id": "expectedUses",
+          "label": "Expected uses",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 100000,
+          "step": 1,
+          "default": 200
+        },
+        {
+          "id": "resaleValue",
+          "label": "Expected resale value",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 10
+        },
+        {
+          "id": "currency",
+          "label": "Currency symbol",
+          "type": "text",
+          "required": false,
+          "default": "$"
+        }
+      ],
+      "testValues": {
+        "itemName": "Reusable bottle",
+        "purchasePrice": 80,
+        "expectedUses": 200,
+        "resaleValue": 10,
+        "currency": "$"
+      }
+    },
+    {
+      "slug": "buy-vs-rent-break-even",
+      "title": "Buy-vs-Rent Break-Even",
+      "description": "Find how many rental periods it takes for a purchase to cost less than repeated renting, including one-time fees.",
+      "limitations": "Ignores financing, maintenance, taxes, damage deposits, and opportunity cost unless you include them in the supplied amounts.",
+      "fields": [
+        {
+          "id": "itemName",
+          "label": "Item or equipment",
+          "type": "text",
+          "required": true,
+          "placeholder": "Projector"
+        },
+        {
+          "id": "buyPrice",
+          "label": "Purchase price",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 1000000,
+          "step": "any",
+          "default": 600
+        },
+        {
+          "id": "buySetupCost",
+          "label": "One-time purchase setup cost",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "max": 1000000,
+          "step": "any",
+          "default": 40
+        },
+        {
+          "id": "rentPerPeriod",
+          "label": "Rental cost per period",
+          "type": "number",
+          "required": true,
+          "min": 0.01,
+          "max": 1000000,
+          "step": "any",
+          "default": 90
+        },
+        {
+          "id": "rentFeePerPeriod",
+          "label": "Rental fee per period",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "max": 1000000,
+          "step": "any",
+          "default": 10
+        },
+        {
+          "id": "currency",
+          "label": "Currency symbol",
+          "type": "text",
+          "required": false,
+          "default": "$"
+        }
+      ],
+      "testValues": {
+        "itemName": "Projector",
+        "buyPrice": 600,
+        "buySetupCost": 40,
+        "rentPerPeriod": 90,
+        "rentFeePerPeriod": 10,
+        "currency": "$"
+      }
+    },
+    {
+      "slug": "coupon-stack-order-optimizer",
+      "title": "Coupon Stack Order Optimizer",
+      "description": "Calculate the final price for up to three percentage discounts and a fixed coupon in the mathematically best order.",
+      "limitations": "Real stores may restrict stacking, apply coupons to different item subsets, or round at different stages; this models sequential discounts on one subtotal.",
+      "fields": [
+        {
+          "id": "subtotal",
+          "label": "Subtotal",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 1000000,
+          "step": "any",
+          "default": 240
+        },
+        {
+          "id": "discountA",
+          "label": "Percentage discount A",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "max": 100,
+          "step": "any",
+          "default": 10
+        },
+        {
+          "id": "discountB",
+          "label": "Percentage discount B",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "max": 100,
+          "step": "any",
+          "default": 15
+        },
+        {
+          "id": "discountC",
+          "label": "Percentage discount C",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "max": 100,
+          "step": "any",
+          "default": 0
+        },
+        {
+          "id": "fixedCoupon",
+          "label": "Fixed coupon",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "max": 1000000,
+          "step": "any",
+          "default": 20
+        },
+        {
+          "id": "currency",
+          "label": "Currency symbol",
+          "type": "text",
+          "required": false,
+          "default": "$"
+        }
+      ],
+      "testValues": {
+        "subtotal": 240,
+        "discountA": 10,
+        "discountB": 15,
+        "discountC": 0,
+        "fixedCoupon": 20,
+        "currency": "$"
+      }
+    },
+    {
+      "slug": "tax-inclusive-checkout-estimator",
+      "title": "Tax-Inclusive Checkout Estimator",
+      "description": "Estimate an out-the-door shopping total by combining item subtotal, tax rate, shipping, and fixed fees.",
+      "limitations": "Tax rules, exemptions, rounding, and shipping taxability vary by location; this is not tax advice or a filing calculation.",
+      "fields": [
+        {
+          "id": "subtotal",
+          "label": "Item subtotal",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 1000000,
+          "step": "any",
+          "default": 125
+        },
+        {
+          "id": "taxRate",
+          "label": "Tax rate (%)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": "any",
+          "default": 8.25
+        },
+        {
+          "id": "shipping",
+          "label": "Shipping",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 12
+        },
+        {
+          "id": "otherFees",
+          "label": "Other fixed fees",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 0
+        },
+        {
+          "id": "currency",
+          "label": "Currency symbol",
+          "type": "text",
+          "required": false,
+          "default": "$"
+        }
+      ],
+      "testValues": {
+        "subtotal": 125,
+        "taxRate": 8.25,
+        "shipping": 12,
+        "otherFees": 0,
+        "currency": "$"
+      }
+    },
+    {
+      "slug": "installment-plan-cost-breakdown",
+      "title": "Installment Plan Cost Breakdown",
+      "description": "Compare a cash price with an installment plan by calculating total paid, added cost, and payment cadence.",
+      "limitations": "Use the lender or seller's disclosed terms for legal, credit, late-payment, and compounding details; this does not recommend borrowing.",
+      "fields": [
+        {
+          "id": "cashPrice",
+          "label": "Cash price",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 1000000,
+          "step": "any",
+          "default": 900
+        },
+        {
+          "id": "paymentAmount",
+          "label": "Payment amount",
+          "type": "number",
+          "required": true,
+          "min": 0.01,
+          "max": 1000000,
+          "step": "any",
+          "default": 160
+        },
+        {
+          "id": "numberOfPayments",
+          "label": "Number of payments",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 1000,
+          "step": 1,
+          "default": 6
+        },
+        {
+          "id": "setupFee",
+          "label": "Setup or service fee",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 15
+        },
+        {
+          "id": "currency",
+          "label": "Currency symbol",
+          "type": "text",
+          "required": false,
+          "default": "$"
+        }
+      ],
+      "testValues": {
+        "cashPrice": 900,
+        "paymentAmount": 160,
+        "numberOfPayments": 6,
+        "setupFee": 15,
+        "currency": "$"
+      }
+    },
+    {
+      "slug": "purchase-sinking-fund-planner",
+      "title": "Purchase Sinking-Fund Planner",
+      "description": "Turn a future purchase target into a regular saving amount after accounting for money already set aside.",
+      "limitations": "The result assumes evenly timed contributions and no interest, fees, or inflation; it is a planning aid, not investment advice.",
+      "fields": [
+        {
+          "id": "goalName",
+          "label": "Purchase goal",
+          "type": "text",
+          "required": true,
+          "placeholder": "New laptop"
+        },
+        {
+          "id": "targetAmount",
+          "label": "Target amount",
+          "type": "number",
+          "required": true,
+          "min": 0.01,
+          "max": 10000000,
+          "step": "any",
+          "default": 1800
+        },
+        {
+          "id": "alreadySaved",
+          "label": "Already saved",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "max": 10000000,
+          "step": "any",
+          "default": 300
+        },
+        {
+          "id": "periodsRemaining",
+          "label": "Periods remaining",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 1000,
+          "step": 1,
+          "default": 10
+        },
+        {
+          "id": "periodName",
+          "label": "Contribution period",
+          "type": "select",
+          "required": true,
+          "options": [
+            "week",
+            "month",
+            "quarter"
+          ],
+          "default": "month"
+        },
+        {
+          "id": "currency",
+          "label": "Currency symbol",
+          "type": "text",
+          "required": false,
+          "default": "$"
+        }
+      ],
+      "testValues": {
+        "goalName": "New laptop",
+        "targetAmount": 1800,
+        "alreadySaved": 300,
+        "periodsRemaining": 10,
+        "periodName": "month",
+        "currency": "$"
+      }
+    },
+    {
+      "slug": "gift-budget-allocation-planner",
+      "title": "Gift Budget Allocation Planner",
+      "description": "Allocate a fixed gift budget across recipients using priority weights and show the rounded plan plus any rounding remainder.",
+      "limitations": "Weights are only a budgeting convention; equal treatment, local prices, and personal preferences may call for a different plan.",
+      "fields": [
+        {
+          "id": "budget",
+          "label": "Total gift budget",
+          "type": "number",
+          "required": true,
+          "min": 0.01,
+          "max": 1000000,
+          "step": "any",
+          "default": 300
+        },
+        {
+          "id": "recipients",
+          "label": "Recipients and weights (one per line: name=weight)",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Alex=2\nSam=1\nJo=1",
+          "help": "Use positive whole or decimal weights."
+        },
+        {
+          "id": "currency",
+          "label": "Currency symbol",
+          "type": "text",
+          "required": false,
+          "default": "$"
+        }
+      ],
+      "testValues": {
+        "budget": 300,
+        "recipients": "Alex=2\nSam=1\nJo=1",
+        "currency": "$"
+      }
+    },
+    {
+      "slug": "cart-budget-priority-planner",
+      "title": "Cart Budget Priority Planner",
+      "description": "Fit a list of priced shopping items into a budget by keeping higher-priority items first and identifying what is deferred.",
+      "limitations": "Priority ordering is a user-supplied heuristic; it does not know necessity, substitutions, availability, or store rules.",
+      "fields": [
+        {
+          "id": "budget",
+          "label": "Cart budget",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 1000000,
+          "step": "any",
+          "default": 100
+        },
+        {
+          "id": "items",
+          "label": "Items (one per line: name|price|priority 1-5)",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Coffee|18|3\nNotebook|12|5\nHeadphones|80|2"
+        },
+        {
+          "id": "currency",
+          "label": "Currency symbol",
+          "type": "text",
+          "required": false,
+          "default": "$"
+        }
+      ],
+      "testValues": {
+        "budget": 100,
+        "items": "Coffee|18|3\nNotebook|12|5\nHeadphones|80|2",
+        "currency": "$"
+      }
+    },
+    {
+      "slug": "package-size-value-comparator",
+      "title": "Package Size Value Comparator",
+      "description": "Compare up to three packages using quantity and price, including a direct savings percentage against the best alternative.",
+      "limitations": "Equal quantities are assumed to be comparable; quality, waste, shelf life, and package usability are not measured.",
+      "fields": [
+        {
+          "id": "productName",
+          "label": "Product",
+          "type": "text",
+          "required": true,
+          "placeholder": "Laundry detergent"
+        },
+        {
+          "id": "packageA",
+          "label": "Package A (price and units, e.g. 12.00, 24)",
+          "type": "text",
+          "required": true,
+          "default": "12,24"
+        },
+        {
+          "id": "packageB",
+          "label": "Package B (price and units)",
+          "type": "text",
+          "required": true,
+          "default": "18, forty"
+        },
+        {
+          "id": "packageC",
+          "label": "Package C (optional price and units)",
+          "type": "text",
+          "required": false,
+          "default": "25,60"
+        },
+        {
+          "id": "currency",
+          "label": "Currency symbol",
+          "type": "text",
+          "required": false,
+          "default": "$"
+        }
+      ],
+      "testValues": {
+        "productName": "Laundry detergent",
+        "packageA": "12,24",
+        "packageB": "18,40",
+        "packageC": "25,60",
+        "currency": "$"
+      }
+    },
+    {
+      "slug": "price-history-change-log",
+      "title": "Local Price Change Log",
+      "description": "Summarize manually entered dated prices to show the lowest, highest, latest, and percentage change over the recorded span.",
+      "limitations": "This uses only the entries you provide and cannot verify sale conditions, package changes, or historical market context.",
+      "fields": [
+        {
+          "id": "itemName",
+          "label": "Item",
+          "type": "text",
+          "required": true,
+          "placeholder": "Printer ink"
+        },
+        {
+          "id": "priceEntries",
+          "label": "Dated prices (one per line: YYYY-MM-DD|price)",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "2026-01-01|32\n2026-02-01|29\n2026-03-01|35"
+        },
+        {
+          "id": "currency",
+          "label": "Currency symbol",
+          "type": "text",
+          "required": false,
+          "default": "$"
+        }
+      ],
+      "testValues": {
+        "itemName": "Printer ink",
+        "priceEntries": "2026-01-01|32\n2026-02-01|29\n2026-03-01|35",
+        "currency": "$"
+      }
+    },
+    {
+      "slug": "subscription-cost-per-benefit",
+      "title": "Subscription Cost-Per-Benefit",
+      "description": "Estimate a subscription's cost per use or benefit and compare it with a one-off alternative.",
+      "limitations": "Usage counts and alternative prices are estimates; this does not evaluate contract terms, cancellation rights, or financial suitability.",
+      "fields": [
+        {
+          "id": "subscriptionName",
+          "label": "Subscription",
+          "type": "text",
+          "required": true,
+          "placeholder": "Design library"
+        },
+        {
+          "id": "periodPrice",
+          "label": "Price per billing period",
+          "type": "number",
+          "required": true,
+          "min": 0.01,
+          "max": 100000,
+          "step": "any",
+          "default": 30
+        },
+        {
+          "id": "periods",
+          "label": "Billing periods considered",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 120,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "id": "uses",
+          "label": "Expected uses in that span",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 100000,
+          "step": 1,
+          "default": 18
+        },
+        {
+          "id": "oneOffPrice",
+          "label": "One-off alternative price",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 12
+        },
+        {
+          "id": "currency",
+          "label": "Currency symbol",
+          "type": "text",
+          "required": false,
+          "default": "$"
+        }
+      ],
+      "testValues": {
+        "subscriptionName": "Design library",
+        "periodPrice": 30,
+        "periods": 3,
+        "uses": 18,
+        "oneOffPrice": 12,
+        "currency": "$"
+      }
+    },
+    {
+      "slug": "warranty-break-even-estimator",
+      "title": "Warranty Break-Even Estimator",
+      "description": "Estimate the failure-cost threshold at which an optional warranty would recover its price.",
+      "limitations": "This is a simplified expected-cost comparison and excludes exclusions, deductibles, claim friction, depreciation, and non-monetary value.",
+      "fields": [
+        {
+          "id": "itemName",
+          "label": "Item",
+          "type": "text",
+          "required": true,
+          "placeholder": "Kitchen appliance"
+        },
+        {
+          "id": "warrantyPrice",
+          "label": "Warranty price",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 90
+        },
+        {
+          "id": "repairOrReplaceCost",
+          "label": "Uncovered repair or replacement cost",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 1000000,
+          "step": "any",
+          "default": 450
+        },
+        {
+          "id": "claimCoveragePercent",
+          "label": "Covered share (%)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": "any",
+          "default": 80
+        },
+        {
+          "id": "currency",
+          "label": "Currency symbol",
+          "type": "text",
+          "required": false,
+          "default": "$"
+        }
+      ],
+      "testValues": {
+        "itemName": "Kitchen appliance",
+        "warrantyPrice": 90,
+        "repairOrReplaceCost": 450,
+        "claimCoveragePercent": 80,
+        "currency": "$"
+      }
+    },
+    {
+      "slug": "free-shipping-threshold-checker",
+      "title": "Free-Shipping Threshold Checker",
+      "description": "Compare paying shipping now with adding a needed item to reach a free-shipping threshold.",
+      "limitations": "It assumes the added item is genuinely wanted and that taxes, returns, and threshold eligibility do not change.",
+      "fields": [
+        {
+          "id": "cartSubtotal",
+          "label": "Current cart subtotal",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 1000000,
+          "step": "any",
+          "default": 42
+        },
+        {
+          "id": "freeShippingThreshold",
+          "label": "Free-shipping threshold",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 1000000,
+          "step": "any",
+          "default": 60
+        },
+        {
+          "id": "shippingCost",
+          "label": "Shipping cost below threshold",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 8
+        },
+        {
+          "id": "candidateAddOnPrice",
+          "label": "Price of useful add-on",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 1000000,
+          "step": "any",
+          "default": 22
+        },
+        {
+          "id": "currency",
+          "label": "Currency symbol",
+          "type": "text",
+          "required": false,
+          "default": "$"
+        }
+      ],
+      "testValues": {
+        "cartSubtotal": 42,
+        "freeShippingThreshold": 60,
+        "shippingCost": 8,
+        "candidateAddOnPrice": 22,
+        "currency": "$"
+      }
+    },
+    {
+      "slug": "return-refund-impact-estimator",
+      "title": "Return Refund Impact Estimator",
+      "description": "Estimate the net amount returned after restocking, return shipping, and nonrefundable fees.",
+      "limitations": "Policies vary by seller and jurisdiction; confirm the actual return terms before sending an item back.",
+      "fields": [
+        {
+          "id": "purchasePrice",
+          "label": "Original purchase price",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 1000000,
+          "step": "any",
+          "default": 140
+        },
+        {
+          "id": "restockingRate",
+          "label": "Restocking rate (%)",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "max": 100,
+          "step": "any",
+          "default": 10
+        },
+        {
+          "id": "returnShipping",
+          "label": "Return shipping paid by you",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 9
+        },
+        {
+          "id": "nonRefundableFees",
+          "label": "Nonrefundable fees",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 3
+        },
+        {
+          "id": "currency",
+          "label": "Currency symbol",
+          "type": "text",
+          "required": false,
+          "default": "$"
+        }
+      ],
+      "testValues": {
+        "purchasePrice": 140,
+        "restockingRate": 10,
+        "returnShipping": 9,
+        "nonRefundableFees": 3,
+        "currency": "$"
+      }
+    },
+    {
+      "slug": "cash-card-fee-comparator",
+      "title": "Cash-vs-Card Fee Comparator",
+      "description": "Compare the net cost of paying cash or using a card when a seller applies a surcharge or a card gives a reward.",
+      "limitations": "Rewards may have caps or redemption conditions; card fees, legal restrictions, and account terms are not assessed.",
+      "fields": [
+        {
+          "id": "purchaseAmount",
+          "label": "Purchase amount",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 1000000,
+          "step": "any",
+          "default": 250
+        },
+        {
+          "id": "cashDiscountPercent",
+          "label": "Cash discount (%)",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "max": 100,
+          "step": "any",
+          "default": 2
+        },
+        {
+          "id": "cardSurchargePercent",
+          "label": "Card surcharge (%)",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "max": 100,
+          "step": "any",
+          "default": 0
+        },
+        {
+          "id": "cardRewardPercent",
+          "label": "Card reward (%)",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "max": 100,
+          "step": "any",
+          "default": 1
+        },
+        {
+          "id": "currency",
+          "label": "Currency symbol",
+          "type": "text",
+          "required": false,
+          "default": "$"
+        }
+      ],
+      "testValues": {
+        "purchaseAmount": 250,
+        "cashDiscountPercent": 2,
+        "cardSurchargePercent": 0,
+        "cardRewardPercent": 1,
+        "currency": "$"
+      }
+    },
+    {
+      "slug": "bulk-buy-break-even-planner",
+      "title": "Bulk-Buy Break-Even Planner",
+      "description": "Determine how quickly a bulk package must be used to beat smaller packages after allowing for waste.",
+      "limitations": "The consumption rate and waste estimate are manual assumptions; storage, freshness, and cash-flow costs are not included.",
+      "fields": [
+        {
+          "id": "smallPrice",
+          "label": "Small package price",
+          "type": "number",
+          "required": true,
+          "min": 0.01,
+          "max": 1000000,
+          "step": "any",
+          "default": 5
+        },
+        {
+          "id": "smallUnits",
+          "label": "Small package units",
+          "type": "number",
+          "required": true,
+          "min": 0.01,
+          "max": 1000000,
+          "step": "any",
+          "default": 10
+        },
+        {
+          "id": "bulkPrice",
+          "label": "Bulk package price",
+          "type": "number",
+          "required": true,
+          "min": 0.01,
+          "max": 1000000,
+          "step": "any",
+          "default": 36
+        },
+        {
+          "id": "bulkUnits",
+          "label": "Bulk package units",
+          "type": "number",
+          "required": true,
+          "min": 0.01,
+          "max": 1000000,
+          "step": "any",
+          "default": 100
+        },
+        {
+          "id": "wastePercent",
+          "label": "Expected waste (%)",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "max": 99.99,
+          "step": "any",
+          "default": 5
+        },
+        {
+          "id": "currency",
+          "label": "Currency symbol",
+          "type": "text",
+          "required": false,
+          "default": "$"
+        }
+      ],
+      "testValues": {
+        "smallPrice": 5,
+        "smallUnits": 10,
+        "bulkPrice": 36,
+        "bulkUnits": 100,
+        "wastePercent": 5,
+        "currency": "$"
+      }
+    },
+    {
+      "slug": "price-per-serving-comparator",
+      "title": "Price-Per-Serving Comparator",
+      "description": "Compare the usable serving cost of up to three food or supplement packages after accounting for serving size and waste.",
+      "limitations": "Serving definitions and waste are user estimates; this does not assess nutrition, safety, or product quality.",
+      "fields": [
+        {
+          "id": "productName",
+          "label": "Product",
+          "type": "text",
+          "required": true,
+          "placeholder": "Protein powder"
+        },
+        {
+          "id": "packageA",
+          "label": "Package A (price, servings, waste %, e.g. 30,20,5)",
+          "type": "text",
+          "required": true,
+          "default": "30,20,5"
+        },
+        {
+          "id": "packageB",
+          "label": "Package B (price, servings, waste %)",
+          "type": "text",
+          "required": true,
+          "default": "42,32,8"
+        },
+        {
+          "id": "packageC",
+          "label": "Package C (optional price, servings, waste %)",
+          "type": "text",
+          "required": false,
+          "default": "55,45,5"
+        },
+        {
+          "id": "currency",
+          "label": "Currency symbol",
+          "type": "text",
+          "required": false,
+          "default": "$"
+        }
+      ],
+      "testValues": {
+        "productName": "Protein powder",
+        "packageA": "30,20,5",
+        "packageB": "42,32,8",
+        "packageC": "55,45,5",
+        "currency": "$"
+      }
+    },
+    {
+      "slug": "donation-match-impact-calculator",
+      "title": "Donation Match Impact Calculator",
+      "description": "Show how a matching contribution changes the total supported amount and the donor's effective matched share.",
+      "limitations": "This is arithmetic only and does not verify charities, eligibility, tax treatment, or match-program caps beyond the values entered.",
+      "fields": [
+        {
+          "id": "donation",
+          "label": "Your donation",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000000,
+          "step": "any",
+          "default": 100
+        },
+        {
+          "id": "matchRate",
+          "label": "Match rate (%)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 1000,
+          "step": "any",
+          "default": 100
+        },
+        {
+          "id": "matchCap",
+          "label": "Match cap",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "max": 100000000,
+          "step": "any",
+          "default": 150
+        },
+        {
+          "id": "currency",
+          "label": "Currency symbol",
+          "type": "text",
+          "required": false,
+          "default": "$"
+        }
+      ],
+      "testValues": {
+        "donation": 100,
+        "matchRate": 100,
+        "matchCap": 150,
+        "currency": "$"
+      }
+    },
+    {
+      "slug": "used-vs-new-total-cost-comparator",
+      "title": "Used-vs-New Total Cost Comparator",
+      "description": "Compare two purchase options after adding delivery, setup, expected repair, and resale assumptions.",
+      "limitations": "Repair and resale amounts are estimates; inspect condition, warranty, authenticity, and seller terms separately.",
+      "fields": [
+        {
+          "id": "optionAName",
+          "label": "Option A name",
+          "type": "text",
+          "required": true,
+          "default": "Used"
+        },
+        {
+          "id": "optionAPrice",
+          "label": "Option A price",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 1000000,
+          "step": "any",
+          "default": 450
+        },
+        {
+          "id": "optionAExtras",
+          "label": "Option A delivery/setup/repair total",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "max": 1000000,
+          "step": "any",
+          "default": 100
+        },
+        {
+          "id": "optionAResale",
+          "label": "Option A expected resale value",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "max": 1000000,
+          "step": "any",
+          "default": 150
+        },
+        {
+          "id": "optionBName",
+          "label": "Option B name",
+          "type": "text",
+          "required": true,
+          "default": "New"
+        },
+        {
+          "id": "optionBData",
+          "label": "Option B price, extras, resale (e.g. 700,30,250)",
+          "type": "text",
+          "required": true,
+          "default": "700,30,250"
+        },
+        {
+          "id": "currency",
+          "label": "Currency symbol",
+          "type": "text",
+          "required": false,
+          "default": "$"
+        }
+      ],
+      "testValues": {
+        "optionAName": "Used",
+        "optionAPrice": 450,
+        "optionAExtras": 100,
+        "optionAResale": 150,
+        "optionBName": "New",
+        "optionBData": "700,30,250",
+        "currency": "$"
+      }
+    },
+    {
+      "slug": "price-per-weight-volume-normalizer",
+      "title": "Price-Per-Weight/Volume Normalizer",
+      "description": "Normalize package prices to a common weight or volume unit so differently sized products can be compared.",
+      "limitations": "Choose compatible units and comparable products; density, concentration, quality, and package waste are not evaluated.",
+      "fields": [
+        {
+          "id": "packagePrice",
+          "label": "Package price",
+          "type": "number",
+          "required": true,
+          "min": 0.01,
+          "max": 1000000,
+          "step": "any",
+          "default": 9
+        },
+        {
+          "id": "packageQuantity",
+          "label": "Package quantity",
+          "type": "number",
+          "required": true,
+          "min": 1e-06,
+          "max": 1000000,
+          "step": "any",
+          "default": 750
+        },
+        {
+          "id": "quantityUnit",
+          "label": "Package unit",
+          "type": "select",
+          "required": true,
+          "options": [
+            "g",
+            "kg",
+            "ml",
+            "l",
+            "oz",
+            "lb"
+          ],
+          "default": "g"
+        },
+        {
+          "id": "targetQuantity",
+          "label": "Target comparison quantity",
+          "type": "number",
+          "required": true,
+          "min": 1e-06,
+          "max": 1000000,
+          "step": "any",
+          "default": 100
+        },
+        {
+          "id": "currency",
+          "label": "Currency symbol",
+          "type": "text",
+          "required": false,
+          "default": "$"
+        }
+      ],
+      "testValues": {
+        "packagePrice": 9,
+        "packageQuantity": 750,
+        "quantityUnit": "g",
+        "targetQuantity": 100,
+        "currency": "$"
+      }
+    },
+    {
+      "slug": "layaway-payment-calendar",
+      "title": "Layaway Payment Calendar",
+      "description": "Build an even payment schedule for a purchase target with a deposit and a chosen number of installments.",
+      "limitations": "It excludes seller-specific fees, missed-payment rules, and interest; verify the actual agreement before paying.",
+      "fields": [
+        {
+          "id": "targetName",
+          "label": "Purchase",
+          "type": "text",
+          "required": true,
+          "default": "Bicycle"
+        },
+        {
+          "id": "targetPrice",
+          "label": "Target price",
+          "type": "number",
+          "required": true,
+          "min": 0.01,
+          "max": 1000000,
+          "step": "any",
+          "default": 480
+        },
+        {
+          "id": "deposit",
+          "label": "Deposit already paid",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "max": 1000000,
+          "step": "any",
+          "default": 80
+        },
+        {
+          "id": "installments",
+          "label": "Remaining installments",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 1000,
+          "step": 1,
+          "default": 8
+        },
+        {
+          "id": "roundTo",
+          "label": "Round each payment to",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "label": "Nearest cent",
+              "value": "0.01"
+            },
+            {
+              "label": "Nearest whole unit",
+              "value": "1"
+            },
+            {
+              "label": "Nearest 5 units",
+              "value": "5"
+            }
+          ],
+          "default": "0.01"
+        },
+        {
+          "id": "currency",
+          "label": "Currency symbol",
+          "type": "text",
+          "required": false,
+          "default": "$"
+        }
+      ],
+      "testValues": {
+        "targetName": "Bicycle",
+        "targetPrice": 480,
+        "deposit": 80,
+        "installments": 8,
+        "roundTo": "0.01",
+        "currency": "$"
+      }
+    },
+    {
+      "slug": "shopping-budget-variance-review",
+      "title": "Shopping Budget Variance Review",
+      "description": "Compare planned and actual amounts across shopping categories and rank the largest overruns and savings.",
+      "limitations": "The result is descriptive only and depends on consistent category names and amounts you enter.",
+      "fields": [
+        {
+          "id": "categoryLines",
+          "label": "Categories (one per line: category|planned|actual)",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Clothing|100|125\nBooks|60|45\nHousehold|80|90"
+        },
+        {
+          "id": "currency",
+          "label": "Currency symbol",
+          "type": "text",
+          "required": false,
+          "default": "$"
+        }
+      ],
+      "testValues": {
+        "categoryLines": "Clothing|100|125\nBooks|60|45\nHousehold|80|90",
+        "currency": "$"
+      }
+    },
+    {
+      "slug": "refund-credit-break-even-planner",
+      "title": "Refund-or-Credit Break-Even Planner",
+      "description": "Compare a partial refund now with store credit later by accounting for credit expiry, planned use, and bonus value.",
+      "limitations": "This assumes you will use the credit as entered; it does not judge seller solvency, legal rights, or whether a purchase is needed.",
+      "fields": [
+        {
+          "id": "originalAmount",
+          "label": "Original amount affected",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 1000000,
+          "step": "any",
+          "default": 120
+        },
+        {
+          "id": "cashRefund",
+          "label": "Cash refund offered",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 1000000,
+          "step": "any",
+          "default": 70
+        },
+        {
+          "id": "storeCredit",
+          "label": "Store credit offered",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 1000000,
+          "step": "any",
+          "default": 90
+        },
+        {
+          "id": "expectedCreditUsePercent",
+          "label": "Expected credit used (%)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": "any",
+          "default": 100
+        },
+        {
+          "id": "currency",
+          "label": "Currency symbol",
+          "type": "text",
+          "required": false,
+          "default": "$"
+        }
+      ],
+      "testValues": {
+        "originalAmount": 120,
+        "cashRefund": 70,
+        "storeCredit": 90,
+        "expectedCreditUsePercent": 100,
+        "currency": "$"
+      }
+    },
+    {
+      "slug": "price-match-savings-checker",
+      "title": "Price-Match Savings Checker",
+      "description": "Calculate the savings from a verified lower competitor price after shipping differences and a store's match limit.",
+      "limitations": "Stores define eligible competitors, timing, exclusions, and proof requirements; this does not verify a policy or price.",
+      "fields": [
+        {
+          "id": "storePrice",
+          "label": "Current store price",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 1000000,
+          "step": "any",
+          "default": 220
+        },
+        {
+          "id": "competitorPrice",
+          "label": "Competitor price",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 1000000,
+          "step": "any",
+          "default": 195
+        },
+        {
+          "id": "storeShipping",
+          "label": "Store shipping",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 0
+        },
+        {
+          "id": "competitorShipping",
+          "label": "Competitor shipping",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 12
+        },
+        {
+          "id": "matchPercent",
+          "label": "Eligible price difference matched (%)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": "any",
+          "default": 100
+        },
+        {
+          "id": "currency",
+          "label": "Currency symbol",
+          "type": "text",
+          "required": false,
+          "default": "$"
+        }
+      ],
+      "testValues": {
+        "storePrice": 220,
+        "competitorPrice": 195,
+        "storeShipping": 0,
+        "competitorShipping": 12,
+        "matchPercent": 100,
+        "currency": "$"
+      }
+    }
+  ]
+}

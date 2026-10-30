@@ -1,0 +1,919 @@
+{
+  "category": {
+    "id": "travel-relocation",
+    "title": "Travel & Relocation",
+    "description": "Practical browser-local planners for trips and moves using only information you enter.",
+    "accent_color": "#0F766E"
+  },
+  "tools": [
+    {
+      "slug": "relocation-milestone-timeline-builder",
+      "title": "Relocation Milestone Timeline Builder",
+      "description": "Turn a move date and manually entered tasks into a dated sequence with suggested lead-time checkpoints.",
+      "limitations": "Dates are planning prompts only; it does not know local procedures, processing times, or appointment availability.",
+      "fields": [
+        {
+          "id": "moveDate",
+          "label": "Move date",
+          "type": "date",
+          "required": true
+        },
+        {
+          "id": "tasks",
+          "label": "Tasks as task | days before move",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Book movers | 30\nForward mail | 14"
+        },
+        {
+          "id": "bufferDays",
+          "label": "Extra buffer days",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 90,
+          "step": 1,
+          "default": 3
+        }
+      ],
+      "testValues": {
+        "moveDate": "2026-08-15",
+        "tasks": "Book movers | 30\nForward mail | 14\nPack essentials | 2",
+        "bufferDays": 3
+      }
+    },
+    {
+      "slug": "neighborhood-scorecard-calculator",
+      "title": "Neighborhood Scorecard Calculator",
+      "description": "Compare candidate neighborhoods by weighted, manually entered ratings to expose trade-offs rather than relying on a single impression.",
+      "limitations": "Scores and weights are subjective inputs; no maps, listings, safety data, or live services are checked.",
+      "fields": [
+        {
+          "id": "criteria",
+          "label": "Criteria as name | weight",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Commute | 5\nQuietness | 3"
+        },
+        {
+          "id": "neighborhoods",
+          "label": "Neighborhood ratings as name | rating1,rating2,...",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Riverside | 4,5"
+        },
+        {
+          "id": "ratingScale",
+          "label": "Maximum rating",
+          "type": "number",
+          "required": true,
+          "min": 2,
+          "max": 10,
+          "step": 1,
+          "default": 5
+        }
+      ],
+      "testValues": {
+        "criteria": "Commute | 5\nQuietness | 3\nParks | 2",
+        "neighborhoods": "Riverside | 4,5,3\nOld Town | 3,4,5",
+        "ratingScale": 5
+      }
+    },
+    {
+      "slug": "accommodation-comparison-matrix",
+      "title": "Accommodation Comparison Matrix",
+      "description": "Rank manually entered lodging options across price, location, rules, and personal priorities with transparent weighted scores.",
+      "limitations": "All facts, prices, and ratings are user-entered; this is not a booking or availability search.",
+      "fields": [
+        {
+          "id": "weights",
+          "label": "Criteria weights as name | weight",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Price | 4\nLocation | 5\nKitchen | 2"
+        },
+        {
+          "id": "options",
+          "label": "Options as name | rating1,rating2,...",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "scale",
+          "label": "Maximum rating",
+          "type": "number",
+          "required": true,
+          "min": 2,
+          "max": 10,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "id": "notes",
+          "label": "Decision notes",
+          "type": "textarea",
+          "required": false
+        }
+      ],
+      "testValues": {
+        "weights": "Price | 4\nLocation | 5\nKitchen | 2",
+        "options": "Maple flat | 4,5,3\nHarbor room | 5,3,1",
+        "scale": 5,
+        "notes": "Need quiet evenings"
+      }
+    },
+    {
+      "slug": "manual-route-stop-sequencer",
+      "title": "Manual Route Stop Sequencer",
+      "description": "Create a repeatable stop order from a small manually entered distance matrix using a nearest-next heuristic and show total route distance.",
+      "limitations": "This is a heuristic, not a guaranteed shortest route; distances must be entered consistently and travel conditions are not considered.",
+      "fields": [
+        {
+          "id": "stops",
+          "label": "Stops in order for matrix rows",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Home\nDepot\nHotel"
+        },
+        {
+          "id": "distances",
+          "label": "Distance matrix rows (comma-separated)",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "0,12,8\n12,0,10\n8,10,0"
+        },
+        {
+          "id": "returnToStart",
+          "label": "Return to starting stop",
+          "type": "checkbox",
+          "required": false,
+          "default": false
+        }
+      ],
+      "testValues": {
+        "stops": "Home\nDepot\nHotel\nStorage",
+        "distances": "0,12,8,15\n12,0,10,7\n8,10,0,11\n15,7,11,0",
+        "returnToStart": true
+      }
+    },
+    {
+      "slug": "trip-day-plan-time-budgeter",
+      "title": "Trip Day Plan Time Budgeter",
+      "description": "Check whether planned activities, transfers, meals, and a manual safety margin fit inside each travel day.",
+      "limitations": "Durations and margins are estimates you provide; the tool does not account for live delays, opening hours, or local conditions.",
+      "fields": [
+        {
+          "id": "availableMinutes",
+          "label": "Available minutes per day",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 1440,
+          "step": 1,
+          "default": 600
+        },
+        {
+          "id": "activities",
+          "label": "Activities as day | item | minutes",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Day 1 | Museum | 120"
+        },
+        {
+          "id": "transferMinutes",
+          "label": "Daily transfer minutes",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 1440,
+          "step": 1,
+          "default": 60
+        },
+        {
+          "id": "marginPercent",
+          "label": "Safety margin percent",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 90,
+          "step": 1,
+          "default": 15
+        }
+      ],
+      "testValues": {
+        "availableMinutes": 600,
+        "activities": "Day 1 | Museum | 120\nDay 1 | Dinner | 90\nDay 2 | Hike | 240",
+        "transferMinutes": 60,
+        "marginPercent": 15
+      }
+    },
+    {
+      "slug": "travel-document-expiry-buffer-checker",
+      "title": "Travel Document Expiry-Buffer Checker",
+      "description": "Compare document expiry dates with a planned return date and a user-specified safety buffer.",
+      "limitations": "It does not know destination entry rules or airline policies; confirm required validity with official sources.",
+      "fields": [
+        {
+          "id": "returnDate",
+          "label": "Planned return date",
+          "type": "date",
+          "required": true
+        },
+        {
+          "id": "bufferDays",
+          "label": "Required buffer days",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 3650,
+          "step": 1,
+          "default": 180
+        },
+        {
+          "id": "documents",
+          "label": "Documents as name | expiry date",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Passport | 2028-03-01\nID card | 2027-01-20"
+        }
+      ],
+      "testValues": {
+        "returnDate": "2026-07-20",
+        "bufferDays": 180,
+        "documents": "Passport | 2028-03-01\nID card | 2027-01-20"
+      }
+    },
+    {
+      "slug": "relocation-address-change-tracker",
+      "title": "Relocation Address-Change Tracker",
+      "description": "Organize institutions and accounts into a local checklist with due dates, status, and follow-up notes.",
+      "limitations": "The list is only a personal tracker; it does not contact organizations or verify address-change rules.",
+      "fields": [
+        {
+          "id": "oldAddressLabel",
+          "label": "Old address label",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "newAddressLabel",
+          "label": "New address label",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "records",
+          "label": "Records as organization | due date | status",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Bank | 2026-08-01 | pending\nEmployer | 2026-07-25 | done"
+        },
+        {
+          "id": "notes",
+          "label": "Follow-up notes",
+          "type": "textarea",
+          "required": false
+        }
+      ],
+      "testValues": {
+        "oldAddressLabel": "Current flat",
+        "newAddressLabel": "New city home",
+        "records": "Bank | 2026-08-01 | pending\nEmployer | 2026-07-25 | done\nLibrary | 2026-08-05 | pending",
+        "notes": "Keep confirmation emails"
+      }
+    },
+    {
+      "slug": "utility-service-start-sequence-planner",
+      "title": "Utility Service Start-Sequence Planner",
+      "description": "Sequence internet, power, water, and other move-in services by lead time and dependency so setup gaps are visible.",
+      "limitations": "Lead times and dependencies are entirely manual estimates; providers, costs, and appointment slots are not queried.",
+      "fields": [
+        {
+          "id": "moveInDate",
+          "label": "Move-in date",
+          "type": "date",
+          "required": true
+        },
+        {
+          "id": "services",
+          "label": "Services as name | lead days | depends on",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Internet | 14 | access\nPower | 3 | meter reading"
+        },
+        {
+          "id": "accessNotes",
+          "label": "Access or handover notes",
+          "type": "textarea",
+          "required": false
+        }
+      ],
+      "testValues": {
+        "moveInDate": "2026-09-01",
+        "services": "Internet | 14 | access\nPower | 3 | meter reading\nWater | 2 | none",
+        "accessNotes": "Keys available after 10:00"
+      }
+    },
+    {
+      "slug": "relocation-cost-category-splitter",
+      "title": "Relocation Cost Category Splitter",
+      "description": "Summarize manually entered moving costs by category and calculate each category's share of the entered total.",
+      "limitations": "This is arithmetic on your entries, not a quote, forecast, tax calculation, or financial recommendation.",
+      "fields": [
+        {
+          "id": "currency",
+          "label": "Currency label",
+          "type": "text",
+          "required": true,
+          "default": "USD"
+        },
+        {
+          "id": "costs",
+          "label": "Costs as category | description | amount",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Transport | Van | 450\nSupplies | Boxes | 80"
+        }
+      ],
+      "testValues": {
+        "currency": "USD",
+        "costs": "Transport | Van | 450\nSupplies | Boxes | 80\nDeposit | Cleaner | 120"
+      }
+    },
+    {
+      "slug": "travel-laundry-rotation-planner",
+      "title": "Travel Laundry Rotation Planner",
+      "description": "Estimate when a trip needs laundry by combining item counts, wear intervals, trip length, and a manually chosen wash capacity.",
+      "limitations": "Wear assumptions are simplified and personal; it does not assess climate, dress codes, or access to laundry facilities.",
+      "fields": [
+        {
+          "id": "tripDays",
+          "label": "Trip days",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 365,
+          "step": 1,
+          "default": 10
+        },
+        {
+          "id": "items",
+          "label": "Items as name | quantity | wears per wash",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Shirts | 5 | 2\nSocks | 6 | 1"
+        },
+        {
+          "id": "washCapacity",
+          "label": "Items washed per session",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 100,
+          "step": 1,
+          "default": 8
+        }
+      ],
+      "testValues": {
+        "tripDays": 10,
+        "items": "Shirts | 5 | 2\nSocks | 6 | 1\nTrousers | 2 | 4",
+        "washCapacity": 8
+      }
+    },
+    {
+      "slug": "manual-commute-comparison-planner",
+      "title": "Manual Commute Comparison Planner",
+      "description": "Compare commute options using entered time, transfers, cost, and reliability ratings with an adjustable priority weight.",
+      "limitations": "No routes, traffic, fares, or service reliability are looked up; results reflect only your estimates.",
+      "fields": [
+        {
+          "id": "options",
+          "label": "Options as name | minutes | transfers | cost | reliability(1-5)",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Train | 35 | 1 | 4.50 | 4"
+        },
+        {
+          "id": "timeWeight",
+          "label": "Time weight",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 10,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "id": "costWeight",
+          "label": "Cost weight",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 10,
+          "step": 1,
+          "default": 3
+        }
+      ],
+      "testValues": {
+        "options": "Train | 35 | 1 | 4.50 | 4\nBus | 50 | 0 | 2.00 | 3\nWalk+rail | 42 | 1 | 1.50 | 5",
+        "timeWeight": 5,
+        "costWeight": 3
+      }
+    },
+    {
+      "slug": "pet-relocation-task-planner",
+      "title": "Pet Relocation Task Planner",
+      "description": "Build a pet-move checklist from manually entered tasks, lead times, and animal-specific notes without asserting legal requirements.",
+      "limitations": "This is organizational only, not veterinary, airline, quarantine, or import advice; verify requirements with qualified authorities.",
+      "fields": [
+        {
+          "id": "petName",
+          "label": "Pet name or label",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "moveDate",
+          "label": "Move date",
+          "type": "date",
+          "required": true
+        },
+        {
+          "id": "tasks",
+          "label": "Tasks as task | days before move",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Carrier acclimation | 21\nRecords review | 30"
+        },
+        {
+          "id": "careNotes",
+          "label": "Care and comfort notes",
+          "type": "textarea",
+          "required": false
+        }
+      ],
+      "testValues": {
+        "petName": "Milo",
+        "moveDate": "2026-10-10",
+        "tasks": "Carrier acclimation | 21\nRecords review | 30\nTravel-day food plan | 2",
+        "careNotes": "Bring familiar blanket"
+      }
+    },
+    {
+      "slug": "packing-volume-capacity-estimator",
+      "title": "Packing Volume & Capacity Estimator",
+      "description": "Estimate total packing volume from item dimensions and compare it with entered suitcase or vehicle capacity.",
+      "limitations": "Real packing efficiency, soft goods, weight limits, and irregular shapes are not modeled; use a margin before relying on the estimate.",
+      "fields": [
+        {
+          "id": "items",
+          "label": "Items as name | quantity | length cm | width cm | height cm",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Books | 10 | 20 | 14 | 3"
+        },
+        {
+          "id": "capacityLiters",
+          "label": "Available capacity in liters",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 100000,
+          "step": "any",
+          "default": 80
+        },
+        {
+          "id": "packingEfficiency",
+          "label": "Packing efficiency percent",
+          "type": "number",
+          "required": true,
+          "min": 10,
+          "max": 100,
+          "step": 1,
+          "default": 70
+        }
+      ],
+      "testValues": {
+        "items": "Books | 10 | 20 | 14 | 3\nShoes | 2 | 30 | 20 | 12\nCubes | 4 | 25 | 25 | 25",
+        "capacityLiters": 80,
+        "packingEfficiency": 70
+      }
+    },
+    {
+      "slug": "relocation-room-size-fit-checker",
+      "title": "Relocation Room Fit Checker",
+      "description": "Check whether entered furniture footprints fit within a target room while preserving a manually specified clearance margin.",
+      "limitations": "This is a simple area and footprint screen, not a floor-plan, doorway, structural, or accessibility assessment.",
+      "fields": [
+        {
+          "id": "roomLength",
+          "label": "Room length (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 100000,
+          "step": "any"
+        },
+        {
+          "id": "roomWidth",
+          "label": "Room width (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 100000,
+          "step": "any"
+        },
+        {
+          "id": "clearance",
+          "label": "Clearance margin per side (cm)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 10000,
+          "step": "any",
+          "default": 30
+        },
+        {
+          "id": "furniture",
+          "label": "Furniture as name | length cm | width cm",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Bed | 200 | 160\nDesk | 120 | 60"
+        }
+      ],
+      "testValues": {
+        "roomLength": 400,
+        "roomWidth": 300,
+        "clearance": 30,
+        "furniture": "Bed | 200 | 160\nDesk | 120 | 60\nSofa | 180 | 85"
+      }
+    },
+    {
+      "slug": "relocation-storage-duration-planner",
+      "title": "Relocation Storage Duration Planner",
+      "description": "Calculate storage days and occupied volume from entered start/end dates and item dimensions, with a packing allowance.",
+      "limitations": "It does not compare storage providers, rates, insurance, or access terms; dates and dimensions are your estimates.",
+      "fields": [
+        {
+          "id": "startDate",
+          "label": "Storage start date",
+          "type": "date",
+          "required": true
+        },
+        {
+          "id": "endDate",
+          "label": "Storage end date",
+          "type": "date",
+          "required": true
+        },
+        {
+          "id": "items",
+          "label": "Stored items as name | quantity | length cm | width cm | height cm",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "allowancePercent",
+          "label": "Extra volume allowance percent",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 200,
+          "step": 1,
+          "default": 15
+        }
+      ],
+      "testValues": {
+        "startDate": "2026-06-01",
+        "endDate": "2026-07-15",
+        "items": "Boxes | 12 | 60 | 40 | 40\nChair | 4 | 50 | 50 | 90",
+        "allowancePercent": 15
+      }
+    },
+    {
+      "slug": "travel-activity-intensity-balancer",
+      "title": "Travel Activity Intensity Balancer",
+      "description": "Review a day-by-day activity list with manually assigned effort ratings and flag consecutive high-intensity stretches.",
+      "limitations": "Effort ratings are subjective and not health guidance; the tool cannot assess personal fitness or medical needs.",
+      "fields": [
+        {
+          "id": "activities",
+          "label": "Activities as day | name | effort 1-5",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "1 | City walk | 2\n2 | Mountain hike | 5"
+        },
+        {
+          "id": "highThreshold",
+          "label": "High-effort threshold",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 4
+        },
+        {
+          "id": "maxConsecutive",
+          "label": "Preferred maximum consecutive high-effort days",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 30,
+          "step": 1,
+          "default": 2
+        }
+      ],
+      "testValues": {
+        "activities": "1 | City walk | 2\n2 | Mountain hike | 5\n3 | Museum | 1\n4 | Bike tour | 4",
+        "highThreshold": 4,
+        "maxConsecutive": 2
+      }
+    },
+    {
+      "slug": "relocation-essentials-first-night-planner",
+      "title": "Relocation First-Night Essentials Planner",
+      "description": "Prioritize entered belongings into an accessible first-night kit based on use frequency, fragility, and priority scores.",
+      "limitations": "The ranking is a simple aid and does not know your household, building access, safety, or care needs.",
+      "fields": [
+        {
+          "id": "items",
+          "label": "Items as name | use priority 1-5 | fragile yes/no | notes",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Toiletries | 5 | no | accessible\nLamp | 4 | yes | wrap well"
+        },
+        {
+          "id": "kitLimit",
+          "label": "Maximum first-night items",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 200,
+          "step": 1,
+          "default": 12
+        },
+        {
+          "id": "location",
+          "label": "New home label",
+          "type": "text",
+          "required": true
+        }
+      ],
+      "testValues": {
+        "items": "Toiletries | 5 | no | accessible\nLamp | 4 | yes | wrap well\nTowels | 5 | no | bathroom\nBooks | 1 | no | later",
+        "kitLimit": 3,
+        "location": "New apartment"
+      }
+    },
+    {
+      "slug": "travel-stop-duration-budgeter",
+      "title": "Travel Stop Duration Budgeter",
+      "description": "Allocate a total travel time across manually entered stops according to importance weights and minimum visit times.",
+      "limitations": "Allocations are mathematical suggestions only; opening hours, queues, transit, and personal pace are excluded.",
+      "fields": [
+        {
+          "id": "totalMinutes",
+          "label": "Total minutes available",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 100000,
+          "step": 1
+        },
+        {
+          "id": "stops",
+          "label": "Stops as name | weight | minimum minutes",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Museum | 3 | 60\nMarket | 1 | 30"
+        },
+        {
+          "id": "reserveMinutes",
+          "label": "Unallocated reserve minutes",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": 1,
+          "default": 30
+        }
+      ],
+      "testValues": {
+        "totalMinutes": 420,
+        "stops": "Museum | 3 | 60\nMarket | 1 | 30\nPark | 2 | 45",
+        "reserveMinutes": 30
+      }
+    },
+    {
+      "slug": "relocation-research-question-tracker",
+      "title": "Relocation Research Question Tracker",
+      "description": "Turn open questions about a destination into a prioritized evidence log with owners, due dates, and decision status.",
+      "limitations": "It stores and sorts your notes only; it does not research places or verify answers.",
+      "fields": [
+        {
+          "id": "questions",
+          "label": "Questions as topic | priority 1-5 | due date | status",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Lease terms | 5 | 2026-07-10 | open\nSchools | 3 | 2026-07-15 | researching"
+        },
+        {
+          "id": "destination",
+          "label": "Destination label",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "decisionDate",
+          "label": "Decision date",
+          "type": "date",
+          "required": false
+        }
+      ],
+      "testValues": {
+        "questions": "Lease terms | 5 | 2026-07-10 | open\nSchools | 3 | 2026-07-15 | researching\nTransit | 4 | 2026-07-08 | answered",
+        "destination": "North Harbor",
+        "decisionDate": "2026-07-20"
+      }
+    },
+    {
+      "slug": "travel-group-preference-reconciler",
+      "title": "Travel Group Preference Reconciler",
+      "description": "Count and rank group preferences for activities to reveal consensus, split votes, and items needing a conversation.",
+      "limitations": "Names and preferences are manually entered; this does not decide for the group or infer accessibility and safety needs.",
+      "fields": [
+        {
+          "id": "people",
+          "label": "People",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Ari\nBea\nChris"
+        },
+        {
+          "id": "preferences",
+          "label": "Preferences as person | activity | rating 1-5",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Ari | Museum | 5\nBea | Museum | 3"
+        },
+        {
+          "id": "consensusGap",
+          "label": "Maximum acceptable rating gap",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 5,
+          "step": 1,
+          "default": 2
+        }
+      ],
+      "testValues": {
+        "people": "Ari\nBea\nChris",
+        "preferences": "Ari | Museum | 5\nBea | Museum | 3\nChris | Museum | 4\nAri | Beach | 2\nBea | Beach | 5\nChris | Beach | 1",
+        "consensusGap": 2
+      }
+    },
+    {
+      "slug": "relocation-vehicle-load-weight-planner",
+      "title": "Relocation Vehicle Load Weight Planner",
+      "description": "Sum manually estimated item weights and compare them with an entered payload limit by loading priority.",
+      "limitations": "Weights and vehicle limits are estimates; this does not replace the vehicle maker's payload, axle, tie-down, or safety instructions.",
+      "fields": [
+        {
+          "id": "payloadLimitKg",
+          "label": "Payload limit (kg)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 100000,
+          "step": "any"
+        },
+        {
+          "id": "items",
+          "label": "Items as name | quantity | weight kg | priority 1-5",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Books | 10 | 2 | 3\nDesk | 1 | 35 | 5"
+        },
+        {
+          "id": "crewWeightKg",
+          "label": "People and loose-load weight (kg)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 10000,
+          "step": "any",
+          "default": 0
+        }
+      ],
+      "testValues": {
+        "payloadLimitKg": 900,
+        "items": "Books | 10 | 2 | 3\nDesk | 1 | 35 | 5\nSofa | 1 | 70 | 4",
+        "crewWeightKg": 150
+      }
+    },
+    {
+      "slug": "trip-connection-document-pack-builder",
+      "title": "Trip Connection Document Pack Builder",
+      "description": "Create a compact handoff list for each trip connection from manually entered tickets, references, contacts, and backup locations.",
+      "limitations": "This is an organization aid, not proof of admission or a check of current travel requirements.",
+      "fields": [
+        {
+          "id": "connections",
+          "label": "Connections as leg | departure | arrival | reference",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Rail to airport | 08:00 | 09:15 | booking ABC"
+        },
+        {
+          "id": "backupLocations",
+          "label": "Backup locations",
+          "type": "textarea",
+          "required": false
+        },
+        {
+          "id": "notes",
+          "label": "Connection notes",
+          "type": "textarea",
+          "required": false
+        }
+      ],
+      "testValues": {
+        "connections": "Rail to airport | 08:00 | 09:15 | booking ABC\nFlight | 12:00 | 15:30 | ticket XYZ",
+        "backupLocations": "Offline PDF\nPrinted folder",
+        "notes": "Keep originals and copies separate"
+      }
+    },
+    {
+      "slug": "relocation-decision-matrix",
+      "title": "Relocation Decision Matrix",
+      "description": "Score relocation options against weighted criteria and show normalized totals plus each option's strongest and weakest criterion.",
+      "limitations": "It is a transparent decision aid, not a prediction; all ratings, weights, and options are supplied by you.",
+      "fields": [
+        {
+          "id": "criteria",
+          "label": "Criteria as name | weight",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "options",
+          "label": "Options as name | ratings in criterion order",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "id": "scale",
+          "label": "Maximum rating",
+          "type": "number",
+          "required": true,
+          "min": 2,
+          "max": 10,
+          "step": 1,
+          "default": 5
+        }
+      ],
+      "testValues": {
+        "criteria": "Cost | 4\nSpace | 3\nCommunity | 2",
+        "options": "City A | 4,3,5\nCity B | 3,5,4",
+        "scale": 5
+      }
+    },
+    {
+      "slug": "relocation-cleaning-handover-planner",
+      "title": "Relocation Cleaning Handover Planner",
+      "description": "Estimate cleaning work by room from entered area, task minutes, and completion status, then show remaining effort.",
+      "limitations": "Times are rough estimates and do not account for condition, equipment, access, or local handover standards.",
+      "fields": [
+        {
+          "id": "rooms",
+          "label": "Rooms as name | task count | minutes per task | status",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Kitchen | 5 | 12 | pending\nBedroom | 3 | 10 | done"
+        },
+        {
+          "id": "handoverDate",
+          "label": "Handover date",
+          "type": "date",
+          "required": true
+        },
+        {
+          "id": "availableMinutes",
+          "label": "Available cleaning minutes",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": 1
+        }
+      ],
+      "testValues": {
+        "rooms": "Kitchen | 5 | 12 | pending\nBedroom | 3 | 10 | done\nHall | 2 | 8 | pending",
+        "handoverDate": "2026-08-30",
+        "availableMinutes": 90
+      }
+    }
+  ]
+}

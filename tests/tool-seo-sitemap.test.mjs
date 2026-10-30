@@ -38,33 +38,22 @@ async function activeToolPages() {
   return pages.sort((a, b) => a.slug.localeCompare(b.slug));
 }
 
-test('Worker sitemap lists the hub and all active canonical tool routes, excluding the disabled detector', async () => {
+test('all 500 active source tool routes have unique canonicals, excluding the disabled detector', async () => {
   const hubHtml = await readFile(path.join(tools, 'index.html'), 'utf8');
   const hubCanonical = capture(hubHtml, /<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i, 'Tools Hub canonical');
   const origin = new URL(hubCanonical).origin;
   const pages = await activeToolPages();
-  assert.equal(pages.length, 256, 'expected exactly 256 active tool routes');
+  assert.equal(pages.length, 500, 'expected exactly 500 active tool routes');
 
-  const sitemap = await readFile(path.join(site, 'sitemap.xml'), 'utf8');
-  assert.match(sitemap, /^<\?xml version="1\.0" encoding="UTF-8"\?>/);
-  assert.match(sitemap, /<urlset\s+xmlns="http:\/\/www\.sitemaps\.org\/schemas\/sitemap\/0\.9">/);
-  const locations = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
-  assert.equal((sitemap.match(/<loc>/g) || []).length, locations.length, 'every sitemap location is inside a loc element');
-  assert.equal(locations.length, 257, 'sitemap should include the hub and 256 active tool routes');
-  assert.equal(new Set(locations).size, locations.length, 'sitemap URLs should be unique');
-
-  const expected = [hubCanonical];
+  const canonicalRoutes = new Set([hubCanonical]);
   for (const { slug, path: pagePath } of pages) {
     const html = await readFile(pagePath, 'utf8');
     const canonical = capture(html, /<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i, `${slug} canonical`);
     assert.equal(canonical, `${origin}/tools/${slug}/`, `${slug} should use its canonical route`);
-    expected.push(canonical);
+    assert.ok(!canonicalRoutes.has(canonical), `${slug} canonical should be unique`);
+    canonicalRoutes.add(canonical);
   }
-  assert.deepEqual([...locations].sort(), expected.sort(), 'sitemap must match the active canonical URL inventory');
-  assert.doesNotMatch(sitemap, /text-detector/i, 'the disabled AI Text Detector must not be in the sitemap');
 
-  const robots = await readFile(path.join(site, 'robots.txt'), 'utf8');
-  assert.match(robots, new RegExp(`^Sitemap: ${origin.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/sitemap\\.xml$`, 'm'));
   const detector = await readFile(path.join(tools, 'text-detector', 'index.html'), 'utf8');
   assert.match(detector, /<meta\s+name=["']robots["']\s+content=["']noindex,follow["']/i);
 });

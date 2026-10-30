@@ -187,6 +187,13 @@ for(const tool of catalogAdditions){
   category.availableTools.push({title:tool.title,href,description:tool.description,icon:plannerIcons[tool.categoryId]||'✦'});
   plannedRoutes.add(href);
 }
+// BEGIN GENERATED 20-CATEGORY EXPANSION
+const newCategorySpecs=(window.AHNewToolCatalog||{}).categories||[];
+for(const spec of newCategorySpecs){
+  if(categories.some(item=>item.id===spec.id)) throw new Error(`Duplicate catalog category: ${spec.id}`);
+  categories.push({id:spec.id,title:spec.title,description:spec.description,accent_color:spec.accent_color,availableTools:spec.tools.map(tool=>({title:tool.title,href:tool.href,description:tool.description,icon:tool.icon||'✦'})),upcomingTools:[]});
+}
+// END GENERATED 20-CATEGORY EXPANSION
 const search=document.querySelector('#category-search');
 const cards=[...document.querySelectorAll('.category')];
 const dialog=document.querySelector('#category-dialog');
@@ -205,10 +212,10 @@ for (const card of cards) {
 }
 const availableCount=categories.reduce((sum,item)=>sum+item.availableTools.length,0);
 const policy=document.querySelectorAll('.policy-item small');
-if(policy[0]) policy[0].textContent='Image Size Optimizer, QR Code Generator, Passport & Visa Photo Studio and the 231 new tools share one existing 10-credit daily browser-local counter. HEIC retains its separate existing 10-credit counter. Successful actions only; failed actions cost no credits. Credits reset at local midnight and are not account-wide or server-enforced.';
+if(policy[0]) policy[0].textContent='Image Size Optimizer, QR Code Generator, Passport & Visa Photo Studio and the new browser-local tools share one existing 10-credit daily browser-local counter. HEIC retains its separate existing 10-credit counter. Successful actions only; failed actions cost no credits. Credits reset at local midnight and are not account-wide or server-enforced.';
 if(policy[1]) policy[1].textContent='All tools are free. No premium-only tiers or paid APIs.';
 const policyLabel=document.querySelector('.policy-label');
-if(policyLabel) policyLabel.textContent=`${availableCount} TOOLS AVAILABLE · 231 NEW TOOLS`;
+if(policyLabel) policyLabel.textContent=`${availableCount} TOOLS AVAILABLE · ALL FREE`;
 const buildNote=document.querySelector('.build-note span:first-child');
 if(buildNote) buildNote.innerHTML=`<i></i>${availableCount} FREE TOOLS AVAILABLE. MORE WILL ARRIVE GRADUALLY.`;
 const districtNote=document.querySelector('.build-note span:last-child');

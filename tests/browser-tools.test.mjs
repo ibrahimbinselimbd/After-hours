@@ -7,9 +7,11 @@ import { fileURLToPath } from 'node:url';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const catalogDataSource = fs.readFileSync(path.join(repoRoot, 'site/tools/_shared/planner-catalog-data.js'), 'utf8');
+const newCatalogDataSource = fs.readFileSync(path.join(repoRoot, 'site/tools/_shared/new-tools-catalog-data.js'), 'utf8');
 const catalogSource = fs.readFileSync(path.join(repoRoot, 'site/tools/catalog.js'), 'utf8');
 const sandbox = { window: {}, document: { querySelector: () => null, querySelectorAll: () => [] }, console };
 vm.runInNewContext(catalogDataSource, sandbox);
+vm.runInNewContext(newCatalogDataSource, sandbox);
 vm.runInNewContext(`${catalogSource}\n;globalThis.__toolCategories = categories;`, sandbox);
 const categories = sandbox.__toolCategories;
 const catalogTools = categories.flatMap(category => category.availableTools);
@@ -176,10 +178,11 @@ const researchedIdeas = [
   ['CSS clamp() Fluid-Scale Calculator & Preview', 'css-clamp-fluid-scale'],
 ];
 
-test('catalog preserves the 155-tool baseline and adds exactly 100 planners plus the screenshot editor', () => {
-  assert.equal(catalogTools.length, 256, 'expected 155 existing routes plus 100 planners and the screenshot editor');
-  assert.equal(new Set(catalogTools.map(tool => tool.href)).size, 256, 'tool routes must be unique');
-  assert.equal(new Set(catalogTools.map(tool => tool.title)).size, 256, 'tool titles must be unique');
+test('catalog preserves the existing 256 tools and adds 244 distinct routes across twenty categories', () => {
+  assert.equal(categories.length, 20, 'the expanded hub must have exactly twenty categories');
+  assert.equal(catalogTools.length, 500, 'expected 256 existing routes plus 244 new tools');
+  assert.equal(new Set(catalogTools.map(tool => tool.href)).size, 500, 'tool routes must be unique');
+  assert.equal(new Set(catalogTools.map(tool => tool.title)).size, 500, 'tool titles must be unique');
   assert.equal(preserved.length, 25, 'the existing tool inventory must remain complete');
   assert.equal(additions.length, 80, 'the release must add exactly 80 tools');
   for (const [title, slug] of preserved) {

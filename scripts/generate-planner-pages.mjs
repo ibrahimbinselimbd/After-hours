@@ -56,12 +56,17 @@ await fs.writeFile(path.join(shared, 'planner-catalog-data.js'), `window.AHPlann
 const catalogPath = path.join(root, 'site/tools/catalog.js');
 const catalogSource = await fs.readFile(catalogPath, 'utf8');
 const catalogSandbox = {window: browserWindow, document: {querySelector: () => null, querySelectorAll: () => []}, console};
+let newCatalogSource = '';
+try { newCatalogSource = await fs.readFile(path.join(shared, 'new-tools-catalog-data.js'), 'utf8'); }
+catch (error) { if (error.code !== 'ENOENT') throw error; }
+if (newCatalogSource) vm.runInNewContext(newCatalogSource, catalogSandbox, {filename: 'new-tools-catalog-data.js', timeout: 3000});
 vm.runInNewContext(`${catalogSource}\n;globalThis.__categories = categories;`, catalogSandbox, {filename: catalogPath, timeout: 3000});
 const categories = catalogSandbox.__categories;
 const activeTools = categories.flatMap(category => category.availableTools);
-if (activeTools.length !== 256) throw new Error(`Expected 256 active catalog routes after integration; found ${activeTools.length}.`);
+const expectedActiveCount = 256 + (browserWindow.AHNewToolCatalog?.tools?.length || 0);
+if (activeTools.length !== expectedActiveCount) throw new Error(`Expected ${expectedActiveCount} active catalog routes after integration; found ${activeTools.length}.`);
 const routes = activeTools.map(tool => tool.href);
-if (new Set(routes).size !== 256 || new Set(activeTools.map(tool => tool.title)).size !== 256) throw new Error('Catalog routes and titles must be unique.');
+if (new Set(routes).size !== expectedActiveCount || new Set(activeTools.map(tool => tool.title)).size !== expectedActiveCount) throw new Error('Catalog routes and titles must be unique.');
 const routeSet = new Set(routes);
 for (const tool of tools) {
   if (!routeSet.has(`/tools/${tool.slug}/`)) throw new Error(`Catalog is missing planner ${tool.slug}.`);
@@ -90,24 +95,24 @@ for (let index = 0; index < tools.length; index++) {
 // Refresh the hub's crawlable metadata and truthful active-tool ItemList.
 const hubPath = path.join(root, 'site/tools/index.html');
 let hub = await fs.readFile(hubPath, 'utf8');
-hub = hub.replace(/Explore 155 free browser-based tools/gi, 'Explore 256 free browser-based tools');
-hub = hub.replace(/155 active AFTERHOURS browser tools/g, '256 active AFTERHOURS browser tools');
-hub = hub.replace(/155 free browser-based tools/g, '256 free browser-based tools');
+hub = hub.replace(/Explore \d+ free browser-based tools/gi, `Explore ${expectedActiveCount} free browser-based tools`);
+hub = hub.replace(/\d+ active AFTERHOURS browser tools/g, `${expectedActiveCount} active AFTERHOURS browser tools`);
+hub = hub.replace(/\d+ free browser-based tools/gi, `${expectedActiveCount} free browser-based tools`);
 const schemaMatch = hub.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/i);
 if (!schemaMatch) throw new Error('Tools Hub JSON-LD could not be found.');
 const schema = JSON.parse(schemaMatch[1]);
 const list = schema['@graph']?.find(item => item['@type'] === 'ItemList');
 const collection = schema['@graph']?.find(item => item['@type'] === 'CollectionPage');
 if (!list || !collection) throw new Error('Tools Hub CollectionPage or ItemList schema is missing.');
-collection.description = 'Explore 256 free browser-based tools for PDFs, images, video, audio, code, files, SEO, privacy, planning and everyday tasks. Work with your data in your browser.';
-list.name = '256 active AFTERHOURS browser tools';
-list.numberOfItems = 256;
+collection.description = `Explore ${expectedActiveCount} free browser-local tools across ${categories.length} useful categories for everyday work and life. Process your inputs on this device, with no paid APIs or live-data claims.`;
+list.name = `${expectedActiveCount} active AFTERHOURS browser tools`;
+list.numberOfItems = expectedActiveCount;
 list.itemListElement = activeTools.slice().sort((a, b) => a.title.localeCompare(b.title)).map((tool, index) => ({'@type':'ListItem',position:index + 1,name:tool.title,url:`${siteOrigin}${tool.href}`}));
 hub = hub.replace(schemaMatch[0], `<script type="application/ld+json">${safeJson(schema)}</script>`);
-hub = hub.replace(/155 FREE TOOLS AVAILABLE/g, '256 FREE TOOLS AVAILABLE');
-hub = hub.replace(/155 TOOLS AVAILABLE/g, '256 TOOLS AVAILABLE');
-hub = hub.replace(/(<meta name="description" content=")[^"]*(">)/i, '$1Explore 256 free browser-based tools for PDFs, images, video, audio, code, files, privacy and everyday planning. Work with your files in your browser.$2');
-hub = hub.replace(/(<meta property="og:description" content=")[^"]*(">)/i, '$1Explore 256 free browser-based utilities organized by the existing AFTERHOURS categories. Process files locally in your browser.$2');
-hub = hub.replace(/(<meta name="twitter:description" content=")[^"]*(">)/i, '$1Browse 256 free browser-based tools for documents, images, code, privacy, creator workflows and everyday planning.$2');
+hub = hub.replace(/\d+ FREE TOOLS AVAILABLE/g, `${expectedActiveCount} FREE TOOLS AVAILABLE`);
+hub = hub.replace(/\d+ DISTRICTS · \d+ TOOLS AVAILABLE/g, `${categories.length} DISTRICTS · ${expectedActiveCount} TOOLS AVAILABLE`);
+hub = hub.replace(/(<meta name="description" content=")[^"]*(">)/i, `$1Explore ${expectedActiveCount} free browser-local tools across ${categories.length} useful categories for everyday work and life. Process your inputs on this device; no paid APIs or live lookups are required.$2`);
+hub = hub.replace(/(<meta property="og:description" content=")[^"]*(">)/i, `$1Explore ${expectedActiveCount} free browser-local tools across ${categories.length} useful categories. Use practical local utilities for everyday work and life.$2`);
+hub = hub.replace(/(<meta name="twitter:description" content=")[^"]*(">)/i, `$1Browse ${expectedActiveCount} free browser-local tools across ${categories.length} categories for everyday work, home, travel, learning and more.$2`);
 await fs.writeFile(hubPath, hub);
 console.log(`Generated ${tools.length} distinct planner pages plus one screenshot editor; active catalog and hub schema list ${activeTools.length} tools.`);
