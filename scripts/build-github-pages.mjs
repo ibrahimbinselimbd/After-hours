@@ -73,9 +73,8 @@ function addPageCanonical(html, relativePath, storyIds) {
   if (relativePath === 'index.html') return upsertCanonical(html, `${siteUrl}/`);
 
   if (relativePath === 'article.html') {
-    const initialStory = storyIds[0] || '';
-    html = upsertCanonical(html, `${siteUrl}/article.html?story=${encodeURIComponent(initialStory)}`);
-    const script = `<script>(()=>{const ids=${JSON.stringify(storyIds)};const requested=new URLSearchParams(location.search).get('story');const id=ids.includes(requested)?requested:(ids[0]||'');const link=document.querySelector('link[rel="canonical"]');if(link&&id)link.href=${JSON.stringify(`${siteUrl}/article.html?story=`)}+encodeURIComponent(id)})()</script>`;
+    html = html.replace(/<link\s+rel=["']canonical["'][^>]*>/gi, '');
+    const script = `<script>(()=>{const ids=${JSON.stringify(storyIds)};const requested=new URLSearchParams(location.search).get('story');let robots=document.querySelector('meta[name="robots"]');if(!robots){robots=document.createElement('meta');robots.name='robots';document.head.appendChild(robots)}const link=document.querySelector('link[rel="canonical"]');if(!ids.includes(requested)){robots.content='noindex,follow';link?.remove();return}robots.content='index,follow';const href=${JSON.stringify(`${siteUrl}/article.html?story=`)}+encodeURIComponent(requested);if(link)link.href=href;else{const canonical=document.createElement('link');canonical.rel='canonical';canonical.href=href;document.head.appendChild(canonical)}})()</script>`;
     return html.replace(/<\/body>/i, `${script}</body>`);
   }
 
@@ -133,7 +132,7 @@ for (const file of await walk(outputRoot)) {
 
 await fs.writeFile(path.join(outputRoot, '.nojekyll'), '');
 await fs.writeFile(path.join(outputRoot, 'tools.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta http-equiv="refresh" content="0;url=${basePath}/tools/"><title>AFTERHOURS Tools</title></head><body><p><a href="${basePath}/tools/">Open the Tools Hub</a></p><script>location.replace(${JSON.stringify(`${basePath}/tools/`)});</script></body></html>`);
-await fs.writeFile(path.join(outputRoot, '404.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Page not found · AFTERHOURS</title></head><body><main><h1>Page not found</h1><p><a href="${basePath}/">Return to AFTERHOURS</a></p></main></body></html>`);
+await fs.writeFile(path.join(outputRoot, '404.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Page not found · AFTERHOURS</title></head><body><main><h1>Page not found</h1><p><a href="${basePath}/districts/">Browse the Journal</a></p><p><a href="${basePath}/">Return to AFTERHOURS</a></p></main></body></html>`);
 
 const catalog = await fs.readFile(path.join(outputRoot, 'tools', 'catalog.js'), 'utf8');
 const escapedBase = basePath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');

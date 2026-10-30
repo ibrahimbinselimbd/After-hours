@@ -4,8 +4,7 @@
   const $ = id => document.getElementById(id);
   const labels = {gaming:'GAMING',ai:'AI & SOFTWARE',gear:'GADGETS & GEAR',crypto:'CRYPTO',culture:'DIGITAL CULTURE'};
   const requested = new URLSearchParams(location.search).get('story');
-  const story = stories.find(s => s.id === requested) || stories[0];
-  if (!story) return;
+  const story = stories.find(s => s.id === requested);
   const esc = value => String(value || '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const date = d => new Date(d+'T12:00:00Z').toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'});
   const setMeta = (key, value, attribute = 'name') => {
@@ -17,6 +16,15 @@
     }
     element.content = value;
   };
+  if (!story) {
+    document.title = 'Story not found | AFTERHOURS';
+    setMeta('description', 'The requested AFTERHOURS Journal story could not be found.');
+    setMeta('robots', 'noindex,follow');
+    document.head.querySelector('link[rel="canonical"]')?.remove();
+    const main = $('main');
+    if (main) main.innerHTML = `<section class="related story-not-found" id="article-content" aria-labelledby="story-not-found-title"><div class="related-head"><div><p class="eyebrow">404 / JOURNAL</p><h1 id="story-not-found-title">Story not found</h1><p>The Journal story you requested does not exist or is no longer available.</p></div><nav aria-label="Not-found navigation"><a href="/districts/">Browse the Journal</a><a href="/">Return to the homepage</a></nav></div></section>`;
+    return;
+  }
   const canonicalUrl = new URL(location.pathname, location.origin);
   canonicalUrl.searchParams.set('story', story.id);
   let canonicalLink = document.head.querySelector('link[rel="canonical"]');

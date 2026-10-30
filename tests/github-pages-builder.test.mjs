@@ -39,6 +39,44 @@ async function activeToolSlugs() {
   return slugs.sort();
 }
 
+test('unknown Journal story IDs render a truthful noindex state and never fall back to the first story', async () => {
+  const vm = await import('node:vm');
+  const source = await readFile(path.join(site, 'article.js'), 'utf8');
+  for (const search of ['?story=unknown-story', '']) {
+    const metas = new Map();
+    let canonicalPresent = true;
+    const canonical = {remove() { canonicalPresent = false; }};
+    const main = {innerHTML: ''};
+    const document = {
+      title: '',
+      head: {
+        querySelector(selector) {
+          if (selector === 'link[rel="canonical"]') return canonicalPresent ? canonical : null;
+          const match = selector.match(/^meta\[(name|property)="([^"]+)"\]$/);
+          return match ? metas.get(`${match[1]}:${match[2]}`) || null : null;
+        },
+        appendChild(element) { metas.set(`${element.attribute}:${element.value}`, element); },
+      },
+      getElementById(id) { return id === 'main' ? main : null; },
+      createElement() { return {setAttribute(attribute, value) { this.attribute = attribute; this.value = value; }}; },
+    };
+    const context = vm.createContext({
+      window: {STORIES: [{id: 'first-story', title: 'FIRST STORY MUST NEVER APPEAR'}]},
+      document,
+      location: {search, origin: 'https://example.test', pathname: '/After-hours/article.html'},
+      URLSearchParams,
+    });
+    vm.runInContext(source, context);
+    assert.equal(document.title, 'Story not found | AFTERHOURS');
+    assert.equal(metas.get('name:robots')?.content, 'noindex,follow');
+    assert.equal(canonicalPresent, false);
+    assert.match(main.innerHTML, /Story not found/);
+    assert.doesNotMatch(main.innerHTML, /FIRST STORY MUST NEVER APPEAR/);
+    assert.match(main.innerHTML, /href="\/districts\/"/);
+    assert.match(main.innerHTML, /href="\/"/);
+  }
+});
+
 test('GitHub Pages builds the complete English site, Journal, and all 500 active tools', async () => {
   const build = spawnSync(process.execPath, ['scripts/build-github-pages.mjs'], {
     cwd: root,
@@ -50,7 +88,7 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
   assert.match(build.stdout, /published active tool routes: 500/);
 
   for (const relative of [
-    'index.html', 'districts/index.html', 'article.html', 'info.html', 'tools/index.html',
+    'index.html', 'districts/index.html', 'article.html', 'info.html', '404.html', 'tools/index.html',
     'style.css', 'app.js', 'content.js', 'districts.js', 'sitemap.xml', 'robots.txt', '.nojekyll',
   ]) {
     assert.equal(await stat(path.join(output, relative)).then(() => true).catch(() => false), true, `${relative} should be published`);
@@ -75,12 +113,19 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
   const district = await readFile(path.join(output, 'districts', 'index.html'), 'utf8');
   const article = await readFile(path.join(output, 'article.html'), 'utf8');
   const info = await readFile(path.join(output, 'info.html'), 'utf8');
+  const notFound = await readFile(path.join(output, '404.html'), 'utf8');
   assert.match(home, /AFTERHOURS/);
   assert.match(home, new RegExp(`rel=["']canonical["'] href=["']${base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/["']`));
   assert.match(district, /JOURNAL DISTRICT MAP/);
   assert.match(district, new RegExp(`${base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/districts/`));
   assert.match(article, /article\.html\?story=/);
+  assert.doesNotMatch(article, /<link\s+rel=["']canonical["']/i, 'query-story template must not canonically identify every request as the first story');
+  assert.match(article, /robots\.content='noindex,follow'/, 'unknown query story IDs must be excluded from indexing');
+  assert.match(article, /ids\.includes\(requested\)/, 'only known story IDs should receive self canonicals');
   assert.match(info, /info\.html\?page=/);
+  assert.match(notFound, /noindex,nofollow/);
+  assert.match(notFound, /href="\/After-hours\/districts\/"/);
+  assert.match(notFound, /href="\/After-hours\/"/);
 
   const storyRouteScript = await readFile(path.join(output, 'districts.js'), 'utf8');
   const homeRouteScript = await readFile(path.join(output, 'app.js'), 'utf8');
