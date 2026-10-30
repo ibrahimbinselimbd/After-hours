@@ -159,11 +159,15 @@ test('hub catalog data, ItemList schema, and screenshot editor route reflect exa
   const editorPage = fs.readFileSync(path.join(toolFolder('screenshot-photo-text-editor'), 'index.html'), 'utf8');
   const editorApp = fs.readFileSync(path.join(toolFolder('screenshot-photo-text-editor'), 'app.js'), 'utf8');
   assert.match(editorPage, /Screenshot &amp; Photo Text Editor/);
-  assert.match(editorPage, /cdn\.jsdelivr\.net/);
+  assert.doesNotMatch(editorPage, /cdn\.jsdelivr\.net/);
+  assert.match(editorPage, /script-src 'self' 'wasm-unsafe-eval'/);
+  assert.match(editorPage, /connect-src 'self'/);
   assert.match(editorPage, /'wasm-unsafe-eval'/);
   assert.doesNotMatch(editorPage, /'unsafe-eval'/, 'OCR may compile WebAssembly but must not enable JavaScript eval');
   assert.match(editorPage, /meta name="description"/);
   assert.match(editorPage, /application\/ld\+json/);
+  for (const asset of [/vendor\/ocr\/tesseract\.min\.js/, /worker\.min\.js/, /core\//, /tessdata\//]) assert.match(editorApp, asset);
+  assert.doesNotMatch(editorApp, /cdn\.jsdelivr\.net/);
   for (const feature of [/createWorker\(/, /recognize\(/, /bbox/, /fontSuggestions/, /estimateTextColor/, /clone sample/i, /toBlob\(/, /credits\.canRun\(/, /credits\.charge\(/]) assert.match(editorApp, feature);
   assert.match(editorApp, /10_000_000/);
   assert.match(editorApp, /12 \* 1024 \* 1024/);
