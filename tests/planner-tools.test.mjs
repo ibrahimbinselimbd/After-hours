@@ -125,6 +125,29 @@ test('hub catalog data, ItemList schema, and screenshot editor route reflect exa
   assert.equal(new Set(dataWindow.AHPlannerTools.map(tool => tool.slug)).size, 100);
   const hub = fs.readFileSync(path.join(root, 'site/tools/index.html'), 'utf8');
   assert.ok(hub.indexOf('planner-catalog-data.js') < hub.indexOf('catalog.js'), 'catalog data loads before category rendering');
+  const categorySandbox = {window: {AHPlannerTools: [], AHNewToolCatalog: {tools: []}}, document: {querySelector: () => null, querySelectorAll: () => []}, console};
+  vm.createContext(categorySandbox);
+  for (const file of ['planner-catalog-data.js', 'new-tools-catalog-data.js']) vm.runInContext(fs.readFileSync(path.join(root, 'site/tools/_shared', file), 'utf8'), categorySandbox);
+  vm.runInContext(fs.readFileSync(path.join(root, 'site/tools/catalog.js'), 'utf8') + '\n;globalThis.__categories = categories;', categorySandbox);
+  const categories = categorySandbox.__categories;
+  const activeTools = categories.flatMap(category => category.availableTools);
+  assert.equal(categories.length, 20);
+  assert.equal(activeTools.length, 500);
+  const visibleHub = hub.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, ' ');
+  assert.match(visibleHub, /A home for 500 active browser tools across 20 useful categories/i);
+  assert.match(visibleHub, /244 new tools share/i);
+  assert.match(visibleHub, /20 CATEGORIES · 500 TOOLS AVAILABLE/i);
+  assert.match(visibleHub, /All 20 categories/i);
+  assert.doesNotMatch(visibleHub, /155 useful tools|10 districts|TEN DISTRICTS|130 NEW FREE UTILITIES|130 new tools share/i);
+  for (const [index, category] of categories.entries()) {
+    const card = hub.match(new RegExp(`<button class="category"[^>]*data-category="${category.id}"[^>]*>[\\s\\S]*?<\\/button>`))?.[0];
+    assert.ok(card, `${category.title} has a static category card`);
+    const count = category.availableTools.length;
+    assert.match(card, new RegExp(`aria-label="[^"]* — ${count} available tools"`));
+    assert.match(card, new RegExp(`${String(index + 1).padStart(2, '0')} / CATEGORY`));
+    assert.match(card, new RegExp(`${count} TOOLS AVAILABLE`));
+    assert.match(card, new RegExp(`${count} TOOLS READY`));
+  }
   const schemaText = hub.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/i)?.[1];
   assert.ok(schemaText, 'hub has crawlable JSON-LD');
   const schema = JSON.parse(schemaText);
