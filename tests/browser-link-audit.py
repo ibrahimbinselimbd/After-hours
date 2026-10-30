@@ -23,9 +23,12 @@ with sync_playwright() as p:
         def feedback():
             status = page.locator('.ah-footer__feedback-status')
             assert status.count() == 1
-            assert 'Feedback contact coming soon' in status.inner_text()
+            assert status.evaluate('(el) => el.tagName') == 'A'
+            assert status.get_attribute('href') == 'https://github.com/ibrahimbinselimbd/After-hours/issues'
+            assert 'posts are public' in status.inner_text().lower()
             assert status.locator('a, input, textarea, button').count() == 0
-            assert page.locator('a[href^="mailto:"], a[href*="github.com"][href*="issues"]').count() == 0
+            assert page.locator('a[href^="mailto:"]').count() == 0
+            assert page.locator('a[href*="github.com"][href*="issues"]').count() >= 1
         for route in ['/', '/tools/']:
             go(route)
             journal = page.get_by_role('link', name='The journal', exact=True, include_hidden=True)
@@ -49,8 +52,12 @@ with sync_playwright() as p:
         page.locator('#category-dialog').wait_for(state='visible')
         assert 'image' in page.locator('#dialog-title').inner_text().lower()
         assert 'design' in page.locator('#dialog-title').inner_text().lower()
-        assert page.locator('.modal-status').inner_text() == '01 AVAILABLE'
-        page.get_by_role('link', name='Open Bulk Image Background Remover', exact=True).click()
+        modal_count, modal_label = page.locator('.modal-status').inner_text().split()
+        assert modal_label == 'AVAILABLE'
+        assert int(modal_count) == page.locator('#category-dialog a[href^="/tools/"]').count()
+        tool_link = page.locator('#category-dialog a[href="/tools/background-remover/"]')
+        assert tool_link.count() == 1
+        tool_link.click()
         assert '/tools/background-remover/' in page.url
         page.wait_for_load_state('networkidle')
         # Preserve queue and clear behavior without downloading the inference model.
@@ -62,26 +69,27 @@ with sync_playwright() as p:
         page.locator('#clear-button').click()
         assert page.locator('#queue-count').inner_text().strip() == '00'
         for key in ['about', 'privacy', 'disclaimer', 'advertising', 'terms', 'cookies', 'editorial', 'contact']:
-            go('/info?page=' + key)
+            go('/info.html?page=' + key)
             assert page.locator('.notice strong').inner_text().lower() == 'draft'
             assert 'not treat it as a final legal or operational policy' in page.locator('.notice').inner_text()
             assert page.locator(f'#page-nav a[aria-current="page"][href="info.html?page={key}"]').count() == 1
             assert page.locator('.link-row a[href="/#feed"]').count() == 1
             assert page.locator('form, textarea, input:not([type="hidden"])').count() == 0
             feedback()
-        assert 'Feedback contact coming soon' in page.locator('.contact-status').inner_text()
-        go('/info?page=contact#corrections')
+        assert 'public corrections route' in page.locator('.contact-status').inner_text().lower()
+        go('/info.html?page=contact#corrections')
         assert page.locator('#corrections').is_visible()
+        assert page.locator('#corrections a[href="https://github.com/ibrahimbinselimbd/After-hours/issues"]').count() == 1
         assert 'No text is collected or submitted' in page.locator('#corrections').inner_text()
         if width in [390, 1280]:
             page.screenshot(path=str(out / f'contact-{width}.png'), full_page=True)
-        go('/info?page=contact#%ZZ')
-        go('/info?page=unknown')
+        go('/info.html?page=contact#%ZZ')
+        go('/info.html?page=unknown')
         assert page.locator('#crumb').inner_text() == 'ABOUT'
         assert not errors, errors
         assert not bad, bad
         assert not submissions, submissions
-        records.append({'width': width, 'journal': 'feed', 'image_design': 'correct modal', 'feedback': 'no collection; coming soon', 'info_pages': '8 visible drafts', 'queue': 'add/clear passed', 'overflow': False, 'errors': errors, 'failed_requests': bad, 'submissions': submissions})
+        records.append({'width': width, 'journal': 'feed', 'image_design': 'correct modal', 'feedback': 'public issue tracker; no sensitive form', 'info_pages': '8 visible drafts', 'queue': 'add/clear passed', 'overflow': False, 'errors': errors, 'failed_requests': bad, 'submissions': submissions})
         print(f'{width}px: all four fixes and queue regression passed', flush=True)
         page.close()
     browser.close()

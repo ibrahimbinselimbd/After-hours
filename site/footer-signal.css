@@ -7,5 +7,5 @@ footer.ah-footer{display:block;gap:normal;align-items:normal;justify-content:nor
 /* Homepage mobile only: preserve word boundaries without changing article footers or desktop. */
 @media(max-width:600px){body:has(main .hero) .ah-footer .ah-footer__story h3 br{display:initial}}
 
-/* An honest non-interactive state until a dedicated public contact exists. */
+/* Public corrections use the repository issue tracker; posts are visible to others. */
 .ah-footer__feedback-status{display:block;color:#b6bbc6;font-size:13px;line-height:1.6;padding:7px 0}.ah-footer__feedback-status small{display:block;color:#bdcb9e;font-size:11px;line-height:1.5;margin-top:3px}

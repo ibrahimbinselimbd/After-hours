@@ -167,6 +167,18 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
   assert.match(article, /robots\.content='noindex,follow'/, 'unknown query story IDs must be excluded from indexing');
   assert.match(article, /ids\.includes\(requested\)/, 'only known story IDs should receive self canonicals');
   assert.match(info, /info\.html\?page=/);
+  assert.match(info, /href="https:\/\/github\.com\/ibrahimbinselimbd\/After-hours\/issues"/);
+  assert.match(info, /Public GitHub issue tracker · posts are public/);
+  assert.doesNotMatch(info, /mailto:/i, 'the public Info page must not invent or expose a private email address');
+  const infoContent = await readFile(path.join(output, 'info.js'), 'utf8');
+  assert.match(infoContent, /Draft/);
+  assert.match(infoContent, /title:'Contact & corrections'/);
+  assert.match(infoContent, /public corrections route/i);
+  assert.match(infoContent, /Use <a href="https:\/\/github\.com\/ibrahimbinselimbd\/After-hours\/issues"/);
+  assert.match(infoContent, /posts are public/i);
+  assert.match(infoContent, /No response time is promised/i);
+  assert.doesNotMatch(infoContent, /Contact is coming soon/i);
+  assert.doesNotMatch(infoContent, /Feedback contact coming soon/i);
   assert.match(notFound, /noindex,nofollow/);
   assert.match(notFound, /href="\/After-hours\/districts\/"/);
   assert.match(notFound, /href="\/After-hours\/"/);
