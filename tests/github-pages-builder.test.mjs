@@ -39,6 +39,10 @@ async function activeToolSlugs() {
   return slugs.sort();
 }
 
+function decodeHtml(value = '') {
+  return value.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;|&#x27;/gi, "'");
+}
+
 test('unknown Journal story IDs render a truthful noindex state and never fall back to the first story', async () => {
   const vm = await import('node:vm');
   const source = await readFile(path.join(site, 'article.js'), 'utf8');
@@ -99,9 +103,47 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
   assert.equal(slugs.length, 500, 'source should contain exactly 500 active tool routes');
   const html = (await filesUnder(path.join(output, 'tools'))).filter(file => file.endsWith('.html'));
   assert.equal(html.length, 502, 'expected the Tools Hub, 500 active tools, and the disabled detector preview');
+  const toolTitles = new Set();
+  const toolCanonicals = new Set();
   for (const slug of slugs) {
     assert.equal(await stat(path.join(output, 'tools', slug, 'index.html')).then(() => true), true, `${slug} should be published`);
+    const page = await readFile(path.join(output, 'tools', slug, 'index.html'), 'utf8');
+    const title = page.match(/<title>([^<]+)<\/title>/i)?.[1] || '';
+    const description = page.match(/<meta\s+name=["']description["']\s+content=(['"])([\s\S]*?)\1/i)?.[2] || '';
+    const canonicalTags = [...page.matchAll(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["'][^>]*>/gi)];
+    assert.ok(title.length > 12, `${slug} needs a descriptive title before JavaScript runs`);
+    assert.ok(description.length > 40, `${slug} needs a useful meta description before JavaScript runs`);
+    assert.equal(canonicalTags.length, 1, `${slug} should have exactly one canonical URL`);
+    const canonical = canonicalTags[0][1].replace(/&amp;/g, '&');
+    assert.equal(canonical, `${base}/tools/${slug}/`, `${slug} needs a self-referencing static canonical`);
+    assert.ok(!toolTitles.has(title), `${slug} should have a unique title`);
+    assert.ok(!toolCanonicals.has(canonical), `${slug} should have a unique canonical URL`);
+    toolTitles.add(title);
+    toolCanonicals.add(canonical);
+
+    const body = page.match(/<body\b[^>]*>([\s\S]*?)<\/body>/i)?.[1] || '';
+    const beforeScripts = body.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '').replace(/<noscript\b[^>]*>[\s\S]*?<\/noscript>/gi, '');
+    const headings = [...beforeScripts.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/gi)];
+    assert.equal(headings.length, 1, `${slug} should expose exactly one meaningful H1 in the initial HTML`);
+    const visibleText = beforeScripts.replace(/<[^>]+>/g, ' ').replace(/&(?:amp|lt|gt|quot|#39);/g, ' ').replace(/\s+/g, ' ').trim();
+    assert.ok(visibleText.length > 200, `${slug} needs useful primary content before JavaScript runs`);
+    assert.match(beforeScripts, /<(?:input|textarea|select|button)\b/i, `${slug} needs initial controls before JavaScript runs`);
+    if (/\bid=["']tool-shell["']/i.test(page)) {
+      assert.match(page, /class=["']tool-static-description["']/, `${slug} needs a static primary description`);
+      assert.match(page, /Enable JavaScript to run this tool/, `${slug} needs an honest non-JavaScript fallback state`);
+      const bodyTitle = page.match(/<body\b[^>]*\bdata-title=(['"])(.*?)\1/i)?.[2];
+      const bodyDescription = page.match(/<body\b[^>]*\bdata-description=(['"])(.*?)\1/i)?.[2];
+      const h1Text = headings[0][1].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+      const staticDescription = page.match(/<p\s+class=["']tool-static-description["']>([\s\S]*?)<\/p>/i)?.[1];
+      assert.equal(decodeHtml(h1Text), decodeHtml(bodyTitle), `${slug} H1 should match its catalog title`);
+      assert.equal(decodeHtml(staticDescription), decodeHtml(bodyDescription), `${slug} should expose its complete catalog description before JavaScript runs`);
+      if (/id=["']new-tool-config["']|planner-runtime\.js/i.test(page)) {
+        assert.match(beforeScripts, /<(?:input|textarea|select)\b[^>]*\bdisabled\b/i, `${slug} should render its catalog-defined fields in the initial HTML`);
+      }
+    }
   }
+  assert.equal(toolTitles.size, 500, 'all active tool titles should be unique');
+  assert.equal(toolCanonicals.size, 500, 'all active tool canonical URLs should be unique');
 
   const hub = await readFile(path.join(output, 'tools', 'index.html'), 'utf8');
   assert.match(hub, new RegExp(`rel=["']canonical["'] href=["']${base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/tools/`));
