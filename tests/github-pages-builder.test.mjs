@@ -105,6 +105,8 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
 
   const hub = await readFile(path.join(output, 'tools', 'index.html'), 'utf8');
   assert.match(hub, new RegExp(`rel=["']canonical["'] href=["']${base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/tools/`));
+  const toolkitCss = await readFile(path.join(output, 'tools', '_shared', 'toolkit.css'), 'utf8');
+  assert.match(toolkitCss, /\.tool-hero h1\{[^}]*overflow-wrap:\s*anywhere/i, 'long tool headings should wrap instead of widening the mobile viewport');
   const detector = await readFile(path.join(output, 'tools', 'text-detector', 'index.html'), 'utf8');
   assert.match(detector, /coming soon/i);
   assert.match(detector, /<meta\s+name=["']robots["']\s+content=["']noindex,follow["']/i);
