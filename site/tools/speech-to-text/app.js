@@ -14,7 +14,7 @@
       <label class="drop-zone" for="st-file"><strong>Choose audio</strong><span>Maximum 25 MB or 3 minutes</span><input id="st-file" type="file" accept="audio/*,.wav,.mp3,.m4a,.webm"></label>
     </div>
     <div class="actions"><button class="button button-main" id="st-run">Transcribe locally</button><button class="button" id="st-cancel" disabled>Cancel</button><button class="button" id="st-srt" disabled>Download SRT</button><button class="button" id="st-vtt" disabled>Download VTT</button></div>
-    <progress id="st-progress" class="progress" max="100" value="0"></progress><div id="st-status" class="status" role="status"></div><textarea id="st-text" rows="12" readonly></textarea>
+    <progress id="st-progress" class="progress" max="100" value="0"></progress><div id="st-status" class="status" role="status"></div><textarea id="st-text" aria-label="Transcribed text output" rows="12" readonly></textarea>
   </div>`);
 
   let worker = null;
