@@ -153,6 +153,32 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
   assert.match(detector, /coming soon/i);
   assert.match(detector, /<meta\s+name=["']robots["']\s+content=["']noindex,follow["']/i);
 
+  const ocrPage = await readFile(path.join(site, 'tools', 'screenshot-photo-text-editor', 'index.html'), 'utf8');
+  const ocrApp = await readFile(path.join(site, 'tools', 'screenshot-photo-text-editor', 'app.js'), 'utf8');
+  assert.match(ocrPage, /script-src 'self' 'wasm-unsafe-eval'/);
+  assert.match(ocrPage, /worker-src 'self' blob:/);
+  assert.match(ocrPage, /connect-src 'self';/);
+  assert.doesNotMatch(`${ocrPage}\n${ocrApp}`, /cdn\.jsdelivr\.net|tessdata\.projectnaptha\.com/i);
+  assert.match(ocrApp, /vendor\/ocr\/tesseract\.min\.js/);
+  assert.match(ocrApp, /workerPath:/);
+  assert.match(ocrApp, /corePath:/);
+  assert.match(ocrApp, /langPath:/);
+  const ocrVendorSource = path.join(site, 'tools', 'screenshot-photo-text-editor', 'vendor', 'ocr');
+  const ocrVendorOutput = path.join(output, 'tools', 'screenshot-photo-text-editor', 'vendor', 'ocr');
+  const ocrVendorFiles = await filesUnder(ocrVendorSource);
+  assert.equal(ocrVendorFiles.length, 28, 'the versioned OCR payload, five language models, and license records should be complete');
+  for (const sourceFile of ocrVendorFiles) {
+    const relative = path.relative(ocrVendorSource, sourceFile);
+    assert.deepEqual(
+      await readFile(path.join(ocrVendorOutput, relative)),
+      await readFile(sourceFile),
+      `${relative} must be copied byte-for-byte to the Pages artifact`
+    );
+  }
+  const ocrNotices = await readFile(path.join(ocrVendorSource, 'THIRD-PARTY-NOTICES.md'), 'utf8');
+  assert.match(ocrNotices, /Apache-2\.0/);
+  assert.match(ocrNotices, /declares `MIT`/);
+
   const home = await readFile(path.join(output, 'index.html'), 'utf8');
   const district = await readFile(path.join(output, 'districts', 'index.html'), 'utf8');
   const article = await readFile(path.join(output, 'article.html'), 'utf8');

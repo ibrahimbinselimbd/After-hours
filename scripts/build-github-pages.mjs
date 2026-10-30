@@ -163,6 +163,7 @@ for (const file of await walk(outputRoot)) {
   const ext = path.extname(file).toLowerCase();
   if (!['.html', '.js', '.mjs', '.css', '.json', '.webmanifest', '.txt', '.xml'].includes(ext)) continue;
   const relativePath = path.relative(outputRoot, file).replace(/\\/g, '/');
+  if (relativePath.startsWith('tools/screenshot-photo-text-editor/vendor/ocr/')) continue;
   let text = await fs.readFile(file, 'utf8');
 
   if (ext === '.html') {

@@ -5,7 +5,7 @@
   const esc = value => api.escape(String(value ?? ''));
   api.mount(`<section class="editor-workspace" aria-label="Screenshot and photo text editing workspace">
     <p class="editor-intro">Import a screenshot or photo from this device, detect text boxes, correct the wording and place replacement text on the image. Your image pixels stay in this browser.</p>
-    <div class="editor-disclosure"><strong>LOCAL FILES &amp; MODEL DOWNLOADS</strong><br>Image pixels are not uploaded. OCR code and the selected language model load only when you choose Run OCR; the download can range from several to tens of megabytes, and processing can use substantial memory. The editor limits images to 12 MB, 10 megapixels and 4,096 px per side. Original font recovery is not guaranteed: font suggestions are approximate width matches for you to fine-tune.</div>
+    <div class="editor-disclosure"><strong>LOCAL FILES &amp; MODEL DOWNLOADS</strong><br>Image pixels are not uploaded. OCR code and the selected language model load from this site only when you choose Run OCR; the first run may download several megabytes and requires a network connection. Processing can use substantial memory. The editor limits images to 12 MB, 10 megapixels and 4,096 px per side. Original font recovery is not guaranteed: font suggestions are approximate width matches for you to fine-tune.</div>
     <div class="editor-controls">
       <label>Image file<input id="photo-file" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/bmp,image/avif"><span class="editor-control-help">Supported images depend on this browser. The source file is opened locally.</span></label>
       <label>OCR language<select id="ocr-language"><option value="eng">English</option><option value="ben">Bengali</option><option value="spa">Spanish</option><option value="fra">French</option><option value="deu">German</option></select><span class="editor-control-help">One language per scan. Language data is downloaded on first use.</span></label>
@@ -287,12 +287,12 @@
     if (window.Tesseract) return Promise.resolve(window.Tesseract);
     return new Promise((resolve, reject) => {
       const script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
+      script.src = new URL('./vendor/ocr/tesseract.min.js', document.baseURI).href;
       script.async = true;
       script.crossOrigin = 'anonymous';
       script.referrerPolicy = 'no-referrer';
       script.onload = () => window.Tesseract ? resolve(window.Tesseract) : reject(new Error('The OCR library loaded without its browser API.'));
-      script.onerror = () => reject(new Error('Could not load OCR code from the public CDN. Check your connection and try again.'));
+      script.onerror = () => reject(new Error('Could not load local OCR code. Check your connection to this site and try again.'));
       document.head.appendChild(script);
     });
   }
@@ -300,11 +300,16 @@
     if (worker && workerLanguage === language) return worker;
     if (worker) { await worker.terminate(); worker = null; workerLanguage = ''; }
     const Tesseract = await loadTesseractScript();
+    const vendorRoot = new URL('./vendor/ocr/', document.baseURI);
     worker = await Tesseract.createWorker(language, 1, {
+      workerPath: new URL('worker.min.js', vendorRoot).href,
+      corePath: new URL('core/', vendorRoot).href.replace(/\/$/, ''),
+      langPath: new URL('tessdata/', vendorRoot).href.replace(/\/$/, ''),
+      gzip: true,
       logger: message => {
         if (message.status) {
           const progress = typeof message.progress === 'number' ? ` ${Math.round(message.progress * 100)}%` : '';
-          setStatus(`Loading local OCR: ${message.status}${progress}. First use downloads the selected language pack.`, '');
+          setStatus(`Loading local OCR assets: ${message.status}${progress}. The selected language data load from this site.`, '');
         }
       }
     });
