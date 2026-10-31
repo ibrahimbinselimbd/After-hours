@@ -57,7 +57,8 @@ function openCategory(id, trigger) {
     preview.className = 'tool-preview';
     preview.setAttribute('aria-hidden', 'true');
     const image = document.createElement('img');
-    image.src = new URL(`${data.id}.webp`, toolPreviewBase).href;
+    const slug = item.href.split('/').filter(Boolean).pop();
+    image.src = new URL(`${slug}.svg`, toolPreviewBase).href;
     image.alt = '';
     image.width = 640;
     image.height = 360;
@@ -65,7 +66,7 @@ function openCategory(id, trigger) {
     image.decoding = 'async';
     const caption = document.createElement('span');
     caption.className = 'preview-caption';
-    caption.textContent = data.title.toUpperCase();
+    caption.textContent = 'ANIMATED TOOL VISUAL';
     preview.append(image, caption);
     const line = document.createElement('div');
     line.className = 'tool-title-line';

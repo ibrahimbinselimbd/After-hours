@@ -74,7 +74,7 @@ with sync_playwright() as p:
             };
         })''')
         assert len(card_checks) == 68
-        assert all(check['src'].startswith(base + '/tools/_shared/previews/') and check['src'].endswith('.webp') for check in card_checks), card_checks
+        assert all(check['src'].startswith(base + '/tools/_shared/tool-art/') and check['src'].endswith('.svg') for check in card_checks), card_checks
         assert all(check['width'] == '640' and check['height'] == '360' and check['naturalWidth'] > 0 for check in card_checks), card_checks
         assert not any(check['clipping'] for check in card_checks), [check for check in card_checks if check['clipping']]
         page.locator('#dialog-tool-search').fill('JSON Formatter')

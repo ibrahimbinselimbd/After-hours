@@ -2,17 +2,16 @@
 
 python3 tests/browser-category-cards.py https://ibrahimbinselimbd.github.io/After-hours
 Optional: CATEGORY_CARD_OUTPUT=/absolute/output/path
-Requires Playwright, Chromium, Pillow. Output is evidence, not committed source.
+Requires Playwright, Chromium. Output is evidence, not committed source.
 """
 import concurrent.futures
-from io import BytesIO
 import json
 import os
+import re
 from pathlib import Path
 import sys
 from urllib.parse import urlparse
 from urllib.request import urlopen
-from PIL import Image
 from playwright.sync_api import sync_playwright
 
 base = sys.argv[1].rstrip('/')
@@ -49,16 +48,19 @@ with sync_playwright() as p:
                 const title = card.querySelector('.tool-meta b');
                 const footer = card.querySelector('.open-label');
                 return {href:card.href, src:image?.src, width:Number(image?.getAttribute('width')), height:Number(image?.getAttribute('height')),
-                    title:title?.textContent, clipped:[card,title,footer].some(el=>el.scrollWidth>el.clientWidth+1)};
+                    alt:image?.getAttribute('alt'), title:title?.textContent, accessibleLabel:card.getAttribute('aria-label'),
+                    clipped:[card,title,footer].some(el=>el.scrollWidth>el.clientWidth+1)};
             })''')
             for card in check:
                 slug = urlparse(card['href']).path.strip('/').split('/')[-1]
-                assert card['src'] == base + '/tools/_shared/tool-art/' + category + '.webp', card
+                assert card['src'] == base + '/tools/_shared/tool-art/' + slug + '.svg', card
                 assert card['width'] == 640 and card['height'] == 360 and card['title'], card
+                assert card['alt'] == '' and card['accessibleLabel'], card
                 assert not card['clipped'], [width, category, card]
                 assets.add(card['src'])
             first = cards.first.locator('img')
             first.evaluate('(image) => image.decode()')
+            assert first.evaluate('(image) => image.naturalWidth') == 640
             assert first.evaluate('(image) => getComputedStyle(image).animationName') == 'none'
             if category == 'data-spreadsheets' and width in (390, 1440):
                 # A pointer action removes the automatic focus ring from the evidence image.
@@ -73,9 +75,11 @@ with sync_playwright() as p:
             assert modal_top <= page.locator('.modal-close').bounding_box()['y'] < modal_top + 110
             page.locator('.modal-close').click()
         assert count == 500
+        assert len(assets) == 500, 'every tool must use its own animated asset'
         assert not errors and not bad and not submissions, {'errors':errors,'bad':bad,'submissions':submissions}
-        records.append({'width':width,'height':height,'categories':20,'active_cards':count,'columns':3 if width>1000 else 2,'overflow':False,'reduced_motion':'disabled','errors':errors,'failed_requests':bad})
-        print(f'{width}px: all 20 category popups / 500 tool cards passed', flush=True)
+        records.append({'width':width,'height':height,'categories':20,'active_cards':count,'unique_animated_assets':len(assets),
+                        'columns':3 if width>1000 else 2,'overflow':False,'reduced_motion':'disabled','errors':errors,'failed_requests':bad})
+        print(f'{width}px: all 20 category popups / 500 individual animations passed', flush=True)
         page.close()
     page = browser.new_page(viewport={'width':390,'height':844}, reduced_motion='no-preference')
     page.goto(base + '/tools/?category=data-spreadsheets', wait_until='networkidle')
@@ -88,22 +92,26 @@ with sync_playwright() as p:
     page.locator('#dialog-tools .featured-tool').last.scroll_into_view_if_needed()
     page.wait_for_function("!document.querySelector('#dialog-tools .featured-tool').classList.contains('is-in-view')")
     assert first.locator('img').evaluate('(el) => getComputedStyle(el).animationName') == 'none'
-    records.append({'motion':'entry, preview drift and sheen active only in view; reduced-motion disables all','computed':motion})
+    records.append({'motion':'tool-specific SVG motion, entry, drift and sheen only in view; reduced-motion disables CSS','computed':motion})
     browser.close()
 
 def verify_asset(url):
     with urlopen(url, timeout=30) as response:
         assert response.status == 200
         data = response.read()
-    assert len(data) <= 250 * 1024
-    with Image.open(BytesIO(data)) as image:
-        image.load()
-        assert image.size == (640, 360)
+    assert len(data) <= 40 * 1024
+    svg = data.decode('utf-8')
+    slug = urlparse(url).path.rsplit('/', 1)[-1].removesuffix('.svg')
+    assert '<svg ' in svg and f'data-tool="{slug}"' in svg
+    assert 'animation:' in svg and 'prefers-reduced-motion:reduce' in svg
+    assert not re.search(r'<script\b|(?:href|xlink:href)=["\']https?://|url\(["\']?https?://', svg, re.I)
     return len(data)
 
-assert len(assets) == 20
-with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
+assert len(assets) == 500
+with concurrent.futures.ThreadPoolExecutor(max_workers=12) as pool:
     sizes = list(pool.map(verify_asset, sorted(assets)))
-records.append({'verified_category_art_assets':20,'total_bytes':sum(sizes),'largest_bytes':max(sizes)})
+total_bytes = sum(sizes)
+assert total_bytes <= 4 * 1024 * 1024, f'animated preview payload too large: {total_bytes}'
+records.append({'verified_animated_svg_assets':500,'total_bytes':total_bytes,'largest_bytes':max(sizes)})
 (out / 'results.json').write_text(json.dumps(records, indent=2) + '\n')
 print(json.dumps(records, indent=2), flush=True)
