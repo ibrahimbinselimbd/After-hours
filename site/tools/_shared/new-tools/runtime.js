@@ -163,7 +163,11 @@
     } catch (error) { api.status(status, error?.message || 'This tool could not process these inputs.', 'error'); }
     finally { runButton.disabled = false; }
   });
-  copyButton.addEventListener('click', async () => { api.status(status, await api.copy(currentText) ? 'Result copied.' : 'Copy failed; select the result text manually.', 'success'); });
+  copyButton.addEventListener('click', async () => {
+    let copied = false;
+    try { copied = await api.copy(currentText); } catch (_) { copied = false; }
+    api.status(status, copied ? 'Result copied.' : 'Copy failed; select the result text manually.', copied ? 'success' : 'error');
+  });
   downloadButton.addEventListener('click', () => api.downloadText(currentText, filename));
   clearButton.addEventListener('click', () => {
     for (const control of controls.values()) {

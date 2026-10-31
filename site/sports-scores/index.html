@@ -7,6 +7,7 @@
   <meta name="description" content="Browse seven AFTERHOURS sports score lanes for football, cricket, tennis, basketball, badminton, Formula 1 and more. No verified live feed is connected yet.">
   <meta name="robots" content="noindex,follow">
   <meta name="score-feed-endpoint" content="./scores.json">
+  <meta name="score-poll-interval-seconds" content="60">
   <meta property="og:site_name" content="AFTERHOURS">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Sports Scores & Fixtures — AFTERHOURS">
@@ -16,7 +17,7 @@
   <title>Sports Scores & Fixtures — AFTERHOURS</title>
   <link rel="stylesheet" href="/fonts.css">
   <link rel="stylesheet" href="./sports-scores.css?v=2">
-  <script defer src="./sports-scores.js?v=3"></script>
+  <script defer src="./sports-scores.js?v=4"></script>
 </head>
 <body class="sports-page">
   <a class="skip-link" href="#scoreboard">Skip to the scoreboard</a>
@@ -89,13 +90,13 @@
           <div class="board-tools"><span id="board-summary" role="status" aria-live="polite">Waiting for the site’s score feed</span><button type="button" id="refresh-scores"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M6.2 9A6.5 6.5 0 0 1 17 6l3 6M4 12l3 6a6.5 6.5 0 0 0 10.8-3"/></svg> Refresh</button></div>
         </div>
 
-        <div class="feed-notice" id="feed-notice" role="status">
+        <div class="feed-notice" id="feed-notice" role="status" aria-live="polite">
           <span class="notice-mark" aria-hidden="true">i</span>
-          <div><strong id="feed-state">First-party feed not connected</strong><p>The display is ready for an AFTERHOURS server-side Goalserve adapter. No provider call or key is active in this page; the adapter must map your account's feed into the scoreboard format.</p></div>
+          <div><strong id="feed-state">First-party feed not connected</strong><p>The display is ready for an AFTERHOURS server-side Goalserve adapter. No provider call or key is active in this page; the adapter must map your account's feed into the scoreboard format.</p><p id="feed-polling-copy">Automatic same-site feed checks run every 60 seconds while this page is visible. Use Refresh to check now.</p></div>
           <span class="feed-update" id="feed-updated">NO FEED / WAITING</span>
         </div>
 
-        <div class="score-grid" id="score-list" aria-live="polite" aria-busy="false"></div>
+        <div class="score-grid" id="score-list" aria-live="off" aria-busy="false"></div>
         <div class="score-empty" id="score-empty">
           <div class="empty-orbit" aria-hidden="true"><span>0</span></div>
           <div class="empty-copy"><span class="empty-kicker">SIGNAL CHECK / NO MATCH DATA</span><h3>No scores on the board—yet.</h3><p>The interface is ready, but this static site needs a first-party feed to supply real fixtures and results. Nothing here is simulated.</p></div>

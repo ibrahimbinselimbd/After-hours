@@ -72,3 +72,52 @@ body[data-title="JSON Formatter & Validator"] .workspace { padding: clamp(20px, 
   .tool-header { min-height: 62px !important; }
   .tool-hero p { font-size: 14px !important; line-height: 1.5 !important; }
 }
+
+
+/* Keep the four file-workspace forms shrinkable on narrow phone screens. */
+body[data-title="CSV Cleaner"] .tool-form,
+body[data-title="CSV ↔ JSON Converter"] .tool-form,
+body[data-title="ZIP Archive Creator"] .tool-form,
+body[data-title="Batch File Renamer"] .tool-form {
+  width: 100%;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr);
+}
+body[data-title="CSV Cleaner"] .tool-form > *,
+body[data-title="CSV ↔ JSON Converter"] .tool-form > *,
+body[data-title="ZIP Archive Creator"] .tool-form > *,
+body[data-title="Batch File Renamer"] .tool-form > * {
+  min-width: 0;
+  max-width: 100%;
+}
+body[data-title="CSV Cleaner"] .tool-form input[type="file"],
+body[data-title="CSV ↔ JSON Converter"] .tool-form input[type="file"],
+body[data-title="ZIP Archive Creator"] .tool-form input[type="file"],
+body[data-title="Batch File Renamer"] .tool-form input[type="file"] {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+body[data-title="CSV Cleaner"] .tool-form .field-grid,
+body[data-title="CSV ↔ JSON Converter"] .tool-form .field-grid,
+body[data-title="ZIP Archive Creator"] .tool-form .field-grid,
+body[data-title="Batch File Renamer"] .tool-form .field-grid {
+  min-width: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+body[data-title="CSV Cleaner"] .tool-form .drop-zone,
+body[data-title="CSV ↔ JSON Converter"] .tool-form .drop-zone,
+body[data-title="ZIP Archive Creator"] .tool-form .drop-zone,
+body[data-title="Batch File Renamer"] .tool-form .drop-zone {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+body[data-title="CSV Cleaner"] .tool-form .actions,
+body[data-title="CSV ↔ JSON Converter"] .tool-form .actions,
+body[data-title="ZIP Archive Creator"] .tool-form .actions,
+body[data-title="Batch File Renamer"] .tool-form .actions {
+  min-width: 0;
+  max-width: 100%;
+  flex-wrap: wrap;
+}

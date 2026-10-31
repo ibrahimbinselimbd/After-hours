@@ -15,8 +15,11 @@
   const dateOnly = (value) => {
     const m = /^\d{4}-\d{2}-\d{2}$/.exec(clean(value, 20));
     if (!m) return null;
-    const d = new Date(`${m[0]}T00:00:00`);
-    return Number.isNaN(d.getTime()) ? null : d;
+    const [year, month, day] = m[0].split('-').map(Number);
+    const d = new Date(0);
+    d.setUTCHours(0, 0, 0, 0);
+    d.setUTCFullYear(year, month - 1, day);
+    return d.getUTCFullYear() === year && d.getUTCMonth() === month - 1 && d.getUTCDate() === day ? d : null;
   };
   const iso = (d) => d.toISOString().slice(0, 10);
   const titleCase = (s) => clean(s, 120).replace(/\s+/g, ' ').replace(/^./, c => c.toUpperCase());
@@ -78,7 +81,7 @@
 
   function allocator(values) {
     const entries = lines(values.subjects).map(line => {
-      const parts = line.split('|').map(clean);
+      const parts = line.split('|').map(value => clean(value));
       return {name: parts[0], weight: clamp(parts[1], 1, 100, 1), due: dateOnly(parts[2])};
     }).filter(x => x.name).slice(0, 100);
     const hours = clamp(values.hours, 0.25, 1000, 10);
@@ -90,7 +93,7 @@
 
   function readingQueue(values) {
     const entries = lines(values.readings).map((line, i) => {
-      const [title, priority, pages] = line.split('|').map(clean);
+      const [title, priority, pages] = line.split('|').map(value => clean(value));
       return `${i + 1}. ${title || `Reading ${i + 1}`} — priority ${titleCase(priority || 'normal')}${pages ? ` — ${pages} pages` : ''}\n   Annotation prompt: claim, evidence, question, and connection.`;
     }).slice(0, 100);
     if (!entries.length) return 'Enter readings one per line as Title | priority | pages.';

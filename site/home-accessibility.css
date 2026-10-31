@@ -581,3 +581,17 @@ header .brand i { font-size: 11px; }
   .journal-plan-cta .edition-note { font-size: 12px; }
 }
 @media (prefers-reduced-motion: reduce) { .districts-cta { transition: none !important; } }
+
+/* HOME-TOUCH-001: enlarge only the home Search hit area; keep narrow headers on one row. */
+header #search-open { min-width: 44px; min-height: 44px; justify-content: center; }
+header #search-open:active { transform: none; }
+@media (max-width: 420px) {
+  header { column-gap: 6px; }
+  header .header-actions { gap: 4px; }
+  header .brand { font-size: 16px; }
+  header .brand-mark { font-size: 34px; margin-right: 12px; }
+}
+@media (max-width: 360px) {
+  header .brand { font-size: 13px; }
+  header .brand-mark { font-size: 28px; margin-right: 8px; }
+}

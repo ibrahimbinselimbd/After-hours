@@ -118,25 +118,19 @@
   function run(values) {
     const jsonText = String(values && values.json || '').trim();
     const queryText = String(values && values.query || '').trim();
-    if (!jsonText) return 'Input error: paste a JSON object or array to test.';
-    if (jsonText.length > MAX_JSON_CHARS) return `Input error: the JSON payload is too large. Limit: ${MAX_JSON_CHARS} characters.`;
+    if (!jsonText) fail('Paste a JSON object or array to test.');
+    if (jsonText.length > MAX_JSON_CHARS) fail(`The JSON payload is too large. Limit: ${MAX_JSON_CHARS} characters.`);
     let document;
     try { document = JSON.parse(jsonText); }
-    catch (error) { return `JSON parse error: ${error && error.message ? error.message : 'invalid JSON'}`; }
-    let steps;
-    try { steps = parseQuery(queryText); }
-    catch (error) { return `Query error: ${error.message}`; }
-    try {
-      const result = evaluate(document, steps);
-      const dialect = 'Limited JSONPath dialect: $, .name, ["key"], [index], and wildcards .* / [*].';
-      if (!result.matches.length) {
-        return `${dialect}\nNo matches for ${queryText}. The query was valid, but no selected key/index exists at the requested path.`;
-      }
-      const lines = result.matches.map((match, index) => `${index + 1}. ${match.path} = ${formatValue(match.value)}`);
-      return `${dialect}\n${result.matches.length} match${result.matches.length === 1 ? '' : 'es'} (${result.visits} node visit${result.visits === 1 ? '' : 's'}):\n${lines.join('\n')}`;
-    } catch (error) {
-      return `Evaluation error: ${error.message}`;
+    catch (error) { fail(`JSON parse error: ${error && error.message ? error.message : 'invalid JSON'}`); }
+    const steps = parseQuery(queryText);
+    const result = evaluate(document, steps);
+    const dialect = 'Limited JSONPath dialect: $, .name, ["key"], [index], and wildcards .* / [*].';
+    if (!result.matches.length) {
+      return `${dialect}\nNo matches for ${queryText}. The query was valid, but no selected key/index exists at the requested path.`;
     }
+    const lines = result.matches.map((match, index) => `${index + 1}. ${match.path} = ${formatValue(match.value)}`);
+    return `${dialect}\n${result.matches.length} match${result.matches.length === 1 ? '' : 'es'} (${result.visits} node visit${result.visits === 1 ? '' : 's'}):\n${lines.join('\n')}`;
   }
 
   window.AHDevToolEngines['jsonpath-query-tester'] = {

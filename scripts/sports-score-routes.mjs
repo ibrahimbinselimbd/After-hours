@@ -74,6 +74,7 @@ export function renderSportScorePage(page, canonicalUrl) {
   <meta name="description" content="${escapeHtml(page.description)}">
   <meta name="robots" content="noindex,follow">
   <meta name="score-feed-endpoint" content="../scores.json">
+  <meta name="score-poll-interval-seconds" content="60">
   <meta name="score-sport" content="${escapeHtml(page.sport)}">
   <meta name="score-sport-label" content="${escapeHtml(page.label)}">
   <meta property="og:site_name" content="AFTERHOURS">
@@ -85,7 +86,7 @@ export function renderSportScorePage(page, canonicalUrl) {
   <title>${escapeHtml(page.title)}</title>
   <link rel="stylesheet" href="/fonts.css">
   <link rel="stylesheet" href="../sports-scores.css?v=3">
-  <script defer src="../sports-scores.js?v=3"></script>
+  <script defer src="../sports-scores.js?v=4"></script>
 </head>
 <body class="sports-page" data-score-page="${escapeHtml(page.slug)}">
   <a class="skip-link" href="#scoreboard">Skip to the ${escapeHtml(statusName)} scoreboard</a>
@@ -115,8 +116,8 @@ export function renderSportScorePage(page, canonicalUrl) {
           <div class="state-filter" role="group" aria-label="Filter ${escapeHtml(page.label)} matches by status"><button type="button" class="state-tab is-active" data-state="all" aria-pressed="true">All matches</button><button type="button" class="state-tab" data-state="live" aria-pressed="false">Live <i aria-hidden="true"></i></button><button type="button" class="state-tab" data-state="upcoming" aria-pressed="false">Upcoming</button><button type="button" class="state-tab" data-state="finished" aria-pressed="false">Results</button></div>
           <div class="board-tools"><span id="board-summary" role="status" aria-live="polite">Waiting for the site’s ${escapeHtml(statusName)} score feed</span><button type="button" id="refresh-scores"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M6.2 9A6.5 6.5 0 0 1 17 6l3 6M4 12l3 6a6.5 6.5 0 0 0 10.8-3"/></svg> Refresh</button></div>
         </div>
-        <div class="feed-notice" id="feed-notice" role="status"><span class="notice-mark" aria-hidden="true">i</span><div><strong id="feed-state">First-party feed not connected</strong><p>No ${escapeHtml(statusName)} provider call or score key is active in this page. Coverage and data fields must be verified for the selected subscription before live information can appear.</p></div><span class="feed-update" id="feed-updated">NO FEED / WAITING</span></div>
-        <div class="score-grid" id="score-list" aria-live="polite" aria-busy="false"></div>
+        <div class="feed-notice" id="feed-notice" role="status" aria-live="polite"><span class="notice-mark" aria-hidden="true">i</span><div><strong id="feed-state">First-party feed not connected</strong><p>No ${escapeHtml(statusName)} provider call or score key is active in this page. Coverage and data fields must be verified for the selected subscription before live information can appear.</p><p id="feed-polling-copy">Automatic same-site feed checks run every 60 seconds while this page is visible. Use Refresh to check now.</p></div><span class="feed-update" id="feed-updated">NO FEED / WAITING</span></div>
+        <div class="score-grid" id="score-list" aria-live="off" aria-busy="false"></div>
         <div class="score-empty" id="score-empty"><div class="empty-orbit" aria-hidden="true"><span>0</span></div><div class="empty-copy"><span class="empty-kicker">${escapeHtml(page.label.toUpperCase())} / NO VERIFIED DATA</span><h3>No ${escapeHtml(statusName)} scores available yet.</h3><p>No live scores, fixtures or results are served for this lane today. The site will show feed-backed data only after the provider feed and its sport-specific fields are verified.</p></div></div>
       </section>
       <section class="score-data-note" aria-labelledby="page-guide-title"><div class="data-note-icon" aria-hidden="true">${escapeHtml(page.icon)}</div><div><span class="board-kicker">PAGE GUIDE / ${escapeHtml(page.label.toUpperCase())}</span><h2 id="page-guide-title">What this lane<br><em>can show.</em></h2></div><div><p>${escapeHtml(page.guide)}</p><p>${escapeHtml(page.coverage)} <a href="${escapeHtml(page.source)}" target="_blank" rel="noopener noreferrer">${escapeHtml(page.sourceLabel)}</a>.</p><p><strong>Indexing status:</strong> This route is crawlable but intentionally marked noindex while its verified feed and useful live content are unavailable. Review page quality and data accuracy before changing that directive.</p></div></section>

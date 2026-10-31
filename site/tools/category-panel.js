@@ -1,9 +1,28 @@
 // Presentation only. Tool logic, routes and credits are untouched; the AI detector stays disabled.
 // Relative to this hub so local and /After-hours/ GitHub Pages previews both work.
-const toolPreviewBase = new URL('./_shared/tool-art/', location.href);
+const toolPreviewBase = new URL('./_shared/previews/', location.href);
 const categorySearch = document.querySelector('#dialog-tool-search');
 const categorySearchStatus = document.querySelector('#category-search-status');
 let previewObserver;
+const cardTiltMotion = window.matchMedia('(prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine)');
+const toolCardGrid = document.querySelector('#dialog-tools');
+toolCardGrid?.addEventListener('pointermove', event => {
+  if (!cardTiltMotion.matches || event.pointerType === 'touch') return;
+  const card = event.target.closest('.featured-tool');
+  if (!card) return;
+  const bounds = card.getBoundingClientRect();
+  if (!bounds.width || !bounds.height) return;
+  const horizontal = (event.clientX - bounds.left) / bounds.width - .5;
+  const vertical = (event.clientY - bounds.top) / bounds.height - .5;
+  card.style.setProperty('--tilt-x', `${Math.max(-2.2, Math.min(2.2, -vertical * 4.4)).toFixed(2)}deg`);
+  card.style.setProperty('--tilt-y', `${Math.max(-3, Math.min(3, horizontal * 6)).toFixed(2)}deg`);
+}, {passive: true});
+toolCardGrid?.addEventListener('pointerout', event => {
+  const card = event.target.closest('.featured-tool');
+  if (!card || card.contains(event.relatedTarget)) return;
+  card.style.removeProperty('--tilt-x');
+  card.style.removeProperty('--tilt-y');
+});
 function updateCategorySearch() {
   const query = categorySearch?.value.trim().toLowerCase() || '';
   const list = document.querySelector('#dialog-tools');
@@ -58,15 +77,16 @@ function openCategory(id, trigger) {
     preview.setAttribute('aria-hidden', 'true');
     const image = document.createElement('img');
     const slug = item.href.split('/').filter(Boolean).pop();
-    image.src = new URL(`${slug}.svg`, toolPreviewBase).href;
+    image.src = new URL(`${slug}.webp`, toolPreviewBase).href;
     image.alt = '';
     image.width = 640;
     image.height = 360;
     image.loading = 'lazy';
     image.decoding = 'async';
+    image.fetchPriority = 'low';
     const caption = document.createElement('span');
     caption.className = 'preview-caption';
-    caption.textContent = 'ANIMATED TOOL VISUAL';
+    caption.textContent = 'REAL TOOL WORKSPACE';
     preview.append(image, caption);
     const line = document.createElement('div');
     line.className = 'tool-title-line';

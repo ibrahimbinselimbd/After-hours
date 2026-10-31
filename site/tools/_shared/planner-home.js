@@ -5,15 +5,17 @@
 
   const LIMIT = 200;
   const clean = (value, fallback = '') => String(value ?? fallback).replace(/[\u0000-\u001f\u007f]/g, ' ').trim().slice(0, 300);
-  const lines = (value) => String(value || '').split(/\r?\n/).map(clean).filter(Boolean).slice(0, LIMIT);
-  const parts = (line) => line.split(/[|,;\t]/).map(clean);
-  const date = (value) => { const d = new Date(`${clean(value)}T00:00:00`); return Number.isNaN(d.getTime()) ? null : d; };
+  const cleanOutput = (value) => String(value ?? '').replace(/\r\n?/g, '\n').replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, '');
+  const lines = (value) => String(value || '').split(/\r?\n/).map(value => clean(value)).filter(Boolean).slice(0, LIMIT);
+  const parts = (line) => line.split(/[|,;\t]/).map(value => clean(value));
+  const civilDate = (year, month, day) => { const d = new Date(0); d.setUTCHours(0, 0, 0, 0); d.setUTCFullYear(year, month - 1, day); return d; };
+  const date = (value) => { const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value ?? '').trim()); if (!match) return null; const [year, month, day] = match.slice(1).map(Number); const d = civilDate(year, month, day); return d.getUTCFullYear() === year && d.getUTCMonth() === month - 1 && d.getUTCDate() === day ? d : null; };
   const iso = (d) => d ? d.toISOString().slice(0, 10) : '';
-  const today = () => { const d = new Date(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()); };
+  const today = () => { const d = new Date(); return civilDate(d.getFullYear(), d.getMonth() + 1, d.getDate()); };
   const days = (a, b) => Math.round((a - b) / 86400000);
   const num = (value) => Number(String(value).replace(/[^\d.-]/g, ''));
   const money = (value) => Number.isFinite(value) ? value.toFixed(2) : '—';
-  const result = (summary, detail, warnings = []) => ({ summary: clean(summary), details: clean(detail), warnings: warnings.filter(Boolean).slice(0, 5) });
+  const result = (summary, detail, warnings = []) => ({ summary: clean(summary), details: cleanOutput(detail), warnings: warnings.map(warning => cleanOutput(warning)).filter(Boolean).slice(0, LIMIT) });
   const field = (id, label, type, extra = {}) => ({ id, label, type, ...extra });
 
   const defs = [
@@ -47,18 +49,29 @@
     },
     'weekly-meal-plan-consolidated-grocery-list': v => {
       const meals = lines(v.meals).map(parts).filter(x => x[0] && x[2]); const merged = new Map();
-      meals.forEach(x => x[2].split('+').map(clean).filter(Boolean).forEach(i => { const key = i.toLowerCase(); merged.set(key, (merged.get(key) || 0) + 1); }));
+      meals.forEach(x => x[2].split('+').map(value => clean(value)).filter(Boolean).forEach(i => { const key = i.toLowerCase(); merged.set(key, (merged.get(key) || 0) + 1); }));
       return result(`${meals.length} meal(s) planned; ${merged.size} consolidated grocery item(s).`, `MEALS\n${meals.map(x => `- ${x[0]}: ${x[1] || 'Meal'} — ${x[2]}`).join('\n')}\n\nGROCERY LIST\n${[...merged].sort().map(([name, count]) => `- ${name}${count > 1 ? ` (mentioned ${count}×)` : ''}`).join('\n')}`, meals.length ? [] : ['Enter one meal per line using | separators and + between ingredients.']);
     },
     'household-chore-rotation-planner': v => {
-      const people = String(v.people || '').split(',').map(clean).filter(Boolean).slice(0, 30); const chores = lines(v.chores); const weeks = Math.max(1, Math.min(12, Math.floor(num(v.weeks) || 4))); const start = date(v.startDate) || today();
+      const people = String(v.people || '').split(',').map(value => clean(value)).filter(Boolean).slice(0, 30); const chores = lines(v.chores); const weeks = Math.max(1, Math.min(12, Math.floor(num(v.weeks) || 4))); const start = date(v.startDate) || today();
       if (!people.length || !chores.length) return result('No rotation created.', '', ['Enter at least one person and one chore.']);
-      const out = []; for (let w = 0; w < weeks; w++) { const d = new Date(start); d.setDate(d.getDate() + w * 7); out.push(`WEEK ${w + 1} (${iso(d)})`); chores.forEach((c, i) => out.push(`- ${c}: ${people[(i + w) % people.length]}`)); }
+      const out = []; for (let w = 0; w < weeks; w++) { const d = new Date(start); d.setUTCDate(d.getUTCDate() + w * 7); out.push(`WEEK ${w + 1} (${iso(d)})`); chores.forEach((c, i) => out.push(`- ${c}: ${people[(i + w) % people.length]}`)); }
       return result(`${weeks}-week rotation for ${people.length} person(s) and ${chores.length} chore(s).`, out.join('\n'));
     },
     'home-maintenance-schedule-planner': v => {
-      const now = today(); const rows = lines(v.tasks).map(parts).map(x => { const last = date(x[1]); const interval = Math.max(1, Math.floor(num(x[2]))); const due = last && interval ? new Date(last.getTime() + interval * 86400000) : null; return { task: x[0], due }; }).filter(x => x.task).sort((a, b) => (a.due || new Date(8640000000000000)) - (b.due || new Date(8640000000000000)));
-      return result(`${rows.length} maintenance task(s) scheduled.`, rows.map(x => `- ${x.task}: ${x.due ? `${iso(x.due)}${days(x.due, now) < 0 ? ' — due' : ` — in ${days(x.due, now)} days`}` : 'check date/interval'}`).join('\n'), rows.length ? [] : ['Enter task, last-completed date, and interval days.']);
+      const now = today(); const warnings = []; const rows = [];
+      lines(v.tasks).forEach((line, index) => {
+        const [task = '', lastText = '', intervalText = ''] = parts(line);
+        if (!task) { warnings.push(`Row ${index + 1}: task name is required.`); return; }
+        const last = lastText ? date(lastText) : null; const interval = Number(intervalText); let valid = true;
+        if (!lastText) { warnings.push(`Row ${index + 1}: last completed date is required in YYYY-MM-DD format.`); valid = false; }
+        else if (!last) { warnings.push(`Row ${index + 1}: last completed date must be a valid YYYY-MM-DD date.`); valid = false; }
+        if (!intervalText) { warnings.push(`Row ${index + 1}: interval days are required.`); valid = false; }
+        else if (!Number.isFinite(interval) || interval <= 0 || !Number.isInteger(interval)) { warnings.push(`Row ${index + 1}: interval days must be a positive whole number.`); valid = false; }
+        if (valid) rows.push({task, due: new Date(last.getTime() + interval * 86400000)});
+      });
+      rows.sort((a, b) => a.due - b.due);
+      return result(`${rows.length} maintenance task(s) scheduled.`, rows.map(x => `- ${x.task}: ${iso(x.due)}${days(x.due, now) < 0 ? ' — due' : ` — in ${days(x.due, now)} days`}`).join('\n'), warnings.length ? warnings : rows.length ? [] : ['Enter task, last-completed date, and interval days.']);
     },
     'emergency-supplies-rotation-tracker': v => {
       const now = today(); const rows = lines(v.supplies).map(parts).map(x => ({ item: x[0], qty: x[1] || '?', useBy: date(x[2]), action: x[3] || 'review' })).filter(x => x.item).sort((a, b) => (a.useBy || new Date(8640000000000000)) - (b.useBy || new Date(8640000000000000)));
@@ -70,9 +83,24 @@
       return result(`${out.length} outfit combination(s) generated from ${rows.length} item(s).`, out.join('\n'), out.length ? [] : ['Use category values such as top, bottom, and shoes.']);
     },
     'plant-care-vacation-watering-planner': v => {
-      const start = date(v.startDate) || today(); const end = date(v.endDate) || start; const rows = lines(v.plants).map(parts).map(x => ({ name: x[0], interval: Math.max(1, Math.floor(num(x[1]))), last: date(x[2]), note: x[3] || '' })).filter(x => x.name); const out = [];
-      rows.forEach(p => { let next = p.last ? new Date(p.last.getTime() + p.interval * 86400000) : new Date(start); let count = 0; while (next <= end && count < 50) { if (next >= start) out.push(`- ${iso(next)} — ${p.name}${p.note ? ` (${p.note})` : ''}`); next.setDate(next.getDate() + p.interval); count++; } });
-      return result(`${rows.length} plant(s); ${out.length} watering/checklist date(s) in range.`, out.join('\n'), rows.length ? [] : ['Enter plant, interval days, and last-watered date.']);
+      const warnings = []; const startText = String(v.startDate || '').trim(); const endText = String(v.endDate || '').trim();
+      const parsedStart = startText ? date(startText) : null; const parsedEnd = endText ? date(endText) : null; const start = parsedStart || today(); const end = parsedEnd || parsedStart || start; let validRange = true;
+      if (startText && !parsedStart) { warnings.push('Planning start must be a valid YYYY-MM-DD date.'); validRange = false; }
+      if (endText && !parsedEnd) { warnings.push('Planning end must be a valid YYYY-MM-DD date.'); validRange = false; }
+      if (parsedEnd && parsedEnd < start) { warnings.push('Planning end must be on or after the planning start.'); validRange = false; }
+      const rows = [];
+      lines(v.plants).forEach((line, index) => {
+        const [name = '', intervalText = '', lastText = '', note = ''] = parts(line);
+        if (!name) { warnings.push(`Row ${index + 1}: plant name is required.`); return; }
+        const interval = Number(intervalText); const last = lastText ? date(lastText) : null; let valid = true;
+        if (!intervalText) { warnings.push(`Row ${index + 1}: interval days are required.`); valid = false; }
+        else if (!Number.isFinite(interval) || interval <= 0 || !Number.isInteger(interval)) { warnings.push(`Row ${index + 1}: interval days must be a positive whole number.`); valid = false; }
+        if (lastText && !last) { warnings.push(`Row ${index + 1}: last watered date must be a valid YYYY-MM-DD date.`); valid = false; }
+        if (valid) rows.push({name, interval, last, note});
+      });
+      const out = [];
+      if (validRange) rows.forEach(plant => { let next = plant.last ? new Date(plant.last) : new Date(start); if (plant.last) next.setUTCDate(next.getUTCDate() + plant.interval); let count = 0; while (next <= end && count < 50) { if (next >= start) out.push(`- ${iso(next)} — ${plant.name}${plant.note ? ` (${plant.note})` : ''}`); next.setUTCDate(next.getUTCDate() + plant.interval); count++; } });
+      return result(`${rows.length} plant(s); ${out.length} watering/checklist date(s) in range.`, out.join('\n'), warnings.length ? warnings : rows.length ? [] : ['Enter plant, interval days, and last-watered date.']);
     },
     'utility-bill-usage-cost-trend-analyzer': v => {
       const rows = lines(v.bills).map(parts).map(x => ({ period: x[0], usage: num(x[1]), cost: num(x[2]) })).filter(x => x.period && Number.isFinite(x.usage) && Number.isFinite(x.cost)); const out = rows.map((x, i) => { const prev = rows[i - 1]; const du = prev ? x.usage - prev.usage : null; const dc = prev ? x.cost - prev.cost : null; return `- ${x.period}: usage ${x.usage}, cost $${money(x.cost)}, cost/unit $${money(x.cost / x.usage)}${prev ? `; change ${du >= 0 ? '+' : ''}${du} usage, ${dc >= 0 ? '+' : ''}$${money(dc)}` : ''}`; });

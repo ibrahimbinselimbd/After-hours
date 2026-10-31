@@ -51,3 +51,18 @@ for (const fixture of fixtures) {
     assert.ok(text.length <= 1_000_000, `${fixture.slug} output must remain within the shared runtime display limit`);
   });
 }
+
+
+test('JSONPath malformed JSON and invalid query syntax throw into the runtime error path', () => {
+  const source = fs.readFileSync(path.join(engineRoot, 'jsonpath-query-tester.js'), 'utf8');
+  const window = {AHDevToolEngines: {}};
+  vm.runInNewContext(source, {window}, {filename: 'jsonpath-query-tester.js', timeout: 2000});
+  const engine = window.AHDevToolEngines['jsonpath-query-tester'];
+  assert.throws(() => engine.run({json: '{', query: '$'}), /JSON parse error/);
+  assert.throws(() => engine.run({json: '{"users":[]}', query: '$['}), /Expected \*|array index|quoted key/);
+  assert.throws(() => engine.run({json: '{"users":[]}', query: 'users'}), /beginning with the root symbol/);
+  const valid = engine.run({json: '{"users":[{"name":"Ada"}]}', query: '$.users[0].name'});
+  assert.match(valid, /Ada/);
+  const noMatch = engine.run({json: '{"users":[]}', query: '$.users[0].name'});
+  assert.match(noMatch, /No matches/);
+});

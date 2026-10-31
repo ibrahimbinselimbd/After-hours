@@ -8,6 +8,11 @@
   const allowedSports = new Set(['football', 'cricket', 'tennis', 'basketball', 'badminton', 'f1', 'other']);
   const routeSport = document.querySelector('meta[name="score-sport"]')?.content || 'all';
   const routeSportLabel = document.querySelector('meta[name="score-sport-label"]')?.content || 'all sports';
+  const configuredPollSeconds = Number(document.querySelector('meta[name="score-poll-interval-seconds"]')?.content);
+  const pollIntervalSeconds = Number.isFinite(configuredPollSeconds) && configuredPollSeconds >= 10
+    ? Math.min(3600, Math.floor(configuredPollSeconds))
+    : 60;
+  const pollIntervalMs = pollIntervalSeconds * 1000;
   const selectors = {
     list: document.querySelector('#score-list'),
     empty: document.querySelector('#score-empty'),
@@ -17,7 +22,8 @@
     boardSummary: document.querySelector('#board-summary'),
     liveCount: document.querySelector('#live-count'),
     matchCount: document.querySelector('#match-count'),
-    refresh: document.querySelector('#refresh-scores')
+    refresh: document.querySelector('#refresh-scores'),
+    pollingCopy: document.querySelector('#feed-polling-copy')
   };
 
   let matches = [];
@@ -26,7 +32,10 @@
   let selectedSport = routeSport;
   let selectedState = 'all';
   let isRefreshing = false;
-  let lastAttemptAt = 0;
+
+  if (selectors.pollingCopy) {
+    selectors.pollingCopy.textContent = `Automatic same-site feed checks run every ${pollIntervalSeconds} seconds while this page is visible. Use Refresh to check now.`;
+  }
 
   const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
   const pad = value => String(value).padStart(2, '0');
@@ -74,6 +83,10 @@
 
   function statusLabel(status) {
     return status === 'live' ? 'LIVE' : status === 'finished' ? 'FINAL' : 'UP NEXT';
+  }
+
+  function setTextIfChanged(element, value) {
+    if (element && element.textContent !== value) element.textContent = value;
   }
 
   function renderMatch(match) {
@@ -140,9 +153,10 @@
     const live = visible.filter(match => match.status === 'live').length;
     selectors.liveCount.textContent = pad(live);
     selectors.matchCount.textContent = pad(visible.length);
-    selectors.boardSummary.textContent = feedConnected
-      ? `${live} live · ${visible.length} fixture${visible.length === 1 ? '' : 's'} on this page`
-      : selectedSport === 'all' ? 'Waiting for the site’s score feed' : `Waiting for the site’s ${routeSportLabel} score feed`;
+    const filterLabel = ({all: 'All matches', live: 'Live', upcoming: 'Upcoming', finished: 'Results'})[selectedState] || 'All matches';
+    const fixtureLabel = `${visible.length} fixture${visible.length === 1 ? '' : 's'}`;
+    const noMatches = visible.length ? '' : ', no matching fixtures';
+    setTextIfChanged(selectors.boardSummary, `${feedConnected ? 'Feed connected' : 'Feed not connected'}; ${routeSportLabel}, ${filterLabel} filter: ${fixtureLabel}, ${live} live${noMatches}.`);
     syncCards(visible);
     selectors.empty.hidden = visible.length > 0;
     selectors.empty.querySelector('h3').textContent = feedConnected
@@ -159,24 +173,24 @@
   }
 
   function updateFeedStatus(message, isError = false) {
-    selectors.feedState.textContent = message;
-    selectors.notice.classList.toggle('has-error', isError);
+    const alreadyError = selectors.notice.classList.contains('has-error');
+    if (selectors.feedState.textContent !== message) selectors.feedState.textContent = message;
+    if (alreadyError !== isError) selectors.notice.classList.toggle('has-error', isError);
   }
 
   function updateTimestamp() {
     if (!feedUpdatedAt) {
-      selectors.feedUpdated.textContent = feedConnected ? 'UPDATED / TIME UNKNOWN' : 'NO FEED / WAITING';
+      setTextIfChanged(selectors.feedUpdated, feedConnected ? 'UPDATED / TIME UNKNOWN' : 'NO FEED / WAITING');
       return;
     }
     const date = new Date(feedUpdatedAt);
-    selectors.feedUpdated.textContent = Number.isNaN(date.getTime())
+    setTextIfChanged(selectors.feedUpdated, Number.isNaN(date.getTime())
       ? 'UPDATED / TIME UNKNOWN'
-      : `UPDATED / ${new Intl.DateTimeFormat(undefined, {hour: '2-digit', minute: '2-digit'}).format(date)}`;
+      : `UPDATED / ${new Intl.DateTimeFormat(undefined, {hour: '2-digit', minute: '2-digit'}).format(date)}`);
   }
 
   async function refreshFeed() {
     if (isRefreshing) return;
-    lastAttemptAt = Date.now();
     isRefreshing = true;
     selectors.refresh.disabled = true;
     selectors.list.setAttribute('aria-busy', 'true');
@@ -223,6 +237,6 @@
   refreshFeed();
   window.setInterval(() => {
     if (document.visibilityState !== 'visible') return;
-    if (feedConnected || Date.now() - lastAttemptAt >= 60_000) refreshFeed();
-  }, 1_000);
+    refreshFeed();
+  }, pollIntervalMs);
 })();

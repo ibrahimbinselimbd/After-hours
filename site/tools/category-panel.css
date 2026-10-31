@@ -1,4 +1,4 @@
-/* English category popup: category-specific 3D art, never a mobile row list. */
+/* English category popup: real tool-specific workspace previews with restrained depth. */
 .tools-page dialog {
   --category-accent: #d3fb56;
   --panel-header-height: 78px;
@@ -70,17 +70,18 @@ body:has(dialog[open]) { overflow: hidden; }
   border: 1px solid #c2d2e22b; border-radius: 15px;
   background: linear-gradient(150deg, #ffffff06, transparent 65%), #101722;
   color: #f0f4f8; text-decoration: none; box-shadow: inset 0 1px #ffffff08;
-  transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+  transform-style: preserve-3d;
+  transition: transform .28s cubic-bezier(.2,.7,.25,1), border-color .22s ease, box-shadow .22s ease;
 }
 #dialog-tools .featured-tool:hover, #dialog-tools .featured-tool:focus-visible {
-  transform: translateY(-4px); border-color: color-mix(in srgb, var(--category-accent) 70%, #516073);
+  transform: perspective(1000px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translateY(-4px); border-color: color-mix(in srgb, var(--category-accent) 70%, #516073);
   box-shadow: 0 12px 28px #0005; outline-color: var(--category-accent); outline-offset: 3px;
 }
-.tool-preview { position: relative; overflow: hidden; aspect-ratio: 16 / 8; perspective: 900px; transform-style: preserve-3d; border-bottom: 1px solid #c2d2e226; background: #111925; isolation: isolate; }
+.tool-preview { position: relative; overflow: hidden; aspect-ratio: 16 / 9; perspective: 950px; transform-style: preserve-3d; border-bottom: 1px solid #c2d2e226; background: radial-gradient(ellipse at 50% 0%, #253349 0, #111925 72%); isolation: isolate; }
 .tool-preview img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; transform-origin: center; backface-visibility: hidden; }
-.tool-preview::before { content: ''; position: absolute; z-index: 1; inset: 0; pointer-events: none; background: linear-gradient(0deg, #080d16c4, transparent 34%); }
-.tool-preview::after { content: ''; position: absolute; z-index: 1; inset: -50%; pointer-events: none; background: linear-gradient(110deg, transparent 40%, #cdebe90c 48%, #ffffff10 50%, transparent 60%); transform: translateX(-70%); }
-.preview-caption { position: absolute; z-index: 2; left: 13px; bottom: 9px; color: #c9d6e5; font: 9px/1.3 monospace; letter-spacing: .08em; }
+.tool-preview::before { content: ''; position: absolute; z-index: 1; inset: 0; pointer-events: none; background: linear-gradient(180deg, #ffffff08, transparent 22%), linear-gradient(0deg, #080d1699, transparent 24%); }
+.tool-preview::after { content: ''; position: absolute; z-index: 1; inset: -50%; pointer-events: none; background: linear-gradient(110deg, transparent 40%, #cdebe90c 48%, #ffffff16 50%, transparent 60%); transform: translateX(-70%); }
+.preview-caption { position: absolute; z-index: 2; left: 11px; bottom: 9px; padding: 4px 7px; border: 1px solid #c9e68c28; border-radius: 999px; background: #050a12c9; color: #d4dfed; font: 8px/1.3 monospace; letter-spacing: .06em; backdrop-filter: blur(8px); }
 .preview-caption::before { content: ''; display: inline-block; width: 4px; height: 4px; margin: 0 6px 1px 0; border-radius: 50%; background: var(--category-accent); }
 .tool-title-line { display: block; min-width: 0; padding: 15px 16px 10px; }
 .tool-meta { display: block; min-width: 0; }
@@ -117,8 +118,11 @@ body:has(dialog[open]) { overflow: hidden; }
   .featured-tool.is-in-view .tool-preview::after { animation: tool-preview-sheen 8s ease-in-out infinite; animation-delay: calc(var(--tool-order, 0) * .4s); }
 }
 @keyframes tool-card-enter { from { opacity: .2; translate: 0 9px; } to { opacity: 1; translate: 0 0; } }
-@keyframes tool-preview-drift { from { transform: perspective(900px) translate3d(0, 0, 0) rotateX(0) rotateY(-.7deg) scale(1.015); } to { transform: perspective(900px) translate3d(0, -3px, 14px) rotateX(.4deg) rotateY(1deg) scale(1.04); } }
+@keyframes tool-preview-drift { from { transform: perspective(950px) translate3d(-1px, 0, 7px) rotateX(-.3deg) rotateY(-.8deg) scale(1.012); } to { transform: perspective(950px) translate3d(1px, -2px, 15px) rotateX(.4deg) rotateY(1.1deg) scale(1.032); } }
 @keyframes tool-preview-sheen { 0%, 18% { transform: translateX(-70%); } 58%, 100% { transform: translateX(70%); } }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  #dialog-tools .featured-tool:hover .tool-preview img { filter: saturate(1.06) contrast(1.025); }
+}
 @media (max-width: 1000px) {
   .tools-page dialog { width: min(900px, calc(100% - 24px)); max-width: 900px; }
   #dialog-tools { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -137,7 +141,7 @@ body:has(dialog[open]) { overflow: hidden; }
   .tools-page dialog .modal-status { font-size: 10px; }
   #dialog-tools { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-inline: 12px; }
   #dialog-tools .featured-tool { border-radius: 12px; }
-  .tool-preview { aspect-ratio: 16 / 10; }
+  .tool-preview { aspect-ratio: 16 / 9; }
   .preview-caption { left: 9px; bottom: 7px; font-size: 8px; letter-spacing: .01em; }
   .tool-title-line { padding: 11px 10px 10px; }
   .tool-meta b { font-size: 14px; line-height: 1.35; }
