@@ -9,3 +9,29 @@ footer.ah-footer{display:block;gap:normal;align-items:normal;justify-content:nor
 
 /* Public corrections use the repository issue tracker; posts are visible to others. */
 .ah-footer__feedback-status{display:block;color:#b6bbc6;font-size:13px;line-height:1.6;padding:7px 0}.ah-footer__feedback-status small{display:block;color:#bdcb9e;font-size:11px;line-height:1.5;margin-top:3px}
+
+
+/* Footer hierarchy: make navigation and draft context readable, not decorative noise. */
+.ah-footer__story { border-color: #b7c9df2b; box-shadow: none; }
+.ah-footer__story:hover { box-shadow: 0 8px 24px #0004; }
+.ah-footer__story small { color: #b8c6d8; font-size: 12px; line-height: 1.5; }
+.ah-footer__story h3 { color: #eef3f9; font-size: 19px; line-height: 1.15; }
+.ah-footer__story p { color: #c0ccdc; font-size: 14px; line-height: 1.55; }
+.ah-footer__station-label, .ah-footer__station-top button { color: #bfccdc; font-size: 12px; line-height: 1.5; }
+.ah-footer__eyebrow, .ah-footer__links h3 { color: #bac8d8; font-size: 12px; line-height: 1.5; }
+.ah-footer__description { color: #c1cddd; font-size: 15px; line-height: 1.65; }
+.ah-footer__links a { color: #d0d9e5; font-size: 14px; line-height: 1.55; }
+.ah-footer__links a:hover { color: #f2f6fa; }
+.ah-footer__channel-note { color: #b9c7d8; font-size: 13px; line-height: 1.6; }
+.ah-footer__feedback-status small { color: #c2cddd; font-size: 12px; line-height: 1.5; }
+.ah-footer__policy-note { color: #c0cada; font-size: 13px; line-height: 1.65; border-left: 2px solid #92a9c433; padding-left: 12px; }
+.ah-footer__world-tag, .ah-footer__world-help { color: #bdc9d8; font-size: 12px; line-height: 1.5; }
+.ah-footer__bottom p, .ah-footer__back, .ah-footer__fineprint { color: #b8c5d6; font-size: 12px; line-height: 1.6; }
+.ah-footer__fineprint { flex-wrap: wrap; }
+@media (max-width: 700px) {
+  .ah-footer__links h3, .ah-footer__station-label, .ah-footer__world-tag,
+  .ah-footer__world-help, .ah-footer__fineprint { font-size: 12px; }
+  .ah-footer__links a { font-size: 14px; }
+  .ah-footer__policy-note { font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) { .ah-footer__story { transition: none !important; } }

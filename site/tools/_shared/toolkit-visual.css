@@ -1,0 +1,54 @@
+/* Visual-only readability refinements for standalone English tool pages. */
+body:not(.tools-page) .site-header { min-height: 72px; }
+body:not(.tools-page) .site-header .brand { display: inline-flex; align-items: center; font-size: 19px; line-height: 1; }
+body:not(.tools-page) .site-header .brand-mark { font-size: 38px; }
+body:not(.tools-page) .site-header nav { color: #c0ccdb; font-size: 12px !important; line-height: 1.5; }
+body:not(.tools-page) .breadcrumb,
+body:not(.tools-page) .crumb { color: #b7c5d6; font-size: 12px !important; line-height: 1.55; letter-spacing: .05em; }
+body:not(.tools-page) .local-pill,
+body:not(.tools-page) .back-link,
+body:not(.tools-page) .back,
+body:not(.tools-page) .footer-status,
+body:not(.tools-page) .eyebrow,
+body:not(.tools-page) .section-kicker { font-size: 12px !important; line-height: 1.5; }
+body:not(.tools-page) .hero-tags span,
+body:not(.tools-page) .file-card small,
+body:not(.tools-page) .file-card > span,
+body:not(.tools-page) .drop-foot,
+body:not(.tools-page) .dropzone > small,
+body:not(.tools-page) .range-hints span,
+body:not(.tools-page) .queue-summary > span,
+body:not(.tools-page) .queue-summary > small { font-size: 12px !important; line-height: 1.5; }
+body:not(.tools-page) .hero p,
+body:not(.tools-page) .dropzone p,
+body:not(.tools-page) .workspace-head p,
+body:not(.tools-page) .local-proof p,
+body:not(.tools-page) .steps p,
+body:not(.tools-page) .faq p { color: #c1ccda; font-size: 14px !important; line-height: 1.6; }
+body:not(.tools-page) .setting-note,
+body:not(.tools-page) .fine-print,
+body:not(.tools-page) .privacy-note small,
+body:not(.tools-page) .credit-panel small,
+body:not(.tools-page) .control-label,
+body:not(.tools-page) .notice { color: #bac6d4; font-size: 13px !important; line-height: 1.6; }
+body:not(.tools-page) .site-footer { color: #b9c5d4; font-size: 12px !important; line-height: 1.6; }
+body:not(.tools-page) .site-footer a { font-size: 12px !important; }
+body:not(.tools-page) .site-header .local-pill i,
+body:not(.tools-page) .site-footer i { flex: 0 0 auto; }
+@media (max-width: 760px) {
+  body:not(.tools-page) .site-header { min-height: 64px; }
+  body:not(.tools-page) .site-header .brand { font-size: 17px; }
+  body:not(.tools-page) .site-header .brand-mark { font-size: 34px; }
+  body:not(.tools-page) .breadcrumb,
+  body:not(.tools-page) .crumb { font-size: 12px !important; }
+  body:not(.tools-page) .hero p,
+  body:not(.tools-page) .dropzone p,
+  body:not(.tools-page) .workspace-head p,
+  body:not(.tools-page) .steps p,
+  body:not(.tools-page) .faq p { font-size: 14px !important; }
+}
+
+@media (max-width: 420px) {
+  body:not(.tools-page) .site-header { gap: 12px; padding-inline: 16px; }
+  body:not(.tools-page) .site-header .local-pill { display: none !important; }
+}

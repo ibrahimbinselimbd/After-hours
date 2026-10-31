@@ -35,6 +35,13 @@ with sync_playwright() as p:
             return float(element.evaluate('(el) => parseFloat(getComputedStyle(el).fontSize)'))
         for route in ['/', '/tools/']:
             go(route)
+            if route == '/':
+                nav = page.locator('#home-navigation')
+                assert nav.locator(':scope > a').count() == 4
+                if width <= 700:
+                    assert not nav.is_visible(), 'the four homepage links remain intentionally hidden on mobile'
+                else:
+                    assert nav.is_visible(), 'the homepage links remain available on wider screens'
             journal = page.get_by_role('link', name='The journal', exact=True, include_hidden=True)
             assert journal.get_attribute('href') == '/#feed'
             # Desktop nav is deliberately hidden on compact layouts; route stays valid.
@@ -42,6 +49,28 @@ with sync_playwright() as p:
                 journal.click()
                 assert page.url == base + '/#feed'
                 assert page.locator('#feed').is_visible()
+        go('/tools/')
+        page.locator('[data-category="developer-utilities"]').click()
+        page.locator('#category-dialog').wait_for(state='visible')
+        assert int(page.locator('.modal-status').inner_text().split()[0]) == 68
+        assert page.locator('#dialog-tools a').count() == 68
+        expected_columns = 3 if width > 1000 else (2 if width > 600 else 1)
+        column_count = page.locator('#dialog-tools').evaluate('(el) => getComputedStyle(el).gridTemplateColumns.split(" ").length')
+        assert column_count == expected_columns, [width, column_count, expected_columns]
+        page.locator('#dialog-tool-search').fill('JSON Formatter')
+        assert page.locator('#dialog-tools a:visible').count() == 1
+        assert page.locator('#dialog-tools a:visible').get_attribute('href') == '/tools/json-formatter/'
+        assert page.locator('#category-search-status').inner_text() == '1 matching item'
+        page.locator('#dialog-tool-search').fill('')
+        assert page.locator('#dialog-tools a:visible').count() == 68
+        assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
+        page.locator('#category-dialog').evaluate('(el) => { el.scrollTop = el.scrollHeight; }')
+        modal_top = page.locator('#category-dialog').bounding_box()['y']
+        title_top = page.locator('#dialog-title').bounding_box()['y']
+        close_top = page.locator('.modal-close').bounding_box()['y']
+        assert modal_top <= title_top < modal_top + 100, [width, title_top, modal_top]
+        assert modal_top <= close_top < modal_top + 100, [width, close_top, modal_top]
+        page.locator('.modal-close').click()
         go('/')
         assert page.locator('#feed').count() == 1
         feedback()
@@ -120,21 +149,34 @@ with sync_playwright() as p:
             go('/')
             assert font_px('.hero-foot') >= 8
             assert font_px('.vertical-label') >= 8
-            assert font_px('.ah-footer__world-help') >= 8
+            assert font_px('.ah-footer__world-help') >= 12
+            assert font_px('.ah-footer__links a') >= 14
+            assert font_px('.ah-footer__policy-note') >= 12
             go('/tools/')
-            assert font_px('.planned') >= 8
+            assert font_px('.breadcrumb') >= 12
+            assert font_px('.hero-desc') >= 14
+            assert font_px('.tools-page .category p') >= 14
+            assert font_px('.planned') >= 12
             go('/districts/')
-            assert font_px('.cat-label small') >= 8
-            assert font_px('.cat-plan small') >= 8
+            assert font_px('.cat-label small') >= 12
+            assert font_px('.cat-plan small') >= 12
             go('/tools/heic-to-jpg/')
-            assert font_px('.file-card > span') >= 8
+            assert font_px('.breadcrumb') >= 12
+            assert font_px('.site-footer') >= 12
+            assert font_px('.file-card > span') >= 12
             go('/tools/background-remover/')
-            assert font_px('.local-pill') >= 8
+            assert font_px('.local-pill') >= 12
+            go('/tools/json-formatter/')
+            assert font_px('.tool-hero p') >= 14
+            intro_height = page.locator('.tool-hero').evaluate('(el) => el.getBoundingClientRect().height')
+            editor_height = page.locator('#js-input').evaluate('(el) => el.getBoundingClientRect().height')
+            assert intro_height <= (300 if width == 320 else 330), [width, intro_height]
+            assert editor_height >= (230 if width == 320 else 340), [width, editor_height]
         assert not errors, errors
         assert not bad, bad
         assert not submissions, submissions
-        records.append({'width': width, 'journal': 'feed', 'image_design': 'correct modal', 'feedback': 'public issue tracker; no sensitive form', 'info_pages': '8 visible drafts', 'queue': 'add/clear passed', 'overflow': False, 'errors': errors, 'failed_requests': bad, 'submissions': submissions})
-        print(f'{width}px: all four fixes and queue regression passed', flush=True)
+        records.append({'width': width, 'journal': 'published/planned hierarchy', 'category_modal': f'{expected_columns}-column grid, search and sticky title passed', 'image_design': 'correct modal', 'feedback': 'public issue tracker; no sensitive form', 'info_pages': '8 visible drafts', 'queue': 'add/clear passed', 'overflow': False, 'errors': errors, 'failed_requests': bad, 'submissions': submissions})
+        print(f'{width}px: responsive navigation, category-search and existing regressions passed', flush=True)
         page.close()
     browser.close()
 (out / 'results.json').write_text(json.dumps(records, indent=2) + '\n')

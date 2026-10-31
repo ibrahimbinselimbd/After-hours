@@ -136,9 +136,14 @@ test('hub catalog data, ItemList schema, and screenshot editor route reflect exa
   const visibleHub = hub.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, ' ');
   assert.match(visibleHub, /A home for 500 active browser tools across 20 useful categories/i);
   assert.match(visibleHub, /244 new tools share/i);
-  assert.match(visibleHub, /20 CATEGORIES · 500 TOOLS AVAILABLE/i);
+  assert.match(visibleHub, /Choose a category to see its available tools/i);
   assert.match(visibleHub, /All 20 categories/i);
   assert.doesNotMatch(visibleHub, /155 useful tools|10 districts|TEN DISTRICTS|130 NEW FREE UTILITIES|130 new tools share/i);
+  const hubCss = fs.readFileSync(path.join(root, 'site/tools/hub.css'), 'utf8');
+  assert.match(hubCss, /\.tools-page \.category \.card-head \.planned\s*\{\s*display:\s*none;/s, 'hide duplicate category-card counts while retaining the ready total');
+  assert.match(hub, /id="dialog-tool-search"[^>]*aria-label="Search tools in this category"/);
+  assert.match(hub, /id="category-search-status"[^>]*role="status"[^>]*aria-live="polite"/);
+  assert.match(hub, /id="tool-search-empty"[^>]*hidden/);
   for (const [index, category] of categories.entries()) {
     const card = hub.match(new RegExp(`<button class="category"[^>]*data-category="${category.id}"[^>]*>[\\s\\S]*?<\\/button>`))?.[0];
     assert.ok(card, `${category.title} has a static category card`);

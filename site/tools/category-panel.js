@@ -1,4 +1,25 @@
 // Category details and same-site tool navigation. AI Text Detector stays disabled.
+const categorySearch = document.querySelector('#dialog-tool-search');
+const categorySearchStatus = document.querySelector('#category-search-status');
+function updateCategorySearch() {
+  const query = categorySearch?.value.trim().toLowerCase() || '';
+  const list = document.querySelector('#dialog-tools');
+  const rows = [...list.querySelectorAll('.featured-tool, .planned-tool')];
+  let matches = 0;
+  let previewVisible = false;
+  for (const row of rows) {
+    const visible = !query || row.textContent.toLowerCase().includes(query);
+    row.hidden = !visible;
+    if (visible) matches += 1;
+    if (row.classList.contains('disabled-tool') && visible) previewVisible = true;
+  }
+  const note = list.querySelector('.tool-note');
+  if (note) note.hidden = !previewVisible;
+  const empty = document.querySelector('#tool-search-empty');
+  if (empty) empty.hidden = matches > 0;
+  if (categorySearchStatus) categorySearchStatus.textContent = query ? `${matches} matching ${matches === 1 ? 'item' : 'items'}` : '';
+}
+categorySearch?.addEventListener('input', updateCategorySearch);
 function openCategory(id, trigger) {
   const data = categories.find(item => item.id === id);
   if (!data) return;
@@ -15,11 +36,14 @@ function openCategory(id, trigger) {
     const dot = document.createElement('span'); dot.className = 'title-dot'; dot.textContent = '.'; heading.append(dot);
   } else heading.textContent = data.title;
   document.querySelector('#dialog-description').textContent = data.description;
+  const accent = opener ? getComputedStyle(opener).getPropertyValue('--accent').trim() : '';
+  dialog.style.setProperty('--category-accent', accent || '#d3fb56');
+  if (categorySearch) categorySearch.value = '';
   const status = document.querySelector('.modal-status');
   status.textContent = ai ? `${data.availableTools.length} AVAILABLE · TEXT DETECTOR COMING SOON` : `${data.availableTools.length} AVAILABLE`;
   const tools = document.querySelector('#dialog-tools');
   tools.replaceChildren();
-  for (const item of data.availableTools) {
+  for (const [index, item] of data.availableTools.entries()) {
     const link = document.createElement('a');
     link.className = 'featured-tool'; link.href = item.href;
     link.setAttribute('aria-label', `Open ${item.title} — free`);
@@ -32,6 +56,7 @@ function openCategory(id, trigger) {
     const arrow = document.createElement('span'); arrow.className='tool-arrow'; arrow.setAttribute('aria-hidden','true'); arrow.textContent='↗';
     line.append(icon, meta, arrow); link.append(line);
     const label=document.createElement('span');label.className='open-label';label.textContent='OPEN TOOL · FREE';link.append(label);
+    link.style.setProperty('--tool-order', String(index < 9 ? index : 0));
     tools.append(link);
   }
   if (data.preview) {
@@ -50,7 +75,9 @@ function openCategory(id, trigger) {
     row.append(icon,label,state);tools.append(row);
   }
   document.querySelector('.preview-note').open = false;
+  updateCategorySearch();
   if (!dialog.open) dialog.showModal();
+  categorySearch?.focus({preventScroll:true});
   dialog.scrollTop = 0;
 }
 cards.forEach(card => card.addEventListener('click', () => openCategory(card.dataset.category, card)));

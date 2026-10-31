@@ -478,3 +478,106 @@ header .tools-entry small:where(:not(.ah-footer):not(.ah-footer *)){font-size:11
   header #home-navigation > a:focus-visible { outline: 2px solid rgba(220,229,246,.48); outline-offset: 2px; }
 }
 @media (prefers-reduced-motion: reduce) { header #home-navigation > a { transition: none; } }
+
+
+/* Visual audit refinements: clearer hierarchy, legible metadata, lighter card chrome. */
+:where(body > :not(.ah-footer)) { font-size: 100%; }
+header .brand { display: inline-flex; align-items: center; font-size: 19px; line-height: 1; }
+header .brand-mark { font-size: 38px; }
+header .brand i { font-size: 11px; }
+.hero .hero-copy > .eyebrow { margin-bottom: 15px; color: #b9c9dc; font-size: 12px; line-height: 1.45; letter-spacing: .1em; }
+.hero .hero-copy > .eyebrow .issue { display: none; }
+.hero h1 { max-width: 11ch; margin-top: 10px; margin-bottom: 15px; font-size: clamp(64px, 7.1vw, 112px); line-height: .9; letter-spacing: -.025em; }
+.hero .hero-bottom p { max-width: 52ch; color: #d0d9e7; font-size: 16px; line-height: 1.65; }
+.hero .hero-top, .hero .touch-heading, .hero .touch-instruction strong, .hero .touch-instruction small,
+.hero .touch-meter, .hero .hero-foot, .hero .ambient-switch > span, .hero .ambient-switch button,
+.hero .city-status, .hero .hotspot small, .hero .vertical-label, .hero .scroll-cue,
+.hero .hud-coordinate, .hero .hud-caption, .hero .discovery small, .hero #discovery-count,
+.live-experience strong, .live-experience .motion-note, .ticker > div, .visual-label,
+.section-heading .editorial-note, .story-meta, .card-bottom, .channel-copy small, .channel-count,
+.console-top, .console-caption, .console-footer, .feed-status, .search-footer,
+.search-result .result-copy > span, .feature-meta, .feature-tag, .read-full,
+.district-grid span, .district-grid small, .footer-signature, .footer-column h3,
+.footer-note, .footer-bottom, footer > span, footer > small {
+  font-size: 12px;
+  line-height: 1.55;
+}
+.hero .hero-top, .hero .hero-foot, .hero .touch-meter, .hero .city-status,
+.section-heading .editorial-note, .story-meta, .card-bottom, .console-top,
+.console-caption, .console-footer, .feed-status, .footer-note, .footer-bottom { color: #bdc9d8; }
+.hero .hero-bottom p, .live-experience p, .story p, .section-heading > p,
+.feature-copy p, .manifesto p, .footer-note p, .search-subtitle, #reader p {
+  color: #c2cedd;
+  font-size: 15px;
+  line-height: 1.7;
+}
+.story {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  overflow: hidden;
+  padding-bottom: 15px;
+  border: 1px solid #c7d5e01b;
+  border-radius: 14px;
+  background: #0d131d;
+  box-shadow: none;
+}
+.story .card-visual { height: auto; min-height: 180px; aspect-ratio: 16 / 10; border: 0; border-radius: 13px 13px 0 0; }
+.story .story-meta { margin: 13px 15px 0; color: #bcc9d9; }
+.story .story-meta .category { color: #c3d0df; }
+.story .story-title { margin: 10px 15px 8px; color: #f1f4f8; font-size: 26px; line-height: 1.13; }
+.story .story p { margin: 0 15px; color: #c0cbd9; font-size: 14px; line-height: 1.6; }
+.card-visual { border-color: #b9cadc22; }
+.card-visual.has-story-image .feed-card-image { opacity: .96; }
+.category-channel { border-radius: 9px; box-shadow: none; }
+.category-channel:hover { transform: translateX(2px); box-shadow: none; }
+.category-channel[aria-pressed="true"] { box-shadow: inset 3px 0 var(--tone); }
+.category-channel[aria-pressed="true"] .channel-copy strong,
+.category-channel[aria-pressed="true"] .channel-count { color: #f0f5fa; }
+.district-grid button { border-radius: 12px; box-shadow: none; }
+.district-grid button:hover, .district-grid button:focus-visible { box-shadow: 0 8px 24px #0004; }
+@media (max-width: 700px) {
+  .hero h1 { max-width: 100%; font-size: clamp(52px, 13vw, 76px); line-height: .93; }
+  .hero .hero-bottom p, .live-experience p, .story p, .section-heading > p,
+  .feature-copy p, .manifesto p, #reader p { font-size: 14px; line-height: 1.65; }
+  .story .card-visual { min-height: 0; }
+  .story .story-title { font-size: 25px; }
+  .story-meta, .card-bottom, .section-heading .editorial-note { font-size: 12px; }
+  .district-grid small, .footer-column h3, .footer-note, .footer-bottom,
+  footer > span, footer > small { font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .story, .card-visual img, .category-channel, .district-grid button { animation: none !important; transition: none !important; }
+  .category-channel:hover, .district-grid button:hover { transform: none !important; }
+}
+
+
+/* Separate the Journal action from the planning totals and label the published set. */
+.journal-plan-cta { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 14px 0 20px; }
+.districts-cta {
+  display: inline-flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 10px 15px;
+  border: 1px solid #d3fb56;
+  border-radius: 8px;
+  background: #d3fb56;
+  color: #12170a;
+  font: 700 12px/1.35 monospace;
+  letter-spacing: .04em;
+  text-decoration: none;
+  transition: transform .16s ease, background-color .16s ease, box-shadow .16s ease;
+}
+.districts-cta:hover { transform: translateY(-1px); background: #e0ff72; box-shadow: 0 7px 18px #d3fb5622; }
+.districts-cta:focus-visible { outline: 2px solid #d3fb56; outline-offset: 4px; }
+.districts-cta > span:last-child { font-size: 17px; }
+.journal-plan-cta .edition-note { margin: 0; color: #bdc9d8; font-size: 12px; line-height: 1.5; }
+.edition-note strong { color: #e5edf5; }
+@media (max-width: 700px) {
+  .journal-plan-cta { align-items: flex-start; flex-direction: column; gap: 8px; margin: 12px 0 16px; }
+  .districts-cta { min-height: 44px; font-size: 12px; }
+  .journal-plan-cta .edition-note { font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) { .districts-cta { transition: none !important; } }

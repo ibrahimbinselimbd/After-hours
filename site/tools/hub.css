@@ -14,3 +14,70 @@ body.tools-page{--lime:#d3fb56;--muted:#a2a6b5;--line:#ffffff16;--ink:#f3f3ed;ma
 /* Explicit Hub header sizing: keep the desktop mark, prevent mobile SVG intrinsic sizing. */
 .tools-page header .mini-cube{width:31px;height:33px;flex:0 0 auto}
 @media(max-width:760px){.tools-page header{height:68px;min-height:68px}.tools-page header .tools-entry{height:44px;min-width:44px;padding:4px}.tools-page header .mini-cube{width:27px;height:29px;flex:0 0 27px}}
+
+
+/* Readability and visual hierarchy refinements for the English Tools Hub. */
+.tools-page header { height: 74px; min-height: 74px; }
+.tools-page .brand { font-size: 20px; line-height: 1; }
+.tools-page .brand-mark { font-size: 38px; margin-right: 15px; }
+.tools-page .brand i { font-size: 11px; }
+.tools-page nav { font-size: 13px; }
+.tools-page .draft-pill { font: 12px/1.4 monospace; letter-spacing: .08em; }
+.tools-page .breadcrumb { color: #aab7c8; font: 12px/1.5 monospace; letter-spacing: .06em; }
+.tools-page .breadcrumb a { color: #d0d8e4; }
+.tools-page .hub-eyebrow { color: #b9c8d8; font: 12px/1.5 monospace; letter-spacing: .1em; }
+.tools-page .hub-eyebrow:before { background: #b9c8d8; box-shadow: none; }
+.tools-page .hub-hero { min-height: 350px; }
+.tools-page .hub-hero h1 { margin: 18px 0 16px; }
+.tools-page .hero-desc { max-width: 520px; color: #c0cad8; font-size: 16px; line-height: 1.65; }
+.tools-page .hero-links { gap: 16px; }
+.tools-page .browse { min-height: 46px; align-items: center; border-radius: 8px; clip-path: none; font-size: 13px; padding: 12px 17px; }
+.tools-page .roadmap-note { color: #aeb9c9; font: 12px/1.5 monospace; letter-spacing: .04em; }
+.tools-page .policy-strip { gap: 22px; }
+.tools-page .policy-item strong { color: #edf1f4; font-size: 14px; line-height: 1.4; }
+.tools-page .policy-item small { color: #b7c3d1; font-size: 13px; line-height: 1.6; }
+.tools-page .policy-symbol { border-color: #cbd7e01f; color: #c4d0df; }
+.tools-page .category-section { padding-top: 34px; }
+.tools-page .section-kicker { color: #aeb9c8; font: 12px/1.5 monospace; letter-spacing: .1em; }
+.tools-page .section-top h2 { font-size: 34px; }
+.tools-page .category-search { min-height: 46px; border-color: #aebfd337; color: #c1cbd7; }
+.tools-page .category-search input { min-height: 44px; width: 220px; color: #f0f4f8; font-size: 14px; }
+.tools-page .category-search input::placeholder { color: #a8b5c5; }
+.tools-page .category .card-head { color: #a9b6c7; font-size: 12px; }
+.tools-page .category .card-head .planned { display: none; }
+.tools-page .category h3 { color: #f1f4f7; font-size: 16px; line-height: 1.35; }
+.tools-page .category p { color: #bcc7d4; font-size: 14px; line-height: 1.6; }
+.tools-page .category .card-bottom { color: #b3bfd0; font-size: 12px; }
+.tools-page .category .card-bottom b { color: var(--accent); }
+.tools-page .category { border-color: #c7d5e01b; box-shadow: none; }
+.tools-page .category:hover { transform: translateY(-2px); box-shadow: 0 10px 26px #0004; }
+.tools-page .category-art:after { box-shadow: none; }
+.tools-page .empty-state { color: #c0cad8; font-size: 14px; }
+.tools-page .build-note { color: #aebaca; font: 12px/1.6 monospace; }
+.tools-page .hub-footer { color: #aebaca; font: 12px/1.6 monospace; }
+.tools-page .hub-footer strong { color: #e1e8ef; letter-spacing: .1em; }
+.tools-page .hub-footer a { color: #d3fb56; }
+.tools-page .draft-tag { color: #d1d9e4; font-size: 12px; }
+.tools-page .draft-tag a { color: #d3fb56; }
+@media (max-width: 760px) {
+  .tools-page header { height: 68px; min-height: 68px; }
+  .tools-page .brand { font-size: 17px; }
+  .tools-page .brand-mark { font-size: 34px; }
+  .tools-page .breadcrumb { padding-top: 18px; font-size: 12px; }
+  .tools-page .hub-hero { padding-top: 24px; padding-bottom: 18px; }
+  .tools-page .hub-hero h1 { margin: 14px 0 12px; font-size: clamp(54px, 15vw, 72px); }
+  .tools-page .hero-desc { margin-bottom: 16px; font-size: 15px; line-height: 1.6; }
+  .tools-page .hub-eyebrow { font-size: 12px; }
+  .tools-page .roadmap-note { font-size: 12px; }
+  .tools-page .policy-item small { font-size: 13px; }
+  .tools-page .section-top h2 { font-size: 29px; }
+  .tools-page .category .card-head { font-size: 12px; }
+  .tools-page .category h3 { font-size: 15px; }
+  .tools-page .category p { font-size: 14px; line-height: 1.55; }
+  .tools-page .category .card-bottom { font-size: 12px; }
+  .tools-page .build-note { font-size: 12px; }
+  .tools-page .hub-footer { font-size: 12px; }
+}
+@media (max-width: 380px) { .tools-page .category-grid { grid-template-columns: minmax(0, 1fr); } }
+
+.tools-page .category .card-head .planned { font-size: 12px; }

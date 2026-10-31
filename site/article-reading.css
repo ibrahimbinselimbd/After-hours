@@ -13,3 +13,35 @@ body.reduce-motion .related-card .card-image{transition:none;transform:none}
 
 /* Keep the canonical Save label visible despite legacy hero-foot span rules. */
 .article-hero .hero-foot .save-button span{display:inline;width:auto;order:initial}
+
+
+/* Editorial media: preserve source wording while improving image and attribution clarity. */
+.article-media { display: grid; gap: 22px; }
+.editorial-image { margin: 0; padding: 10px; border: 1px solid #94b7d329; border-radius: 13px; background: #0d1522; }
+.editorial-image img { display: block; border: 1px solid #c9d8e51c; border-radius: 9px; }
+.editorial-image figcaption { color: #c2d0e2; font-size: 14px; line-height: 1.7; }
+.editorial-image figcaption a {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  margin: 5px 0 0 5px;
+  padding: 2px 8px;
+  border: 1px solid #87cbed49;
+  border-radius: 5px;
+  background: #49b7e20a;
+  color: #bcecff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: normal;
+}
+.editorial-image figcaption a:hover, .editorial-image figcaption a:focus-visible { border-color: #bcecff; color: #f1fbff; }
+.article-body .editorial-note { border-color: #83c4e42a; border-radius: 10px; background: #0d1522; }
+.article-body .editorial-note a { color: #bcecff; text-underline-offset: 3px; }
+.article-end { color: #b2c1d4; }
+.related-card { box-shadow: none; }
+.related-card:hover, .related-card:focus-visible { box-shadow: 0 8px 24px #0004 !important; }
+@media (max-width: 800px) {
+  .editorial-image { padding: 8px; }
+  .editorial-image figcaption { font-size: 14px; line-height: 1.65; }
+  .editorial-image figcaption a { margin-left: 0; }
+}
