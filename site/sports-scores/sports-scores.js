@@ -6,6 +6,8 @@
   const feedUrl = new URL(configuredFeed, window.location.href);
   if (feedUrl.origin !== window.location.origin) throw new Error('Use an AFTERHOURS first-party feed endpoint, never Goalserve directly.');
   const allowedSports = new Set(['football', 'cricket', 'tennis', 'basketball', 'badminton', 'f1', 'other']);
+  const routeSport = document.querySelector('meta[name="score-sport"]')?.content || 'all';
+  const routeSportLabel = document.querySelector('meta[name="score-sport-label"]')?.content || 'all sports';
   const selectors = {
     list: document.querySelector('#score-list'),
     empty: document.querySelector('#score-empty'),
@@ -21,7 +23,7 @@
   let matches = [];
   let feedConnected = false;
   let feedUpdatedAt = null;
-  let selectedSport = 'all';
+  let selectedSport = routeSport;
   let selectedState = 'all';
   let isRefreshing = false;
   let lastAttemptAt = 0;
@@ -135,23 +137,25 @@
 
   function render() {
     const visible = matches.filter(match => (selectedSport === 'all' || match.sport === selectedSport) && (selectedState === 'all' || match.status === selectedState));
-    const live = matches.filter(match => match.status === 'live').length;
+    const live = visible.filter(match => match.status === 'live').length;
     selectors.liveCount.textContent = pad(live);
-    selectors.matchCount.textContent = pad(matches.length);
+    selectors.matchCount.textContent = pad(visible.length);
     selectors.boardSummary.textContent = feedConnected
-      ? `${live} live · ${matches.length} fixture${matches.length === 1 ? '' : 's'} on the board`
-      : 'Waiting for the site’s score feed';
+      ? `${live} live · ${visible.length} fixture${visible.length === 1 ? '' : 's'} on this page`
+      : selectedSport === 'all' ? 'Waiting for the site’s score feed' : `Waiting for the site’s ${routeSportLabel} score feed`;
     syncCards(visible);
     selectors.empty.hidden = visible.length > 0;
     selectors.empty.querySelector('h3').textContent = feedConnected
-      ? 'No matches in this lane right now.'
-      : 'No scores on the board—yet.';
+      ? `No ${routeSportLabel === 'all sports' ? 'matches' : `${routeSportLabel} matches`} in this lane right now.`
+      : routeSport === 'all' ? 'No scores on the board—yet.' : `No ${routeSportLabel.toLowerCase()} scores available yet.`;
     selectors.empty.querySelector('.empty-kicker').textContent = feedConnected
       ? 'FILTER CHECK / NO MATCH DATA'
       : 'SIGNAL CHECK / NO MATCH DATA';
     selectors.empty.querySelector('.empty-copy p').textContent = feedConnected
       ? 'There are no fixtures for the selected sport and status. Try another lane or check again later.'
-      : 'The interface is ready, but this static site needs a first-party feed to supply real fixtures and results. Nothing here is simulated.';
+      : routeSport === 'all'
+        ? 'The interface is ready, but this static site needs a first-party feed to supply real fixtures and results. Nothing here is simulated.'
+        : `No live, scheduled or completed ${routeSportLabel.toLowerCase()} data is being served. This page will show feed-backed information only after the sport and its data fields are verified.`;
   }
 
   function updateFeedStatus(message, isError = false) {
@@ -201,18 +205,6 @@
       isRefreshing = false;
     }
   }
-
-  document.querySelectorAll('[data-sport]').forEach(button => {
-    button.addEventListener('click', () => {
-      selectedSport = button.dataset.sport || 'all';
-      document.querySelectorAll('[data-sport]').forEach(tab => {
-        const active = tab === button;
-        tab.classList.toggle('is-active', active);
-        tab.setAttribute('aria-pressed', String(active));
-      });
-      render();
-    });
-  });
 
   document.querySelectorAll('[data-state]').forEach(button => {
     button.addEventListener('click', () => {
