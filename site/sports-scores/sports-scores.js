@@ -1,9 +1,10 @@
 (() => {
   'use strict';
 
-  // This page intentionally reads only its own static JSON file. Do not add a
-  // third-party sports endpoint or a provider key to this client-side script.
-  const feedUrl = new URL('./scores.json', window.location.href);
+  // Browser reads an AFTERHOURS endpoint only. Goalserve credentials belong in a server secret.
+  const configuredFeed = document.querySelector('meta[name="score-feed-endpoint"]')?.content || './scores.json';
+  const feedUrl = new URL(configuredFeed, window.location.href);
+  if (feedUrl.origin !== window.location.origin) throw new Error('Use an AFTERHOURS first-party feed endpoint, never Goalserve directly.');
   const allowedSports = new Set(['football', 'cricket', 'tennis', 'basketball', 'badminton', 'f1', 'other']);
   const selectors = {
     list: document.querySelector('#score-list'),
@@ -74,14 +75,62 @@
   }
 
   function renderMatch(match) {
-    return `<article class="match-card">
+    return `<article class="match-card" data-match-id="${escapeHtml(match.id)}">
       <div class="match-top"><span class="match-league">${escapeHtml(match.league)}</span><span class="match-state ${match.status}">${statusLabel(match.status)}</span></div>
       <div class="match-teams">
-        <div class="match-team"><span class="team-mark" aria-hidden="true">${escapeHtml(initials(match.home))}</span><span class="team-name">${escapeHtml(match.home.name)}</span><strong class="team-score">${escapeHtml(match.home.score)}</strong></div>
-        <div class="match-team"><span class="team-mark" aria-hidden="true">${escapeHtml(initials(match.away))}</span><span class="team-name">${escapeHtml(match.away.name)}</span><strong class="team-score">${escapeHtml(match.away.score)}</strong></div>
+        <div class="match-team" data-team-side="home"><span class="team-mark" aria-hidden="true">${escapeHtml(initials(match.home))}</span><span class="team-name">${escapeHtml(match.home.name)}</span><strong class="team-score">${escapeHtml(match.home.score)}</strong></div>
+        <div class="match-team" data-team-side="away"><span class="team-mark" aria-hidden="true">${escapeHtml(initials(match.away))}</span><span class="team-name">${escapeHtml(match.away.name)}</span><strong class="team-score">${escapeHtml(match.away.score)}</strong></div>
       </div>
       <div class="match-bottom"><span class="match-period">${escapeHtml(timeLabel(match))}</span><span>${escapeHtml(match.venue || match.sport.toUpperCase())}</span></div>
     </article>`;
+  }
+
+  function setScore(scoreNode, score) {
+    const nextScore = String(score);
+    if (scoreNode.textContent === nextScore) return;
+    scoreNode.textContent = nextScore;
+    scoreNode.classList.remove('score-updated');
+    void scoreNode.offsetWidth;
+    scoreNode.classList.add('score-updated');
+  }
+
+  function updateMatchCard(card, match) {
+    card.dataset.matchId = match.id;
+    card.querySelector('.match-league').textContent = match.league;
+    const state = card.querySelector('.match-state');
+    state.className = `match-state ${match.status}`;
+    state.textContent = statusLabel(match.status);
+    for (const side of ['home', 'away']) {
+      const team = match[side];
+      const row = card.querySelector(`[data-team-side="${side}"]`);
+      row.querySelector('.team-mark').textContent = initials(team);
+      row.querySelector('.team-name').textContent = team.name;
+      setScore(row.querySelector('.team-score'), team.score);
+    }
+    card.querySelector('.match-period').textContent = timeLabel(match);
+    card.querySelector('.match-bottom span:last-child').textContent = match.venue || match.sport.toUpperCase();
+  }
+
+  function createMatchCard(match) {
+    const template = document.createElement('template');
+    template.innerHTML = renderMatch(match).trim();
+    const card = template.content.firstElementChild;
+    updateMatchCard(card, match);
+    return card;
+  }
+
+  function syncCards(visible) {
+    const existing = new Map(Array.from(selectors.list.querySelectorAll('.match-card'), card => [card.dataset.matchId, card]));
+    const ordered = visible.map(match => {
+      const card = existing.get(match.id) || createMatchCard(match);
+      updateMatchCard(card, match);
+      return card;
+    });
+    const current = Array.from(selectors.list.children);
+    if (current.length !== ordered.length || current.some((card, index) => card !== ordered[index])) {
+      selectors.list.replaceChildren(...ordered);
+    }
+    selectors.list.hidden = !visible.length;
   }
 
   function render() {
@@ -92,8 +141,7 @@
     selectors.boardSummary.textContent = feedConnected
       ? `${live} live · ${matches.length} fixture${matches.length === 1 ? '' : 's'} on the board`
       : 'Waiting for the site’s score feed';
-    selectors.list.innerHTML = visible.map(renderMatch).join('');
-    selectors.list.hidden = !visible.length;
+    syncCards(visible);
     selectors.empty.hidden = visible.length > 0;
     selectors.empty.querySelector('h3').textContent = feedConnected
       ? 'No matches in this lane right now.'

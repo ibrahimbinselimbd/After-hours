@@ -4,18 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#080a16">
-  <meta name="description" content="A clean, ad-free scoreboard for football, cricket, tennis, basketball, badminton, Formula 1 and more. Uses an AFTERHOURS first-party score feed only.">
+  <meta name="description" content="A feed-ready AFTERHOURS multi-sport scoreboard. Scores animate without page reload when the first-party provider feed is connected.">
   <meta name="robots" content="noindex,follow">
+  <meta name="score-feed-endpoint" content="./scores.json">
   <meta property="og:site_name" content="AFTERHOURS">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Sports signals — AFTERHOURS">
-  <meta property="og:description" content="A clean multi-sport scoreboard inside AFTERHOURS. No ads, trackers or third-party sports APIs.">
+  <meta property="og:description" content="A feed-ready multi-sport scoreboard. Animated updates appear without page reload when the AFTERHOURS server-side feed is connected.">
   <meta property="og:url" content="https://afterhours-district.bird-timimus.workers.dev/sports-scores/">
   <link rel="canonical" href="https://afterhours-district.bird-timimus.workers.dev/sports-scores/">
   <title>Sports signals — AFTERHOURS</title>
   <link rel="stylesheet" href="/fonts.css">
-  <link rel="stylesheet" href="./sports-scores.css?v=1">
-  <script defer src="./sports-scores.js?v=1"></script>
+  <link rel="stylesheet" href="./sports-scores.css?v=2">
+  <script defer src="./sports-scores.js?v=2"></script>
 </head>
 <body class="sports-page">
   <a class="skip-link" href="#scoreboard">Skip to the scoreboard</a>
@@ -44,10 +45,10 @@
         <div class="score-hero-copy">
           <div class="score-eyebrow"><i aria-hidden="true"></i> THE GLOBAL SPORTS FREQUENCY <span>001 / LIVE BOARD</span></div>
           <h1 id="score-title">One world.<br><em>Every game.</em></h1>
-          <p>Football, cricket, tennis, basketball, badminton, Formula 1 and more—one calm place to follow the action.</p>
+          <p>Football, cricket, tennis, basketball, badminton, Formula 1 and more—available when your selected feed supports them.</p>
           <div class="score-hero-actions">
             <a class="score-primary" href="#scoreboard">Explore the board <span aria-hidden="true">↓</span></a>
-            <span class="score-clean-note"><b aria-hidden="true">✳</b> No ads. No trackers. No third-party sports API.</span>
+            <span class="score-clean-note"><b aria-hidden="true">✳</b> No ads. No trackers. Provider keys stay server-side.</span>
           </div>
         </div>
         <div class="score-hero-art" aria-hidden="true">
@@ -90,7 +91,7 @@
 
         <div class="feed-notice" id="feed-notice" role="status">
           <span class="notice-mark" aria-hidden="true">i</span>
-          <div><strong id="feed-state">First-party feed not connected</strong><p>This page reads <code>/sports-scores/scores.json</code> from AFTERHOURS itself. No external API is called; connect your own authorized feed to show real scores.</p></div>
+          <div><strong id="feed-state">First-party feed not connected</strong><p>The display is ready for an AFTERHOURS server-side Goalserve adapter. No provider call or key is active in this page; the adapter must map your account's feed into the scoreboard format.</p></div>
           <span class="feed-update" id="feed-updated">NO FEED / WAITING</span>
         </div>
 
@@ -104,7 +105,7 @@
       <section class="score-data-note" aria-labelledby="data-note-title">
         <div class="data-note-icon" aria-hidden="true">⌁</div>
         <div><span class="board-kicker">BUILT FOR THE AFTERHOURS SIGNAL</span><h2 id="data-note-title">Fast by design.<br><em>Honest by default.</em></h2></div>
-        <p>The scoreboard has no ads, trackers, third-party scripts or remote team logos. When connected, it checks the same-site feed every second. Meeting one-second score freshness still requires an authorized first-party real-time source; a static GitHub Pages file cannot generate or update live scores on its own, and no feed is connected yet.</p>
+        <p>The scoreboard checks AFTERHOURS's own feed every second and animates only changed scores—without reloading the page. Goalserve says scores update every 2–4 seconds for most sports, so a one-second check cannot guarantee a new score each second. The provider key must stay on a server/Worker; this static GitHub Pages site cannot fetch live data by itself. Coverage, including badminton, must be confirmed with Goalserve. No feed is connected yet.</p>
       </section>
     </div>
   </main>
