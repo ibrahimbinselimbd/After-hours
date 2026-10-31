@@ -3,6 +3,7 @@ import { readdir, readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { test } from 'node:test';
+import { sportScorePages } from '../scripts/sports-score-routes.mjs';
 
 const root = path.resolve('.');
 const site = path.join(root, 'site');
@@ -243,6 +244,37 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
   assert.doesNotMatch(sitemap, /text-detector/i, 'disabled AI Text Detector must not appear in the sitemap');
   assert.match(sitemap, /^<\?xml version="1\.0" encoding="UTF-8"\?>/);
   assert.match(await readFile(path.join(output, 'robots.txt'), 'utf8'), new RegExp(`Sitemap: ${base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/sitemap\\.xml`));
+
+  assert.equal(sportScorePages.length, 7, 'the scoreboard should retain six named sports plus the additional-sports lane');
+  const scoreHub = await readFile(path.join(output, 'sports-scores', 'index.html'), 'utf8');
+  const scoreTitles = new Set();
+  const scoreDescriptions = new Set();
+  for (const page of sportScorePages) {
+    const relative = `sports-scores/${page.slug}/index.html`;
+    const pageHtml = await readFile(path.join(output, relative), 'utf8');
+    const canonicalTags = [...pageHtml.matchAll(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["'][^>]*>/gi)];
+    const title = pageHtml.match(/<title>([^<]+)<\/title>/i)?.[1] || '';
+    const description = pageHtml.match(/<meta\s+name=["']description["']\s+content=(['"])([\s\S]*?)\1/i)?.[2] || '';
+    assert.ok(title.length > 12, `${page.slug} needs a descriptive title`);
+    assert.ok(description.length > 80, `${page.slug} needs a meaningful route-specific description`);
+    assert.equal(canonicalTags.length, 1, `${page.slug} must have one self-referencing canonical`);
+    assert.equal(canonicalTags[0][1], `${base}/sports-scores/${page.slug}/`, `${page.slug} canonical must match its public route`);
+    assert.match(pageHtml, /<meta\s+name=["']robots["']\s+content=["']noindex,follow["']/i, `${page.slug} remains crawlable but excluded until real sport data is available`);
+    assert.match(pageHtml, new RegExp(`<meta\\s+name=["']score-sport["']\\s+content=["']${page.sport}["']`, 'i'));
+    assert.match(pageHtml, /<h1\b[^>]*>[\s\S]*?<\/h1>/i, `${page.slug} needs a useful server-rendered heading`);
+    assert.match(pageHtml, /No (?:verified )?(?:live|provider|sport|badminton|Formula 1|cricket|football|tennis|basketball)/i, `${page.slug} must not imply that scores are currently available`);
+    assert.match(pageHtml, /data-feed-endpoint|score-feed-endpoint/i, `${page.slug} should use the same-origin feed contract`);
+    assert.match(pageHtml, /Goalserve|provider|coverage/i, `${page.slug} should explain its provider/coverage limitation`);
+    assert.ok(!locations.includes(`${base}/sports-scores/${page.slug}/`), `${page.slug} noindex route must not be listed in the sitemap`);
+    assert.match(scoreHub, new RegExp(`href=["']${'/After-hours/sports-scores/'}${page.slug}/["']`), `${page.slug} must be reachable by a crawlable hub link`);
+    assert.ok(!scoreTitles.has(title), `${page.slug} title must be unique`);
+    assert.ok(!scoreDescriptions.has(description), `${page.slug} description must be unique`);
+    scoreTitles.add(title);
+    scoreDescriptions.add(description);
+  }
+  assert.equal(scoreTitles.size, 7);
+  assert.equal(scoreDescriptions.size, 7);
+  assert.match(await readFile(path.join(output, 'sports-scores', 'sports-scores.js'), 'utf8'), /score-sport-label/);
 
   const publicTextFiles = (await filesUnder(output)).filter(file => /\.(?:html|js|mjs|css|json|xml|txt)$/.test(file));
   for (const file of publicTextFiles) {

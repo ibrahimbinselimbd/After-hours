@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
+import { renderSportScorePage, sportScorePages } from './sports-score-routes.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const siteRoot = path.join(repoRoot, 'site');
@@ -146,6 +147,13 @@ await fs.cp(siteRoot, outputRoot, {
     return relative === '' || !ignoredSourceFiles.has(relative);
   },
 });
+
+for (const page of sportScorePages) {
+  const relativePath = path.join('sports-scores', page.slug, 'index.html');
+  const targetPath = path.join(outputRoot, relativePath);
+  await fs.mkdir(path.dirname(targetPath), { recursive: true });
+  await fs.writeFile(targetPath, renderSportScorePage(page, `${siteUrl}/sports-scores/${page.slug}/`));
+}
 
 const storySource = await fs.readFile(path.join(outputRoot, 'content.js'), 'utf8');
 const storyMatch = storySource.match(/^window\.STORIES\s*=\s*([\s\S]*);\s*$/);

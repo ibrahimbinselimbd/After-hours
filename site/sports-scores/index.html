@@ -4,19 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#080a16">
-  <meta name="description" content="A feed-ready AFTERHOURS multi-sport scoreboard. Scores animate without page reload when the first-party provider feed is connected.">
+  <meta name="description" content="Browse seven AFTERHOURS sports score lanes for football, cricket, tennis, basketball, badminton, Formula 1 and more. No verified live feed is connected yet.">
   <meta name="robots" content="noindex,follow">
   <meta name="score-feed-endpoint" content="./scores.json">
   <meta property="og:site_name" content="AFTERHOURS">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Sports signals — AFTERHOURS">
-  <meta property="og:description" content="A feed-ready multi-sport scoreboard. Animated updates appear without page reload when the AFTERHOURS server-side feed is connected.">
+  <meta property="og:title" content="Sports Scores & Fixtures — AFTERHOURS">
+  <meta property="og:description" content="Browse seven separate sports score lanes. No verified live data feed is connected yet.">
   <meta property="og:url" content="https://afterhours-district.bird-timimus.workers.dev/sports-scores/">
   <link rel="canonical" href="https://afterhours-district.bird-timimus.workers.dev/sports-scores/">
-  <title>Sports signals — AFTERHOURS</title>
+  <title>Sports Scores & Fixtures — AFTERHOURS</title>
   <link rel="stylesheet" href="/fonts.css">
   <link rel="stylesheet" href="./sports-scores.css?v=2">
-  <script defer src="./sports-scores.js?v=2"></script>
+  <script defer src="./sports-scores.js?v=3"></script>
 </head>
 <body class="sports-page">
   <a class="skip-link" href="#scoreboard">Skip to the scoreboard</a>
@@ -45,7 +45,7 @@
         <div class="score-hero-copy">
           <div class="score-eyebrow"><i aria-hidden="true"></i> THE GLOBAL SPORTS FREQUENCY <span>001 / LIVE BOARD</span></div>
           <h1 id="score-title">One world.<br><em>Every game.</em></h1>
-          <p>Football, cricket, tennis, basketball, badminton, Formula 1 and more—available when your selected feed supports them.</p>
+          <p>Football, cricket, tennis, basketball, badminton and Formula 1—separate score lanes, with no verified live feed connected yet.</p>
           <div class="score-hero-actions">
             <a class="score-primary" href="#scoreboard">Explore the board <span aria-hidden="true">↓</span></a>
             <span class="score-clean-note"><b aria-hidden="true">✳</b> No ads. No trackers. Provider keys stay server-side.</span>
@@ -68,16 +68,16 @@
           </div>
         </div>
 
-        <div class="sport-filter" role="group" aria-label="Choose a sport">
-          <button type="button" class="sport-tab is-active" data-sport="all" aria-pressed="true"><span class="sport-tab-icon">✳</span>All sports</button>
-          <button type="button" class="sport-tab" data-sport="football" aria-pressed="false"><span class="sport-tab-icon">⚽</span>Football</button>
-          <button type="button" class="sport-tab" data-sport="cricket" aria-pressed="false"><span class="sport-tab-icon">◉</span>Cricket</button>
-          <button type="button" class="sport-tab" data-sport="tennis" aria-pressed="false"><span class="sport-tab-icon">◌</span>Tennis</button>
-          <button type="button" class="sport-tab" data-sport="basketball" aria-pressed="false"><span class="sport-tab-icon">◉</span>Basketball</button>
-          <button type="button" class="sport-tab" data-sport="badminton" aria-pressed="false"><span class="sport-tab-icon">⌁</span>Badminton</button>
-          <button type="button" class="sport-tab" data-sport="f1" aria-pressed="false"><span class="sport-tab-icon">↗</span>Formula 1</button>
-          <button type="button" class="sport-tab" data-sport="other" aria-pressed="false"><span class="sport-tab-icon">＋</span>More</button>
-        </div>
+        <nav class="sport-filter" aria-label="Choose a sports score page">
+          <a class="sport-tab is-active" href="/sports-scores/" aria-current="page"><span class="sport-tab-icon" aria-hidden="true">✳</span>All sports</a>
+          <a class="sport-tab" href="/sports-scores/football/"><span class="sport-tab-icon" aria-hidden="true">⚽</span>Football</a>
+          <a class="sport-tab" href="/sports-scores/cricket/"><span class="sport-tab-icon" aria-hidden="true">◉</span>Cricket</a>
+          <a class="sport-tab" href="/sports-scores/tennis/"><span class="sport-tab-icon" aria-hidden="true">◌</span>Tennis</a>
+          <a class="sport-tab" href="/sports-scores/basketball/"><span class="sport-tab-icon" aria-hidden="true">◉</span>Basketball</a>
+          <a class="sport-tab" href="/sports-scores/badminton/"><span class="sport-tab-icon" aria-hidden="true">⌁</span>Badminton</a>
+          <a class="sport-tab" href="/sports-scores/formula-1/"><span class="sport-tab-icon" aria-hidden="true">↗</span>Formula 1</a>
+          <a class="sport-tab" href="/sports-scores/more-sports/"><span class="sport-tab-icon" aria-hidden="true">＋</span>More</a>
+        </nav>
 
         <div class="board-controls">
           <div class="state-filter" role="group" aria-label="Filter matches by status">
@@ -105,7 +105,7 @@
       <section class="score-data-note" aria-labelledby="data-note-title">
         <div class="data-note-icon" aria-hidden="true">⌁</div>
         <div><span class="board-kicker">BUILT FOR THE AFTERHOURS SIGNAL</span><h2 id="data-note-title">Fast by design.<br><em>Honest by default.</em></h2></div>
-        <p>The scoreboard checks AFTERHOURS's own feed every second and animates only changed scores—without reloading the page. Goalserve says scores update every 2–4 seconds for most sports, so a one-second check cannot guarantee a new score each second. The provider key must stay on a server/Worker; this static GitHub Pages site cannot fetch live data by itself. Coverage, including badminton, must be confirmed with Goalserve. No feed is connected yet.</p>
+        <p>The scoreboard reads only an AFTERHOURS same-origin feed and animates scores only when real data changes. This static GitHub Pages page does not connect to a provider by itself; no Goalserve adapter, package access or credentials are active. Check sport coverage—including badminton—against the <a href="https://www.goalserve.com/en/sport-data-feeds" target="_blank" rel="noopener noreferrer">official public catalogue</a> and the chosen subscription before enabling scores. No feed is connected, so the board stays empty.</p>
       </section>
     </div>
   </main>
