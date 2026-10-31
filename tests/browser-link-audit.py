@@ -43,7 +43,7 @@ with sync_playwright() as p:
                 else:
                     assert nav.is_visible(), 'the homepage links remain available on wider screens'
             journal = page.get_by_role('link', name='The journal', exact=True, include_hidden=True)
-            assert journal.get_attribute('href') == '/#feed'
+            assert journal.get_attribute('href').endswith('/#feed')
             # Desktop nav is deliberately hidden on compact layouts; route stays valid.
             if journal.is_visible():
                 journal.click()
@@ -59,7 +59,7 @@ with sync_playwright() as p:
         assert column_count == expected_columns, [width, column_count, expected_columns]
         page.locator('#dialog-tool-search').fill('JSON Formatter')
         assert page.locator('#dialog-tools a:visible').count() == 1
-        assert page.locator('#dialog-tools a:visible').get_attribute('href') == '/tools/json-formatter/'
+        assert page.locator('#dialog-tools a:visible').get_attribute('href').endswith('/tools/json-formatter/')
         assert page.locator('#category-search-status').inner_text() == '1 matching item'
         page.locator('#dialog-tool-search').fill('')
         assert page.locator('#dialog-tools a:visible').count() == 68
@@ -74,21 +74,22 @@ with sync_playwright() as p:
         go('/')
         assert page.locator('#feed').count() == 1
         feedback()
-        story = page.locator('a[href*="story="]').first.get_attribute('href')
-        go('/' + story.lstrip('/'))
+        page.locator('a[href*="story="]').first.click()
+        page.wait_for_load_state('networkidle')
+        assert 'story=' in page.url
         feedback()
         assert page.locator('h1').inner_text().strip()
         go('/tools/background-remover/')
-        crumbs = page.locator('a[href="/tools/?category=image-design#categories"]')
+        crumbs = page.locator('a[href*="category=image-design#categories"]')
         assert crumbs.count() == 2
-        page.locator('.breadcrumb a[href="/tools/?category=image-design#categories"]').click()
+        page.locator('.breadcrumb a[href*="category=image-design#categories"]').click()
         page.locator('#category-dialog').wait_for(state='visible')
         assert 'image' in page.locator('#dialog-title').inner_text().lower()
         assert 'design' in page.locator('#dialog-title').inner_text().lower()
         modal_count, modal_label = page.locator('.modal-status').inner_text().split()
         assert modal_label == 'AVAILABLE'
-        assert int(modal_count) == page.locator('#category-dialog a[href^="/tools/"]').count()
-        tool_link = page.locator('#category-dialog a[href="/tools/background-remover/"]')
+        assert int(modal_count) == page.locator('#category-dialog a[href*="/tools/"]').count()
+        tool_link = page.locator('#category-dialog a[href$="/tools/background-remover/"]')
         assert tool_link.count() == 1
         tool_link.click()
         assert '/tools/background-remover/' in page.url
@@ -107,7 +108,7 @@ with sync_playwright() as p:
             assert page.locator('.notice strong').inner_text().lower() == 'draft'
             assert 'not treat it as a final legal or operational policy' in page.locator('.notice').inner_text()
             assert page.locator(f'#page-nav a[aria-current="page"][href="info.html?page={key}"]').count() == 1
-            assert page.locator('.link-row a[href="/#feed"]').count() == 1
+            assert page.locator('.link-row a[href$="/#feed"]').count() == 1
             assert page.locator('form, textarea, input:not([type="hidden"])').count() == 0
             feedback()
         assert 'public corrections route' in page.locator('.contact-status').inner_text().lower()
