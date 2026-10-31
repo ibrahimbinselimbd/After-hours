@@ -1,4 +1,4 @@
-/* English category popup: actual workspace previews, never a mobile row list. */
+/* English category popup: category-specific 3D art, never a mobile row list. */
 .tools-page dialog {
   --category-accent: #d3fb56;
   --panel-header-height: 78px;
@@ -76,8 +76,8 @@ body:has(dialog[open]) { overflow: hidden; }
   transform: translateY(-4px); border-color: color-mix(in srgb, var(--category-accent) 70%, #516073);
   box-shadow: 0 12px 28px #0005; outline-color: var(--category-accent); outline-offset: 3px;
 }
-.tool-preview { position: relative; overflow: hidden; aspect-ratio: 16 / 8; border-bottom: 1px solid #c2d2e226; background: #111925; isolation: isolate; }
-.tool-preview img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center top; transform-origin: center 35%; }
+.tool-preview { position: relative; overflow: hidden; aspect-ratio: 16 / 8; perspective: 900px; transform-style: preserve-3d; border-bottom: 1px solid #c2d2e226; background: #111925; isolation: isolate; }
+.tool-preview img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; transform-origin: center; backface-visibility: hidden; }
 .tool-preview::before { content: ''; position: absolute; z-index: 1; inset: 0; pointer-events: none; background: linear-gradient(0deg, #080d16c4, transparent 34%); }
 .tool-preview::after { content: ''; position: absolute; z-index: 1; inset: -50%; pointer-events: none; background: linear-gradient(110deg, transparent 40%, #cdebe90c 48%, #ffffff10 50%, transparent 60%); transform: translateX(-70%); }
 .preview-caption { position: absolute; z-index: 2; left: 13px; bottom: 9px; color: #c9d6e5; font: 9px/1.3 monospace; letter-spacing: .08em; }
@@ -113,11 +113,11 @@ body:has(dialog[open]) { overflow: hidden; }
 #dialog-tools .featured-tool[hidden], #dialog-tools .planned-tool[hidden], #dialog-tools .tool-note[hidden] { display: none !important; }
 @media (prefers-reduced-motion: no-preference) {
   #dialog-tools .featured-tool.is-in-view { animation: tool-card-enter .36s ease-out both; animation-delay: calc(var(--tool-order, 0) * 35ms); }
-  .featured-tool.is-in-view .tool-preview img { animation: tool-preview-drift 7s ease-in-out infinite alternate; }
+  .featured-tool.is-in-view .tool-preview img { animation: tool-preview-drift 7s ease-in-out infinite alternate; will-change: transform; }
   .featured-tool.is-in-view .tool-preview::after { animation: tool-preview-sheen 8s ease-in-out infinite; animation-delay: calc(var(--tool-order, 0) * .4s); }
 }
 @keyframes tool-card-enter { from { opacity: .2; translate: 0 9px; } to { opacity: 1; translate: 0 0; } }
-@keyframes tool-preview-drift { from { transform: scale(1); } to { transform: scale(1.025); } }
+@keyframes tool-preview-drift { from { transform: perspective(900px) translate3d(0, 0, 0) rotateX(0) rotateY(-.7deg) scale(1.015); } to { transform: perspective(900px) translate3d(0, -3px, 14px) rotateX(.4deg) rotateY(1deg) scale(1.04); } }
 @keyframes tool-preview-sheen { 0%, 18% { transform: translateX(-70%); } 58%, 100% { transform: translateX(70%); } }
 @media (max-width: 1000px) {
   .tools-page dialog { width: min(900px, calc(100% - 24px)); max-width: 900px; }

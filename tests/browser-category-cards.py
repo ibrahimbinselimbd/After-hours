@@ -53,7 +53,7 @@ with sync_playwright() as p:
             })''')
             for card in check:
                 slug = urlparse(card['href']).path.strip('/').split('/')[-1]
-                assert card['src'] == base + '/tools/_shared/previews/' + slug + '.webp', card
+                assert card['src'] == base + '/tools/_shared/tool-art/' + category + '.webp', card
                 assert card['width'] == 640 and card['height'] == 360 and card['title'], card
                 assert not card['clipped'], [width, category, card]
                 assets.add(card['src'])
@@ -101,9 +101,9 @@ def verify_asset(url):
         assert image.size == (640, 360)
     return len(data)
 
-assert len(assets) == 500
+assert len(assets) == 20
 with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
     sizes = list(pool.map(verify_asset, sorted(assets)))
-records.append({'verified_preview_assets':500,'total_bytes':sum(sizes),'largest_bytes':max(sizes)})
+records.append({'verified_category_art_assets':20,'total_bytes':sum(sizes),'largest_bytes':max(sizes)})
 (out / 'results.json').write_text(json.dumps(records, indent=2) + '\n')
 print(json.dumps(records, indent=2), flush=True)

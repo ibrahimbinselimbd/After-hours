@@ -1,6 +1,6 @@
 // Presentation only. Tool logic, routes and credits are untouched; the AI detector stays disabled.
 // Relative to this hub so local and /After-hours/ GitHub Pages previews both work.
-const toolPreviewBase = new URL('./_shared/previews/', location.href);
+const toolPreviewBase = new URL('./_shared/tool-art/', location.href);
 const categorySearch = document.querySelector('#dialog-tool-search');
 const categorySearchStatus = document.querySelector('#category-search-status');
 let previewObserver;
@@ -57,16 +57,15 @@ function openCategory(id, trigger) {
     preview.className = 'tool-preview';
     preview.setAttribute('aria-hidden', 'true');
     const image = document.createElement('img');
-    const slug = item.href.split('/').filter(Boolean).pop();
-    image.src = new URL(`${slug}.webp`, toolPreviewBase).href;
+    image.src = new URL(`${data.id}.webp`, toolPreviewBase).href;
     image.alt = '';
     image.width = 640;
     image.height = 360;
-    image.loading = index < 6 ? 'eager' : 'lazy';
+    image.loading = 'lazy';
     image.decoding = 'async';
     const caption = document.createElement('span');
     caption.className = 'preview-caption';
-    caption.textContent = 'WORKSPACE PREVIEW';
+    caption.textContent = data.title.toUpperCase();
     preview.append(image, caption);
     const line = document.createElement('div');
     line.className = 'tool-title-line';
