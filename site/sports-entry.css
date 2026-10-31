@@ -1,0 +1,16 @@
+/* Home-only discovery entry for the AFTERHOURS sports board. */
+header .sports-entry{display:inline-flex;align-items:center;gap:8px;flex-shrink:0;min-height:44px;padding:6px 10px 6px 8px;border:1px solid #53f5ff52;border-radius:11px;background:linear-gradient(135deg,#53f5ff12,#a78bfa0b);box-shadow:inset 0 1px #ffffff12,0 0 22px #53f5ff08;color:#e8fbff;font:700 10px 'DM Sans',sans-serif;letter-spacing:1px;transition:transform .22s,border-color .22s}
+header .sports-entry:hover,header .sports-entry:focus-visible{transform:translateY(-2px);border-color:#53f5ff;outline:none}
+header .sports-entry .sports-entry-icon{display:grid;width:29px;height:29px;place-items:center;color:#53f5ff}
+header .sports-entry svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round}
+header .sports-entry>span:last-child{display:grid;gap:4px}
+header .sports-entry small{color:#aebbd0;font:8px monospace;letter-spacing:.2px}
+.sports-score-category{color:var(--freq-muted);text-decoration:none!important}
+.sports-score-category .channel-glyph{--tone:#53f5ff;color:#53f5ff}
+.sports-score-category .channel-count{color:#53f5ff;font:9px monospace;letter-spacing:.3px}
+.sports-score-category:hover{border-color:#53f5ff80!important;color:#effcff!important}
+.sports-score-category:focus-visible{outline:2px solid #53f5ff;outline-offset:2px}
+.sports-score-category .channel-copy small{color:#a9b2c5}
+@media(max-width:1250px){header .sports-entry{padding:5px 8px}header .sports-entry small{display:none}}
+@media(max-width:760px){header .sports-entry{justify-content:center;width:44px;padding:5px}header .sports-entry>span:last-child{display:none}header .sports-entry .sports-entry-icon{width:28px;height:28px}}
+@media(prefers-reduced-motion:reduce){header .sports-entry{transition:none}header .sports-entry:hover{transform:none}}
