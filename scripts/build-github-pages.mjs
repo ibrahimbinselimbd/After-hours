@@ -12,7 +12,7 @@ const siteUrl = (process.env.PAGES_SITE_URL || `https://ibrahimbinselimbd.github
 const workerOrigin = 'https://afterhours-district.bird-timimus.workers.dev';
 const ignoredSourceFiles = new Set(['_headers', '_redirects', 'sitemap.xml']);
 const rootDirectories = new Set([
-  'tools', 'media', 'assets', 'images', 'fonts', 'api', 'districts', 'article', 'info',
+  'tools', 'media', 'assets', 'images', 'fonts', 'api', 'districts', 'article', 'info', 'sports-scores',
   'favicon', 'css', 'js',
 ]);
 const allowedAssetExtensions = /\.(?:css|js|mjs|json|webmanifest|ttf|otf|woff2?|png|jpe?g|webp|gif|svg|ico|wasm|mp3|wav|mp4)$/i;
