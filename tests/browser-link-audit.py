@@ -54,9 +54,29 @@ with sync_playwright() as p:
         page.locator('#category-dialog').wait_for(state='visible')
         assert int(page.locator('.modal-status').inner_text().split()[0]) == 68
         assert page.locator('#dialog-tools a').count() == 68
-        expected_columns = 3 if width > 1000 else (2 if width > 600 else 1)
+        expected_columns = 3 if width > 1000 else 2
         column_count = page.locator('#dialog-tools').evaluate('(el) => getComputedStyle(el).gridTemplateColumns.split(" ").length')
         assert column_count == expected_columns, [width, column_count, expected_columns]
+        # Scroll the real popup to exercise lazy images, not a forced-eager test DOM.
+        for preview in page.locator('#dialog-tools .tool-preview img').all():
+            preview.scroll_into_view_if_needed()
+            preview.evaluate('(image) => image.decode()')
+        page.locator('#category-dialog').evaluate('(el) => { el.scrollTop = 0; }')
+        card_checks = page.locator('#dialog-tools a.featured-tool').evaluate_all('''cards => cards.map(card => {
+            const image = card.querySelector('.tool-preview img');
+            const descendants = [card, ...card.querySelectorAll('.tool-meta, .tool-meta b, .tool-meta small, .open-label')];
+            return {
+                src: image?.getAttribute('src') || '',
+                width: image?.getAttribute('width'),
+                height: image?.getAttribute('height'),
+                naturalWidth: image?.naturalWidth || 0,
+                clipping: descendants.some(el => el.scrollWidth > el.clientWidth + 1),
+            };
+        })''')
+        assert len(card_checks) == 68
+        assert all(check['src'].startswith(base + '/tools/_shared/previews/') and check['src'].endswith('.webp') for check in card_checks), card_checks
+        assert all(check['width'] == '640' and check['height'] == '360' and check['naturalWidth'] > 0 for check in card_checks), card_checks
+        assert not any(check['clipping'] for check in card_checks), [check for check in card_checks if check['clipping']]
         page.locator('#dialog-tool-search').fill('JSON Formatter')
         assert page.locator('#dialog-tools a:visible').count() == 1
         assert page.locator('#dialog-tools a:visible').get_attribute('href').endswith('/tools/json-formatter/')
