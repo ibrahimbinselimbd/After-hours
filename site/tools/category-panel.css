@@ -158,6 +158,23 @@ body:has(dialog[open]) { overflow: hidden; }
   .panel-bottom > span { max-width: 110px; font-size: 10px; }
   .tool-empty-state { margin-inline: 12px; }
 }
+/* Selective current-main dialog chrome adapted to old-live preview markup. */
+.tools-page dialog {
+  border-color: #a8bec138;
+  background: radial-gradient(ellipse at 95% 0%, #57457e24, transparent 48%),
+    radial-gradient(ellipse at 0% 50%, #3e606b12, transparent 60%), #0b1017;
+  box-shadow: 0 45px 140px #000d, 0 0 65px #7db8d509, inset 0 1px #d5e6f41a;
+}
+.panel-top {
+  border-bottom-color: #c8dced13;
+  background: #0c1119ed;
+}
+.tools-page .modal-close {
+  border-radius: 50%;
+  background: #ffffff04;
+  color: #c7d4df;
+  border-color: #a8bec126;
+}
 @media (prefers-reduced-motion: reduce) {
   #dialog-tools *, #dialog-tools *::before, #dialog-tools *::after { animation: none !important; transition: none !important; }
   #dialog-tools .featured-tool, #dialog-tools .featured-tool:hover, #dialog-tools .featured-tool:focus-visible { animation: none !important; transition: none !important; transform: none !important; translate: none !important; }
