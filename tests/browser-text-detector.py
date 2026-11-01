@@ -1,4 +1,4 @@
-"""Optional real-browser static-preview smoke test; requires Playwright and Chromium."""
+"""Optional real-browser smoke test; requires the English app server, Playwright and Chromium."""
 import sys,json,os,tempfile
 from pathlib import Path
 from playwright.sync_api import sync_playwright
@@ -15,6 +15,8 @@ with sync_playwright() as p:
         page.on('response',lambda r:bad.append([r.status,r.url]) if r.status>=400 and 'favicon' not in r.url else None)
         page.on('request',lambda r:api.append(r.url) if '/api/' in r.url else None)
         page.goto(base+'/tools/text-detector/',wait_until='networkidle')
+        assert page.locator('body').get_attribute('data-analysis-enabled') == 'false'
+        assert page.locator('meta[name="robots"]').get_attribute('content') == 'noindex,follow'
         assert page.locator('#service-notice').is_visible()
         assert 'COMING SOON' in page.locator('#service-notice').inner_text()
         assert page.locator('#analyze-button').is_disabled()
@@ -39,11 +41,17 @@ with sync_playwright() as p:
         page.locator('.breadcrumb a[href*="category="]').click()
         page.locator('#category-dialog').wait_for(state='visible')
         assert 'COMING SOON' in page.locator('.modal-status').inner_text()
-        page.get_by_role('link',name='Preview AI Article and Text Detector — coming soon',exact=True).click()
-        assert '/tools/text-detector/' in page.url
-        page.get_by_role('link',name='← All tools',exact=True).click()
-        page.get_by_role('button',name='AI & Everyday Utilities — frontend preview and coming-soon tools',exact=True).click()
-        page.get_by_role('link',name='Preview AI Article and Text Detector — coming soon',exact=True).click()
+        disabled_preview = page.locator('#category-dialog .disabled-tool')
+        assert disabled_preview.is_visible()
+        assert 'COMING SOON · DISABLED' in disabled_preview.inner_text()
+        assert disabled_preview.locator('a').count() == 0
+        assert page.locator('#category-dialog a[href="/tools/text-detector/"]').count() == 0
+        page.locator('#category-dialog .modal-close').click()
+        page.locator('[data-category="ai-everyday-utilities"]').click()
+        assert page.locator('#category-dialog .disabled-tool').is_visible()
+        assert 'COMING SOON · DISABLED' in page.locator('#category-dialog .disabled-tool').inner_text()
+        assert page.locator('#category-dialog a[href="/tools/text-detector/"]').count() == 0
+        page.locator('#category-dialog .modal-close').click()
         page.get_by_role('link',name='AFTERHOURS home',exact=True).click()
         assert page.url.rstrip('/')==base,page.url
         page.goto(base+'/tools/text-detector/',wait_until='networkidle')

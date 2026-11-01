@@ -9,6 +9,8 @@ const routes = new Map([
   ['/tools.html', 'tools/index.html'],
   ['/tools/background-remover', 'tools/background-remover/index.html'],
   ['/tools/background-remover/', 'tools/background-remover/index.html'],
+  ['/tools/passport-photo-studio', 'tools/passport-photo-studio/index.html'],
+  ['/tools/passport-photo-studio/', 'tools/passport-photo-studio/index.html'],
   ['/tools/text-detector', 'tools/text-detector/index.html'],
   ['/tools/text-detector/', 'tools/text-detector/index.html'],
   ['/article', 'article.html'], ['/article/', 'article.html'],
@@ -47,9 +49,16 @@ function upstreamCode(data) {
 export function createAppServer({
   detectorOrigin = process.env.TEXT_DETECTOR_API_ORIGIN || '',
   detectorApiKey = process.env.TEXT_DETECTOR_API_KEY || '',
+  passportPhotoOrigin = process.env.PASSPORT_PHOTO_SERVICE_ORIGIN || '',
+  passportPhotoToken = process.env.PASSPORT_PHOTO_SERVICE_TOKEN || '',
   upstreamTimeoutMs = 120000
 } = {}) {
   detectorOrigin = detectorOrigin.replace(/\/$/, '');
+  passportPhotoOrigin = passportPhotoOrigin.replace(/\/$/, '');
+  if (passportPhotoOrigin) {
+    const photoUrl = new URL(passportPhotoOrigin);
+    if (photoUrl.protocol !== 'https:' || photoUrl.username || photoUrl.password || photoUrl.search || photoUrl.hash || photoUrl.pathname !== '/') throw new Error('PASSPORT_PHOTO_SERVICE_ORIGIN must be an HTTPS origin without a path or credentials.');
+  }
   if (detectorOrigin) {
     const url = new URL(detectorOrigin);
     const local = ['127.0.0.1', 'localhost', '[::1]'].includes(url.hostname);
@@ -101,8 +110,32 @@ export function createAppServer({
       return writeJson(res, error?.statusCode || 502, { ok: false, code });
     }
   }
+  async function passportPhotoRequest(req, res) {
+    if (!passportPhotoOrigin || passportPhotoToken.length < 32) return writeJson(res, 503, { ok: false, code: 'service_not_configured', message: 'The self-hosted photo model is not configured.' });
+    const type = (req.headers['content-type'] || '').split(';')[0].trim().toLowerCase();
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(type)) return writeJson(res, 415, { ok: false, code: 'unsupported_image_type' });
+    const chunks = []; let size = 0;
+    try {
+      for await (const chunk of req) {
+        size += chunk.length;
+        if (size > 15 * 1024 * 1024) return writeJson(res, 413, { ok: false, code: 'image_too_large' });
+        chunks.push(chunk);
+      }
+      if (!size) return writeJson(res, 422, { ok: false, code: 'invalid_image' });
+      const upstream = await fetch(passportPhotoOrigin + '/v1/background-remove', {
+        method: 'POST', headers: { 'content-type': type, accept: 'image/png', authorization: 'Bearer ' + passportPhotoToken },
+        body: Buffer.concat(chunks), cache: 'no-store', redirect: 'error', signal: AbortSignal.timeout(upstreamTimeoutMs)
+      });
+      const body = Buffer.from(await upstream.arrayBuffer());
+      res.writeHead(upstream.status, { 'Content-Type': upstream.headers.get('content-type') || 'application/json; charset=utf-8', 'Cache-Control': 'no-store, no-cache, must-revalidate', 'Pragma': 'no-cache', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer' });
+      return res.end(body);
+    } catch {
+      return writeJson(res, 502, { ok: false, code: 'model_unreachable', message: 'The self-hosted photo model is not reachable.' });
+    }
+  }
   return http.createServer(async (req, res) => {
     const pathname = req.url?.split('?')[0];
+    if (pathname === '/api/v1/passport-photo/background-remove' && req.method === 'POST') return passportPhotoRequest(req, res);
     if (pathname?.startsWith('/api/')) {
       if (req.method === 'POST' && pathname === '/api/v1/text/analyze') return detectorRequest(pathname, req, res);
       if (req.method === 'GET' && pathname === '/api/v1/text/health') return detectorRequest(pathname, req, res);
@@ -111,9 +144,15 @@ export function createAppServer({
     if (!['GET', 'HEAD'].includes(req.method)) { res.writeHead(405, { Allow: 'GET, HEAD' }); return res.end(); }
     try {
       const pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
-      const file = path.resolve(root, routes.get(pathname) || pathname.replace(/^\/+/, ''));
+      let file = path.resolve(root, routes.get(pathname) || pathname.replace(/^\/+/, ''));
       if (!file.startsWith(root)) { res.writeHead(403); return res.end('Forbidden'); }
-      const content = await readFile(file);
+      let content;
+      try { content = await readFile(file); }
+      catch {
+        file = path.resolve(file, 'index.html');
+        if (!file.startsWith(root)) { res.writeHead(403); return res.end('Forbidden'); }
+        content = await readFile(file);
+      }
       res.writeHead(200, { 'Content-Type': types[path.extname(file)] || 'application/octet-stream', 'X-Content-Type-Options': 'nosniff' });
       res.end(req.method === 'HEAD' ? undefined : content);
     } catch { res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' }); res.end('Not found'); }

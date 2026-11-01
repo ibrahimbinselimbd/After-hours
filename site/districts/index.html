@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080a16">
+<meta name="description" content="The AFTERHOURS Journal district map: eight approved districts, 55 planned subtopics, and a 100-post editorial allocation.">
+<link rel="canonical" href="https://afterhours-district.bird-timimus.workers.dev/districts/">
+<title>AFTERHOURS Journal — The Districts</title>
+<link rel="stylesheet" href="/fonts.css">
+<link rel="stylesheet" href="/districts.css">
+</head>
+<body>
+<a class="skip-link" href="#districts">Skip to district map</a>
+
+<header class="topbar" id="top">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="/" aria-label="AFTERHOURS home"><span class="brand-mark">a<span>h</span></span><span>AFTER<span style="color:#aab5cd">HOURS</span><small> / JOURNAL</small></span></a>
+    <nav class="nav" aria-label="Journal navigation"><a href="/#feed">The journal</a><a href="#districts" aria-current="page">The districts</a><a href="#allocation">100-post plan</a><a href="/tools/">Tools Hub ↗</a></nav>
+    <span class="status"><i aria-hidden="true"></i> JOURNAL / 08 DISTRICTS</span>
+  </div>
+</header>
+<main>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow">AFTERHOURS JOURNAL / THE DISTRICT MAP</div>
+        <span class="preview-chip">APPROVED TAXONOMY · PLANNED STORIES</span>
+        <h1 id="hero-title">Eight<br><span>districts</span><em>.</em><br>One journal.</h1>
+        <p class="hero-copy">A clearer route through AI, games, gear and digital life. Explore the approved category map, open every subtopic, and review how the first 100 planned stories are distributed.</p>
+        <div class="hero-actions"><a class="primary" href="#districts">ENTER THE DISTRICT MAP <span aria-hidden="true">↘</span></a><span class="secondary">A NEW ROUTE. THE SAME RESTLESS CURIOSITY.</span></div>
+        <div class="hero-facts" aria-label="Journal map summary">
+          <div class="fact"><strong>08</strong><small>DISTRICTS</small></div>
+          <div class="fact"><strong>55</strong><small>SUBTOPIC LANES</small></div>
+          <div class="fact"><strong>100</strong><small>PLANNED STORIES</small></div>
+        </div>
+      </div>
+      <div class="atlas" aria-label="Decorative map of eight editorial districts">
+        <div class="atlas-glow"></div><div class="orbit"></div><div class="orbit two"></div><div class="orbit three"></div>
+        <div class="atlas-core"><div><b>a<span>h</span></b><small>JOURNAL<br>FREQUENCY CORE</small></div></div>
+        <span class="orbit-node n1"><i></i> AI / SOFTWARE</span><span class="orbit-node n2"><i></i> GAMING</span><span class="orbit-node n3"><i></i> GADGETS</span><span class="orbit-node n4"><i></i> DIGITAL CULTURE</span><span class="orbit-node n5"><i></i> CRYPTO / FINANCE</span><span class="orbit-node n6"><i></i> WEB / CREATOR</span><span class="orbit-node n7"><i></i> PRIVACY</span><span class="orbit-node n8"><i></i> CAREERS</span>
+        <span class="atlas-label">ONE JOURNAL / EIGHT DIRECTIONS</span>
+      </div>
+    </div>
+  </section>
+  <div class="ticker" aria-hidden="true"><div class="wrap ticker-inner"><span>LESS NOISE. MORE SIGNAL.</span><b>✳</b><span>FOLLOW YOUR CURIOSITY.</span><b>✳</b><span>THE INTERNET HAS ANOTHER SIDE.</span><b>✳</b><span>LESS NOISE. MORE SIGNAL.</span></div></div>
+
+  <section class="section" id="districts" aria-labelledby="districts-title">
+    <div class="wrap">
+      <div class="section-head">
+        <div><div class="section-no">01 / THE FREQUENCY ROUTER</div><h2 id="districts-title">Choose your <span>district.</span></h2></div>
+        <p class="section-intro">Select a district to inspect its purpose and planned subtopics. Search by category or topic, or open the complete map to scan everything at once.</p>
+      </div>
+      <div class="router-layout">
+        <aside class="console" aria-label="Journal categories">
+          <div class="console-top"><span>JOURNAL ROUTER / 08 CHANNELS</span><i aria-hidden="true"></i></div>
+          <h3>Tune into<br>your world<span>.</span></h3>
+          <p class="console-intro">Eight signals. One curious mind.</p>
+          <label class="sr-only" for="topic-search">Search categories and subtopics</label>
+          <input class="search" id="topic-search" type="search" placeholder="Search a category or subtopic…" autocomplete="off" maxlength="160" aria-controls="category-list" aria-describedby="search-status"><button class="clear-search" id="clear-search" type="button" hidden> CLEAR SEARCH </button><div class="search-status" id="search-status" role="status" aria-live="polite"></div>
+          <div class="category-list" id="category-list" role="group" aria-label="Choose a category"></div>
+          <div class="console-foot"><i aria-hidden="true"></i><span>APPROVED TAXONOMY / ARTICLE COUNTS ARE PLANNED</span></div>
+        </aside>
+        <article class="detail" id="category-detail" aria-live="polite" aria-atomic="true"></article>
+      </div>
+      <section class="existing-feed" id="district-stories" aria-labelledby="district-stories-title">
+        <div class="existing-feed-head"><div><div class="section-no">READ WHAT IS HERE / NOT THE PLAN</div><h3 id="district-stories-title">Existing Journal stories</h3></div><span class="existing-count" id="existing-story-count" role="status"></span></div>
+        <p class="existing-feed-note" id="existing-story-note">Current reporting is separate from the planned 100-post allocation.</p>
+        <div class="existing-story-grid" id="existing-story-grid"></div>
+      </section>
+      <div class="map-controls"><button class="outline-button" id="toggle-directory" type="button" aria-expanded="false" aria-controls="directory">OPEN THE COMPLETE CATEGORY MAP <span aria-hidden="true">＋</span></button><a class="outline-button" href="#allocation">REVIEW THE 100-POST ALLOCATION ↘</a></div>
+      <div class="directory" id="directory" hidden>
+        <div class="directory-top"><div><h3>All eight districts.</h3><p>Open a district to see every planned subtopic.</p></div><button class="outline-button" id="toggle-all" type="button">EXPAND ALL</button></div>
+        <div class="directory-grid" id="directory-grid"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="plan-section" id="allocation" aria-labelledby="allocation-title">
+    <div class="wrap">
+      <div class="plan-topline">
+        <div class="section-head"><div><div class="section-no">02 / FIRST-WAVE EDITORIAL MIX</div><h2 id="allocation-title">The first <span>100.</span></h2></div></div>
+        <div class="total-stamp"><strong>100</strong><span>PLANNED POSTS<br>IN THE FIRST PHASE</span></div>
+      </div>
+      <p class="section-intro" style="margin:-10px 0 22px;max-width:650px">A planning split—not a count of published stories. The distribution below follows the proposed editorial priorities exactly.</p>
+      <div class="allocation-list" id="allocation-list" aria-label="Planned post distribution across eight categories"></div>
+      <p class="plan-footnote"><strong>Reading the bars:</strong> each value is the proposed number of articles for the first phase, and also its share of the 100-post total. These are planning targets, not live article or category counts.</p>
+      <div class="guardrails" id="editorial-guardrails" aria-label="Editorial notes for sensitive categories"></div>
+    </div>
+  </section>
+</main>
+<footer class="footer wrap"><span><a href="/" aria-label="AFTERHOURS home"><strong>AFTERHOURS / JOURNAL DISTRICT MAP</strong></a> · <a href="#editorial-guardrails">EDITORIAL NOTES</a></span><span>ARTICLE COUNTS ARE PLANNED <span class="end-mark">✳</span> EXISTING STORIES UNCHANGED</span></footer>
+<noscript><style>.router-layout,.map-controls,.existing-feed{display:none}</style><section class="wrap directory static-directory" aria-labelledby="static-directory-title"><div class="directory-top"><div><h2 id="static-directory-title">Complete district directory</h2><p>All 8 districts and 55 planned subtopics.</p></div></div><div class="directory-grid"><article class="directory-card"><div class="directory-body"><div class="card-code">01</div><h3>AI &amp; Software</h3><p>AI, software, releases and analysis</p><div class="directory-subtopics"><span>AI News &amp; Releases</span><span>AI Tools &amp; Applications</span><span>AI Models &amp; Benchmarks</span><span>AI Research &amp; Safety</span><span>Software Updates</span><span>Tutorials &amp; Troubleshooting</span><span>AI Productivity &amp; Workflows</span></div><p class="directory-note">20 planned posts. No published count.</p></div></article><article class="directory-card"><div class="directory-body"><div class="card-code">02</div><h3>Gaming</h3><p>Gaming news, guides and updates</p><div class="directory-subtopics"><span>Game News &amp; Updates</span><span>Walkthroughs &amp; Guides</span><span>Tips, Secrets &amp; Collectibles</span><span>Gaming Hardware</span><span>Game Reviews &amp; Comparisons</span><span>Gaming Industry &amp; Policy</span></div><p class="directory-note">15 planned posts. No published count.</p></div></article><article class="directory-card"><div class="directory-body"><div class="card-code">03</div><h3>Gadgets &amp; Gear</h3><p>Devices, reviews and comparisons</p><div class="directory-subtopics"><span>Smartphones &amp; Computers</span><span>Gaming PCs &amp; Handhelds</span><span>Audio &amp; Wearables</span><span>Product Reviews</span><span>Buying Guides</span><span>Device Comparisons</span><span>Smart Home &amp; Robotics</span></div><p class="directory-note">10 planned posts. No published count.</p></div></article><article class="directory-card"><div class="directory-body"><div class="card-code">04</div><h3>Digital Culture</h3><p>Internet culture and digital life</p><div class="directory-subtopics"><span>Social Media &amp; Platforms</span><span>Creator Economy</span><span>Internet Trends</span><span>Digital Work &amp; Society</span><span>Online Identity</span><span>Digital Ownership</span></div><p class="directory-note">08 planned posts. No published count.</p></div></article><article class="directory-card"><div class="directory-body"><div class="card-code">05</div><h3>Crypto &amp; Digital Finance</h3><p>Blockchain, payments and policy</p><div class="directory-subtopics"><span>Blockchain Technology</span><span>Stablecoins &amp; Payments</span><span>Regulation &amp; Policy</span><span>Tokenization</span><span>Crypto Security</span><span>Industry Analysis</span></div><p class="directory-note">05 planned posts. No published count.</p><p class="directory-note"><strong>EDITORIAL GUARDRAIL:</strong> Prioritize evidence-led explainers and verified reporting over advice that could steer financial decisions. No financial decision advice.</p></div></article><article class="directory-card"><div class="directory-body"><div class="card-code">06</div><h3>Web, SEO &amp; Creator Tools</h3><p>SEO, websites, free tools and tutorials</p><div class="directory-subtopics"><span>Google Search &amp; SEO</span><span>Technical SEO</span><span>Website Performance</span><span>Website Accessibility</span><span>Image &amp; Design Tutorials</span><span>PDF &amp; Document Guides</span><span>Video &amp; Audio Tools</span><span>Developer Utilities</span><span>Creator Productivity</span></div><p class="directory-note">22 planned posts. No published count.</p></div></article><article class="directory-card"><div class="directory-body"><div class="card-code">07</div><h3>Privacy &amp; Cybersecurity</h3><p>Online security and privacy</p><div class="directory-subtopics"><span>Account Security</span><span>Online Scams &amp; Deepfakes</span><span>Privacy Settings</span><span>Browser &amp; App Security</span><span>Metadata &amp; Digital Footprints</span><span>Data Protection</span><span>Security Explainers</span></div><p class="directory-note">12 planned posts. No published count.</p></div></article><article class="directory-card"><div class="directory-body"><div class="card-code">08</div><h3>Tech Careers &amp; Jobs</h3><p>Jobs, career paths and skills</p><div class="directory-subtopics"><span>Verified Remote Jobs</span><span>AI &amp; Software Jobs</span><span>Internships &amp; Entry-Level Jobs</span><span>Career Paths &amp; Salary Guides</span><span>Resume &amp; Portfolio Guides</span><span>Interview Preparation</span><span>Work Visas &amp; Sponsorship</span></div><p class="directory-note">08 planned posts. No published count.</p><p class="directory-note"><strong>VERIFICATION STANDARD:</strong> Job posts should include the original employer source, location, application deadline and verification date. Do not call an unverified listing “Verified”. Verified Remote Jobs is a planned topic name, not verification of any listing. Check all four fields before using “Verified”.</p></div></article></div></section></noscript>
+<script src="/content.js?v=9"></script>
+<script src="/districts.js"></script>
+</body>
+</html>

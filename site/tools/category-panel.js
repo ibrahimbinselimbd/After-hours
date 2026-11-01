@@ -1,60 +1,153 @@
-// Category details and same-site tool navigation. Text detector is not launched.
+// Presentation only. Tool logic, routes and credits are untouched; the AI detector stays disabled.
+// Relative to this hub so local and /After-hours/ GitHub Pages previews both work.
+const toolPreviewBase = new URL('./_shared/previews/', location.href);
+const categorySearch = document.querySelector('#dialog-tool-search');
+const categorySearchStatus = document.querySelector('#category-search-status');
+let previewObserver;
+const cardTiltMotion = window.matchMedia('(prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine)');
+const toolCardGrid = document.querySelector('#dialog-tools');
+toolCardGrid?.addEventListener('pointermove', event => {
+  if (!cardTiltMotion.matches || event.pointerType === 'touch') return;
+  const card = event.target.closest('.featured-tool');
+  if (!card) return;
+  const bounds = card.getBoundingClientRect();
+  if (!bounds.width || !bounds.height) return;
+  const horizontal = (event.clientX - bounds.left) / bounds.width - .5;
+  const vertical = (event.clientY - bounds.top) / bounds.height - .5;
+  card.style.setProperty('--tilt-x', `${Math.max(-2.2, Math.min(2.2, -vertical * 4.4)).toFixed(2)}deg`);
+  card.style.setProperty('--tilt-y', `${Math.max(-3, Math.min(3, horizontal * 6)).toFixed(2)}deg`);
+}, {passive: true});
+toolCardGrid?.addEventListener('pointerout', event => {
+  const card = event.target.closest('.featured-tool');
+  if (!card || card.contains(event.relatedTarget)) return;
+  card.style.removeProperty('--tilt-x');
+  card.style.removeProperty('--tilt-y');
+});
+function updateCategorySearch() {
+  const query = categorySearch?.value.trim().toLowerCase() || '';
+  const list = document.querySelector('#dialog-tools');
+  const rows = [...list.querySelectorAll('.featured-tool, .planned-tool')];
+  let matches = 0;
+  let previewVisible = false;
+  for (const row of rows) {
+    const visible = !query || row.textContent.toLowerCase().includes(query);
+    row.hidden = !visible;
+    if (visible) matches += 1;
+    if (row.classList.contains('disabled-tool') && visible) previewVisible = true;
+  }
+  const note = list.querySelector('.tool-note');
+  if (note) note.hidden = !previewVisible;
+  const empty = document.querySelector('#tool-search-empty');
+  if (empty) empty.hidden = matches > 0;
+  if (categorySearchStatus) categorySearchStatus.textContent = query ? `${matches} matching ${matches === 1 ? 'item' : 'items'}` : '';
+}
+categorySearch?.addEventListener('input', updateCategorySearch);
+function syncPanelHeader() {
+  dialog.style.setProperty('--panel-header-height', `${document.querySelector('.panel-top').offsetHeight}px`);
+}
+if ('ResizeObserver' in window) new ResizeObserver(syncPanelHeader).observe(document.querySelector('.panel-top'));
 function openCategory(id, trigger) {
-  const d = categories.find(c => c.id === id);
-  if (!d) return;
-  const image = id === 'image-design';
+  const data = categories.find(item => item.id === id);
+  if (!data) return;
   const ai = id === 'ai-everyday-utilities';
-  opener = trigger || document.querySelector('[data-category="' + id + '"]');
-  document.querySelector('#district-number').textContent = String(categories.indexOf(d) + 1).padStart(2, '0');
-  const heading = document.querySelector('#dialog-title');
-  heading.replaceChildren();
-  if (image || ai) {
-    heading.append(image ? 'Image ' : 'AI & ');
-    if (image) { const amp = document.createElement('span'); amp.textContent = '&'; heading.append(amp); }
-    heading.append(document.createElement('br'), image ? 'Design' : 'Everyday Utilities');
-    const dot = document.createElement('span'); dot.className = 'title-dot'; dot.textContent = '.'; heading.append(dot);
-  } else heading.textContent = d.title;
-  document.querySelector('#dialog-description').textContent = d.description;
-  document.querySelector('.modal-status').textContent = image ? '02 AVAILABLE' : ai ? 'COMING SOON' : 'PLANNED';
+  opener = trigger || document.querySelector(`[data-category="${id}"]`);
+  document.querySelector('#district-number').textContent = String(categories.indexOf(data) + 1).padStart(2, '0');
+  document.querySelector('#dialog-title').textContent = data.title;
+  document.querySelector('#dialog-description').textContent = data.description;
+  const accent = opener ? getComputedStyle(opener).getPropertyValue('--accent').trim() : '';
+  dialog.style.setProperty('--category-accent', accent || '#d3fb56');
+  if (categorySearch) categorySearch.value = '';
+  document.querySelector('.modal-status').textContent = ai ? `${data.availableTools.length} AVAILABLE · TEXT DETECTOR COMING SOON` : `${data.availableTools.length} AVAILABLE`;
   const tools = document.querySelector('#dialog-tools');
+  previewObserver?.disconnect();
   tools.replaceChildren();
-  if (image) {
+  if ('IntersectionObserver' in window) {
+    // Pause preview movement outside the popup viewport, including filtered cards.
+    previewObserver = new IntersectionObserver(entries => {
+      for (const entry of entries) entry.target.classList.toggle('is-in-view', entry.isIntersecting);
+    }, {root: dialog, threshold: .12});
+  }
+  for (const [index, item] of data.availableTools.entries()) {
     const link = document.createElement('a');
-    link.className = 'featured-tool'; link.href = '/tools/background-remover/';
-    link.setAttribute('aria-label', 'Open Bulk Image Background Remover');
-    link.innerHTML = '<div class="tool-title-line"><span class="tool-icon" aria-hidden="true">✂</span><span class="tool-meta"><b>Bulk Image Background Remover</b><small>Isolate the subject. Keep the possibilities.</small></span><span class="tool-arrow" aria-hidden="true">↗</span></div><span class="open-label">OPEN TOOL</span>';
+    link.className = 'featured-tool';
+    link.href = item.href;
+    link.setAttribute('aria-label', `Open ${item.title} — free`);
+    const preview = document.createElement('div');
+    preview.className = 'tool-preview';
+    preview.setAttribute('aria-hidden', 'true');
+    const image = document.createElement('img');
+    const slug = item.href.split('/').filter(Boolean).pop();
+    image.src = new URL(`${slug}.webp`, toolPreviewBase).href;
+    image.alt = '';
+    image.width = 640;
+    image.height = 360;
+    image.loading = 'lazy';
+    image.decoding = 'async';
+    image.fetchPriority = 'low';
+    const caption = document.createElement('span');
+    caption.className = 'preview-caption';
+    caption.textContent = 'REAL TOOL WORKSPACE';
+    preview.append(image, caption);
+    const line = document.createElement('div');
+    line.className = 'tool-title-line';
+    const meta = document.createElement('span');
+    meta.className = 'tool-meta';
+    const title = document.createElement('b');
+    title.textContent = item.title;
+    const description = document.createElement('small');
+    description.textContent = item.description;
+    meta.append(title, description);
+    line.append(meta);
+    const label = document.createElement('span');
+    label.className = 'open-label';
+    label.textContent = 'OPEN TOOL · FREE';
+    const arrow = document.createElement('span');
+    arrow.className = 'tool-arrow';
+    arrow.setAttribute('aria-hidden', 'true');
+    arrow.textContent = '↗';
+    label.append(arrow);
+    link.append(preview, line, label);
+    link.style.setProperty('--tool-order', String(index % 6));
     tools.append(link);
-    const optimizer = document.createElement('a');
-    optimizer.className = 'featured-tool'; optimizer.href = '/tools/image-size-optimizer/';
-    optimizer.setAttribute('aria-label', 'Open Image Size Optimizer');
-    optimizer.innerHTML = '<div class="tool-title-line"><span class="tool-icon" aria-hidden="true">⌗</span><span class="tool-meta"><b>Image Size Optimizer</b><small>Resize. Compress. Convert. Keep every pixel in perspective.</small></span><span class="tool-arrow" aria-hidden="true">↗</span></div><span class="open-label">OPEN TOOL · FREE</span>';
-    tools.append(optimizer);
+    if (previewObserver) previewObserver.observe(link);
+    else link.classList.add('is-in-view');
   }
-  if (ai) {
-    const preview = document.createElement('a');
-    preview.className = 'featured-tool'; preview.href = '/tools/text-detector/';
-    preview.setAttribute('aria-label', 'Preview AI Article and Text Detector — coming soon');
-    preview.innerHTML = '<div class="tool-title-line"><span class="tool-icon" aria-hidden="true">T</span><span class="tool-meta"><b>AI Article &amp; Text Detector</b><small>Coming soon. Analysis hosting is not configured.</small></span><span class="tool-arrow" aria-hidden="true">↗</span></div><span class="open-label">PREVIEW ONLY · NOT LIVE</span>';
-    tools.append(preview);
+  if (data.preview) {
+    const row = document.createElement('div'); row.className = 'planned-tool disabled-tool';
+    const icon = document.createElement('span'); icon.className = 'planned-icon'; icon.setAttribute('aria-hidden', 'true'); icon.textContent = 'T';
+    const label = document.createElement('b'); label.textContent = data.preview.title;
+    const state = document.createElement('small'); state.textContent = 'COMING SOON · DISABLED';
+    row.append(icon, label, state); tools.append(row);
+    const note = document.createElement('p'); note.className = 'tool-note'; note.textContent = 'Analysis hosting is not configured. This tool does not analyze text and is not available yet.'; tools.append(note);
   }
-  const planned = image ? ['Palette Generator'] : ai ? ['Prompt Organizer', 'Decision Helper'] : d.example_planned_tools;
-  planned.forEach((title, index) => {
+  for (const title of data.upcomingTools.filter(title => title !== data.preview?.title)) {
     const row = document.createElement('div'); row.className = 'planned-tool';
-    const icon = document.createElement('span'); icon.className = 'planned-icon'; icon.setAttribute('aria-hidden', 'true'); icon.textContent = index === 0 ? '⌗' : '◈';
+    const icon = document.createElement('span'); icon.className = 'planned-icon'; icon.setAttribute('aria-hidden', 'true'); icon.textContent = '◈';
     const label = document.createElement('b'); label.textContent = title;
-    const status = document.createElement('small'); status.textContent = 'PLANNED';
-    row.append(icon, label, status); tools.append(row);
-  });
+    const state = document.createElement('small'); state.textContent = 'PLANNED';
+    row.append(icon, label, state); tools.append(row);
+  }
   document.querySelector('.preview-note').open = false;
+  updateCategorySearch();
   if (!dialog.open) dialog.showModal();
+  syncPanelHeader();
+  // Do not raise the phone keyboard over the newly opened visual grid.
+  if (matchMedia('(min-width: 700px)').matches) categorySearch?.focus({preventScroll: true});
+  else document.querySelector('.modal-close').focus({preventScroll: true});
   dialog.scrollTop = 0;
 }
-cards.forEach(c => c.addEventListener('click', () => openCategory(c.dataset.category, c)));
+cards.forEach(card => card.addEventListener('click', () => openCategory(card.dataset.category, card)));
 document.querySelector('.modal-close').addEventListener('click', () => dialog.close());
-document.querySelector('#back-districts').addEventListener('click', () => { dialog.close(); document.querySelector('#categories').scrollIntoView({ behavior: 'smooth' }); });
-dialog.addEventListener('click', e => { if (e.target === dialog) { const r = dialog.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dialog.close(); } });
-dialog.addEventListener('close', () => opener?.focus({ preventScroll: true }));
+document.querySelector('#back-districts').addEventListener('click', () => {
+  dialog.close();
+  document.querySelector('#categories').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
+});
+dialog.addEventListener('click', event => {
+  if (event.target === dialog) {
+    const rect = dialog.getBoundingClientRect();
+    if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close();
+  }
+});
+dialog.addEventListener('close', () => { previewObserver?.disconnect(); opener?.focus({preventScroll: true}); });
 const requestedCategory = new URLSearchParams(location.search).get('category');
-if (requestedCategory && categories.some(category => category.id === requestedCategory)) {
-  openCategory(requestedCategory);
-}
+if (requestedCategory && categories.some(category => category.id === requestedCategory)) openCategory(requestedCategory);

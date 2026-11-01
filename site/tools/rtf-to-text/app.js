@@ -1,0 +1,13 @@
+(() => { const root=AHToolkit.mount(`
+<div class="section-head"><div><div class="section-kicker">RICH TEXT READING</div><h2>Extract plain text</h2><p>RTF up to 10 MB. Files stay on this device.</p></div><span class="tool-badge">BROWSER ONLY</span></div>
+<label class="drop-zone" for="file"><strong>Choose a file</strong><span>Nothing is uploaded or sent to a server.</span><input id="file" type="file" accept=".rtf,application/rtf,text/rtf"></label>
+<div class="actions"><button class="button button-main" id="run" type="button">Extract plain text</button><button class="button" id="clear" type="button">Clear</button></div><div id="status" class="status" role="status" aria-live="polite" hidden></div><div id="result" class="result" hidden><pre id="output" class="output-text"></pre><div class="result-actions"><button class="button" id="download" type="button">Download result</button><button class="button" id="copy" type="button">Copy</button></div></div>`);
+const file=root.querySelector('#file'),status=root.querySelector('#status'),result=root.querySelector('#result'),out=root.querySelector('#output'); let value='', filename='result.txt';
+const show=(text,name='result.txt')=>{value=text;filename=name;out.textContent=text;result.hidden=false;root.querySelector('#download').disabled=false;};
+root.querySelector('#clear').onclick=()=>{file.value='';result.hidden=true;AHToolkit.status(status,'');value='';};
+root.querySelector('#copy').onclick=async()=>{if(await AHToolkit.copy(value))AHToolkit.status(status,'Copied to clipboard.','success');};
+root.querySelector('#download').onclick=()=>AHToolkit.downloadText(value,filename,'text/plain;charset=utf-8');
+root.querySelector('#run').onclick=async()=>{if(!file.files[0])return AHToolkit.status(status,'Choose a file first.','warn'); if(!AHToolkit.credits.canRun(status))return; try{const f=file.files[0]; if(f.size>10485760)throw Error('RTF up to 10 MB.'); const text=await process(f); if(!text.trim())throw Error('No readable content was found.'); show(text,makeName(f.name)); AHToolkit.credits.charge(); AHToolkit.status(status,'Completed successfully.','success');}catch(e){AHToolkit.status(status,e.message||'Could not process this file.','error');}};
+function makeName(n){return n.replace(/\.[^.]+$/,'')+'-extracted.txt';}
+async function process(f){let s=await AHToolkit.readText(f,10*1024*1024); s=s.replace(/\\par[d]?/g,'\n').replace(/\\line/g,'\n').replace(/\\'[0-9a-fA-F]{2}/g,m=>String.fromCharCode(parseInt(m.slice(2),16))).replace(/\\u(-?\d+)\??/g,(_,n)=>String.fromCharCode((+n<0?+n+65536:+n))).replace(/\\[a-z]+-?\d* ?/gi,'').replace(/[{}]/g,''); return s.replace(/\n{3,}/g,'\n\n').trim();}
+})();

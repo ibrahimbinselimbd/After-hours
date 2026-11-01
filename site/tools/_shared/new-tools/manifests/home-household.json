@@ -1,0 +1,1336 @@
+{
+  "category": {
+    "id": "home-household",
+    "title": "Home & Household",
+    "description": "Private, browser-local planners for organizing spaces, household routines, measurements, and practical home decisions.",
+    "accent_color": "#2F6F68"
+  },
+  "tools": [
+    {
+      "slug": "room-furniture-fit-checker",
+      "title": "Room Furniture Fit Checker",
+      "description": "Check whether a proposed furniture footprint fits within a room while preserving chosen walkways.",
+      "limitations": "This is a 2D clearance estimate; it does not model doors, windows, irregular walls, or furniture shape beyond a rectangle.",
+      "fields": [
+        {
+          "id": "roomLength",
+          "label": "Room length (m)",
+          "type": "number",
+          "required": true,
+          "min": 0.5,
+          "max": 100,
+          "step": "any",
+          "default": 4
+        },
+        {
+          "id": "roomWidth",
+          "label": "Room width (m)",
+          "type": "number",
+          "required": true,
+          "min": 0.5,
+          "max": 100,
+          "step": "any",
+          "default": 3
+        },
+        {
+          "id": "furnitureLength",
+          "label": "Furniture length (m)",
+          "type": "number",
+          "required": true,
+          "min": 0.1,
+          "max": 50,
+          "step": "any",
+          "default": 2
+        },
+        {
+          "id": "furnitureWidth",
+          "label": "Furniture width (m)",
+          "type": "number",
+          "required": true,
+          "min": 0.1,
+          "max": 50,
+          "step": "any",
+          "default": 0.9
+        },
+        {
+          "id": "walkway",
+          "label": "Desired clear walkway (m)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 10,
+          "step": "any",
+          "default": 0.75
+        }
+      ],
+      "testValues": {
+        "roomLength": "4",
+        "roomWidth": "3",
+        "furnitureLength": "2",
+        "furnitureWidth": "0.9",
+        "walkway": "0.75"
+      }
+    },
+    {
+      "slug": "furniture-delivery-clearance-checker",
+      "title": "Furniture Delivery Clearance Checker",
+      "description": "Compare a large item and its route against door, hall, and lift dimensions before delivery day.",
+      "limitations": "Measure the narrowest real point; this simplified check does not account for turning geometry, packaging, or stair landings.",
+      "fields": [
+        {
+          "id": "itemWidth",
+          "label": "Item width (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 1000,
+          "step": "any",
+          "default": 80
+        },
+        {
+          "id": "itemHeight",
+          "label": "Item height (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 1000,
+          "step": "any",
+          "default": 90
+        },
+        {
+          "id": "narrowestWidth",
+          "label": "Narrowest route width (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 1000,
+          "step": "any",
+          "default": 90
+        },
+        {
+          "id": "narrowestHeight",
+          "label": "Narrowest route height (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 1000,
+          "step": "any",
+          "default": 200
+        },
+        {
+          "id": "turningAllowance",
+          "label": "Extra clearance for handling (cm)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": "any",
+          "default": 5
+        }
+      ],
+      "testValues": {
+        "itemWidth": "80",
+        "itemHeight": "90",
+        "narrowestWidth": "90",
+        "narrowestHeight": "200",
+        "turningAllowance": "5"
+      }
+    },
+    {
+      "slug": "closet-rod-capacity-planner",
+      "title": "Closet Rod Capacity Planner",
+      "description": "Estimate how many hanging garments a rod can hold from rod length, hanger spacing, and item mix.",
+      "limitations": "The result is a spacing estimate, not a structural load certification; follow the rod and wall-anchor manufacturer limits.",
+      "fields": [
+        {
+          "id": "rodLength",
+          "label": "Usable rod length (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 2000,
+          "step": "any",
+          "default": 150
+        },
+        {
+          "id": "spacing",
+          "label": "Average hanger spacing (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 30,
+          "step": "any",
+          "default": 4
+        },
+        {
+          "id": "garmentCount",
+          "label": "Garments to hang",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 500,
+          "step": 1,
+          "default": 28
+        },
+        {
+          "id": "averageWeight",
+          "label": "Average garment weight (kg)",
+          "type": "number",
+          "required": true,
+          "min": 0.01,
+          "max": 20,
+          "step": "any",
+          "default": 0.45
+        }
+      ],
+      "testValues": {
+        "rodLength": "150",
+        "spacing": "4",
+        "garmentCount": "28",
+        "averageWeight": "0.45"
+      }
+    },
+    {
+      "slug": "shelf-load-distribution-planner",
+      "title": "Shelf Load Distribution Planner",
+      "description": "Place a total load across shelf sections and flag uneven concentration that may cause sagging or instability.",
+      "limitations": "Use the shelf manufacturer’s rated load as the authority; this does not calculate material strength or wall-anchor safety.",
+      "fields": [
+        {
+          "id": "shelfLength",
+          "label": "Shelf length (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 1000,
+          "step": "any",
+          "default": 120
+        },
+        {
+          "id": "sections",
+          "label": "Number of load sections",
+          "type": "number",
+          "required": true,
+          "min": 2,
+          "max": 20,
+          "step": 1,
+          "default": 4
+        },
+        {
+          "id": "totalWeight",
+          "label": "Total stored weight (kg)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 1000,
+          "step": "any",
+          "default": 32
+        },
+        {
+          "id": "ratedWeight",
+          "label": "Shelf rated load (kg)",
+          "type": "number",
+          "required": true,
+          "min": 0.1,
+          "max": 2000,
+          "step": "any",
+          "default": 50
+        }
+      ],
+      "testValues": {
+        "shelfLength": "120",
+        "sections": "4",
+        "totalWeight": "32",
+        "ratedWeight": "50"
+      }
+    },
+    {
+      "slug": "storage-bin-stacking-planner",
+      "title": "Storage Bin Stacking Planner",
+      "description": "Estimate rows, layers, and usable bin count for a rectangular storage zone with a handling gap.",
+      "limitations": "Bins are treated as identical rectangles; lids, sloped ceilings, and access needs beyond the supplied gap are not modeled.",
+      "fields": [
+        {
+          "id": "zoneLength",
+          "label": "Zone length (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5000,
+          "step": "any",
+          "default": 240
+        },
+        {
+          "id": "zoneWidth",
+          "label": "Zone depth (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5000,
+          "step": "any",
+          "default": 100
+        },
+        {
+          "id": "zoneHeight",
+          "label": "Zone height (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5000,
+          "step": "any",
+          "default": 180
+        },
+        {
+          "id": "binLength",
+          "label": "Bin length (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 1000,
+          "step": "any",
+          "default": 60
+        },
+        {
+          "id": "binWidth",
+          "label": "Bin depth (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 1000,
+          "step": "any",
+          "default": 40
+        },
+        {
+          "id": "binHeight",
+          "label": "Bin height (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 1000,
+          "step": "any",
+          "default": 30
+        }
+      ],
+      "testValues": {
+        "zoneLength": "240",
+        "zoneWidth": "100",
+        "zoneHeight": "180",
+        "binLength": "60",
+        "binWidth": "40",
+        "binHeight": "30"
+      }
+    },
+    {
+      "slug": "drawer-organizer-fit-planner",
+      "title": "Drawer Organizer Fit Planner",
+      "description": "Find how many identical organizer cells fit in a drawer and quantify the leftover space.",
+      "limitations": "Only a grid of identical rectangular cells is evaluated; mixing orientations and rounded interior corners can change the result.",
+      "fields": [
+        {
+          "id": "drawerLength",
+          "label": "Drawer length (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 2000,
+          "step": "any",
+          "default": 80
+        },
+        {
+          "id": "drawerWidth",
+          "label": "Drawer width (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 2000,
+          "step": "any",
+          "default": 45
+        },
+        {
+          "id": "cellLength",
+          "label": "Organizer cell length (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 500,
+          "step": "any",
+          "default": 20
+        },
+        {
+          "id": "cellWidth",
+          "label": "Organizer cell width (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 500,
+          "step": "any",
+          "default": 12
+        }
+      ],
+      "testValues": {
+        "drawerLength": "80",
+        "drawerWidth": "45",
+        "cellLength": "20",
+        "cellWidth": "12"
+      }
+    },
+    {
+      "slug": "cleaning-dilution-mixer",
+      "title": "Cleaning Dilution Mixer",
+      "description": "Convert a target dilution ratio and batch size into concentrate and water amounts.",
+      "limitations": "Use only on products whose label permits dilution; never combine cleaners, and treat the label as the safety authority.",
+      "fields": [
+        {
+          "id": "batchVolume",
+          "label": "Finished solution volume (mL)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 100000,
+          "step": "any",
+          "default": 750
+        },
+        {
+          "id": "partsWater",
+          "label": "Water parts in label ratio",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 1000,
+          "step": "any",
+          "default": 10
+        },
+        {
+          "id": "partsConcentrate",
+          "label": "Concentrate parts in label ratio",
+          "type": "number",
+          "required": true,
+          "min": 0.01,
+          "max": 100,
+          "step": "any",
+          "default": 1
+        }
+      ],
+      "testValues": {
+        "batchVolume": "750",
+        "partsWater": "10",
+        "partsConcentrate": "1"
+      }
+    },
+    {
+      "slug": "laundry-load-capacity-planner",
+      "title": "Laundry Load Capacity Planner",
+      "description": "Compare estimated dry fabric weight with a washer capacity and split a hamper into practical loads.",
+      "limitations": "Fabric weights are user estimates; follow the appliance manual and do not use this as a guarantee of cleaning or mechanical safety.",
+      "fields": [
+        {
+          "id": "hamperWeight",
+          "label": "Dry laundry total (kg)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 500,
+          "step": "any",
+          "default": 11
+        },
+        {
+          "id": "washerCapacity",
+          "label": "Washer rated capacity (kg)",
+          "type": "number",
+          "required": true,
+          "min": 0.1,
+          "max": 100,
+          "step": "any",
+          "default": 7
+        },
+        {
+          "id": "loadBuffer",
+          "label": "Empty capacity buffer (%)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 50,
+          "step": "any",
+          "default": 10
+        }
+      ],
+      "testValues": {
+        "hamperWeight": "11",
+        "washerCapacity": "7",
+        "loadBuffer": "10"
+      }
+    },
+    {
+      "slug": "laundry-drying-rack-planner",
+      "title": "Laundry Drying Rack Planner",
+      "description": "Estimate rack rail length and drying cycles from garment count and average hanging width.",
+      "limitations": "Drying time, airflow, fabric thickness, and humidity are not estimated; this only plans physical hanging capacity.",
+      "fields": [
+        {
+          "id": "garments",
+          "label": "Garments to dry",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 1000,
+          "step": 1,
+          "default": 18
+        },
+        {
+          "id": "averageWidth",
+          "label": "Average garment width (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 200,
+          "step": "any",
+          "default": 12
+        },
+        {
+          "id": "railLength",
+          "label": "Available rail length per cycle (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5000,
+          "step": "any",
+          "default": 120
+        }
+      ],
+      "testValues": {
+        "garments": "18",
+        "averageWidth": "12",
+        "railLength": "120"
+      }
+    },
+    {
+      "slug": "bedding-rotation-planner",
+      "title": "Bedding Rotation Planner",
+      "description": "Determine the minimum bedding sets needed for a chosen change interval and laundry turnaround.",
+      "limitations": "This is a scheduling estimate and does not account for illness, allergies, climate, or personal hygiene guidance.",
+      "fields": [
+        {
+          "id": "changeEveryDays",
+          "label": "Change interval (days)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 90,
+          "step": 1,
+          "default": 7
+        },
+        {
+          "id": "laundryTurnaroundDays",
+          "label": "Laundry turnaround (days)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 30,
+          "step": "any",
+          "default": 2
+        },
+        {
+          "id": "bufferSets",
+          "label": "Extra backup sets",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 1
+        }
+      ],
+      "testValues": {
+        "changeEveryDays": "7",
+        "laundryTurnaroundDays": "2",
+        "bufferSets": "1"
+      }
+    },
+    {
+      "slug": "guest-room-readiness-scorecard",
+      "title": "Guest Room Readiness Scorecard",
+      "description": "Score a guest room against practical categories and identify the lowest-scoring readiness areas.",
+      "limitations": "The score reflects only the categories and weights shown; it is not a hospitality standard or accessibility inspection.",
+      "fields": [
+        {
+          "id": "sleepScore",
+          "label": "Sleep setup score (0–5)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 5,
+          "step": 1,
+          "default": 4
+        },
+        {
+          "id": "privacyScore",
+          "label": "Privacy score (0–5)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 5,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "id": "accessScore",
+          "label": "Access and lighting score (0–5)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 5,
+          "step": 1,
+          "default": 4
+        },
+        {
+          "id": "suppliesScore",
+          "label": "Basic supplies score (0–5)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 5,
+          "step": 1,
+          "default": 3
+        }
+      ],
+      "testValues": {
+        "sleepScore": "4",
+        "privacyScore": "3",
+        "accessScore": "4",
+        "suppliesScore": "3"
+      }
+    },
+    {
+      "slug": "home-lighting-layer-planner",
+      "title": "Home Lighting Layer Planner",
+      "description": "Turn room size and intended activities into a simple ambient, task, and accent lighting plan.",
+      "limitations": "Lux targets are broad planning assumptions; fixture optics, ceiling height, daylight, and local electrical requirements are not modeled.",
+      "fields": [
+        {
+          "id": "roomArea",
+          "label": "Room area (m²)",
+          "type": "number",
+          "required": true,
+          "min": 0.5,
+          "max": 1000,
+          "step": "any",
+          "default": 18
+        },
+        {
+          "id": "activity",
+          "label": "Primary activity",
+          "type": "select",
+          "required": true,
+          "options": [
+            "relaxing",
+            "general",
+            "detailed work"
+          ],
+          "default": "general"
+        },
+        {
+          "id": "fixtureLumens",
+          "label": "Planned lumens per fixture",
+          "type": "number",
+          "required": true,
+          "min": 50,
+          "max": 100000,
+          "step": "any",
+          "default": 800
+        }
+      ],
+      "testValues": {
+        "roomArea": "18",
+        "activity": "general",
+        "fixtureLumens": "800"
+      }
+    },
+    {
+      "slug": "window-covering-measurement-planner",
+      "title": "Window Covering Measurement Planner",
+      "description": "Calculate fabric width and finished drop from window measurements, fullness, and hem allowances.",
+      "limitations": "Check the chosen hardware manufacturer’s mounting and overlap requirements; fabric behavior and pattern matching can require extra material.",
+      "fields": [
+        {
+          "id": "windowWidth",
+          "label": "Window width (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 2000,
+          "step": "any",
+          "default": 140
+        },
+        {
+          "id": "windowDrop",
+          "label": "Finished drop (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 3000,
+          "step": "any",
+          "default": 180
+        },
+        {
+          "id": "fullness",
+          "label": "Fabric fullness multiplier",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 4,
+          "step": "any",
+          "default": 2
+        },
+        {
+          "id": "hemAllowance",
+          "label": "Bottom and top allowance (cm)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": "any",
+          "default": 20
+        }
+      ],
+      "testValues": {
+        "windowWidth": "140",
+        "windowDrop": "180",
+        "fullness": "2",
+        "hemAllowance": "20"
+      }
+    },
+    {
+      "slug": "rug-placement-planner",
+      "title": "Rug Placement Planner",
+      "description": "Suggest a rug footprint and check its margins inside a room or beneath a furniture grouping.",
+      "limitations": "The recommendation is a rectangular layout heuristic and does not model door swings, furniture shapes, or trip hazards.",
+      "fields": [
+        {
+          "id": "roomLength",
+          "label": "Room length (cm)",
+          "type": "number",
+          "required": true,
+          "min": 50,
+          "max": 5000,
+          "step": "any",
+          "default": 400
+        },
+        {
+          "id": "roomWidth",
+          "label": "Room width (cm)",
+          "type": "number",
+          "required": true,
+          "min": 50,
+          "max": 5000,
+          "step": "any",
+          "default": 300
+        },
+        {
+          "id": "rugLength",
+          "label": "Rug length (cm)",
+          "type": "number",
+          "required": true,
+          "min": 20,
+          "max": 5000,
+          "step": "any",
+          "default": 240
+        },
+        {
+          "id": "rugWidth",
+          "label": "Rug width (cm)",
+          "type": "number",
+          "required": true,
+          "min": 20,
+          "max": 5000,
+          "step": "any",
+          "default": 170
+        }
+      ],
+      "testValues": {
+        "roomLength": "400",
+        "roomWidth": "300",
+        "rugLength": "240",
+        "rugWidth": "170"
+      }
+    },
+    {
+      "slug": "wall-art-spacing-planner",
+      "title": "Wall Art Spacing Planner",
+      "description": "Lay out a row of art by calculating total width, equal gaps, and centered side margins.",
+      "limitations": "All pieces are treated as same-height rectangles in one horizontal row; mounting hardware and visual balance are not assessed.",
+      "fields": [
+        {
+          "id": "pieceCount",
+          "label": "Number of pieces",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 30,
+          "step": 1,
+          "default": 4
+        },
+        {
+          "id": "pieceWidth",
+          "label": "Each piece width (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 500,
+          "step": "any",
+          "default": 35
+        },
+        {
+          "id": "gap",
+          "label": "Gap between pieces (cm)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": "any",
+          "default": 8
+        },
+        {
+          "id": "wallWidth",
+          "label": "Available wall width (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5000,
+          "step": "any",
+          "default": 220
+        }
+      ],
+      "testValues": {
+        "pieceCount": "4",
+        "pieceWidth": "35",
+        "gap": "8",
+        "wallWidth": "220"
+      }
+    },
+    {
+      "slug": "picture-grid-layout-planner",
+      "title": "Picture Grid Layout Planner",
+      "description": "Calculate a centered grid’s overall footprint and the positions of its columns and rows.",
+      "limitations": "Frames are assumed identical and aligned; this does not locate studs or verify hanging hardware.",
+      "fields": [
+        {
+          "id": "columns",
+          "label": "Columns",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 12,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "id": "rows",
+          "label": "Rows",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 12,
+          "step": 1,
+          "default": 2
+        },
+        {
+          "id": "frameWidth",
+          "label": "Frame width (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 300,
+          "step": "any",
+          "default": 30
+        },
+        {
+          "id": "frameHeight",
+          "label": "Frame height (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 300,
+          "step": "any",
+          "default": 40
+        },
+        {
+          "id": "gap",
+          "label": "Gap between frames (cm)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": "any",
+          "default": 6
+        }
+      ],
+      "testValues": {
+        "columns": "3",
+        "rows": "2",
+        "frameWidth": "30",
+        "frameHeight": "40",
+        "gap": "6"
+      }
+    },
+    {
+      "slug": "home-cable-length-planner",
+      "title": "Home Cable Length Planner",
+      "description": "Estimate the cable length needed along a route with rise, slack, and a chosen reserve percentage.",
+      "limitations": "This is a routing estimate; it does not identify cable type, electrical rating, heat limits, or code compliance.",
+      "fields": [
+        {
+          "id": "horizontalRun",
+          "label": "Horizontal run (m)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 1000,
+          "step": "any",
+          "default": 4
+        },
+        {
+          "id": "verticalRun",
+          "label": "Vertical rise/drop (m)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 1000,
+          "step": "any",
+          "default": 1.5
+        },
+        {
+          "id": "endSlack",
+          "label": "Total end slack (m)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": "any",
+          "default": 1
+        },
+        {
+          "id": "reservePercent",
+          "label": "Routing reserve (%)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": "any",
+          "default": 15
+        }
+      ],
+      "testValues": {
+        "horizontalRun": "4",
+        "verticalRun": "1.5",
+        "endSlack": "1",
+        "reservePercent": "15"
+      }
+    },
+    {
+      "slug": "extension-load-checker",
+      "title": "Extension Load Checker",
+      "description": "Compare manually entered appliance wattages with an extension lead’s stated wattage limit.",
+      "limitations": "Use the lead, socket, and appliance manufacturer ratings; this simple sum cannot detect damaged equipment, startup surges, or local code issues.",
+      "fields": [
+        {
+          "id": "applianceWatts",
+          "label": "Appliance 1 watts",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 20000,
+          "step": "any",
+          "default": 800
+        },
+        {
+          "id": "secondWatts",
+          "label": "Appliance 2 watts",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 20000,
+          "step": "any",
+          "default": 400
+        },
+        {
+          "id": "thirdWatts",
+          "label": "Appliance 3 watts",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 20000,
+          "step": "any",
+          "default": 0
+        },
+        {
+          "id": "leadLimit",
+          "label": "Lead rated limit (W)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 50000,
+          "step": "any",
+          "default": 1500
+        }
+      ],
+      "testValues": {
+        "applianceWatts": "800",
+        "secondWatts": "400",
+        "thirdWatts": "0",
+        "leadLimit": "1500"
+      }
+    },
+    {
+      "slug": "acoustic-panel-coverage-planner",
+      "title": "Acoustic Panel Coverage Planner",
+      "description": "Estimate panel count and coverage percentage for a target wall area and chosen acoustic treatment goal.",
+      "limitations": "Coverage is not a soundproofing prediction; room geometry, panel performance, placement, and frequencies matter.",
+      "fields": [
+        {
+          "id": "wallArea",
+          "label": "Treatable wall area (m²)",
+          "type": "number",
+          "required": true,
+          "min": 0.5,
+          "max": 1000,
+          "step": "any",
+          "default": 24
+        },
+        {
+          "id": "panelArea",
+          "label": "Area per panel (m²)",
+          "type": "number",
+          "required": true,
+          "min": 0.01,
+          "max": 100,
+          "step": "any",
+          "default": 0.72
+        },
+        {
+          "id": "targetPercent",
+          "label": "Target coverage (%)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 100,
+          "step": "any",
+          "default": 25
+        }
+      ],
+      "testValues": {
+        "wallArea": "24",
+        "panelArea": "0.72",
+        "targetPercent": "25"
+      }
+    },
+    {
+      "slug": "flooring-waste-planner",
+      "title": "Flooring Waste Planner",
+      "description": "Estimate purchase quantity from floor area, installation pattern, and a configurable waste allowance.",
+      "limitations": "This is a material-order estimate; rooms with many cuts, defects, or supplier pack sizes may require more, and unopened surplus policies vary.",
+      "fields": [
+        {
+          "id": "floorLength",
+          "label": "Floor length (m)",
+          "type": "number",
+          "required": true,
+          "min": 0.1,
+          "max": 1000,
+          "step": "any",
+          "default": 5
+        },
+        {
+          "id": "floorWidth",
+          "label": "Floor width (m)",
+          "type": "number",
+          "required": true,
+          "min": 0.1,
+          "max": 1000,
+          "step": "any",
+          "default": 4
+        },
+        {
+          "id": "wastePercent",
+          "label": "Waste allowance (%)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 50,
+          "step": "any",
+          "default": 10
+        }
+      ],
+      "testValues": {
+        "floorLength": "5",
+        "floorWidth": "4",
+        "wastePercent": "10"
+      }
+    },
+    {
+      "slug": "declutter-decision-matrix",
+      "title": "Declutter Decision Matrix",
+      "description": "Score an item on use, replacement difficulty, space cost, and emotional importance to make a consistent keep-review-release decision.",
+      "limitations": "The score is a reflection aid, not a command; safety, legal, sentimental, and accessibility considerations can override it.",
+      "fields": [
+        {
+          "id": "useFrequency",
+          "label": "Use frequency (0–5)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 5,
+          "step": 1,
+          "default": 4
+        },
+        {
+          "id": "replacementDifficulty",
+          "label": "Replacement difficulty (0–5)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 5,
+          "step": 1,
+          "default": 2
+        },
+        {
+          "id": "spaceCost",
+          "label": "Space cost (0–5)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 5,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "id": "emotionalValue",
+          "label": "Emotional value (0–5)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 5,
+          "step": 1,
+          "default": 1
+        }
+      ],
+      "testValues": {
+        "useFrequency": "4",
+        "replacementDifficulty": "2",
+        "spaceCost": "3",
+        "emotionalValue": "1"
+      }
+    },
+    {
+      "slug": "donation-box-capacity-planner",
+      "title": "Donation Box Capacity Planner",
+      "description": "Estimate boxes needed and average fill per box from item count, average item volume, and box capacity.",
+      "limitations": "Item volumes vary widely and fragile or irregular objects need extra room; this does not value, sort, or identify donations.",
+      "fields": [
+        {
+          "id": "itemCount",
+          "label": "Items to pack",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": 1,
+          "default": 35
+        },
+        {
+          "id": "averageLitres",
+          "label": "Average item volume (L)",
+          "type": "number",
+          "required": true,
+          "min": 0.01,
+          "max": 1000,
+          "step": "any",
+          "default": 2.5
+        },
+        {
+          "id": "boxLitres",
+          "label": "Usable box capacity (L)",
+          "type": "number",
+          "required": true,
+          "min": 0.1,
+          "max": 5000,
+          "step": "any",
+          "default": 45
+        }
+      ],
+      "testValues": {
+        "itemCount": "35",
+        "averageLitres": "2.5",
+        "boxLitres": "45"
+      }
+    },
+    {
+      "slug": "appliance-ventilation-clearance-planner",
+      "title": "Appliance Ventilation Clearance Planner",
+      "description": "Compare appliance dimensions plus requested clearances with the available alcove dimensions.",
+      "limitations": "Clearances must come from the appliance manual; this tool does not assess heat, gas, plumbing, or electrical installation requirements.",
+      "fields": [
+        {
+          "id": "alcoveWidth",
+          "label": "Available width (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 3000,
+          "step": "any",
+          "default": 90
+        },
+        {
+          "id": "alcoveHeight",
+          "label": "Available height (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 3000,
+          "step": "any",
+          "default": 210
+        },
+        {
+          "id": "applianceWidth",
+          "label": "Appliance width (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 3000,
+          "step": "any",
+          "default": 60
+        },
+        {
+          "id": "applianceHeight",
+          "label": "Appliance height (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 3000,
+          "step": "any",
+          "default": 180
+        },
+        {
+          "id": "clearanceEachSide",
+          "label": "Required side clearance each side (cm)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 500,
+          "step": "any",
+          "default": 5
+        },
+        {
+          "id": "clearanceTop",
+          "label": "Required top clearance (cm)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 500,
+          "step": "any",
+          "default": 10
+        }
+      ],
+      "testValues": {
+        "alcoveWidth": "90",
+        "alcoveHeight": "210",
+        "applianceWidth": "60",
+        "applianceHeight": "180",
+        "clearanceEachSide": "5",
+        "clearanceTop": "10"
+      }
+    },
+    {
+      "slug": "recycling-bin-capacity-planner",
+      "title": "Recycling Bin Capacity Planner",
+      "description": "Estimate collection-bin volume and pickup frequency from weekly material volume and a compaction assumption.",
+      "limitations": "Local collection rules and actual material density vary; compaction is a planning assumption, not a recommendation for unsafe handling.",
+      "fields": [
+        {
+          "id": "weeklyLitres",
+          "label": "Loose recycling per week (L)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 90
+        },
+        {
+          "id": "binLitres",
+          "label": "Bin capacity (L)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 10000,
+          "step": "any",
+          "default": 240
+        },
+        {
+          "id": "compactionPercent",
+          "label": "Expected volume reduction (%)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 80,
+          "step": "any",
+          "default": 15
+        }
+      ],
+      "testValues": {
+        "weeklyLitres": "90",
+        "binLitres": "240",
+        "compactionPercent": "15"
+      }
+    },
+    {
+      "slug": "shared-space-agreement-builder",
+      "title": "Shared Space Agreement Builder",
+      "description": "Turn household preferences for noise, storage, guests, and cleanup into a concise discussion draft.",
+      "limitations": "This creates a private conversation aid, not a lease, legal agreement, or substitute for addressing safety and accessibility needs directly.",
+      "fields": [
+        {
+          "id": "quietHours",
+          "label": "Quiet hours",
+          "type": "text",
+          "required": true,
+          "default": "10:00 pm–7:00 am",
+          "placeholder": "e.g., 10:00 pm–7:00 am"
+        },
+        {
+          "id": "sharedStorage",
+          "label": "Shared storage rule",
+          "type": "textarea",
+          "required": true,
+          "default": "Label shelves and leave one shelf open",
+          "placeholder": "Describe the practical rule"
+        },
+        {
+          "id": "guestRule",
+          "label": "Guest expectation",
+          "type": "textarea",
+          "required": true,
+          "default": "Give same-day notice when practical",
+          "placeholder": "Describe the expectation"
+        },
+        {
+          "id": "cleanupCadence",
+          "label": "Cleanup cadence",
+          "type": "select",
+          "required": true,
+          "options": [
+            "daily reset",
+            "weekly rotation",
+            "as needed together"
+          ],
+          "default": "weekly rotation"
+        }
+      ],
+      "testValues": {
+        "quietHours": "10:00 pm–7:00 am",
+        "sharedStorage": "Label shelves and leave one shelf open",
+        "guestRule": "Give same-day notice when practical",
+        "cleanupCadence": "weekly rotation"
+      }
+    }
+  ]
+}

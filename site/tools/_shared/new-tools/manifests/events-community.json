@@ -1,0 +1,1112 @@
+{
+  "category": {
+    "id": "events-community",
+    "title": "Events & Community",
+    "description": "Private, browser-local tools for planning inclusive events, community participation, communications, and follow-up.",
+    "accent_color": "#7C3AED"
+  },
+  "tools": [
+    {
+      "slug": "event-format-fit-score",
+      "title": "Event Format Fit Score",
+      "description": "Compare how well a proposed event format fits the audience, interaction goal, and available time.",
+      "limitations": "A planning heuristic, not a guarantee of attendance or engagement.",
+      "fields": [
+        {
+          "id": "audienceSize",
+          "label": "Expected attendees",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 10000,
+          "step": 1,
+          "default": 40
+        },
+        {
+          "id": "interactionLevel",
+          "label": "Desired interaction",
+          "type": "select",
+          "required": true,
+          "options": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "default": "medium"
+        },
+        {
+          "id": "minutes",
+          "label": "Available minutes",
+          "type": "number",
+          "required": true,
+          "min": 15,
+          "max": 1440,
+          "step": 5,
+          "default": 90
+        },
+        {
+          "id": "format",
+          "label": "Proposed format",
+          "type": "select",
+          "required": true,
+          "options": [
+            "talk",
+            "workshop",
+            "roundtable",
+            "open-house"
+          ],
+          "default": "workshop"
+        }
+      ],
+      "testValues": {
+        "audienceSize": "40",
+        "interactionLevel": "medium",
+        "minutes": "90",
+        "format": "workshop"
+      }
+    },
+    {
+      "slug": "rsvp-deadline-planner",
+      "title": "RSVP Deadline Planner",
+      "description": "Set a practical RSVP deadline from preparation lead time, reminder spacing, and expected response lag.",
+      "limitations": "Assumes attendees respond manually; it cannot predict actual response behavior.",
+      "fields": [
+        {
+          "id": "eventDate",
+          "label": "Event date",
+          "type": "date",
+          "required": true,
+          "default": "2026-12-12"
+        },
+        {
+          "id": "prepDays",
+          "label": "Preparation days after RSVP close",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 90,
+          "step": 1,
+          "default": 7
+        },
+        {
+          "id": "reminderDays",
+          "label": "Reminder spacing",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 30,
+          "step": 1,
+          "default": 4
+        },
+        {
+          "id": "responseLag",
+          "label": "Expected response lag",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 30,
+          "step": 1,
+          "default": 2
+        }
+      ],
+      "testValues": {
+        "eventDate": "2026-12-12",
+        "prepDays": "7",
+        "reminderDays": "4",
+        "responseLag": "2"
+      }
+    },
+    {
+      "slug": "capacity-buffer-planner",
+      "title": "Attendance Capacity Buffer Planner",
+      "description": "Estimate a sensible invite cap from room capacity and a manually supplied no-show estimate.",
+      "limitations": "No-show rates are assumptions; verify fire, venue, and accessibility limits separately.",
+      "fields": [
+        {
+          "id": "roomCapacity",
+          "label": "Usable room capacity",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 100000,
+          "step": 1,
+          "default": 80
+        },
+        {
+          "id": "noShowPercent",
+          "label": "Expected no-show percent",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 95,
+          "step": 1,
+          "default": 15
+        },
+        {
+          "id": "reservedSeats",
+          "label": "Seats reserved for access or hosts",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": 1,
+          "default": 6
+        }
+      ],
+      "testValues": {
+        "roomCapacity": "80",
+        "noShowPercent": "15",
+        "reservedSeats": "6"
+      }
+    },
+    {
+      "slug": "accessibility-priority-planner",
+      "title": "Accessibility Priority Planner",
+      "description": "Rank accessibility actions by likely reach, effort, and consequence if omitted.",
+      "limitations": "It is a prioritization aid, not an accessibility compliance assessment.",
+      "fields": [
+        {
+          "id": "actions",
+          "label": "Actions, one per line",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Captions\nStep-free route\nLarge-print handout"
+        },
+        {
+          "id": "reach",
+          "label": "People affected (1-5)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 4
+        },
+        {
+          "id": "effort",
+          "label": "Effort per action (1-5)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 2
+        },
+        {
+          "id": "impact",
+          "label": "Impact if missing (1-5)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        }
+      ],
+      "testValues": {
+        "actions": "Captions\nStep-free route\nLarge-print handout",
+        "reach": "4",
+        "effort": "2",
+        "impact": "5"
+      }
+    },
+    {
+      "slug": "dietary-accommodation-matrix",
+      "title": "Dietary Accommodation Matrix",
+      "description": "Turn manually entered dietary needs into a coverage matrix and flag needs with no confirmed option.",
+      "limitations": "Do not treat labels as medical safety advice; confirm ingredients and cross-contact controls with providers.",
+      "fields": [
+        {
+          "id": "needs",
+          "label": "Needs, one per line",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Vegetarian\nNut-free\nHalal"
+        },
+        {
+          "id": "options",
+          "label": "Available menu options, one per line",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Vegetable curry (vegetarian)\nFruit (nut-free)"
+        },
+        {
+          "id": "strict",
+          "label": "Require explicit label match",
+          "type": "checkbox",
+          "required": true,
+          "default": true
+        }
+      ],
+      "testValues": {
+        "needs": "Vegetarian\nNut-free\nHalal",
+        "options": "Vegetable curry - vegetarian\nFruit - nut-free",
+        "strict": true
+      }
+    },
+    {
+      "slug": "code-of-conduct-builder",
+      "title": "Community Code-of-Conduct Builder",
+      "description": "Assemble a concise, actionable code of conduct from selected behavior standards and reporting details.",
+      "limitations": "This produces a draft for review; it is not legal advice or a substitute for local policy.",
+      "fields": [
+        {
+          "id": "communityName",
+          "label": "Community or event name",
+          "type": "text",
+          "required": true,
+          "placeholder": "Northside Makers"
+        },
+        {
+          "id": "standards",
+          "label": "Standards, one per line",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Be respectful\nMake room for others"
+        },
+        {
+          "id": "reportTo",
+          "label": "Report concerns to",
+          "type": "text",
+          "required": true,
+          "placeholder": "the host team"
+        },
+        {
+          "id": "responseTime",
+          "label": "Acknowledgement target (hours)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 720,
+          "step": 1,
+          "default": 24
+        }
+      ],
+      "testValues": {
+        "communityName": "Northside Makers",
+        "standards": "Be respectful\nMake room for others",
+        "reportTo": "the host team",
+        "responseTime": "24"
+      }
+    },
+    {
+      "slug": "sponsor-benefit-tier-mapper",
+      "title": "Sponsor Benefit Tier Mapper",
+      "description": "Distribute manually listed sponsor benefits across tiers without promising more benefits than the event can deliver.",
+      "limitations": "Does not value sponsorships financially or create contracts; review fairness and conflicts.",
+      "fields": [
+        {
+          "id": "benefits",
+          "label": "Benefits, one per line",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Logo on flyer\nFive-minute welcome\nDemo table"
+        },
+        {
+          "id": "tiers",
+          "label": "Tier names, comma-separated",
+          "type": "text",
+          "required": true,
+          "placeholder": "Community, Partner, Lead"
+        },
+        {
+          "id": "maxPerTier",
+          "label": "Maximum benefits per tier",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 20,
+          "step": 1,
+          "default": 3
+        }
+      ],
+      "testValues": {
+        "benefits": "Logo on flyer\nFive-minute welcome\nDemo table\nNewsletter mention",
+        "tiers": "Community, Partner, Lead",
+        "maxPerTier": "3"
+      }
+    },
+    {
+      "slug": "survey-question-prioritizer",
+      "title": "Community Survey Question Prioritizer",
+      "description": "Score survey questions by decision usefulness, clarity, and respondent burden to create a short prioritized set.",
+      "limitations": "Scores reflect supplied judgments and cannot ensure representative survey results.",
+      "fields": [
+        {
+          "id": "questions",
+          "label": "Questions, one per line",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "What time works?\nWhat should we improve?"
+        },
+        {
+          "id": "decisionUse",
+          "label": "Decision usefulness (1-5)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "id": "clarity",
+          "label": "Clarity (1-5)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 4
+        },
+        {
+          "id": "burden",
+          "label": "Answer burden (1-5)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 2
+        }
+      ],
+      "testValues": {
+        "questions": "What time works?\nWhat should we improve?\nWould you return?",
+        "decisionUse": "5",
+        "clarity": "4",
+        "burden": "2"
+      }
+    },
+    {
+      "slug": "participation-energy-arc",
+      "title": "Participation Energy Arc Planner",
+      "description": "Place participation modes across an event so high-demand moments are separated by lower-pressure transitions.",
+      "limitations": "It models pacing only; actual group energy varies by audience and facilitation.",
+      "fields": [
+        {
+          "id": "minutes",
+          "label": "Event length in minutes",
+          "type": "number",
+          "required": true,
+          "min": 20,
+          "max": 1440,
+          "step": 5,
+          "default": 120
+        },
+        {
+          "id": "segments",
+          "label": "Number of segments",
+          "type": "number",
+          "required": true,
+          "min": 2,
+          "max": 12,
+          "step": 1,
+          "default": 6
+        },
+        {
+          "id": "highDemand",
+          "label": "High-demand segments",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 12,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "id": "openingMode",
+          "label": "Opening mode",
+          "type": "select",
+          "required": true,
+          "options": [
+            "welcome",
+            "quiet-arrival",
+            "prompt"
+          ],
+          "default": "welcome"
+        }
+      ],
+      "testValues": {
+        "minutes": "120",
+        "segments": "6",
+        "highDemand": "3",
+        "openingMode": "welcome"
+      }
+    },
+    {
+      "slug": "workshop-activity-timer",
+      "title": "Workshop Activity Timer",
+      "description": "Allocate workshop minutes among briefing, individual work, group work, and share-out while preserving a short buffer.",
+      "limitations": "A timing plan cannot replace facilitator judgment or accessibility breaks.",
+      "fields": [
+        {
+          "id": "totalMinutes",
+          "label": "Total workshop minutes",
+          "type": "number",
+          "required": true,
+          "min": 20,
+          "max": 600,
+          "step": 5,
+          "default": 120
+        },
+        {
+          "id": "briefPercent",
+          "label": "Briefing percent",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 40,
+          "step": 1,
+          "default": 15
+        },
+        {
+          "id": "sharePercent",
+          "label": "Share-out percent",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "default": 20
+        },
+        {
+          "id": "bufferMinutes",
+          "label": "Break or buffer minutes",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 120,
+          "step": 5,
+          "default": 10
+        }
+      ],
+      "testValues": {
+        "totalMinutes": "120",
+        "briefPercent": "15",
+        "sharePercent": "20",
+        "bufferMinutes": "10"
+      }
+    },
+    {
+      "slug": "discussion-prompt-ladder",
+      "title": "Discussion Prompt Ladder",
+      "description": "Transform a topic into a gentle-to-deep sequence of prompts for inclusive community discussion.",
+      "limitations": "Prompts are generated from local text and should be reviewed for cultural fit and safety.",
+      "fields": [
+        {
+          "id": "topic",
+          "label": "Discussion topic",
+          "type": "text",
+          "required": true,
+          "placeholder": "Public space and belonging"
+        },
+        {
+          "id": "audience",
+          "label": "Audience description",
+          "type": "text",
+          "required": true,
+          "placeholder": "neighborhood members"
+        },
+        {
+          "id": "depthSteps",
+          "label": "Number of steps",
+          "type": "number",
+          "required": true,
+          "min": 3,
+          "max": 7,
+          "step": 1,
+          "default": 5
+        }
+      ],
+      "testValues": {
+        "topic": "Public space and belonging",
+        "audience": "neighborhood members",
+        "depthSteps": "5"
+      }
+    },
+    {
+      "slug": "networking-card-deck",
+      "title": "Networking Conversation Card Deck",
+      "description": "Create a varied set of low-pressure conversation cards from a shared theme and participant context.",
+      "limitations": "Cards are prompts, not a guarantee of safe or comfortable interaction; allow opting out.",
+      "fields": [
+        {
+          "id": "theme",
+          "label": "Shared theme",
+          "type": "text",
+          "required": true,
+          "placeholder": "Local creative projects"
+        },
+        {
+          "id": "count",
+          "label": "Card count",
+          "type": "number",
+          "required": true,
+          "min": 3,
+          "max": 30,
+          "step": 1,
+          "default": 8
+        },
+        {
+          "id": "tone",
+          "label": "Tone",
+          "type": "select",
+          "required": true,
+          "options": [
+            "curious",
+            "practical",
+            "playful"
+          ],
+          "default": "curious"
+        }
+      ],
+      "testValues": {
+        "theme": "Local creative projects",
+        "count": "8",
+        "tone": "curious"
+      }
+    },
+    {
+      "slug": "icebreaker-suitability-score",
+      "title": "Icebreaker Suitability Score",
+      "description": "Evaluate an icebreaker against group size, privacy sensitivity, time, and opt-out friendliness.",
+      "limitations": "The score is a heuristic; test activities with the actual community and never pressure disclosure.",
+      "fields": [
+        {
+          "id": "groupSize",
+          "label": "Group size",
+          "type": "number",
+          "required": true,
+          "min": 2,
+          "max": 1000,
+          "step": 1,
+          "default": 24
+        },
+        {
+          "id": "minutes",
+          "label": "Available minutes",
+          "type": "number",
+          "required": true,
+          "min": 2,
+          "max": 120,
+          "step": 1,
+          "default": 15
+        },
+        {
+          "id": "privacyLevel",
+          "label": "Personal disclosure level (1-5)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 2
+        },
+        {
+          "id": "optOut",
+          "label": "Opt-out available",
+          "type": "checkbox",
+          "required": true,
+          "default": true
+        }
+      ],
+      "testValues": {
+        "groupSize": "24",
+        "minutes": "15",
+        "privacyLevel": "2",
+        "optOut": true
+      }
+    },
+    {
+      "slug": "audience-question-queue",
+      "title": "Audience Question Queue",
+      "description": "Clean and prioritize a manually entered question list using urgency, broad relevance, and time available.",
+      "limitations": "It does not moderate content or determine factual correctness.",
+      "fields": [
+        {
+          "id": "questions",
+          "label": "Questions, one per line",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "How do we join?\nCan you explain the timeline?"
+        },
+        {
+          "id": "availableMinutes",
+          "label": "Minutes for questions",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 180,
+          "step": 1,
+          "default": 20
+        },
+        {
+          "id": "secondsEach",
+          "label": "Seconds per question",
+          "type": "number",
+          "required": true,
+          "min": 15,
+          "max": 900,
+          "step": 15,
+          "default": 120
+        },
+        {
+          "id": "priorityMode",
+          "label": "Priority mode",
+          "type": "select",
+          "required": true,
+          "options": [
+            "broad-first",
+            "urgent-first",
+            "balanced"
+          ],
+          "default": "balanced"
+        }
+      ],
+      "testValues": {
+        "questions": "How do we join?\nCan you explain the timeline?\nWhere are resources?",
+        "availableMinutes": "20",
+        "secondsEach": "120",
+        "priorityMode": "balanced"
+      }
+    },
+    {
+      "slug": "feedback-theme-tally",
+      "title": "Feedback Theme Tally",
+      "description": "Tally manually tagged feedback into themes and identify the strongest positive, negative, and mixed signals.",
+      "limitations": "It counts supplied tags only and is not statistical sentiment analysis.",
+      "fields": [
+        {
+          "id": "entries",
+          "label": "Entries as theme:rating, one per line",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "access:positive\naccess:negative\ncontent:positive"
+        },
+        {
+          "id": "ratingScale",
+          "label": "Rating labels",
+          "type": "select",
+          "required": true,
+          "options": [
+            "positive-negative",
+            "up-down-mixed"
+          ],
+          "default": "positive-negative"
+        }
+      ],
+      "testValues": {
+        "entries": "access:positive\naccess:negative\ncontent:positive\ncontent:positive",
+        "ratingScale": "positive-negative"
+      }
+    },
+    {
+      "slug": "event-feedback-theme-counter",
+      "title": "Event Feedback Theme Counter",
+      "description": "Count manually defined themes across anonymous event-feedback lines and show unmatched response count, without inferring sentiment.",
+      "limitations": "Keyword rules are literal and may miss context; do not paste identifying or sensitive feedback.",
+      "fields": [
+        {
+          "id": "responses",
+          "label": "Anonymous feedback responses, one per line",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Loved the accessible entrance\nThe check-in line was slow\nThe music was too loud"
+        },
+        {
+          "id": "themeRules",
+          "label": "Theme rules, one per line (Theme: keyword1, keyword2)",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Access: accessible, step-free\nTiming: slow, late"
+        },
+        {
+          "id": "caseSensitive",
+          "label": "Match keywords case-sensitively",
+          "type": "checkbox",
+          "required": false,
+          "default": false
+        }
+      ],
+      "testValues": {
+        "responses": "Loved the accessible entrance\nThe check-in line was slow\nThe music was too loud",
+        "themeRules": "Access: ACCESSIBLE, step-free\nTiming: slow, late",
+        "caseSensitive": false
+      }
+    },
+    {
+      "slug": "contingency-decision-tree",
+      "title": "Event Contingency Decision Tree",
+      "description": "Convert trigger, action, owner, and backup notes into a compact if-then contingency checklist.",
+      "limitations": "It is a manually maintained plan and cannot monitor live conditions.",
+      "fields": [
+        {
+          "id": "items",
+          "label": "Rows as trigger | action | owner",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Room unavailable | Move online | Host\nSpeaker late | Use Q&A | Moderator"
+        },
+        {
+          "id": "reviewHours",
+          "label": "Hours before event to review",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 168,
+          "step": 1,
+          "default": 24
+        }
+      ],
+      "testValues": {
+        "items": "Room unavailable | Move online | Host\nSpeaker late | Use Q&A | Moderator",
+        "reviewHours": "24"
+      }
+    },
+    {
+      "slug": "cleanup-zone-planner",
+      "title": "Community Cleanup Zone Planner",
+      "description": "Divide a manually described cleanup area into balanced zones and assign supplies per zone.",
+      "limitations": "It assumes equal-effort zones; check hazards and permissions on site.",
+      "fields": [
+        {
+          "id": "areaDescription",
+          "label": "Area or route description",
+          "type": "text",
+          "required": true,
+          "placeholder": "Riverside path"
+        },
+        {
+          "id": "zones",
+          "label": "Number of zones",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 50,
+          "step": 1,
+          "default": 4
+        },
+        {
+          "id": "suppliesPerZone",
+          "label": "Supplies per zone",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 2
+        },
+        {
+          "id": "hazards",
+          "label": "Known hazards",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Steep steps near zone 3"
+        }
+      ],
+      "testValues": {
+        "areaDescription": "Riverside path",
+        "zones": "4",
+        "suppliesPerZone": "2",
+        "hazards": "Steep steps near zone 3"
+      }
+    },
+    {
+      "slug": "donation-drive-allocation",
+      "title": "Donation Drive Allocation Planner",
+      "description": "Allocate a manually entered donation total across stated community needs by priority weights and show rounding remainder.",
+      "limitations": "This is arithmetic planning, not fundraising, tax, or financial advice.",
+      "fields": [
+        {
+          "id": "total",
+          "label": "Total available amount",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000000,
+          "step": 0.01,
+          "default": 1000
+        },
+        {
+          "id": "needs",
+          "label": "Needs as name:weight, one per line",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Food:5\nTransport:3\nMaterials:2"
+        },
+        {
+          "id": "roundTo",
+          "label": "Round allocations to",
+          "type": "select",
+          "required": true,
+          "options": [
+            "1",
+            "5",
+            "10",
+            "0.01"
+          ],
+          "default": "1"
+        }
+      ],
+      "testValues": {
+        "total": "103",
+        "needs": "Food:5\nTransport:3\nMaterials:2",
+        "roundTo": "1"
+      }
+    },
+    {
+      "slug": "channel-announcement-matrix",
+      "title": "Community Announcement Channel Matrix",
+      "description": "Recommend announcement timing and channel roles from audience reach, urgency, and channel capacity ratings.",
+      "limitations": "Recommendations are manual planning heuristics; no channel delivery or reach data is fetched.",
+      "fields": [
+        {
+          "id": "channels",
+          "label": "Channels as name:reach:noise, one per line",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Email:5:2\nChat:4:4\nFlyer:2:1"
+        },
+        {
+          "id": "urgency",
+          "label": "Announcement urgency",
+          "type": "select",
+          "required": true,
+          "options": [
+            "routine",
+            "soon",
+            "urgent"
+          ],
+          "default": "soon"
+        },
+        {
+          "id": "leadDays",
+          "label": "Days before event",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 365,
+          "step": 1,
+          "default": 14
+        }
+      ],
+      "testValues": {
+        "channels": "Email:5:2\nChat:4:4\nFlyer:2:1",
+        "urgency": "soon",
+        "leadDays": "14"
+      }
+    },
+    {
+      "slug": "recurring-event-cadence",
+      "title": "Recurring Event Cadence Planner",
+      "description": "Compare recurring cadences using preparation load, audience habit, and recovery time to recommend a sustainable interval.",
+      "limitations": "It cannot predict demand or volunteer availability.",
+      "fields": [
+        {
+          "id": "prepHours",
+          "label": "Preparation hours per event",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 500,
+          "step": 0.5,
+          "default": 6
+        },
+        {
+          "id": "teamHours",
+          "label": "Team hours available per month",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 10000,
+          "step": 1,
+          "default": 40
+        },
+        {
+          "id": "audienceHabit",
+          "label": "Audience habit preference",
+          "type": "select",
+          "required": true,
+          "options": [
+            "weekly",
+            "biweekly",
+            "monthly"
+          ],
+          "default": "monthly"
+        },
+        {
+          "id": "cadence",
+          "label": "Cadence to test",
+          "type": "select",
+          "required": true,
+          "options": [
+            "weekly",
+            "biweekly",
+            "monthly",
+            "quarterly"
+          ],
+          "default": "monthly"
+        }
+      ],
+      "testValues": {
+        "prepHours": "6",
+        "teamHours": "40",
+        "audienceHabit": "monthly",
+        "cadence": "monthly"
+      }
+    },
+    {
+      "slug": "newcomer-welcome-journey",
+      "title": "Newcomer Welcome Journey",
+      "description": "Build a sequence of before, arrival, participation, and follow-up touchpoints for first-time community members.",
+      "limitations": "It creates a checklist, not personalized outreach or consent management.",
+      "fields": [
+        {
+          "id": "community",
+          "label": "Community name",
+          "type": "text",
+          "required": true,
+          "placeholder": "Civic Design Circle"
+        },
+        {
+          "id": "touchpoints",
+          "label": "Touchpoints per phase",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 2
+        },
+        {
+          "id": "followUpDays",
+          "label": "Follow-up days after event",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 30,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "id": "accessNote",
+          "label": "Key access note",
+          "type": "text",
+          "required": true,
+          "placeholder": "quiet room available"
+        }
+      ],
+      "testValues": {
+        "community": "Civic Design Circle",
+        "touchpoints": "2",
+        "followUpDays": "3",
+        "accessNote": "quiet room available"
+      }
+    },
+    {
+      "slug": "host-role-coverage-checker",
+      "title": "Host Role Coverage Checker",
+      "description": "Check whether essential event host roles have named coverage and flag gaps or duplicate ownership.",
+      "limitations": "It checks names supplied by the user only and is not a staffing or safeguarding assessment.",
+      "fields": [
+        {
+          "id": "roles",
+          "label": "Required roles, one per line",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Welcome host\nTimekeeper\nAccessibility contact"
+        },
+        {
+          "id": "assignments",
+          "label": "Assignments as role=name, one per line",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Welcome host=Sam\nTimekeeper=Lee"
+        },
+        {
+          "id": "allowDual",
+          "label": "Allow one person to cover multiple roles",
+          "type": "checkbox",
+          "required": true,
+          "default": false
+        }
+      ],
+      "testValues": {
+        "roles": "Welcome host\nTimekeeper\nAccessibility contact",
+        "assignments": "Welcome host=Sam\nTimekeeper=Sam",
+        "allowDual": false
+      }
+    },
+    {
+      "slug": "event-retrospective-scorecard",
+      "title": "Event Retrospective Scorecard",
+      "description": "Summarize outcome ratings across welcome, access, participation, logistics, and follow-up into focused improvement priorities.",
+      "limitations": "Ratings are self-reported and should be discussed with participants, not treated as objective measurement.",
+      "fields": [
+        {
+          "id": "ratings",
+          "label": "Area:rating (1-5), one per line",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "welcome:4\naccess:3\nparticipation:5\nlogistics:2"
+        },
+        {
+          "id": "successThreshold",
+          "label": "Success threshold",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 4
+        },
+        {
+          "id": "nextEventDays",
+          "label": "Days until next event",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 730,
+          "step": 1,
+          "default": 30
+        }
+      ],
+      "testValues": {
+        "ratings": "welcome:4\naccess:3\nparticipation:5\nlogistics:2\nfollow-up:3",
+        "successThreshold": "4",
+        "nextEventDays": "30"
+      }
+    },
+    {
+      "slug": "community-resource-directory-builder",
+      "title": "Community Resource Directory Builder",
+      "description": "Organize manually entered local resources by need, access mode, and contact detail into a compact directory.",
+      "limitations": "It only formats supplied information; verify availability, privacy, and contact details before sharing.",
+      "fields": [
+        {
+          "id": "resources",
+          "label": "Resources as name|need|access, one per line",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Tool library | equipment | email@example.org\nFood shelf | food | walk-in"
+        },
+        {
+          "id": "sortBy",
+          "label": "Sort by",
+          "type": "select",
+          "required": true,
+          "options": [
+            "need",
+            "access",
+            "name"
+          ],
+          "default": "need"
+        }
+      ],
+      "testValues": {
+        "resources": "Tool library | equipment | email@example.org\nFood shelf | food | walk-in\nRepair cafe | equipment | monthly",
+        "sortBy": "need"
+      }
+    }
+  ]
+}

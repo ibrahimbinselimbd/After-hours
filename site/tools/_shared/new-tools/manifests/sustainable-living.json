@@ -1,0 +1,1675 @@
+{
+  "category": {
+    "id": "sustainable-living",
+    "title": "Sustainable Living",
+    "description": "Practical offline estimators for reducing resource use with transparent, user-entered assumptions.",
+    "accent_color": "#2F855A"
+  },
+  "tools": [
+    {
+      "slug": "household-carbon-snapshot",
+      "title": "Household Carbon Snapshot",
+      "description": "Estimate annual household CO2e from electricity, heating fuel, and driving using transparent user-supplied factors.",
+      "limitations": "This is a rough planning estimate, not an official inventory; actual factors vary by region, supplier, vehicle, and season.",
+      "fields": [
+        {
+          "id": "electricityKwh",
+          "label": "Annual electricity (kWh)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 3200,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "electricityFactor",
+          "label": "Electricity factor (kg CO2e/kWh)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 5,
+          "step": "any",
+          "default": 0.4,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "heatingFuelUnits",
+          "label": "Annual heating-fuel units",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 500,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "heatingFactor",
+          "label": "Heating factor (kg CO2e/unit)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 20,
+          "step": "any",
+          "default": 2.3,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "drivingKm",
+          "label": "Annual driving (km)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 12000,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "carFactor",
+          "label": "Car factor (kg CO2e/km)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 2,
+          "step": "any",
+          "default": 0.18,
+          "help": "Enter a non-negative estimate."
+        }
+      ],
+      "testValues": {
+        "electricityKwh": "3200",
+        "electricityFactor": "0.4",
+        "heatingFuelUnits": "500",
+        "heatingFactor": "2.3",
+        "drivingKm": "12000",
+        "carFactor": "0.18"
+      }
+    },
+    {
+      "slug": "electricity-saving-impact",
+      "title": "Electricity Saving Impact",
+      "description": "Calculate annual kWh and CO2e avoided by reducing electricity use by a chosen percentage.",
+      "limitations": "Results assume the entered electricity factor stays constant and do not predict bills or grid behavior.",
+      "fields": [
+        {
+          "id": "annualKwh",
+          "label": "Current annual electricity (kWh)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 3200,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "reductionPercent",
+          "label": "Planned reduction (%)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 15,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "factor",
+          "label": "Electricity factor (kg CO2e/kWh)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 5,
+          "step": "any",
+          "default": 0.4,
+          "help": "Enter a non-negative estimate."
+        }
+      ],
+      "testValues": {
+        "annualKwh": "3200",
+        "reductionPercent": "15",
+        "factor": "0.4"
+      }
+    },
+    {
+      "slug": "water-use-estimator",
+      "title": "Daily Water Use Estimator",
+      "description": "Estimate daily and annual indoor water use from showers, toilet flushes, laundry, and dishwashing.",
+      "limitations": "Only the listed activities are included; fixture flow and habits may differ from the entered averages.",
+      "fields": [
+        {
+          "id": "showers",
+          "label": "Showers per day",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 1,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "showerLiters",
+          "label": "Liters per shower",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 500,
+          "step": "any",
+          "default": 60,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "flushes",
+          "label": "Toilet flushes per day",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "default": 5,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "flushLiters",
+          "label": "Liters per flush",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 30,
+          "step": "any",
+          "default": 6,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "laundryLoads",
+          "label": "Laundry loads per week",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "default": 4,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "laundryLiters",
+          "label": "Liters per load",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 500,
+          "step": "any",
+          "default": 50,
+          "help": "Enter a non-negative estimate."
+        }
+      ],
+      "testValues": {
+        "showers": "1",
+        "showerLiters": "60",
+        "flushes": "5",
+        "flushLiters": "6",
+        "laundryLoads": "4",
+        "laundryLiters": "50"
+      }
+    },
+    {
+      "slug": "rainwater-catchment-estimator",
+      "title": "Rainwater Catchment Estimator",
+      "description": "Estimate collectible rainwater from roof area, rainfall, and collection efficiency for garden or cleaning uses.",
+      "limitations": "Rainfall is a manual average and collection is not guaranteed; check local rules and water safety before use.",
+      "fields": [
+        {
+          "id": "roofArea",
+          "label": "Catchment roof area (m\u00b2)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 80,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "rainfallMm",
+          "label": "Annual rainfall (mm)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 700,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "efficiencyPercent",
+          "label": "Collection efficiency (%)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 75,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "demandLiters",
+          "label": "Monthly non-potable demand (L)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 2500,
+          "help": "Enter a non-negative estimate."
+        }
+      ],
+      "testValues": {
+        "roofArea": "80",
+        "rainfallMm": "700",
+        "efficiencyPercent": "75",
+        "demandLiters": "2500"
+      }
+    },
+    {
+      "slug": "shower-water-saver",
+      "title": "Shower Water Saver",
+      "description": "Compare current and planned shower duration and flow to estimate water and energy saved.",
+      "limitations": "Energy assumes water is heated from 10\u00b0C to 40\u00b0C; it excludes heater losses and wastewater impacts.",
+      "fields": [
+        {
+          "id": "showersPerWeek",
+          "label": "Showers per week",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 7,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "currentMinutes",
+          "label": "Current minutes per shower",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 120,
+          "step": 1,
+          "default": 10,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "newMinutes",
+          "label": "Planned minutes per shower",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 120,
+          "step": 1,
+          "default": 7,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "flowLitersPerMin",
+          "label": "Shower flow (L/min)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 40,
+          "step": "any",
+          "default": 8,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "heatedShare",
+          "label": "Share heated (%)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 80,
+          "help": "Enter a non-negative estimate."
+        }
+      ],
+      "testValues": {
+        "showersPerWeek": "7",
+        "currentMinutes": "10",
+        "newMinutes": "7",
+        "flowLitersPerMin": "8",
+        "heatedShare": "80"
+      }
+    },
+    {
+      "slug": "laundry-impact-comparator",
+      "title": "Laundry Impact Comparator",
+      "description": "Compare annual water, energy, and CO2e for two laundry routines using loads, temperature, and machine assumptions.",
+      "limitations": "Machine energy and water are user estimates; this omits detergent production, drying, and garment wear.",
+      "fields": [
+        {
+          "id": "loadsPerWeek",
+          "label": "Loads per week",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "default": 4,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "routineALiters",
+          "label": "Routine A water/load (L)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 50,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "routineAKwh",
+          "label": "Routine A energy/load (kWh)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 0.6,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "routineAFactor",
+          "label": "Routine A energy factor (kg CO2e/kWh)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 5,
+          "step": "any",
+          "default": 0.4,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "routineBLiters",
+          "label": "Routine B water/load (L)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 35,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "routineBKwh",
+          "label": "Routine B energy/load (kWh)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 0.35,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "routineBFactor",
+          "label": "Routine B energy factor (kg CO2e/kWh)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 5,
+          "step": "any",
+          "default": 0.4,
+          "help": "Enter a non-negative estimate."
+        }
+      ],
+      "testValues": {
+        "loadsPerWeek": "4",
+        "routineALiters": "50",
+        "routineAKwh": "0.6",
+        "routineAFactor": "0.4",
+        "routineBLiters": "35",
+        "routineBKwh": "0.35",
+        "routineBFactor": "0.4"
+      }
+    },
+    {
+      "slug": "solar-self-consumption-planner",
+      "title": "Solar Self-Consumption Planner",
+      "description": "Estimate how much manually entered solar generation is used onsite, exported, and offset by household demand.",
+      "limitations": "This is an arithmetic scenario, not a production forecast or grid-export valuation.",
+      "fields": [
+        {
+          "id": "monthlyGeneration",
+          "label": "Monthly solar generation (kWh)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 450,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "monthlyDemand",
+          "label": "Monthly household demand (kWh)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 600,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "daytimeShare",
+          "label": "Demand available during solar hours (%)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 35,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "flexibleLoad",
+          "label": "Flexible load shifted into solar hours (kWh)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 40,
+          "help": "Enter a non-negative estimate."
+        }
+      ],
+      "testValues": {
+        "monthlyGeneration": "450",
+        "monthlyDemand": "600",
+        "daytimeShare": "35",
+        "flexibleLoad": "40"
+      }
+    },
+    {
+      "slug": "compost-bin-capacity-planner",
+      "title": "Compost Bin Capacity Planner",
+      "description": "Estimate weekly compost volume and the minimum bin volume needed for a chosen retention period.",
+      "limitations": "Volumes are loose estimates; compaction, moisture, and accepted materials change real capacity needs.",
+      "fields": [
+        {
+          "id": "foodKgWeek",
+          "label": "Food scraps per week (kg)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 4,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "foodLitersPerKg",
+          "label": "Loose volume per kg (L)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 1.2,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "yardLitersWeek",
+          "label": "Yard material per week (L)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 30,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "retentionWeeks",
+          "label": "Desired retention (weeks)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 104,
+          "step": 1,
+          "default": 8,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "headroomPercent",
+          "label": "Headroom (%)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 20,
+          "help": "Enter a non-negative estimate."
+        }
+      ],
+      "testValues": {
+        "foodKgWeek": "4",
+        "foodLitersPerKg": "1.2",
+        "yardLitersWeek": "30",
+        "retentionWeeks": "8",
+        "headroomPercent": "20"
+      }
+    },
+    {
+      "slug": "compost-impact-estimator",
+      "title": "Compost Diversion Impact Estimator",
+      "description": "Estimate landfill waste diverted and potential methane-avoidance CO2e from composting a weekly organic stream.",
+      "limitations": "The factor is a scenario assumption, not a verified offset; outcomes depend on collection and compost conditions.",
+      "fields": [
+        {
+          "id": "foodKgWeek",
+          "label": "Food scraps diverted per week (kg)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 4,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "weeks",
+          "label": "Weeks per year",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 53,
+          "step": 1,
+          "default": 52,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "avoidanceFactor",
+          "label": "Scenario factor (kg CO2e/kg)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 10,
+          "step": "any",
+          "default": 0.5,
+          "help": "Enter a non-negative estimate."
+        }
+      ],
+      "testValues": {
+        "foodKgWeek": "4",
+        "weeks": "52",
+        "avoidanceFactor": "0.5"
+      }
+    },
+    {
+      "slug": "packaging-waste-audit",
+      "title": "Packaging Waste Audit",
+      "description": "Turn counts and weights of packaging types into an annual material profile and reduction target.",
+      "limitations": "Sampling one period does not represent every purchase; material labels and recycling access vary locally.",
+      "fields": [
+        {
+          "id": "weeksSampled",
+          "label": "Weeks in sample",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 52,
+          "step": 1,
+          "default": 2,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "paperGrams",
+          "label": "Paper/cardboard grams in sample",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 900,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "plasticGrams",
+          "label": "Plastic grams in sample",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 500,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "metalGrams",
+          "label": "Metal grams in sample",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 120,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "targetPercent",
+          "label": "Reduction target (%)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 20,
+          "help": "Enter a non-negative estimate."
+        }
+      ],
+      "testValues": {
+        "weeksSampled": "2",
+        "paperGrams": "900",
+        "plasticGrams": "500",
+        "metalGrams": "120",
+        "targetPercent": "20"
+      }
+    },
+    {
+      "slug": "recycling-sort-decision",
+      "title": "Recycling Sort Decision",
+      "description": "Classify an item from its material, condition, and local acceptance notes into a cautious next step.",
+      "limitations": "Local rules always override this heuristic; it cannot identify resin codes or contamination reliably.",
+      "fields": [
+        {
+          "id": "itemName",
+          "label": "Item name",
+          "type": "text",
+          "required": true,
+          "default": "clean glass jar",
+          "placeholder": "clean glass jar",
+          "help": "Enter a short description."
+        },
+        {
+          "id": "material",
+          "label": "Main material",
+          "type": "select",
+          "required": true,
+          "options": [
+            "paper",
+            "plastic",
+            "glass",
+            "metal",
+            "mixed",
+            "unknown"
+          ],
+          "default": "glass"
+        },
+        {
+          "id": "condition",
+          "label": "Condition",
+          "type": "select",
+          "required": true,
+          "options": [
+            "clean",
+            "food-soiled",
+            "wet",
+            "broken",
+            "unknown"
+          ],
+          "default": "clean"
+        },
+        {
+          "id": "localAcceptance",
+          "label": "Your local guide says this material is accepted",
+          "type": "checkbox",
+          "required": false,
+          "default": true
+        }
+      ],
+      "testValues": {
+        "itemName": "clean glass jar",
+        "material": "glass",
+        "condition": "clean",
+        "localAcceptance": true
+      }
+    },
+    {
+      "slug": "repair-replace-impact",
+      "title": "Repair or Replace Impact",
+      "description": "Compare the embodied-impact scenario of repairing an item versus replacing it with a new one.",
+      "limitations": "Embodied factors are user-entered scenarios, not product declarations; performance and safety are not assessed.",
+      "fields": [
+        {
+          "id": "repairImpact",
+          "label": "Repair impact (kg CO2e)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 2,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "repairYears",
+          "label": "Years repair extends life",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": "any",
+          "default": 3,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "replacementImpact",
+          "label": "Replacement impact (kg CO2e)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 80,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "replacementYears",
+          "label": "Replacement useful years",
+          "type": "number",
+          "required": true,
+          "min": 0.1,
+          "max": 100,
+          "step": "any",
+          "default": 8,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "currentRemainingYears",
+          "label": "Current item years if unrepaired",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": "any",
+          "default": 1,
+          "help": "Enter a non-negative estimate."
+        }
+      ],
+      "testValues": {
+        "repairImpact": "2",
+        "repairYears": "3",
+        "replacementImpact": "80",
+        "replacementYears": "8",
+        "currentRemainingYears": "1"
+      }
+    },
+    {
+      "slug": "reusable-item-break-even",
+      "title": "Reusable Item Break-Even",
+      "description": "Find how many uses a reusable item needs to surpass disposable alternatives on material impact.",
+      "limitations": "This compares only entered production impacts and ignores washing, transport, and end-of-life.",
+      "fields": [
+        {
+          "id": "reusableImpact",
+          "label": "Reusable item impact (kg CO2e)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 1.2,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "washImpact",
+          "label": "Impact per wash/use (kg CO2e)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 0.01,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "disposableImpact",
+          "label": "Disposable item impact/use (kg CO2e)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 0.08,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "usesPerWeek",
+          "label": "Planned uses per week",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 5,
+          "help": "Enter a non-negative estimate."
+        }
+      ],
+      "testValues": {
+        "reusableImpact": "1.2",
+        "washImpact": "0.01",
+        "disposableImpact": "0.08",
+        "usesPerWeek": "5"
+      }
+    },
+    {
+      "slug": "low-carbon-commute-comparator",
+      "title": "Low-Carbon Commute Comparator",
+      "description": "Compare annual distance and CO2e for two manual commute modes across workdays and one-way distance.",
+      "limitations": "Factors are scenarios only; route length, occupancy, traffic, and transit operations can differ.",
+      "fields": [
+        {
+          "id": "workdaysPerYear",
+          "label": "Commute days per year",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 366,
+          "step": 1,
+          "default": 230,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "oneWayKm",
+          "label": "One-way distance (km)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 12,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "modeAFactor",
+          "label": "Mode A factor (kg CO2e/km)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 5,
+          "step": "any",
+          "default": 0.18,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "modeBFactor",
+          "label": "Mode B factor (kg CO2e/km)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 5,
+          "step": "any",
+          "default": 0.03,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "modeAShare",
+          "label": "Mode A days (%)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 100,
+          "help": "Enter a non-negative estimate."
+        }
+      ],
+      "testValues": {
+        "workdaysPerYear": "230",
+        "oneWayKm": "12",
+        "modeAFactor": "0.18",
+        "modeBFactor": "0.03",
+        "modeAShare": "75"
+      }
+    },
+    {
+      "slug": "carpool-emissions-split",
+      "title": "Carpool Emissions Splitter",
+      "description": "Estimate per-person commute emissions when a vehicle trip is shared by different passenger counts.",
+      "limitations": "It assumes the same vehicle trip occurs either way and excludes detours and occupancy changes.",
+      "fields": [
+        {
+          "id": "roundTripKm",
+          "label": "Round-trip distance (km)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 40,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "daysPerWeek",
+          "label": "Trip days per week",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 7,
+          "step": 1,
+          "default": 5,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "weeksPerYear",
+          "label": "Weeks per year",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 52,
+          "step": 1,
+          "default": 48,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "vehicleFactor",
+          "label": "Vehicle factor (kg CO2e/km)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 5,
+          "step": "any",
+          "default": 0.2,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "passengersAlone",
+          "label": "People when solo",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 20,
+          "step": 1,
+          "default": 1,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "passengersShared",
+          "label": "People when shared",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 20,
+          "step": 1,
+          "default": 3,
+          "help": "Enter a non-negative estimate."
+        }
+      ],
+      "testValues": {
+        "roundTripKm": "40",
+        "daysPerWeek": "5",
+        "weeksPerYear": "48",
+        "vehicleFactor": "0.2",
+        "passengersAlone": "1",
+        "passengersShared": "3"
+      }
+    },
+    {
+      "slug": "errand-trip-consolidator",
+      "title": "Errand Trip Consolidator",
+      "description": "Compare distance and emissions for separate errands versus a consolidated route with a manual detour estimate.",
+      "limitations": "The model ignores time, congestion, and mode changes; enter comparable route distances.",
+      "fields": [
+        {
+          "id": "errands",
+          "label": "Number of errands",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 50,
+          "step": 1,
+          "default": 4,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "separateKm",
+          "label": "Average round-trip per errand (km)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 8,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "consolidatedKm",
+          "label": "Consolidated round-trip (km)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 20,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "vehicleFactor",
+          "label": "Travel factor (kg CO2e/km)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 5,
+          "step": "any",
+          "default": 0.18,
+          "help": "Enter a non-negative estimate."
+        }
+      ],
+      "testValues": {
+        "errands": "4",
+        "separateKm": "8",
+        "consolidatedKm": "20",
+        "vehicleFactor": "0.18"
+      }
+    },
+    {
+      "slug": "clothing-wear-impact",
+      "title": "Clothing Wear Impact",
+      "description": "Estimate annual impact per wear by comparing purchase impact with expected wears and care impact.",
+      "limitations": "Inputs are scenario values; this is not a lifecycle assessment and excludes labor, water, and disposal impacts.",
+      "fields": [
+        {
+          "id": "purchaseImpact",
+          "label": "Purchase impact (kg CO2e)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 25,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "expectedWears",
+          "label": "Expected total wears",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 10000,
+          "step": 1,
+          "default": 60,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "careImpact",
+          "label": "Care impact per wear (kg CO2e)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 5,
+          "step": "any",
+          "default": 0.08,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "plannedWears",
+          "label": "Planned wears this year",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 1000,
+          "step": 1,
+          "default": 30,
+          "help": "Enter a non-negative estimate."
+        }
+      ],
+      "testValues": {
+        "purchaseImpact": "25",
+        "expectedWears": "60",
+        "careImpact": "0.08",
+        "plannedWears": "30"
+      }
+    },
+    {
+      "slug": "home-heat-loss-estimator",
+      "title": "Home Heat-Loss Scenario",
+      "description": "Compare a simple heat-loss index before and after changing insulation, area, and temperature difference.",
+      "limitations": "This is an index, not a heating-load or building-code calculation; wind, windows, and thermal bridges are omitted.",
+      "fields": [
+        {
+          "id": "surfaceArea",
+          "label": "Exposed surface area (m\u00b2)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 120,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "uValueBefore",
+          "label": "Before heat-transfer value",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 20,
+          "step": "any",
+          "default": 1.2,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "uValueAfter",
+          "label": "After heat-transfer value",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 20,
+          "step": "any",
+          "default": 0.4,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "insideTemp",
+          "label": "Indoor temperature (\u00b0C)",
+          "type": "number",
+          "required": true,
+          "min": -50,
+          "max": 60,
+          "step": "any",
+          "default": 20,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "outsideTemp",
+          "label": "Outdoor temperature (\u00b0C)",
+          "type": "number",
+          "required": true,
+          "min": -80,
+          "max": 60,
+          "step": "any",
+          "default": 5,
+          "help": "Enter a non-negative estimate."
+        }
+      ],
+      "testValues": {
+        "surfaceArea": "120",
+        "uValueBefore": "1.2",
+        "uValueAfter": "0.4",
+        "insideTemp": "20",
+        "outsideTemp": "5"
+      }
+    },
+    {
+      "slug": "food-waste-impact",
+      "title": "Food Waste Impact Estimator",
+      "description": "Estimate annual edible food wasted and its scenario CO2e impact from weekly discarded mass.",
+      "limitations": "A single factor cannot represent every food; this excludes packaging, land use, and disposal differences.",
+      "fields": [
+        {
+          "id": "wastedKgWeek",
+          "label": "Wasted food per week (kg)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 1.5,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "weeks",
+          "label": "Weeks per year",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 53,
+          "step": 1,
+          "default": 52,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "impactFactor",
+          "label": "Scenario impact (kg CO2e/kg)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 20,
+          "step": "any",
+          "default": 2.5,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "reductionPercent",
+          "label": "Target reduction (%)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 30,
+          "help": "Enter a non-negative estimate."
+        }
+      ],
+      "testValues": {
+        "wastedKgWeek": "1.5",
+        "weeks": "52",
+        "impactFactor": "2.5",
+        "reductionPercent": "30"
+      }
+    },
+    {
+      "slug": "sustainable-party-materials",
+      "title": "Sustainable Party Materials Planner",
+      "description": "Estimate servingware counts and waste mass for reusable, compostable, and disposable event setups.",
+      "limitations": "Counts are planning estimates; compostability and local waste acceptance must be verified separately.",
+      "fields": [
+        {
+          "id": "guests",
+          "label": "Guests",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 10000,
+          "step": 1,
+          "default": 40,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "servingsPerGuest",
+          "label": "Servings per guest",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 20,
+          "step": 1,
+          "default": 2,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "setup",
+          "label": "Servingware setup",
+          "type": "select",
+          "required": true,
+          "options": [
+            "reusable",
+            "compostable",
+            "disposable"
+          ],
+          "default": "reusable"
+        },
+        {
+          "id": "itemGrams",
+          "label": "Average single-use item mass (g)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 1000,
+          "step": "any",
+          "default": 8,
+          "help": "Enter a non-negative estimate."
+        }
+      ],
+      "testValues": {
+        "guests": "40",
+        "servingsPerGuest": "2",
+        "setup": "disposable",
+        "itemGrams": "8"
+      }
+    },
+    {
+      "slug": "water-heating-energy-estimator",
+      "title": "Water Heating Energy Estimator",
+      "description": "Estimate energy needed to heat a volume of water and compare two heater efficiencies.",
+      "limitations": "Physics estimate assumes water heat capacity of 4.186 kJ/kg\u00b0C and omits standby and pipe losses.",
+      "fields": [
+        {
+          "id": "volumeLiters",
+          "label": "Water volume (L)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 100,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "startTemp",
+          "label": "Starting temperature (\u00b0C)",
+          "type": "number",
+          "required": true,
+          "min": -20,
+          "max": 60,
+          "step": "any",
+          "default": 15,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "targetTemp",
+          "label": "Target temperature (\u00b0C)",
+          "type": "number",
+          "required": true,
+          "min": -20,
+          "max": 100,
+          "step": "any",
+          "default": 50,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "efficiencyA",
+          "label": "Heater A efficiency (%)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 100,
+          "step": 1,
+          "default": 80,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "efficiencyB",
+          "label": "Heater B efficiency (%)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 100,
+          "step": 1,
+          "default": 95,
+          "help": "Enter a non-negative estimate."
+        }
+      ],
+      "testValues": {
+        "volumeLiters": "100",
+        "startTemp": "15",
+        "targetTemp": "50",
+        "efficiencyA": "80",
+        "efficiencyB": "95"
+      }
+    },
+    {
+      "slug": "native-landscape-water-budget",
+      "title": "Native Landscape Water Budget",
+      "description": "Estimate weekly irrigation demand and savings from replacing a lawn area with lower-water planting.",
+      "limitations": "Plant needs, rainfall, soil, and local restrictions vary; treat this as a comparison worksheet.",
+      "fields": [
+        {
+          "id": "lawnArea",
+          "label": "Existing lawn area (m\u00b2)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 100,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "lawnLitersM2",
+          "label": "Lawn water per m\u00b2/week (L)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 25,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "newArea",
+          "label": "Lower-water area (m\u00b2)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 100,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "newLitersM2",
+          "label": "New planting water per m\u00b2/week (L)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 10,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "rainfallCredit",
+          "label": "Reliable weekly rainfall credit (L)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 200,
+          "help": "Enter a non-negative estimate."
+        }
+      ],
+      "testValues": {
+        "lawnArea": "100",
+        "lawnLitersM2": "25",
+        "newArea": "100",
+        "newLitersM2": "10",
+        "rainfallCredit": "200"
+      }
+    },
+    {
+      "slug": "sustainable-action-prioritizer",
+      "title": "Sustainable Action Prioritizer",
+      "description": "Rank three proposed actions by estimated annual impact, feasibility, and confidence using a transparent weighted score.",
+      "limitations": "Scores are subjective planning aids, not a universal environmental ranking; use consistent scales.",
+      "fields": [
+        {
+          "id": "actionA",
+          "label": "Action A",
+          "type": "text",
+          "required": true,
+          "default": "LED lighting retrofit",
+          "placeholder": "LED lighting retrofit",
+          "help": "Enter a short description."
+        },
+        {
+          "id": "actionB",
+          "label": "Action B",
+          "type": "text",
+          "required": true,
+          "default": "Bike two commute days",
+          "placeholder": "Bike two commute days",
+          "help": "Enter a short description."
+        },
+        {
+          "id": "actionC",
+          "label": "Action C",
+          "type": "text",
+          "required": true,
+          "default": "Compost food scraps",
+          "placeholder": "Compost food scraps",
+          "help": "Enter a short description."
+        },
+        {
+          "id": "impactA",
+          "label": "A impact score (1-10)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 10,
+          "step": 1,
+          "default": 8,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "impactB",
+          "label": "B impact score (1-10)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 10,
+          "step": 1,
+          "default": 7,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "impactC",
+          "label": "C impact score (1-10)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 10,
+          "step": 1,
+          "default": 5,
+          "help": "Enter a non-negative estimate."
+        },
+        {
+          "id": "feasibility",
+          "label": "Shared feasibility score (1-10)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 10,
+          "step": 1,
+          "default": 7,
+          "help": "Enter a non-negative estimate."
+        }
+      ],
+      "testValues": {
+        "actionA": "LED lighting retrofit",
+        "actionB": "Bike two commute days",
+        "actionC": "Compost food scraps",
+        "impactA": "8",
+        "impactB": "7",
+        "impactC": "5",
+        "feasibility": "7"
+      }
+    },
+    {
+      "slug": "home-battery-sizing-scenario",
+      "title": "Home Battery Sizing Scenario",
+      "description": "Estimate usable battery capacity and approximate cycle count from daily load, backup hours, and usable-depth assumptions.",
+      "limitations": "This is a manual sizing scenario, not an electrical design or safety recommendation; peak loads and battery degradation are omitted.",
+      "fields": [
+        {
+          "id": "dailyLoadKwh",
+          "label": "Daily household load (kWh)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "step": "any",
+          "default": 12
+        },
+        {
+          "id": "backupHours",
+          "label": "Backup hours desired",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 240,
+          "step": "any",
+          "default": 12
+        },
+        {
+          "id": "averageLoadShare",
+          "label": "Share of daily load during backup window (%)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 100,
+          "step": 1,
+          "default": 50
+        },
+        {
+          "id": "usableDepth",
+          "label": "Usable battery depth (%)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 100,
+          "step": 1,
+          "default": 80
+        }
+      ],
+      "testValues": {
+        "dailyLoadKwh": "12",
+        "backupHours": "12",
+        "averageLoadShare": "50",
+        "usableDepth": "80"
+      }
+    },
+    {
+      "slug": "e-waste-collection-planner",
+      "title": "E-Waste Collection Planner",
+      "description": "Aggregate stored electronics by item count and mass, then schedule a practical collection batch against a chosen minimum weight.",
+      "limitations": "Masses are user estimates; it does not identify hazardous components, certify recyclers, or provide local drop-off information.",
+      "fields": [
+        {
+          "id": "smallCount",
+          "label": "Small devices count",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 10000,
+          "step": 1,
+          "default": 6
+        },
+        {
+          "id": "smallKg",
+          "label": "Average small-device mass (kg)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": "any",
+          "default": 0.2
+        },
+        {
+          "id": "largeCount",
+          "label": "Large devices count",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 10000,
+          "step": 1,
+          "default": 2
+        },
+        {
+          "id": "largeKg",
+          "label": "Average large-device mass (kg)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 500,
+          "step": "any",
+          "default": 8
+        },
+        {
+          "id": "batchThresholdKg",
+          "label": "Preferred collection batch size (kg)",
+          "type": "number",
+          "required": true,
+          "min": 0.1,
+          "max": 10000,
+          "step": "any",
+          "default": 15
+        }
+      ],
+      "testValues": {
+        "smallCount": "6",
+        "smallKg": "0.2",
+        "largeCount": "2",
+        "largeKg": "8",
+        "batchThresholdKg": "15"
+      }
+    }
+  ]
+}

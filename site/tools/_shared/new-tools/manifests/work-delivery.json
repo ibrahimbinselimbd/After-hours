@@ -1,0 +1,1069 @@
+{
+  "category": {
+    "id": "work-delivery",
+    "title": "Work & Project Delivery",
+    "description": "Browser-local tools for planning, prioritizing, coordinating, validating, and closing project work without network access.",
+    "accent_color": "#2563EB"
+  },
+  "tools": [
+    {
+      "slug": "delivery-risk-register",
+      "title": "Delivery Risk Register",
+      "description": "Ranks a delivery risk from likelihood and impact and proposes a response priority.",
+      "limitations": "Scores are subjective and do not predict outcomes.",
+      "fields": [
+        {
+          "id": "riskName",
+          "label": "Risk name",
+          "type": "text",
+          "required": true,
+          "placeholder": "Vendor API change"
+        },
+        {
+          "id": "likelihood",
+          "label": "Likelihood (1\u20135)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5,
+          "step": 1
+        },
+        {
+          "id": "impact",
+          "label": "Impact (1\u20135)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5,
+          "step": 1
+        },
+        {
+          "id": "mitigation",
+          "label": "Mitigation or trigger",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Pin version and test weekly"
+        }
+      ],
+      "testValues": {
+        "riskName": "Vendor API change",
+        "likelihood": 4,
+        "impact": 5,
+        "mitigation": "Pin version and test weekly"
+      }
+    },
+    {
+      "slug": "project-charter-builder",
+      "title": "Project Charter Builder",
+      "description": "Turns a goal, success measure, boundaries, and sponsor context into a compact alignment charter.",
+      "limitations": "It cannot validate stakeholder agreement or feasibility.",
+      "fields": [
+        {
+          "id": "goal",
+          "label": "Outcome goal",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "What should change?"
+        },
+        {
+          "id": "successMeasure",
+          "label": "Success measure",
+          "type": "text",
+          "required": true,
+          "placeholder": "Metric and target"
+        },
+        {
+          "id": "inScope",
+          "label": "In scope",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Included work"
+        },
+        {
+          "id": "outOfScope",
+          "label": "Out of scope",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Explicit exclusions"
+        }
+      ],
+      "testValues": {
+        "goal": "Launch a self-service support portal",
+        "successMeasure": "80% of requests resolved without escalation",
+        "inScope": "FAQ, search, feedback form",
+        "outOfScope": "Native mobile app"
+      }
+    },
+    {
+      "slug": "milestone-map-builder",
+      "title": "Milestone Map Builder",
+      "description": "Builds a sequenced milestone map from named checkpoints and durations, including contingency.",
+      "limitations": "Durations are working-day estimates and ignore holidays and parallel work.",
+      "fields": [
+        {
+          "id": "milestones",
+          "label": "Milestones (name: days)",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Research: 3\nPrototype: 5"
+        },
+        {
+          "id": "startDate",
+          "label": "Start date",
+          "type": "date",
+          "required": true
+        },
+        {
+          "id": "bufferPercent",
+          "label": "Contingency buffer (%)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 10
+        }
+      ],
+      "testValues": {
+        "milestones": "Research: 3\nPrototype: 5\nPilot: 4",
+        "startDate": "2026-11-02",
+        "bufferPercent": 10
+      }
+    },
+    {
+      "slug": "dependency-map-analyzer",
+      "title": "Dependency Map Analyzer",
+      "description": "Identifies blocked work and traces the prerequisite chain for a selected item.",
+      "limitations": "It relies on exact item names and cannot infer missing dependencies.",
+      "fields": [
+        {
+          "id": "items",
+          "label": "Work items (one per line)",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Design\nBuild\nTest"
+        },
+        {
+          "id": "dependencies",
+          "label": "Dependencies (item > prerequisite)",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Build > Design"
+        },
+        {
+          "id": "focus",
+          "label": "Focus item",
+          "type": "text",
+          "required": true,
+          "placeholder": "Launch"
+        }
+      ],
+      "testValues": {
+        "items": "Design\nBuild\nTest\nLaunch",
+        "dependencies": "Build > Design\nTest > Build\nLaunch > Test",
+        "focus": "Launch"
+      }
+    },
+    {
+      "slug": "wip-policy-designer",
+      "title": "WIP Policy Designer",
+      "description": "Calculates a starting work-in-progress limit from team size, workflow stages, and flow factor.",
+      "limitations": "It is a starting policy; validate it against observed throughput.",
+      "fields": [
+        {
+          "id": "teamSize",
+          "label": "People actively delivering",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 100,
+          "step": 1
+        },
+        {
+          "id": "stages",
+          "label": "Workflow stages",
+          "type": "text",
+          "required": true,
+          "placeholder": "Ready, Doing, Review, Done"
+        },
+        {
+          "id": "flowFactor",
+          "label": "Flow factor (%)",
+          "type": "number",
+          "required": true,
+          "min": 50,
+          "max": 200,
+          "step": 1,
+          "default": 100
+        }
+      ],
+      "testValues": {
+        "teamSize": 5,
+        "stages": "Ready, Doing, Review, Done",
+        "flowFactor": 100
+      }
+    },
+    {
+      "slug": "acceptance-criteria-builder",
+      "title": "Acceptance Criteria Builder",
+      "description": "Converts a user outcome and constraints into testable Given/When/Then criteria.",
+      "limitations": "Criteria need domain review and do not replace formal requirements.",
+      "fields": [
+        {
+          "id": "actor",
+          "label": "User or role",
+          "type": "text",
+          "required": true,
+          "placeholder": "Account owner"
+        },
+        {
+          "id": "outcome",
+          "label": "Desired outcome",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "What can they accomplish?"
+        },
+        {
+          "id": "constraints",
+          "label": "Constraints (one per line)",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Must work offline"
+        }
+      ],
+      "testValues": {
+        "actor": "Project lead",
+        "outcome": "review release readiness before launch",
+        "constraints": "Must show unresolved blockers\nMust work on mobile"
+      }
+    },
+    {
+      "slug": "qa-test-matrix",
+      "title": "QA Test Matrix Builder",
+      "description": "Creates a test matrix by crossing scenarios with test types and reports the test count.",
+      "limitations": "It does not execute tests or know product-specific risk.",
+      "fields": [
+        {
+          "id": "scenarios",
+          "label": "Scenarios (one per line)",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "New user\nReturning user"
+        },
+        {
+          "id": "testTypes",
+          "label": "Test types",
+          "type": "text",
+          "required": true,
+          "placeholder": "Happy path, Error path"
+        },
+        {
+          "id": "riskBias",
+          "label": "Risk emphasis",
+          "type": "select",
+          "required": true,
+          "options": [
+            "balanced",
+            "high-risk-first",
+            "edge-case-first"
+          ]
+        }
+      ],
+      "testValues": {
+        "scenarios": "New user\nReturning user\nOffline retry",
+        "testTypes": "Happy path, Error path, Accessibility",
+        "riskBias": "high-risk-first"
+      }
+    },
+    {
+      "slug": "release-readiness-gate",
+      "title": "Release Readiness Gate",
+      "description": "Evaluates weighted release checks and reports a go or no-go recommendation.",
+      "limitations": "The result is only as reliable as the evidence entered.",
+      "fields": [
+        {
+          "id": "checks",
+          "label": "Checks (name|weight|status)",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Critical bug fixed|5|pass"
+        },
+        {
+          "id": "threshold",
+          "label": "Pass threshold (%)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 100,
+          "step": 1,
+          "default": 85
+        },
+        {
+          "id": "releaseName",
+          "label": "Release name",
+          "type": "text",
+          "required": true,
+          "placeholder": "v2.4"
+        }
+      ],
+      "testValues": {
+        "checks": "Critical bug fixed|5|pass\nDocs updated|2|pass\nSupport briefed|3|fail",
+        "threshold": 85,
+        "releaseName": "Support portal v2.4"
+      }
+    },
+    {
+      "slug": "change-request-triage",
+      "title": "Change Request Triage",
+      "description": "Scores a proposed change on urgency, value, effort, and disruption to suggest a disposition.",
+      "limitations": "The score is a transparent prioritization heuristic, not a business case.",
+      "fields": [
+        {
+          "id": "request",
+          "label": "Change request",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Describe the requested change"
+        },
+        {
+          "id": "urgency",
+          "label": "Urgency (1\u20135)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5,
+          "step": 1
+        },
+        {
+          "id": "value",
+          "label": "Expected value (1\u20135)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5,
+          "step": 1
+        },
+        {
+          "id": "effort",
+          "label": "Effort (1\u20135)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5,
+          "step": 1
+        },
+        {
+          "id": "disruption",
+          "label": "Disruption (1\u20135)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5,
+          "step": 1
+        }
+      ],
+      "testValues": {
+        "request": "Add export to CSV",
+        "urgency": 3,
+        "value": 5,
+        "effort": 2,
+        "disruption": 1
+      }
+    },
+    {
+      "slug": "stakeholder-update-drafter",
+      "title": "Stakeholder Update Drafter",
+      "description": "Builds a concise status update with progress, status, and an explicit ask.",
+      "limitations": "It drafts wording and does not send or verify the update.",
+      "fields": [
+        {
+          "id": "project",
+          "label": "Project name",
+          "type": "text",
+          "required": true,
+          "placeholder": "Checkout redesign"
+        },
+        {
+          "id": "status",
+          "label": "Overall status",
+          "type": "select",
+          "required": true,
+          "options": [
+            "on track",
+            "at risk",
+            "blocked",
+            "complete"
+          ]
+        },
+        {
+          "id": "progress",
+          "label": "Progress since last update",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "What changed?"
+        },
+        {
+          "id": "ask",
+          "label": "Decision or help needed",
+          "type": "textarea",
+          "required": false,
+          "placeholder": "Optional request"
+        }
+      ],
+      "testValues": {
+        "project": "Checkout redesign",
+        "status": "at risk",
+        "progress": "Prototype passed review; payment test is delayed.",
+        "ask": "Approve one extra QA day."
+      }
+    },
+    {
+      "slug": "decision-log-entry",
+      "title": "Decision Log Entry Builder",
+      "description": "Creates a reusable decision record with options, rationale, and reversibility.",
+      "limitations": "It records supplied reasoning but cannot assess whether the decision is correct.",
+      "fields": [
+        {
+          "id": "decision",
+          "label": "Decision statement",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Choose the approach"
+        },
+        {
+          "id": "options",
+          "label": "Options considered (one per line)",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Option A\nOption B"
+        },
+        {
+          "id": "rationale",
+          "label": "Rationale",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Evidence and trade-offs"
+        },
+        {
+          "id": "reversibility",
+          "label": "Reversibility",
+          "type": "select",
+          "required": true,
+          "options": [
+            "easy",
+            "moderate",
+            "hard"
+          ]
+        }
+      ],
+      "testValues": {
+        "decision": "Use a weekly release train",
+        "options": "Ad hoc releases\nWeekly train\nMonthly train",
+        "rationale": "Reduces coordination cost.",
+        "reversibility": "moderate"
+      }
+    },
+    {
+      "slug": "retrospective-theme-cluster",
+      "title": "Retrospective Theme Cluster",
+      "description": "Groups retrospective observations by literal keyword themes for focused discussion.",
+      "limitations": "Keyword grouping may miss synonyms or sarcasm.",
+      "fields": [
+        {
+          "id": "observations",
+          "label": "Observations (one per line)",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Review queue grew\nPairing helped debugging"
+        },
+        {
+          "id": "themeKeywords",
+          "label": "Themes name=keywords",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "flow=queue,waiting\nquality=bug,test"
+        },
+        {
+          "id": "cycle",
+          "label": "Iteration label",
+          "type": "text",
+          "required": true,
+          "placeholder": "Sprint 12"
+        }
+      ],
+      "testValues": {
+        "observations": "Review queue grew\nPairing helped debugging\nMore tests caught bugs",
+        "themeKeywords": "flow=queue,waiting\nquality=bug,test\ncollaboration=pairing",
+        "cycle": "Sprint 12"
+      }
+    },
+    {
+      "slug": "incident-severity-classifier",
+      "title": "Incident Severity Classifier",
+      "description": "Classifies an issue using user impact, scope, duration, and workaround availability.",
+      "limitations": "This is a lightweight triage aid, not an incident-response policy.",
+      "fields": [
+        {
+          "id": "affectedUsers",
+          "label": "Affected users",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 1000000,
+          "step": 1
+        },
+        {
+          "id": "scope",
+          "label": "Scope",
+          "type": "select",
+          "required": true,
+          "options": [
+            "single feature",
+            "multiple features",
+            "whole service"
+          ]
+        },
+        {
+          "id": "durationHours",
+          "label": "Duration so far (hours)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 8760,
+          "step": 1
+        },
+        {
+          "id": "workaround",
+          "label": "Workaround",
+          "type": "select",
+          "required": true,
+          "options": [
+            "available",
+            "partial",
+            "none"
+          ]
+        }
+      ],
+      "testValues": {
+        "affectedUsers": 120,
+        "scope": "multiple features",
+        "durationHours": 2,
+        "workaround": "partial"
+      }
+    },
+    {
+      "slug": "escalation-ladder-builder",
+      "title": "Escalation Ladder Builder",
+      "description": "Creates time-boxed escalation levels from owner roles and response intervals.",
+      "limitations": "Intervals are targets and do not contact anyone automatically.",
+      "fields": [
+        {
+          "id": "issue",
+          "label": "Issue summary",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Build pipeline failing"
+        },
+        {
+          "id": "ownerRoles",
+          "label": "Owner roles",
+          "type": "text",
+          "required": true,
+          "placeholder": "On-call engineer, Delivery lead, Sponsor"
+        },
+        {
+          "id": "firstResponseMinutes",
+          "label": "First response target (minutes)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 10080,
+          "step": 1
+        },
+        {
+          "id": "levels",
+          "label": "Escalation levels",
+          "type": "number",
+          "required": true,
+          "min": 2,
+          "max": 6,
+          "step": 1
+        }
+      ],
+      "testValues": {
+        "issue": "Build pipeline failing on main",
+        "ownerRoles": "On-call engineer, Delivery lead, Sponsor",
+        "firstResponseMinutes": 30,
+        "levels": 3
+      }
+    },
+    {
+      "slug": "requirement-prioritizer",
+      "title": "Requirement Prioritizer",
+      "description": "Ranks requirements using value, reach, confidence, and effort with a transparent score.",
+      "limitations": "Scores are subjective and should be revisited as evidence changes.",
+      "fields": [
+        {
+          "id": "requirements",
+          "label": "Requirements (name|value|reach|confidence|effort)",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Search|5|4|4|2"
+        },
+        {
+          "id": "method",
+          "label": "Ranking method",
+          "type": "select",
+          "required": true,
+          "options": [
+            "impact per effort",
+            "value then effort"
+          ]
+        }
+      ],
+      "testValues": {
+        "requirements": "Search|5|4|4|2\nBulk export|3|2|3|3\nSaved filters|4|3|4|2",
+        "method": "impact per effort"
+      }
+    },
+    {
+      "slug": "effort-range-estimator",
+      "title": "Effort Range Estimator",
+      "description": "Computes a three-point expected effort and a planning range from optimistic, likely, and pessimistic inputs.",
+      "limitations": "It assumes comparable units and ignores team capacity and calendar time.",
+      "fields": [
+        {
+          "id": "optimistic",
+          "label": "Optimistic effort (hours)",
+          "type": "number",
+          "required": true,
+          "min": 0.1,
+          "max": 100000,
+          "step": 1
+        },
+        {
+          "id": "likely",
+          "label": "Most likely effort (hours)",
+          "type": "number",
+          "required": true,
+          "min": 0.1,
+          "max": 100000,
+          "step": 1
+        },
+        {
+          "id": "pessimistic",
+          "label": "Pessimistic effort (hours)",
+          "type": "number",
+          "required": true,
+          "min": 0.1,
+          "max": 100000,
+          "step": 1
+        },
+        {
+          "id": "confidence",
+          "label": "Planning confidence",
+          "type": "select",
+          "required": true,
+          "options": [
+            "conservative",
+            "balanced",
+            "aggressive"
+          ]
+        }
+      ],
+      "testValues": {
+        "optimistic": 4,
+        "likely": 8,
+        "pessimistic": 20,
+        "confidence": "balanced"
+      }
+    },
+    {
+      "slug": "now-next-later-roadmap",
+      "title": "Now Next Later Roadmap",
+      "description": "Distributes initiatives into Now, Next, and Later using readiness and strategic value.",
+      "limitations": "It is a prioritization snapshot, not a commitment or schedule.",
+      "fields": [
+        {
+          "id": "initiatives",
+          "label": "Initiatives (name|readiness|value)",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Search|5|5"
+        },
+        {
+          "id": "nowLimit",
+          "label": "Maximum Now items",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 20,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "id": "nextLimit",
+          "label": "Maximum Next items",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 30,
+          "step": 1,
+          "default": 5
+        }
+      ],
+      "testValues": {
+        "initiatives": "Search|5|5\nExport|3|4\nPersonalization|2|5\nAdmin filters|4|3",
+        "nowLimit": 2,
+        "nextLimit": 2
+      }
+    },
+    {
+      "slug": "definition-of-done-designer",
+      "title": "Definition of Done Designer",
+      "description": "Builds a role-aware completion checklist from deliverable type, risk, and existing evidence.",
+      "limitations": "It suggests checks and cannot certify compliance.",
+      "fields": [
+        {
+          "id": "deliverable",
+          "label": "Deliverable type",
+          "type": "select",
+          "required": true,
+          "options": [
+            "feature",
+            "content",
+            "data change",
+            "bug fix"
+          ]
+        },
+        {
+          "id": "riskLevel",
+          "label": "Risk level",
+          "type": "select",
+          "required": true,
+          "options": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        {
+          "id": "requiredEvidence",
+          "label": "Evidence available",
+          "type": "text",
+          "required": true,
+          "placeholder": "tests, review, docs"
+        }
+      ],
+      "testValues": {
+        "deliverable": "feature",
+        "riskLevel": "high",
+        "requiredEvidence": "unit tests, peer review"
+      }
+    },
+    {
+      "slug": "sprint-goal-checker",
+      "title": "Sprint Goal Checker",
+      "description": "Checks whether a sprint goal is outcome-focused, measurable, bounded, and beneficiary-aware.",
+      "limitations": "Heuristics flag wording issues but cannot judge strategic value.",
+      "fields": [
+        {
+          "id": "goal",
+          "label": "Sprint goal",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Enable customers to self-serve returns"
+        },
+        {
+          "id": "workItems",
+          "label": "Work items (one per line)",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Return API\nHelp page"
+        },
+        {
+          "id": "sprintDays",
+          "label": "Sprint length (days)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 31,
+          "step": 1
+        }
+      ],
+      "testValues": {
+        "goal": "Enable customers to self-serve returns",
+        "workItems": "Return eligibility API\nReturns help page\nRefund status banner",
+        "sprintDays": 10
+      }
+    },
+    {
+      "slug": "backlog-refinement-slicer",
+      "title": "Backlog Refinement Slicer",
+      "description": "Estimates how many vertical slices a large work item needs at a chosen target size.",
+      "limitations": "Suggestions are prompts for refinement, not complete technical designs.",
+      "fields": [
+        {
+          "id": "workItem",
+          "label": "Large work item",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Build account reporting"
+        },
+        {
+          "id": "lens",
+          "label": "Slicing lens",
+          "type": "select",
+          "required": true,
+          "options": [
+            "user journey",
+            "risk first",
+            "data variation",
+            "interface layer"
+          ]
+        },
+        {
+          "id": "targetHours",
+          "label": "Target maximum slice size (hours)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 200,
+          "step": 1
+        },
+        {
+          "id": "roughHours",
+          "label": "Rough total effort (hours)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 10000,
+          "step": 1
+        }
+      ],
+      "testValues": {
+        "workItem": "Build account reporting",
+        "lens": "user journey",
+        "targetHours": 16,
+        "roughHours": 52
+      }
+    },
+    {
+      "slug": "project-health-radar",
+      "title": "Project Health Radar",
+      "description": "Combines five self-reported delivery dimensions into a health band and watch list.",
+      "limitations": "Scores are self-reported and are not objective measurement.",
+      "fields": [
+        {
+          "id": "schedule",
+          "label": "Schedule confidence (1\u20135)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5,
+          "step": 1
+        },
+        {
+          "id": "scope",
+          "label": "Scope stability (1\u20135)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5,
+          "step": 1
+        },
+        {
+          "id": "team",
+          "label": "Team clarity (1\u20135)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5,
+          "step": 1
+        },
+        {
+          "id": "quality",
+          "label": "Quality confidence (1\u20135)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5,
+          "step": 1
+        },
+        {
+          "id": "alignment",
+          "label": "Stakeholder alignment (1\u20135)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5,
+          "step": 1
+        }
+      ],
+      "testValues": {
+        "schedule": 3,
+        "scope": 4,
+        "team": 4,
+        "quality": 3,
+        "alignment": 2
+      }
+    },
+    {
+      "slug": "risk-burndown-planner",
+      "title": "Risk Burndown Planner",
+      "description": "Calculates risk points to retire per review cycle to reach a target residual risk.",
+      "limitations": "It assumes risk scores are additive and comparable.",
+      "fields": [
+        {
+          "id": "riskScores",
+          "label": "Open risk scores",
+          "type": "text",
+          "required": true,
+          "placeholder": "12, 8, 5"
+        },
+        {
+          "id": "targetPoints",
+          "label": "Target remaining points",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 10000,
+          "step": 1
+        },
+        {
+          "id": "cycles",
+          "label": "Review cycles available",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 100,
+          "step": 1
+        }
+      ],
+      "testValues": {
+        "riskScores": "12, 8, 5, 4",
+        "targetPoints": 10,
+        "cycles": 3
+      }
+    },
+    {
+      "slug": "work-breakdown-structure",
+      "title": "Work Breakdown Structure Builder",
+      "description": "Numbers work packages and checks whether each includes an owner and completion evidence.",
+      "limitations": "It does not prove completeness; use it as a decomposition aid.",
+      "fields": [
+        {
+          "id": "deliverable",
+          "label": "Top-level deliverable",
+          "type": "text",
+          "required": true,
+          "placeholder": "Launch reporting dashboard"
+        },
+        {
+          "id": "packages",
+          "label": "Work packages (name | owner | evidence)",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Data model | Alex | schema review"
+        },
+        {
+          "id": "depth",
+          "label": "Numbering depth",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 3,
+          "step": 1,
+          "default": 1
+        }
+      ],
+      "testValues": {
+        "deliverable": "Launch reporting dashboard",
+        "packages": "Data model | Alex | schema review\nAPI endpoint | Jo | contract test\nUI dashboard | Sam | walkthrough",
+        "depth": 1
+      }
+    },
+    {
+      "slug": "project-closure-checklist",
+      "title": "Project Closure Checklist",
+      "description": "Evaluates closure readiness across outcomes, documentation, ownership, lessons, and archive evidence.",
+      "limitations": "It cannot verify records or approvals outside the supplied text.",
+      "fields": [
+        {
+          "id": "project",
+          "label": "Project name",
+          "type": "text",
+          "required": true,
+          "placeholder": "Website migration"
+        },
+        {
+          "id": "evidence",
+          "label": "Evidence (area|status)",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Outcome|done\nDocumentation|done"
+        },
+        {
+          "id": "closeThreshold",
+          "label": "Closure threshold (%)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 100,
+          "step": 1,
+          "default": 90
+        }
+      ],
+      "testValues": {
+        "project": "Website migration",
+        "evidence": "Outcome|done\nDocumentation|done\nOwnership|done\nLessons|open\nArchive|done",
+        "closeThreshold": 90
+      }
+    },
+    {
+      "slug": "delivery-communication-plan",
+      "title": "Delivery Communication Plan",
+      "description": "Maps project audiences to message purpose, cadence, channel, and evidence so updates are intentional and predictable.",
+      "limitations": "It proposes a communication rhythm but cannot know audience preferences or confirm receipt.",
+      "fields": [
+        {
+          "id": "audiences",
+          "label": "Audiences (one per line)",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Sponsor\nDelivery team\nSupport"
+        },
+        {
+          "id": "projectPhase",
+          "label": "Project phase",
+          "type": "select",
+          "required": true,
+          "options": [
+            "discovery",
+            "build",
+            "pilot",
+            "launch",
+            "steady state"
+          ]
+        },
+        {
+          "id": "updateCadence",
+          "label": "Update cadence",
+          "type": "select",
+          "required": true,
+          "options": [
+            "daily",
+            "weekly",
+            "fortnightly",
+            "monthly"
+          ]
+        }
+      ],
+      "testValues": {
+        "audiences": "Sponsor\nDelivery team\nSupport",
+        "projectPhase": "pilot",
+        "updateCadence": "weekly"
+      }
+    }
+  ]
+}

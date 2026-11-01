@@ -5,7 +5,7 @@
   "description": "AFTERHOURS English editorial site and Tools Hub source",
   "scripts": {
     "start": "node server.mjs",
-    "test": "node --check server.mjs && node --check site/info.js && node --check site/tools/text-detector/app.js && node --check site/tools/category-panel.js && node --test tests/*.test.mjs && python3 -m unittest discover -s tests -p 'test_*.py'"
+    "test": "node --check server.mjs && node --check site/tools/heic-to-jpg/app.js && node --check site/tools/heic-to-jpg/decoder-worker.js && node --check worker.js && node --check site/tools/qr-code-generator/app.js && node --check site/info.js && node --check site/tools/text-detector/app.js && node --check site/tools/category-panel.js && node --check site/tools/_shared/planner-runtime.js && node --check site/tools/_shared/new-tools/runtime.js && node --check site/tools/screenshot-photo-text-editor/app.js && node --check scripts/generate-planner-pages.mjs && node --check scripts/generate-new-tools.mjs && node --check scripts/generate-tool-animations.mjs && node --test tests/*.test.mjs && python3 -m unittest discover -s tests -p 'test_*.py'"
   },
   "engines": {
     "node": ">=18"

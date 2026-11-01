@@ -1,0 +1,1066 @@
+{
+  "category": {
+    "id": "food-kitchen",
+    "title": "Food & Kitchen",
+    "description": "Practical browser-local helpers for cooking technique, baking ratios, beverage brewing, food handling, and kitchen workflow.",
+    "accent_color": "#D97706"
+  },
+  "tools": [
+    {
+      "slug": "ingredient-substitution-planner",
+      "title": "Ingredient Substitution Planner",
+      "description": "Suggests a practical replacement quantity and adjustment for a missing common ingredient using a small, transparent local substitution table.",
+      "limitations": "Only the listed ingredients are supported; substitutions can change flavor, texture, allergens, and cooking time.",
+      "fields": [
+        {
+          "id": "ingredient",
+          "label": "Missing ingredient",
+          "type": "select",
+          "required": true,
+          "options": [
+            "butter",
+            "milk",
+            "egg",
+            "sour cream",
+            "lemon juice",
+            "cornstarch"
+          ]
+        },
+        {
+          "id": "amount",
+          "label": "Amount required",
+          "type": "number",
+          "required": true,
+          "min": 0.1,
+          "max": 1000,
+          "step": "any",
+          "default": 1,
+          "help": "Use the recipe's stated unit."
+        },
+        {
+          "id": "unit",
+          "label": "Unit",
+          "type": "select",
+          "required": true,
+          "options": [
+            "cup",
+            "tablespoon",
+            "teaspoon",
+            "each"
+          ]
+        }
+      ],
+      "testValues": {
+        "ingredient": "butter",
+        "amount": 0.5,
+        "unit": "cup"
+      }
+    },
+    {
+      "slug": "cooking-method-converter",
+      "title": "Cooking Method Converter",
+      "description": "Converts a covered oven plan into an approximate stovetop or slow-cooker plan while preserving the supplied cooking intent.",
+      "limitations": "This is a starting estimate, not a guarantee of doneness; vessel size, food density, and altitude matter.",
+      "fields": [
+        {
+          "id": "method",
+          "label": "Current method",
+          "type": "select",
+          "required": true,
+          "options": [
+            "oven",
+            "stovetop",
+            "slow cooker"
+          ]
+        },
+        {
+          "id": "temperature",
+          "label": "Oven temperature (°F)",
+          "type": "number",
+          "required": true,
+          "min": 200,
+          "max": 500,
+          "default": 350
+        },
+        {
+          "id": "minutes",
+          "label": "Current cook time (minutes)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 1440,
+          "default": 45
+        },
+        {
+          "id": "covered",
+          "label": "Covered during cooking",
+          "type": "checkbox",
+          "required": false,
+          "default": true
+        }
+      ],
+      "testValues": {
+        "method": "oven",
+        "temperature": 350,
+        "minutes": 45,
+        "covered": true
+      }
+    },
+    {
+      "slug": "baker-hydration-calculator",
+      "title": "Baker’s Hydration Calculator",
+      "description": "Calculates dough hydration and the water needed for a target hydration from flour weight, making bread formulas easier to compare.",
+      "limitations": "Hydration excludes incidental water in preferments and ingredients unless you add those amounts yourself.",
+      "fields": [
+        {
+          "id": "flourGrams",
+          "label": "Total flour (g)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 100000,
+          "default": 500
+        },
+        {
+          "id": "waterGrams",
+          "label": "Total water (g)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100000,
+          "default": 350
+        },
+        {
+          "id": "targetHydration",
+          "label": "Target hydration (%)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 200,
+          "default": 70
+        }
+      ],
+      "testValues": {
+        "flourGrams": 500,
+        "waterGrams": 350,
+        "targetHydration": 75
+      }
+    },
+    {
+      "slug": "brine-salinity-planner",
+      "title": "Brine Salinity Planner",
+      "description": "Computes salt mass for a chosen percentage brine and total water volume, with a clear reminder that food size and time still control the result.",
+      "limitations": "Use a tested preservation recipe for shelf-stable canning; this tool is for refrigerated culinary brines only.",
+      "fields": [
+        {
+          "id": "waterLiters",
+          "label": "Water (liters)",
+          "type": "number",
+          "required": true,
+          "min": 0.1,
+          "max": 100,
+          "step": "any",
+          "default": 1
+        },
+        {
+          "id": "saltPercent",
+          "label": "Salt percentage by weight",
+          "type": "number",
+          "required": true,
+          "min": 0.5,
+          "max": 20,
+          "step": "any",
+          "default": 5
+        },
+        {
+          "id": "saltType",
+          "label": "Salt type",
+          "type": "select",
+          "required": true,
+          "options": [
+            "fine salt",
+            "kosher salt",
+            "pickling salt"
+          ]
+        }
+      ],
+      "testValues": {
+        "waterLiters": 2,
+        "saltPercent": 5,
+        "saltType": "kosher salt"
+      }
+    },
+    {
+      "slug": "coffee-brew-ratio-planner",
+      "title": "Coffee Brew Ratio Planner",
+      "description": "Turns a coffee-to-water ratio into coffee and water weights for a selected brew size and style.",
+      "limitations": "Taste depends on grind, water quality, temperature, and extraction; the result is a starting recipe, not a quality guarantee.",
+      "fields": [
+        {
+          "id": "waterGrams",
+          "label": "Water (g)",
+          "type": "number",
+          "required": true,
+          "min": 50,
+          "max": 10000,
+          "default": 500
+        },
+        {
+          "id": "ratio",
+          "label": "Water : coffee ratio",
+          "type": "number",
+          "required": true,
+          "min": 5,
+          "max": 25,
+          "step": "any",
+          "default": 16
+        },
+        {
+          "id": "style",
+          "label": "Brew style",
+          "type": "select",
+          "required": true,
+          "options": [
+            "pour-over",
+            "French press",
+            "cold brew concentrate",
+            "espresso-style"
+          ]
+        }
+      ],
+      "testValues": {
+        "waterGrams": 750,
+        "ratio": 16,
+        "style": "pour-over"
+      }
+    },
+    {
+      "slug": "tea-steeping-planner",
+      "title": "Tea Steeping Planner",
+      "description": "Builds a repeatable tea steeping starting point from leaf mass, water volume, tea family, and desired strength.",
+      "limitations": "Leaf age, cultivar, water chemistry, and personal taste can require adjustment; avoid treating the output as a brewing rule.",
+      "fields": [
+        {
+          "id": "waterMl",
+          "label": "Water (ml)",
+          "type": "number",
+          "required": true,
+          "min": 50,
+          "max": 5000,
+          "default": 300
+        },
+        {
+          "id": "teaType",
+          "label": "Tea family",
+          "type": "select",
+          "required": true,
+          "options": [
+            "green",
+            "black",
+            "oolong",
+            "white",
+            "herbal"
+          ]
+        },
+        {
+          "id": "strength",
+          "label": "Strength",
+          "type": "select",
+          "required": true,
+          "options": [
+            "light",
+            "standard",
+            "strong"
+          ]
+        }
+      ],
+      "testValues": {
+        "waterMl": 400,
+        "teaType": "black",
+        "strength": "standard"
+      }
+    },
+    {
+      "slug": "sourdough-feeding-planner",
+      "title": "Sourdough Feeding Planner",
+      "description": "Calculates flour and water additions for a target starter amount and hydration, using the starter you already have.",
+      "limitations": "It does not predict rise or fermentation readiness; temperature, culture health, and feeding history matter.",
+      "fields": [
+        {
+          "id": "starterGrams",
+          "label": "Starter on hand (g)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 10000,
+          "default": 50
+        },
+        {
+          "id": "feedRatio",
+          "label": "Feed ratio (new flour : starter)",
+          "type": "number",
+          "required": true,
+          "min": 0.5,
+          "max": 20,
+          "step": "any",
+          "default": 2
+        },
+        {
+          "id": "hydration",
+          "label": "Target hydration (%)",
+          "type": "number",
+          "required": true,
+          "min": 50,
+          "max": 150,
+          "default": 100
+        }
+      ],
+      "testValues": {
+        "starterGrams": 60,
+        "feedRatio": 3,
+        "hydration": 100
+      }
+    },
+    {
+      "slug": "batch-cooking-portion-planner",
+      "title": "Batch Cooking Portion Planner",
+      "description": "Allocates a cooked batch into meal portions and reserve portions while accounting for an expected cooking yield loss.",
+      "limitations": "Yield loss is an estimate; it does not assess nutrition, storage life, or whether a container is food-safe.",
+      "fields": [
+        {
+          "id": "rawWeightGrams",
+          "label": "Raw batch weight (g)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 100000,
+          "default": 2000
+        },
+        {
+          "id": "yieldPercent",
+          "label": "Expected cooked yield (%)",
+          "type": "number",
+          "required": true,
+          "min": 10,
+          "max": 150,
+          "default": 80
+        },
+        {
+          "id": "portions",
+          "label": "Portions",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 200,
+          "default": 6
+        },
+        {
+          "id": "reservePortions",
+          "label": "Reserve portions",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 100,
+          "default": 1
+        }
+      ],
+      "testValues": {
+        "rawWeightGrams": 2400,
+        "yieldPercent": 82,
+        "portions": 6,
+        "reservePortions": 1
+      }
+    },
+    {
+      "slug": "food-cost-per-serving",
+      "title": "Food Cost per Serving",
+      "description": "Adds ingredient costs and divides them across servings, showing the contribution of each listed ingredient from local user-entered values.",
+      "limitations": "This is a simple ingredient-cost estimate and excludes labor, utilities, waste beyond the supplied amounts, and taxes.",
+      "fields": [
+        {
+          "id": "ingredients",
+          "label": "Ingredient costs",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "rice=1.20\nvegetables=2.50\noil=0.80",
+          "help": "One item per line as name=cost."
+        },
+        {
+          "id": "servings",
+          "label": "Servings produced",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 500,
+          "default": 4
+        },
+        {
+          "id": "currency",
+          "label": "Currency label",
+          "type": "text",
+          "required": true,
+          "default": "USD",
+          "max": 6
+        }
+      ],
+      "testValues": {
+        "ingredients": "rice=1.20\nvegetables=2.50\noil=0.80",
+        "servings": 4,
+        "currency": "USD"
+      }
+    },
+    {
+      "slug": "oven-rack-load-planner",
+      "title": "Oven Rack Load Planner",
+      "description": "Checks whether a multi-rack oven load has enough vertical space and suggests a rack arrangement from pan heights and clearance.",
+      "limitations": "It cannot model airflow or hot spots; follow the appliance manual and rotate pans only when the recipe permits.",
+      "fields": [
+        {
+          "id": "cavityHeightCm",
+          "label": "Usable cavity height (cm)",
+          "type": "number",
+          "required": true,
+          "min": 10,
+          "max": 100,
+          "default": 35
+        },
+        {
+          "id": "panHeights",
+          "label": "Pan heights (cm)",
+          "type": "text",
+          "required": true,
+          "placeholder": "5, 4, 3",
+          "help": "Comma-separated heights."
+        },
+        {
+          "id": "clearanceCm",
+          "label": "Clearance between pans (cm)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 20,
+          "step": "any",
+          "default": 5
+        }
+      ],
+      "testValues": {
+        "cavityHeightCm": 36,
+        "panHeights": "5,4,3",
+        "clearanceCm": 5
+      }
+    },
+    {
+      "slug": "baking-pan-converter",
+      "title": "Baking Pan Volume Converter",
+      "description": "Compares rectangular, round, and square pan volumes and estimates the batter fraction needed when changing pan shape.",
+      "limitations": "Pan geometry is simplified and ignores taper; do not fill a pan beyond a recipe’s safe fill level.",
+      "fields": [
+        {
+          "id": "fromShape",
+          "label": "Original pan shape",
+          "type": "select",
+          "required": true,
+          "options": [
+            "round",
+            "square",
+            "rectangle"
+          ]
+        },
+        {
+          "id": "fromA",
+          "label": "Original dimension A (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 200,
+          "default": 23
+        },
+        {
+          "id": "fromB",
+          "label": "Original dimension B (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 200,
+          "default": 33
+        },
+        {
+          "id": "toShape",
+          "label": "New pan shape",
+          "type": "select",
+          "required": true,
+          "options": [
+            "round",
+            "square",
+            "rectangle"
+          ]
+        },
+        {
+          "id": "toA",
+          "label": "New dimension A (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 200,
+          "default": 20
+        },
+        {
+          "id": "toB",
+          "label": "New dimension B (cm)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 200,
+          "default": 20
+        }
+      ],
+      "testValues": {
+        "fromShape": "rectangle",
+        "fromA": 23,
+        "fromB": 33,
+        "toShape": "rectangle",
+        "toA": 25,
+        "toB": 25
+      }
+    },
+    {
+      "slug": "egg-substitute-planner",
+      "title": "Egg Substitute Planner",
+      "description": "Maps whole eggs to practical leavening or binding substitutes and scales the needed quantity for a recipe.",
+      "limitations": "Substitutes do not reproduce every egg function; results vary especially in custards, meringues, and recipes relying on structure.",
+      "fields": [
+        {
+          "id": "eggs",
+          "label": "Eggs to replace",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 30,
+          "default": 2
+        },
+        {
+          "id": "substitute",
+          "label": "Substitute",
+          "type": "select",
+          "required": true,
+          "options": [
+            "flax egg",
+            "applesauce",
+            "aquafaba",
+            "commercial egg replacer"
+          ]
+        },
+        {
+          "id": "purpose",
+          "label": "Main purpose",
+          "type": "select",
+          "required": true,
+          "options": [
+            "binding",
+            "moisture",
+            "leavening"
+          ]
+        }
+      ],
+      "testValues": {
+        "eggs": 2,
+        "substitute": "flax egg",
+        "purpose": "binding"
+      }
+    },
+    {
+      "slug": "thickener-conversion-planner",
+      "title": "Sauce Thickener Conversion Planner",
+      "description": "Estimates an equivalent amount when switching among flour, cornstarch, and arrowroot for a specified sauce volume.",
+      "limitations": "Acidity, dairy, boiling, and reheating affect thickening; use the result as a starting point and adjust gradually.",
+      "fields": [
+        {
+          "id": "volumeCups",
+          "label": "Liquid volume (cups)",
+          "type": "number",
+          "required": true,
+          "min": 0.25,
+          "max": 100,
+          "step": "any",
+          "default": 2
+        },
+        {
+          "id": "from",
+          "label": "Current thickener",
+          "type": "select",
+          "required": true,
+          "options": [
+            "flour",
+            "cornstarch",
+            "arrowroot"
+          ]
+        },
+        {
+          "id": "to",
+          "label": "Replacement thickener",
+          "type": "select",
+          "required": true,
+          "options": [
+            "flour",
+            "cornstarch",
+            "arrowroot"
+          ]
+        },
+        {
+          "id": "thickness",
+          "label": "Desired thickness",
+          "type": "select",
+          "required": true,
+          "options": [
+            "light",
+            "standard",
+            "firm"
+          ]
+        }
+      ],
+      "testValues": {
+        "volumeCups": 3,
+        "from": "flour",
+        "to": "cornstarch",
+        "thickness": "standard"
+      }
+    },
+    {
+      "slug": "spice-blend-scaler",
+      "title": "Spice Blend Scaler",
+      "description": "Scales a custom spice blend recipe to a target total mass while preserving each ingredient’s ratio.",
+      "limitations": "It only scales the text you provide and cannot judge freshness, heat, saltiness, or allergen cross-contact.",
+      "fields": [
+        {
+          "id": "blend",
+          "label": "Blend ingredients",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "paprika=4\ncumin=2\ngarlic=1",
+          "help": "One ingredient per line as name=parts."
+        },
+        {
+          "id": "targetGrams",
+          "label": "Target blend weight (g)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 10000,
+          "default": 100
+        }
+      ],
+      "testValues": {
+        "blend": "paprika=4\ncumin=2\ngarlic=1",
+        "targetGrams": 140
+      }
+    },
+    {
+      "slug": "pizza-dough-fermentation-planner",
+      "title": "Pizza Dough Fermentation Planner",
+      "description": "Schedules a user-specified pizza dough fermentation across room-temperature and chilled phases, including a usable yeast estimate.",
+      "limitations": "Fermentation is highly temperature-sensitive; the yeast figure is a rough planning estimate, not a guarantee of timing or flavor.",
+      "fields": [
+        {
+          "id": "doughGrams",
+          "label": "Total dough (g)",
+          "type": "number",
+          "required": true,
+          "min": 100,
+          "max": 20000,
+          "default": 1000
+        },
+        {
+          "id": "coldHours",
+          "label": "Cold fermentation (hours)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 168,
+          "default": 24
+        },
+        {
+          "id": "roomHours",
+          "label": "Room-temperature finish (hours)",
+          "type": "number",
+          "required": true,
+          "min": 0.5,
+          "max": 24,
+          "step": "any",
+          "default": 3
+        },
+        {
+          "id": "roomTempC",
+          "label": "Room temperature (°C)",
+          "type": "number",
+          "required": true,
+          "min": 10,
+          "max": 35,
+          "default": 22
+        }
+      ],
+      "testValues": {
+        "doughGrams": 1200,
+        "coldHours": 48,
+        "roomHours": 3,
+        "roomTempC": 21
+      }
+    },
+    {
+      "slug": "pasta-dough-hydration-planner",
+      "title": "Pasta Dough Hydration Planner",
+      "description": "Calculates liquid or egg-equivalent mass for a target fresh pasta hydration and estimates finished dough yield.",
+      "limitations": "Egg size, flour absorption, and rolling method vary; add liquid slowly rather than relying on the estimate blindly.",
+      "fields": [
+        {
+          "id": "flourGrams",
+          "label": "Flour (g)",
+          "type": "number",
+          "required": true,
+          "min": 50,
+          "max": 10000,
+          "default": 300
+        },
+        {
+          "id": "hydration",
+          "label": "Target hydration (%)",
+          "type": "number",
+          "required": true,
+          "min": 20,
+          "max": 60,
+          "step": "any",
+          "default": 35
+        },
+        {
+          "id": "eggMassGrams",
+          "label": "Egg mass already included (g)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 5000,
+          "default": 150
+        }
+      ],
+      "testValues": {
+        "flourGrams": 400,
+        "hydration": 35,
+        "eggMassGrams": 200
+      }
+    },
+    {
+      "slug": "cooking-yield-loss-estimator",
+      "title": "Cooking Yield & Loss Estimator",
+      "description": "Estimates cooked yield and mass lost or gained from a raw ingredient using a user-entered yield percentage.",
+      "limitations": "Yield percentages vary by cut, trim, method, and moisture; this is not a nutrition or food-safety calculation.",
+      "fields": [
+        {
+          "id": "rawGrams",
+          "label": "Raw weight (g)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 100000,
+          "default": 1000
+        },
+        {
+          "id": "yieldPercent",
+          "label": "Expected cooked yield (%)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 200,
+          "step": "any",
+          "default": 75
+        },
+        {
+          "id": "ingredient",
+          "label": "Ingredient",
+          "type": "text",
+          "required": true,
+          "default": "chicken thighs",
+          "max": 60
+        }
+      ],
+      "testValues": {
+        "rawGrams": 1800,
+        "yieldPercent": 72,
+        "ingredient": "roasted vegetables"
+      }
+    },
+    {
+      "slug": "leftover-portion-label-maker",
+      "title": "Leftover Portion Label Maker",
+      "description": "Creates concise freezer or refrigerator labels from a dish name, portion count, preparation date, and storage location.",
+      "limitations": "The label does not determine a safe storage duration; follow local food-safety guidance and your own handling records.",
+      "fields": [
+        {
+          "id": "dish",
+          "label": "Dish name",
+          "type": "text",
+          "required": true,
+          "max": 80,
+          "default": "Vegetable soup"
+        },
+        {
+          "id": "portions",
+          "label": "Portions",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 100,
+          "default": 4
+        },
+        {
+          "id": "prepared",
+          "label": "Prepared date",
+          "type": "date",
+          "required": true,
+          "default": "2026-10-30"
+        },
+        {
+          "id": "location",
+          "label": "Storage location",
+          "type": "select",
+          "required": true,
+          "options": [
+            "refrigerator",
+            "freezer"
+          ]
+        }
+      ],
+      "testValues": {
+        "dish": "Vegetable soup",
+        "portions": 4,
+        "prepared": "2026-10-30",
+        "location": "freezer"
+      }
+    },
+    {
+      "slug": "meal-prep-container-planner",
+      "title": "Meal-Prep Container Planner",
+      "description": "Allocates containers by portion size and calculates total container volume needed for a batch, without creating a meal plan or grocery list.",
+      "limitations": "Real fill volume depends on food shape and headspace; verify container measurements and leave room for expansion when freezing.",
+      "fields": [
+        {
+          "id": "portions",
+          "label": "Number of portions",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 200,
+          "default": 5
+        },
+        {
+          "id": "portionMl",
+          "label": "Food per portion (ml)",
+          "type": "number",
+          "required": true,
+          "min": 50,
+          "max": 5000,
+          "default": 600
+        },
+        {
+          "id": "headspacePercent",
+          "label": "Headspace (%)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 50,
+          "default": 10
+        },
+        {
+          "id": "containerSizeMl",
+          "label": "Container size (ml)",
+          "type": "number",
+          "required": true,
+          "min": 50,
+          "max": 10000,
+          "default": 750
+        }
+      ],
+      "testValues": {
+        "portions": 6,
+        "portionMl": 550,
+        "headspacePercent": 10,
+        "containerSizeMl": 750
+      }
+    },
+    {
+      "slug": "allergen-ingredient-matrix",
+      "title": "Ingredient Allergen Matrix",
+      "description": "Checks user-entered ingredient lines against a small transparent allergen keyword set and reports lines requiring review.",
+      "limitations": "This is not a certified allergen determination; labels, shared equipment, regional rules, and trace ingredients require manual verification.",
+      "fields": [
+        {
+          "id": "ingredients",
+          "label": "Ingredient list",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "flour\nmilk\nolive oil",
+          "help": "One ingredient or label line per row."
+        },
+        {
+          "id": "allergens",
+          "label": "Allergens to flag",
+          "type": "text",
+          "required": true,
+          "default": "milk,egg,wheat,peanut,soy,sesame",
+          "help": "Comma-separated keywords."
+        }
+      ],
+      "testValues": {
+        "ingredients": "flour\nmilk\nolive oil\nsoy sauce",
+        "allergens": "milk,wheat,soy"
+      }
+    },
+    {
+      "slug": "kitchen-tasting-scorecard",
+      "title": "Kitchen Tasting Scorecard",
+      "description": "Aggregates sensory scores for aroma, flavor, texture, appearance, and balance into a weighted review with actionable weakest areas.",
+      "limitations": "Scores are subjective and do not measure nutrition, safety, or objective quality; use the same scale consistently.",
+      "fields": [
+        {
+          "id": "dish",
+          "label": "Dish name",
+          "type": "text",
+          "required": true,
+          "max": 80,
+          "default": "Test batch"
+        },
+        {
+          "id": "aroma",
+          "label": "Aroma (1–5)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5,
+          "default": 4
+        },
+        {
+          "id": "flavor",
+          "label": "Flavor (1–5)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5,
+          "default": 4
+        },
+        {
+          "id": "texture",
+          "label": "Texture (1–5)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5,
+          "default": 3
+        },
+        {
+          "id": "appearance",
+          "label": "Appearance (1–5)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5,
+          "default": 4
+        },
+        {
+          "id": "balance",
+          "label": "Balance (1–5)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 5,
+          "default": 3
+        }
+      ],
+      "testValues": {
+        "dish": "Test batch",
+        "aroma": 4,
+        "flavor": 5,
+        "texture": 3,
+        "appearance": 4,
+        "balance": 3
+      }
+    },
+    {
+      "slug": "kitchen-timer-sequence-planner",
+      "title": "Kitchen Timer Sequence Planner",
+      "description": "Turns a set of named tasks and durations into an ordered countdown schedule from a common start time.",
+      "limitations": "The schedule assumes tasks begin sequentially and does not account for parallel work, interruptions, or appliance preheating unless entered as a task.",
+      "fields": [
+        {
+          "id": "tasks",
+          "label": "Tasks and minutes",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Preheat=15\nChop=10\nBake=35",
+          "help": "One task per line as name=minutes."
+        },
+        {
+          "id": "startTime",
+          "label": "Start time (HH:MM)",
+          "type": "text",
+          "required": true,
+          "default": "18:00",
+          "placeholder": "18:00"
+        }
+      ],
+      "testValues": {
+        "tasks": "Preheat=15\nChop=10\nBake=35",
+        "startTime": "18:00"
+      }
+    },
+    {
+      "slug": "kitchen-scale-batch-unit-planner",
+      "title": "Kitchen Scale Batch Unit Planner",
+      "description": "Converts a target batch mass into repeatable weighed portions and reports remainder for practical kitchen prep.",
+      "limitations": "Mass does not guarantee equal volume or equal serving nutrition; use a calibrated scale and account for container tare separately.",
+      "fields": [
+        {
+          "id": "batchGrams",
+          "label": "Batch mass (g)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 100000,
+          "default": 2500
+        },
+        {
+          "id": "portionGrams",
+          "label": "Target portion (g)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 10000,
+          "default": 180
+        },
+        {
+          "id": "tareGrams",
+          "label": "Container tare (g)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 10000,
+          "default": 120
+        }
+      ],
+      "testValues": {
+        "batchGrams": 2500,
+        "portionGrams": 180,
+        "tareGrams": 120
+      }
+    },
+    {
+      "slug": "knife-cut-yield-planner",
+      "title": "Knife-Cut Yield Planner",
+      "description": "Estimates how many uniform pieces a food item can yield from a supplied usable length and target cut size.",
+      "limitations": "The estimate ignores irregular ends, blade kerf, trimming, and food-specific cutting technique; use it for prep planning only.",
+      "fields":[
+        {"id":"usableLengthCm","label":"Usable length (cm)","type":"number","required":true,"min":1,"max":1000,"step":"any","default":30},
+        {"id":"cutSizeCm","label":"Target piece length (cm)","type":"number","required":true,"min":0.1,"max":100,"step":"any","default":2},
+        {"id":"kerfCm","label":"Estimated blade kerf per cut (cm)","type":"number","required":true,"min":0,"max":1,"step":"any","default":0.1},
+        {"id":"food","label":"Food being cut","type":"text","required":true,"max":60,"default":"carrot"}
+      ],
+      "testValues":{"usableLengthCm":30,"cutSizeCm":2,"kerfCm":0.1,"food":"carrot"}
+    }
+  ]
+}

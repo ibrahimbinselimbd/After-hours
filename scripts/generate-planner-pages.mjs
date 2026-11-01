@@ -1,0 +1,144 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import vm from 'node:vm';
+import { fileURLToPath } from 'node:url';
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const shared = path.join(root, 'site/tools/_shared');
+const groups = ['gaming', 'streaming', 'writing', 'learning', 'freelance', 'home', 'work', 'privacy', 'design', 'travel'];
+const siteOrigin = 'https://afterhours-district.bird-timimus.workers.dev';
+const categoryNames = {
+  'pdf-documents': 'PDF & Documents', 'image-design': 'Image & Design', 'video-tools': 'Video Tools',
+  'audio-tools': 'Audio Tools', 'web-seo': 'Web & SEO', 'developer-utilities': 'Developer Utilities',
+  'data-spreadsheets': 'Data & Spreadsheets', 'files-archives': 'Files & Archives',
+  'privacy-security': 'Privacy & Security', 'ai-everyday-utilities': 'AI & Everyday Utilities'
+};
+const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+const safeJson = value => JSON.stringify(value).replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/&/g, '\\u0026');
+const browserWindow = {AHPlannerTools: [], AHPlannerHandlers: {}};
+const moduleSandbox = {window: browserWindow, document: {querySelector: () => null, querySelectorAll: () => []}, console};
+const ownerBySlug = new Map();
+for (const group of groups) {
+  const file = path.join(shared, `planner-${group}.js`);
+  const before = browserWindow.AHPlannerTools.length;
+  vm.runInNewContext(await fs.readFile(file, 'utf8'), moduleSandbox, {filename: file, timeout: 3000});
+  for (const tool of browserWindow.AHPlannerTools.slice(before)) ownerBySlug.set(tool.slug, group);
+}
+const tools = browserWindow.AHPlannerTools;
+const handlers = browserWindow.AHPlannerHandlers;
+if (!Array.isArray(tools) || tools.length !== 100) throw new Error(`Expected exactly 100 planner definitions; found ${tools?.length ?? 0}.`);
+if (Object.keys(handlers).length !== 100) throw new Error(`Expected exactly 100 planner handlers; found ${Object.keys(handlers).length}.`);
+const allowedTypes = new Set(['text', 'textarea', 'number', 'date', 'select', 'checkbox']);
+const slugSet = new Set();
+const titleSet = new Set();
+for (const tool of tools) {
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(tool.slug || '')) throw new Error(`Invalid planner slug: ${tool.slug}`);
+  if (slugSet.has(tool.slug)) throw new Error(`Duplicate planner slug: ${tool.slug}`);
+  if (titleSet.has(tool.title)) throw new Error(`Duplicate planner title: ${tool.title}`);
+  if (!categoryNames[tool.categoryId]) throw new Error(`${tool.slug} uses a category outside the existing taxonomy: ${tool.categoryId}`);
+  if (!ownerBySlug.has(tool.slug) || typeof handlers[tool.slug] !== 'function') throw new Error(`Missing module or handler for ${tool.slug}`);
+  if (!Array.isArray(tool.fields) || !tool.fields.length || tool.fields.length > 20) throw new Error(`${tool.slug} must declare 1–20 fields.`);
+  const fieldIds = new Set();
+  for (const field of tool.fields) {
+    const key = field?.id || field?.name || '';
+    if (!/^[a-zA-Z][\w-]{0,40}$/.test(key) || !allowedTypes.has(field?.type)) throw new Error(`${tool.slug} has an unsupported field definition.`);
+    if (fieldIds.has(key)) throw new Error(`${tool.slug} has duplicate field id ${key}.`);
+    fieldIds.add(key);
+  }
+  slugSet.add(tool.slug);
+  titleSet.add(tool.title);
+}
+
+// The hub only needs short catalog metadata; full handler modules load on their own tool pages.
+const catalogData = tools.map(({slug, title, categoryId, description}) => ({slug, title, categoryId, description}));
+await fs.writeFile(path.join(shared, 'planner-catalog-data.js'), `window.AHPlannerTools=${safeJson(catalogData)};\n`);
+
+const catalogPath = path.join(root, 'site/tools/catalog.js');
+const catalogSource = await fs.readFile(catalogPath, 'utf8');
+const catalogSandbox = {window: browserWindow, document: {querySelector: () => null, querySelectorAll: () => []}, console};
+let newCatalogSource = '';
+try { newCatalogSource = await fs.readFile(path.join(shared, 'new-tools-catalog-data.js'), 'utf8'); }
+catch (error) { if (error.code !== 'ENOENT') throw error; }
+if (newCatalogSource) vm.runInNewContext(newCatalogSource, catalogSandbox, {filename: 'new-tools-catalog-data.js', timeout: 3000});
+vm.runInNewContext(`${catalogSource}\n;globalThis.__categories = categories;`, catalogSandbox, {filename: catalogPath, timeout: 3000});
+const categories = catalogSandbox.__categories;
+const activeTools = categories.flatMap(category => category.availableTools);
+const expectedActiveCount = activeTools.length;
+const newToolCount = browserWindow.AHNewToolCatalog?.tools?.length || 0;
+if (!expectedActiveCount) throw new Error('The active catalog is empty.');
+const routes = activeTools.map(tool => tool.href);
+if (new Set(routes).size !== expectedActiveCount || new Set(activeTools.map(tool => tool.title)).size !== expectedActiveCount) throw new Error('Catalog routes and titles must be unique.');
+const routeSet = new Set(routes);
+for (const tool of tools) {
+  if (!routeSet.has(`/tools/${tool.slug}/`)) throw new Error(`Catalog is missing planner ${tool.slug}.`);
+}
+if (!routeSet.has('/tools/screenshot-photo-text-editor/')) throw new Error('Catalog is missing the screenshot editor.');
+if (routeSet.has('/tools/text-detector/')) throw new Error('The disabled AI Text Detector must not be an active catalog route.');
+
+for (let index = 0; index < tools.length; index++) {
+  const tool = tools[index];
+  const description = String(tool.description || `A browser-local ${tool.title.toLowerCase()} utility.`).replace(/\s+/g, ' ').trim().slice(0, 220);
+  const pageTitle = `${tool.title} | AFTERHOURS`;
+  const canonical = `${siteOrigin}/tools/${tool.slug}/`;
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {'@type':'WebPage','@id':`${canonical}#webpage`,url:canonical,name:pageTitle,description,inLanguage:'en',isPartOf:{'@type':'WebSite',name:'AFTERHOURS',url:`${siteOrigin}/`},mainEntity:{'@id':`${canonical}#application`}},
+      {'@type':'WebApplication','@id':`${canonical}#application`,name:tool.title,url:canonical,description,applicationCategory:'UtilitiesApplication',isAccessibleForFree:true,browserRequirements:'JavaScript enabled; modern browser with local storage and canvas support'}
+    ]
+  };
+  const html = `<!doctype html>\n<html lang="en"><head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<meta name="theme-color" content="#080b12">\n<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; worker-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; font-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">\n<link rel="stylesheet" href="/tools/_shared/toolkit.css">\n<link rel="stylesheet" href="/tools/_shared/planner.css">\n<script defer src="/tools/_shared/toolkit.js"></script>\n<script defer src="/tools/_shared/planner-${ownerBySlug.get(tool.slug)}.js"></script>\n<script defer src="/tools/_shared/planner-runtime.js"></script>\n<title>${escapeHtml(pageTitle)}</title>\n<meta name="description" content="${escapeHtml(description)}">\n<meta name="robots" content="index,follow">\n<link rel="canonical" href="${escapeHtml(canonical)}">\n<meta property="og:site_name" content="AFTERHOURS">\n<meta property="og:type" content="website">\n<meta property="og:title" content="${escapeHtml(pageTitle)}">\n<meta property="og:description" content="${escapeHtml(description)}">\n<meta property="og:url" content="${escapeHtml(canonical)}">\n<meta property="og:locale" content="en_US">\n<meta name="twitter:card" content="summary">\n<meta name="twitter:title" content="${escapeHtml(pageTitle)}">\n<meta name="twitter:description" content="${escapeHtml(description)}">\n<script type="application/ld+json">${safeJson(structuredData)}</script>\n</head><body data-title="${escapeHtml(tool.title)}" data-category="${escapeHtml(categoryNames[tool.categoryId])}" data-index="${156 + index}" data-description="${escapeHtml(description)}" data-slug="${escapeHtml(tool.slug)}"><div id="tool-shell"></div><noscript><main><h1>${escapeHtml(tool.title)}</h1><p>${escapeHtml(description)}</p><p>This browser-local utility needs JavaScript. Its fields are not sent to a server.</p></main></noscript></body></html>\n`;
+  const dir = path.join(root, 'site/tools', tool.slug);
+  await fs.mkdir(dir, {recursive: true});
+  await fs.writeFile(path.join(dir, 'index.html'), html);
+}
+
+// Refresh the hub's crawlable metadata and truthful active-tool ItemList.
+const hubPath = path.join(root, 'site/tools/index.html');
+let hub = await fs.readFile(hubPath, 'utf8');
+const categoryById = new Map(categories.map((category, index) => [category.id, { ...category, index }]));
+let renderedCategoryCards = 0;
+hub = hub.replace(/<button class="category"([^>]*data-category="([^"]+)"[^>]*)>([\s\S]*?)<\/button>/g, (full, rawAttributes, id, content) => {
+  const category = categoryById.get(id);
+  if (!category) return full;
+  renderedCategoryCards++;
+  const count = category.availableTools.length;
+  const number = String(category.index + 1).padStart(2, '0');
+  const attributes = rawAttributes.replace(/aria-label="[^"]*"/i, `aria-label="${escapeHtml(category.title)} — ${count} available tools"`);
+  const updatedContent = content
+    .replace(/\d{2}\s*\/\s*DISTRICT/i, `${number} / CATEGORY`)
+    .replace(/\d+\s+TOOLS AVAILABLE/i, `${count} TOOLS AVAILABLE`)
+    .replace(/\d+\s+TOOLS READY/i, `${count} TOOLS READY`);
+  return `<button class="category"${attributes}>${updatedContent}</button>`;
+});
+if (renderedCategoryCards !== categories.length) throw new Error(`Expected ${categories.length} static category cards; updated ${renderedCategoryCards}.`);
+hub = hub.replace(/A home for \d+ useful tools across (?:ten|\d+) carefully built districts/i, `A home for ${expectedActiveCount} active browser tools across ${categories.length} useful categories`);
+hub = hub.replace(/\b\d+ new tools share\b/gi, `${newToolCount} new tools share`);
+hub = hub.replace(/\b\d+ TOOLS AVAILABLE\s*\/\s*\d+ CATEGORIES\b/gi, `${expectedActiveCount} TOOLS AVAILABLE / ${categories.length} CATEGORIES`);
+hub = hub.replace(/\b\d+ TOOLS AVAILABLE\s*·\s*\d+ NEW FREE UTILITIES\b/gi, `${expectedActiveCount} ACTIVE TOOLS · ${categories.length} CATEGORIES`);
+hub = hub.replace(/FIND YOUR NEXT SHORTCUT \/ 01—\d+/i, `FIND YOUR NEXT SHORTCUT / 01—${String(categories.length).padStart(2, '0')}`);
+hub = hub.replace(/\bTEN DISTRICTS\b/gi, `${categories.length} CATEGORIES`);
+hub = hub.replace(/\b\d+ DISTRICTS\s*·\s*\d+ TOOLS AVAILABLE\b/gi, `${categories.length} CATEGORIES · ${expectedActiveCount} TOOLS AVAILABLE`);
+hub = hub.replace(/All \d+ districts/gi, `All ${categories.length} categories`);
+hub = hub.replace(/catalog is organized into \d+ categories/gi, `catalog is organized into ${categories.length} categories`);
+hub = hub.replace(/Explore \d+ free browser-based tools/gi, `Explore ${expectedActiveCount} free browser-based tools`);
+hub = hub.replace(/\d+ active AFTERHOURS browser tools/g, `${expectedActiveCount} active AFTERHOURS browser tools`);
+hub = hub.replace(/\d+ free browser-based tools/gi, `${expectedActiveCount} free browser-based tools`);
+const schemaMatch = hub.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/i);
+if (!schemaMatch) throw new Error('Tools Hub JSON-LD could not be found.');
+const schema = JSON.parse(schemaMatch[1]);
+const list = schema['@graph']?.find(item => item['@type'] === 'ItemList');
+const collection = schema['@graph']?.find(item => item['@type'] === 'CollectionPage');
+if (!list || !collection) throw new Error('Tools Hub CollectionPage or ItemList schema is missing.');
+collection.description = `Explore ${expectedActiveCount} free browser-local tools across ${categories.length} useful categories for everyday work and life. Process your inputs on this device, with no paid APIs or live-data claims.`;
+list.name = `${expectedActiveCount} active AFTERHOURS browser tools`;
+list.numberOfItems = expectedActiveCount;
+list.itemListElement = activeTools.slice().sort((a, b) => a.title.localeCompare(b.title)).map((tool, index) => ({'@type':'ListItem',position:index + 1,name:tool.title,url:`${siteOrigin}${tool.href}`}));
+hub = hub.replace(schemaMatch[0], `<script type="application/ld+json">${safeJson(schema)}</script>`);
+hub = hub.replace(/\d+ FREE TOOLS AVAILABLE/g, `${expectedActiveCount} FREE TOOLS AVAILABLE`);
+hub = hub.replace(/\d+ DISTRICTS · \d+ TOOLS AVAILABLE/g, `${categories.length} CATEGORIES · ${expectedActiveCount} TOOLS AVAILABLE`);
+hub = hub.replace(/(<meta name="description" content=")[^"]*(">)/i, `$1Explore ${expectedActiveCount} free browser-local tools across ${categories.length} useful categories for everyday work and life. Process your inputs on this device; no paid APIs or live lookups are required.$2`);
+hub = hub.replace(/(<meta property="og:description" content=")[^"]*(">)/i, `$1Explore ${expectedActiveCount} free browser-local tools across ${categories.length} useful categories. Use practical local utilities for everyday work and life.$2`);
+hub = hub.replace(/(<meta name="twitter:description" content=")[^"]*(">)/i, `$1Browse ${expectedActiveCount} free browser-local tools across ${categories.length} categories for everyday work, home, travel, learning and more.$2`);
+await fs.writeFile(hubPath, hub);
+console.log(`Generated ${tools.length} distinct planner pages plus one screenshot editor; active catalog and hub schema list ${activeTools.length} tools.`);

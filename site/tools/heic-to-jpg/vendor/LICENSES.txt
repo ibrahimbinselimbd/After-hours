@@ -1,0 +1,8 @@
+heic-to 1.6.6 / libheif JavaScript build
+Source: https://github.com/hoppergee/heic-to/tree/v1.6.6
+License: LGPL-3.0 (see package LICENSE and https://www.gnu.org/licenses/lgpl-3.0.html)
+Bundle: heic-engine-1.6.6.js, built from heic-to 1.6.6 src/lib/libheif-without-unsafe-eval.js (USE_UNSAFE_EVAL=0) with esbuild.
+
+Complete pinned package source: heic-to-1.6.6-source.tgz.part1 and .part2 (same directory). See SOURCE-ARCHIVE.txt for reconstruction and checksum.
+LGPL-3.0.txt and GPL-3.0.txt are provided alongside.
+Engine is an independent replaceable JavaScript bundle.
