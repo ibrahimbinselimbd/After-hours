@@ -17,7 +17,7 @@
     element.content = value;
   };
   if (!story) {
-    document.title = 'Story not found | AFTERHOURS';
+    document.title = 'Story not found | ByteAfter';
     setMeta('description', 'The requested AFTERHOURS Journal story could not be found.');
     setMeta('robots', 'noindex,follow');
     document.head.querySelector('link[rel="canonical"]')?.remove();
@@ -34,7 +34,7 @@
     document.head.appendChild(canonicalLink);
   }
   canonicalLink.href = canonicalUrl.href;
-  document.title = `${story.title} | AFTERHOURS`;
+  document.title = `${story.title} | ByteAfter`;
   setMeta('description', story.excerpt);
   $('article-title').textContent=story.title;
   $('article-bangla').textContent=story.subtitle || '';
@@ -59,7 +59,7 @@
   const imageUrls=pictures.map(image=>new URL(image.src,location.href).href);
   setMeta('og:site_name','AFTERHOURS','property');
   setMeta('og:type','article','property');
-  setMeta('og:title',`${story.title} | AFTERHOURS`,'property');
+  setMeta('og:title',`${story.title} | ByteAfter`,'property');
   setMeta('og:description',story.excerpt,'property');
   setMeta('og:url',canonicalUrl.href,'property');
   setMeta('og:image',imageUrls[0],'property');
@@ -67,7 +67,7 @@
   setMeta('article:published_time',story.publishedAt,'property');
   setMeta('article:section',categoryDisplay,'property');
   setMeta('twitter:card','summary_large_image');
-  setMeta('twitter:title',`${story.title} | AFTERHOURS`);
+  setMeta('twitter:title',`${story.title} | ByteAfter`);
   setMeta('twitter:description',story.excerpt);
   setMeta('twitter:image',imageUrls[0]);
   setMeta('twitter:image:alt',pictures[0].alt||story.title);

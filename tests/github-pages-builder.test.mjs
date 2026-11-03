@@ -78,7 +78,7 @@ test('unknown Journal story IDs render a truthful noindex state and never fall b
       URLSearchParams,
     });
     vm.runInContext(source, context);
-    assert.equal(document.title, 'Story not found | AFTERHOURS');
+    assert.equal(document.title, 'Story not found | ByteAfter');
     assert.equal(metas.get('name:robots')?.content, 'noindex,follow');
     assert.equal(canonicalPresent, false);
     assert.match(main.innerHTML, /Story not found/);
@@ -101,6 +101,7 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
   for (const relative of [
     'index.html', 'districts/index.html', 'article.html', 'info.html', '404.html', 'tools/index.html',
     'style.css', 'app.js', 'content.js', 'districts.js', 'sitemap.xml', 'robots.txt', '.nojekyll',
+    'byteafter-logo.css', 'byteafter-mark.webp', 'byteafter-icon.png',
   ]) {
     assert.equal(await stat(path.join(output, relative)).then(() => true).catch(() => false), true, `${relative} should be published`);
   }
@@ -115,6 +116,10 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
   for (const slug of slugs) {
     assert.equal(await stat(path.join(output, 'tools', slug, 'index.html')).then(() => true), true, `${slug} should be published`);
     const page = await readFile(path.join(output, 'tools', slug, 'index.html'), 'utf8');
+    assert.match(page, /href="\/After-hours\/byteafter-logo\.css\?v=1"/, `${slug} should load the shared ByteAfter logo styles`);
+    assert.match(page, /href="\/After-hours\/byteafter-icon\.png"/, `${slug} should load the ByteAfter favicon`);
+    assert.match(page, /src="\/After-hours\/byteafter-mark\.webp"/, `${slug} should use the approved ByteAfter mark`);
+    assert.match(page, /property="og:site_name" content="ByteAfter"/, `${slug} should expose ByteAfter site metadata`);
     const title = page.match(/<title>([^<]+)<\/title>/i)?.[1] || '';
     const description = page.match(/<meta\s+name=["']description["']\s+content=(['"])([\s\S]*?)\1/i)?.[2] || '';
     const canonicalTags = [...page.matchAll(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["'][^>]*>/gi)];
@@ -191,7 +196,22 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
   const article = await readFile(path.join(output, 'article.html'), 'utf8');
   const info = await readFile(path.join(output, 'info.html'), 'utf8');
   const notFound = await readFile(path.join(output, '404.html'), 'utf8');
-  assert.match(home, /AFTERHOURS/);
+  assert.match(home, /ByteAfter/);
+  const brandedFooterPages = [
+    'index.html', 'article.html', 'info.html', 'districts/index.html',
+    'sports-scores/index.html', 'sports-scores/football/index.html', 'tools/index.html',
+    'tools/background-remover/index.html', 'tools/heic-to-jpg/index.html',
+    'tools/image-size-optimizer/index.html', 'tools/qr-code-generator/index.html',
+    'tools/text-detector/index.html', 'tools/passport-photo-studio/index.html',
+  ];
+  for (const relative of brandedFooterPages) {
+    const page = await readFile(path.join(output, relative), 'utf8');
+    const footer = page.match(/<footer\b[^>]*>[\s\S]*?<\/footer>/i)?.[0] || '';
+    assert.ok(footer, `${relative} should render a footer`);
+    assert.match(footer, /byteafter-mark\.webp/, `${relative} footer should use the approved mark`);
+    assert.match(footer, /brand-word/, `${relative} footer should render the ByteAfter wordmark`);
+    assert.doesNotMatch(footer, /AFTERHOURS/i, `${relative} footer should not retain the previous brand wordmark`);
+  }
   assert.match(home, new RegExp(`rel=["']canonical["'] href=["']${base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/["']`));
   assert.match(district, /JOURNAL DISTRICT MAP/);
   assert.match(district, new RegExp(`${base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/districts/`));
@@ -223,6 +243,8 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
   assert.match(notFound, /noindex,nofollow/);
   assert.match(notFound, /href="\/After-hours\/districts\/"/);
   assert.match(notFound, /href="\/After-hours\/"/);
+  assert.match(notFound, /src="\/After-hours\/byteafter-mark\.webp"/);
+  assert.match(notFound, /href="\/After-hours\/byteafter-icon\.png"/);
 
   const storyRouteScript = await readFile(path.join(output, 'districts.js'), 'utf8');
   const homeRouteScript = await readFile(path.join(output, 'app.js'), 'utf8');

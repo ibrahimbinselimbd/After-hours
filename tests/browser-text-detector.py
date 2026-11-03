@@ -52,7 +52,7 @@ with sync_playwright() as p:
         assert 'COMING SOON · DISABLED' in page.locator('#category-dialog .disabled-tool').inner_text()
         assert page.locator('#category-dialog a[href="/tools/text-detector/"]').count() == 0
         page.locator('#category-dialog .modal-close').click()
-        page.get_by_role('link',name='AFTERHOURS home',exact=True).click()
+        page.get_by_role('link',name='ByteAfter home',exact=True).click()
         assert page.url.rstrip('/')==base,page.url
         page.goto(base+'/tools/text-detector/',wait_until='networkidle')
         if width in [390,1280]: page.screenshot(path=str(out/f'{"live" if base.startswith("https") else "local"}-{width}.png'),full_page=True)

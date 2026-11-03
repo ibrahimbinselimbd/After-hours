@@ -1,0 +1,91 @@
+/* Shared ByteAfter logo lockup. Loaded after page-specific styles so every route uses the same approved mark. */
+.brand{gap:0;letter-spacing:-.55px}
+.brand .brand-mark-3d,
+.tool-header .brand .brand-mark-3d,
+.sports-brand .brand-mark-3d,
+.site-footer .brand .brand-mark-3d,
+.tool-footer .brand-mark-3d,
+.ah-footer__wordmark .brand-mark-3d{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 50px!important;
+  width:50px!important;
+  height:36px!important;
+  margin:0 10px 0 0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  transform:none!important;
+  overflow:visible!important;
+  font-size:0!important;
+  font-style:normal!important;
+  letter-spacing:0!important;
+  line-height:0!important;
+}
+.brand .brand-mark-3d img,
+.tool-header .brand .brand-mark-3d img,
+.sports-brand .brand-mark-3d img,
+.site-footer .brand .brand-mark-3d img,
+.tool-footer .brand-mark-3d img,
+.ah-footer__wordmark .brand-mark-3d img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+.brand-word{
+  color:#f4f6ff!important;
+  font-weight:800!important;
+  letter-spacing:-.7px!important;
+  text-transform:none!important;
+  white-space:nowrap;
+}
+.brand-word>span{color:#79f1d1!important;font-weight:400!important}
+.sports-brand .brand-mark-3d{margin-right:10px!important}
+.ah-footer__wordmark .brand-mark-3d,
+.site-footer .brand .brand-mark-3d,
+.tool-footer .brand-mark-3d{
+  flex-basis:40px!important;
+  width:40px!important;
+  height:26px!important;
+  margin-right:0!important;
+}
+.signal-art .core{display:grid;place-items:center}
+.signal-art .core img{
+  display:block;
+  width:140px;
+  max-width:100%;
+  height:auto;
+  object-fit:contain;
+  filter:drop-shadow(0 0 18px #56d9ff77);
+}
+@media(max-width:700px){
+  .brand .brand-mark-3d,
+  .tool-header .brand .brand-mark-3d,
+  .sports-brand .brand-mark-3d{
+    flex-basis:44px!important;
+    width:44px!important;
+    height:31px!important;
+    margin-right:8px!important;
+  }
+}
+
+/* Compact footer lockups across the English site and its custom tools. */
+.brand.footer-brand,
+a.ah-footer__wordmark.brand{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:0!important;
+  vertical-align:middle;
+  white-space:nowrap;
+}
+.brand.footer-brand .brand-mark-3d,
+a.ah-footer__wordmark.brand .brand-mark-3d{
+  flex:0 0 40px!important;
+  width:40px!important;
+  height:26px!important;
+  margin-right:8px!important;
+}

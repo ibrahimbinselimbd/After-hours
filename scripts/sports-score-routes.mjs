@@ -2,7 +2,7 @@ const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, character =>
 
 export const sportScorePages = [
   {
-    slug: 'football', sport: 'football', label: 'Football', icon: '⚽', title: 'Football Scores & Fixtures | AFTERHOURS',
+    slug: 'football', sport: 'football', label: 'Football', icon: '⚽', title: 'Football Scores & Fixtures | ByteAfter',
     description: 'Follow the AFTERHOURS football score page for live matches, fixtures and results. No verified football feed is connected, so no score data is displayed yet.',
     intro: 'A dedicated page for association football (often called soccer): match status, two sides, score and competition details when a verified first-party feed supplies them. No live football feed is connected, and this page currently has no fixtures or results.',
     guide: 'The current score card can represent two sides, a competition, a score, match status, period, start time and venue when those fields are supplied. Competition coverage will depend on the verified feed and the account package; no league availability is promised here.',
@@ -10,7 +10,7 @@ export const sportScorePages = [
     source: 'https://www.goalserve.com/en/sport-data-feeds', sourceLabel: 'Goalserve public sports-feed catalogue',
   },
   {
-    slug: 'cricket', sport: 'cricket', label: 'Cricket', icon: '◉', title: 'Cricket Scores & Fixtures | AFTERHOURS',
+    slug: 'cricket', sport: 'cricket', label: 'Cricket', icon: '◉', title: 'Cricket Scores & Fixtures | ByteAfter',
     description: 'Check the AFTERHOURS cricket score page for live matches, schedules and results. No verified cricket feed is connected, so no score data is displayed yet.',
     intro: 'A dedicated cricket route for match status, teams and score summaries when an approved first-party feed supplies them. No cricket feed is connected, and no live scorecard, fixture or result is being simulated.',
     guide: 'The shared score card currently treats each side’s score as plain text; it does not yet parse innings, overs or wickets into a cricket scorecard. A cricket-specific adapter and review are required before those fields can be promised or shown.',
@@ -18,7 +18,7 @@ export const sportScorePages = [
     source: 'https://www.goalserve.com/en/sport-data-feeds/cricket-api/description/14', sourceLabel: 'Goalserve cricket feed details',
   },
   {
-    slug: 'tennis', sport: 'tennis', label: 'Tennis', icon: '◌', title: 'Tennis Scores & Match Results | AFTERHOURS',
+    slug: 'tennis', sport: 'tennis', label: 'Tennis', icon: '◌', title: 'Tennis Scores & Match Results | ByteAfter',
     description: 'Follow the AFTERHOURS tennis score page for match updates, fixtures and results. No verified tennis feed is connected, so no score data is displayed yet.',
     intro: 'A dedicated tennis route for tournament matches and player or doubles-pair score summaries when a verified first-party feed supplies them. No tennis feed is connected, and there are no live matches or results on this page yet.',
     guide: 'The shared score card can hold two participants and one score string, but it does not yet format set-by-set games or point-by-point data. A tennis-specific adapter is needed before detailed tennis scoring can be represented accurately.',
@@ -26,7 +26,7 @@ export const sportScorePages = [
     source: 'https://www.goalserve.com/en/sport-data-feeds/tennis-api/description/14', sourceLabel: 'Goalserve tennis feed details',
   },
   {
-    slug: 'basketball', sport: 'basketball', label: 'Basketball', icon: '◉', title: 'Basketball Scores & Fixtures | AFTERHOURS',
+    slug: 'basketball', sport: 'basketball', label: 'Basketball', icon: '◉', title: 'Basketball Scores & Fixtures | ByteAfter',
     description: 'Check the AFTERHOURS basketball score page for cached game snapshots, fixtures and results with honest update and stale-status information.',
     intro: 'A dedicated basketball route for cached game snapshots, team scores and status from the AFTERHOURS first-party Worker. Snapshots may be up to 15 minutes delayed, or longer if unavailable or the free daily quota is reached; this is not 15-second realtime data.',
     guide: 'The current shared card can display two teams, a score and a period label. It does not yet model a game clock, quarter-by-quarter score or player box score; those require verified source fields and a basketball-specific adapter.',
@@ -35,7 +35,7 @@ export const sportScorePages = [
     feedEndpoint: 'https://afterhours-district.bird-timimus.workers.dev/api/v1/scores/basketball', pollSeconds: 900,
   },
   {
-    slug: 'badminton', sport: 'badminton', label: 'Badminton', icon: '⌁', title: 'Badminton Scores & Match Results | AFTERHOURS',
+    slug: 'badminton', sport: 'badminton', label: 'Badminton', icon: '⌁', title: 'Badminton Scores & Match Results | ByteAfter',
     description: 'The AFTERHOURS badminton score page is reserved for verified match data. No badminton feed is connected, and no scores or fixtures are available yet.',
     intro: 'A dedicated badminton route for singles or doubles matches if a suitable feed is confirmed and connected. There is no badminton score data here today, and no provider coverage is assumed.',
     guide: 'The generic card can represent two players or pairs and a plain-text score, but it does not parse game-by-game badminton scoring. A badminton-specific adapter and a confirmed data source are required before this page can report results.',
@@ -43,7 +43,7 @@ export const sportScorePages = [
     source: 'https://www.goalserve.com/en/sport-data-feeds', sourceLabel: 'Goalserve public sports-feed catalogue',
   },
   {
-    slug: 'formula-1', sport: 'f1', label: 'Formula 1', icon: '↗', title: 'Formula 1 Scores & Race Sessions | AFTERHOURS',
+    slug: 'formula-1', sport: 'f1', label: 'Formula 1', icon: '↗', title: 'Formula 1 Scores & Race Sessions | ByteAfter',
     description: 'Follow the AFTERHOURS Formula 1 score page for verified race-session information. No Formula 1 feed is connected, and no session data or results are displayed yet.',
     intro: 'A dedicated Formula 1 route for verified race-weekend session information. No Formula 1 feed is connected, and this page currently contains no qualifying, sprint or race results.',
     guide: 'The current shared card is designed for a two-side match, not a race-session timetable or driver classification. An F1-specific feed adapter and leaderboard rendering are required before the page can publish session or finishing-order data.',
@@ -51,7 +51,7 @@ export const sportScorePages = [
     source: 'https://www.goalserve.com/en/sport-data-feeds/f1-api/description/14', sourceLabel: 'Goalserve F1 feed details',
   },
   {
-    slug: 'more-sports', sport: 'other', label: 'More sports', icon: '＋', title: 'More Sports Scores | AFTERHOURS',
+    slug: 'more-sports', sport: 'other', label: 'More sports', icon: '＋', title: 'More Sports Scores | ByteAfter',
     description: 'Browse the AFTERHOURS additional-sports score lane. No extra sports feed is connected or verified, so this page does not claim live coverage.',
     intro: 'This route is a placeholder for sports beyond the six named lanes. No additional sports are currently being reported; a sport will appear here only after its provider coverage, data fields and first-party feed are verified.',
     guide: 'The current page model supports a small set of match-style fields. Every added sport needs an explicit provider-coverage check and a suitable data mapping; formats that need a different model must not be squeezed into a misleading match card.',
@@ -84,7 +84,7 @@ export function renderSportScorePage(page, canonicalUrl) {
   <meta name="score-poll-interval-seconds" content="${pollSeconds}">
   <meta name="score-sport" content="${escapeHtml(page.sport)}">
   <meta name="score-sport-label" content="${escapeHtml(page.label)}">
-  <meta property="og:site_name" content="AFTERHOURS">
+  <meta property="og:site_name" content="ByteAfter">
   <meta property="og:type" content="website">
   <meta property="og:title" content="${escapeHtml(page.title)}">
   <meta property="og:description" content="${escapeHtml(page.description)}">
@@ -98,13 +98,13 @@ export function renderSportScorePage(page, canonicalUrl) {
 <body class="sports-page" data-score-page="${escapeHtml(page.slug)}">
   <a class="skip-link" href="#scoreboard">Skip to the ${escapeHtml(statusName)} scoreboard</a>
   <header class="sports-header">
-    <a class="sports-brand" href="/" aria-label="AFTERHOURS home"><span class="brand-mark">a<span>h</span></span><span class="brand-name">AFTER<span>HOURS</span><small> / SPORTS SIGNAL</small></span></a>
+    <a class="sports-brand" href="/" aria-label="ByteAfter home"><span class="brand-mark brand-mark-3d" aria-hidden="true"><img src="/byteafter-mark.webp" alt=""></span><span class="brand-name brand-word">Byte<span>After</span><small> / SPORTS SIGNAL</small></span></a>
     <nav class="sports-nav" aria-label="Main navigation"><a href="/#feed">The journal</a><a href="/districts/">The districts</a><a href="/tools/">Tools</a><a href="/sports-scores/" aria-current="page">Scores</a></nav>
     <a class="sports-header-badge" href="/sports-scores/" aria-label="All sports scores"><span>SPORTS<small>LIVE BOARD</small></span><i aria-hidden="true"></i></a>
   </header>
   <main>
     <div class="score-wrap">
-      <div class="score-breadcrumb"><a href="/">AFTERHOURS</a><span aria-hidden="true">/</span><a href="/sports-scores/">ALL SPORTS</a><span aria-hidden="true">/</span><span>${escapeHtml(page.label.toUpperCase())}</span></div>
+      <div class="score-breadcrumb"><a href="/">ByteAfter</a><span aria-hidden="true">/</span><a href="/sports-scores/">ALL SPORTS</a><span aria-hidden="true">/</span><span>${escapeHtml(page.label.toUpperCase())}</span></div>
       <section class="score-hero" aria-labelledby="score-title">
         <div class="score-hero-copy">
           <div class="score-eyebrow"><i aria-hidden="true"></i> SPORT SCORE PAGE <span>${escapeHtml(page.label.toUpperCase())}</span></div>
@@ -130,7 +130,7 @@ export function renderSportScorePage(page, canonicalUrl) {
       <section class="score-data-note" aria-labelledby="page-guide-title"><div class="data-note-icon" aria-hidden="true">${escapeHtml(page.icon)}</div><div><span class="board-kicker">PAGE GUIDE / ${escapeHtml(page.label.toUpperCase())}</span><h2 id="page-guide-title">What this lane<br><em>can show.</em></h2></div><div><p>${escapeHtml(page.guide)}</p><p>${escapeHtml(page.coverage)} <a href="${escapeHtml(page.source)}" target="_blank" rel="noopener noreferrer">${escapeHtml(page.sourceLabel)}</a>.</p><p><strong>Indexing status:</strong> This route is crawlable but intentionally marked noindex while its verified feed and useful live content are unavailable. Review page quality and data accuracy before changing that directive.</p></div></section>
     </div>
   </main>
-  <footer class="score-footer"><a href="/" class="footer-brand">AFTER<span>HOURS</span></a><span>LESS NOISE. MORE SIGNAL.</span><a href="/sports-scores/">All sports scores ↗</a></footer>
+  <footer class="score-footer"><a href="/" class="brand footer-brand" aria-label="ByteAfter home"><span class="brand-mark brand-mark-3d" aria-hidden="true"><img src="/byteafter-mark.webp" alt=""></span><span class="brand-word">Byte<span>After</span></span><sup aria-hidden="true">®</sup></a><span>LESS NOISE. MORE SIGNAL.</span><a href="/sports-scores/">All sports scores ↗</a></footer>
 </body>
 </html>
 `;
