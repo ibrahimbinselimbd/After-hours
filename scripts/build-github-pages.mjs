@@ -119,7 +119,7 @@ function staticFieldMarkup(field, slug) {
 function staticToolMarkup({slug, title, description, category, fields}) {
   const controls = (Array.isArray(fields) ? fields : []).slice(0, 20).map(field => staticFieldMarkup(field, slug)).filter(Boolean).join('');
   const controlNote = controls ? '' : '<p class="privacy-note">Interactive controls load in this browser when JavaScript is enabled.</p>';
-  return `<header class="tool-header"><a class="brand" href="/" aria-label="AFTERHOURS home">AFTER<span>HOURS</span><sup>®</sup></a><nav aria-label="Breadcrumb"><a href="/tools/">Tools Hub</a><span>/</span><b>${escapeHtml(title)}</b></nav><a class="back-link" href="/tools/">← All tools</a></header><main class="tool-main"><div class="breadcrumb"><a href="/tools/">THE UTILITY DISTRICT</a><span>/</span><b>${escapeHtml(category || 'BROWSER TOOLS')}</b></div><section class="tool-hero"><div class="eyebrow">BROWSER-LOCAL TOOL</div><h1>${escapeHtml(title)}</h1><p class="tool-static-description">${escapeHtml(description)}</p><div class="hero-tags"><span>PROCESS ON THIS DEVICE</span><span>JAVASCRIPT REQUIRED</span><span>FREE TO USE</span></div></section><section class="workspace" aria-label="${escapeHtml(title)} preview"><h2>Local workspace preview</h2><p class="privacy-note">This initial preview is generated from the tool definition. Enable JavaScript to use the interactive controls. Inputs stay in this browser and are not sent to a server.</p><div class="field-grid tool-static-controls">${controls}${controlNote}</div><div class="actions"><button class="button button-main" type="button" disabled>Enable JavaScript to run this tool</button></div></section></main>`;
+  return `<header class="tool-header"><a class="brand" href="/" aria-label="ByteAfter home"><span class="brand-mark brand-mark-3d" aria-hidden="true"><img src="/byteafter-mark.webp" alt=""></span><span class="brand-word">Byte<span>After</span></span><i>®</i></a><nav aria-label="Breadcrumb"><a href="/tools/">Tools Hub</a><span>/</span><b>${escapeHtml(title)}</b></nav><a class="back-link" href="/tools/">← All tools</a></header><main class="tool-main"><div class="breadcrumb"><a href="/tools/">THE UTILITY DISTRICT</a><span>/</span><b>${escapeHtml(category || 'BROWSER TOOLS')}</b></div><section class="tool-hero"><div class="eyebrow">BROWSER-LOCAL TOOL</div><h1>${escapeHtml(title)}</h1><p class="tool-static-description">${escapeHtml(description)}</p><div class="hero-tags"><span>PROCESS ON THIS DEVICE</span><span>JAVASCRIPT REQUIRED</span><span>FREE TO USE</span></div></section><section class="workspace" aria-label="${escapeHtml(title)} preview"><h2>Local workspace preview</h2><p class="privacy-note">This initial preview is generated from the tool definition. Enable JavaScript to use the interactive controls. Inputs stay in this browser and are not sent to a server.</p><div class="field-grid tool-static-controls">${controls}${controlNote}</div><div class="actions"><button class="button button-main" type="button" disabled>Enable JavaScript to run this tool</button></div></section></main>`;
 }
 
 function addPageCanonical(html, relativePath, storyIds) {
@@ -187,12 +187,12 @@ for (const file of await walk(outputRoot)) {
     const toolMatch = relativePath.match(/^tools\/([^/]+)\/index\.html$/);
     if (toolMatch && toolMatch[1] !== 'text-detector') {
       const slug = toolMatch[1];
-      const title = bodyData(text, 'title') || decodeHtml(text.match(/<title>([\s\S]*?)<\/title>/i)?.[1] || '').replace(/\s*\|\s*AFTERHOURS$/i, '');
+      const title = bodyData(text, 'title') || decodeHtml(text.match(/<title>([\s\S]*?)<\/title>/i)?.[1] || '').replace(/\s*\|\s*(?:AFTERHOURS|ByteAfter)$/i, '');
       const descriptionMeta = text.match(/<meta\s+name=["']description["']\s+content=(['"])([\s\S]*?)\1/i);
       const description = (bodyData(text, 'description') || decodeHtml(descriptionMeta?.[2] || '')).replace(/\s+/g, ' ').trim();
       const category = bodyData(text, 'category') || 'Browser Tools';
       if (!title || !description) throw new Error(`${relativePath} needs a unique title and useful description before JavaScript runs.`);
-      const pageTitle = `${title} | AFTERHOURS`;
+      const pageTitle = `${title} | ByteAfter`;
       const canonical = `${siteUrl}/tools/${slug}/`;
       text = text.replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeHtml(pageTitle)}</title>`);
       text = upsertMeta(text, 'name', 'description', description);
@@ -221,7 +221,14 @@ for (const file of await walk(outputRoot)) {
       const csp = '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; script-src \'self\'; worker-src \'self\'; style-src \'self\'; font-src \'self\'; img-src \'self\' blob: data:; connect-src \'none\'; object-src \'none\'; base-uri \'none\'; form-action \'none\'">';
       text = text.replace(/<head([^>]*)>/i, `<head$1>${csp}<meta name="referrer" content="no-referrer">`);
     }
-    if (ext === '.html') text = ensureDocumentReferrerMeta(text);
+    if (ext === '.html') {
+      text = ensureDocumentReferrerMeta(text);
+      if (!text.includes('byteafter-logo.css')) text = text.replace(/<\/head>/i, '<link rel="stylesheet" href="/byteafter-logo.css?v=1"></head>');
+      if (!text.includes('byteafter-icon.png')) text = text.replace(/<\/head>/i, '<link rel="icon" type="image/png" sizes="128x128" href="/byteafter-icon.png"></head>');
+      text = upsertMeta(text, 'property', 'og:site_name', 'ByteAfter');
+      text = text.replace(/<meta\b[^>]*>/gi, tag => /\b(?:property|name)=["'](?:og:title|og:description|twitter:title|twitter:description|description)["']/i.test(tag) ? tag.replaceAll('AFTERHOURS', 'ByteAfter') : tag);
+      text = text.replace(/(<script\b[^>]*type=["']application\/ld\+json["'][^>]*>)([\s\S]*?)(<\/script>)/gi, (_, open, json, close) => `${open}${json.replaceAll('AFTERHOURS', 'ByteAfter')}${close}`);
+    }
   }
 
   text = applyProjectBase(text, file);
@@ -235,8 +242,8 @@ for (const file of await walk(outputRoot)) {
 }
 
 await fs.writeFile(path.join(outputRoot, '.nojekyll'), '');
-await fs.writeFile(path.join(outputRoot, 'tools.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta http-equiv="refresh" content="0;url=${basePath}/tools/"><title>AFTERHOURS Tools</title></head><body><p><a href="${basePath}/tools/">Open the Tools Hub</a></p><script>location.replace(${JSON.stringify(`${basePath}/tools/`)});</script></body></html>`);
-await fs.writeFile(path.join(outputRoot, '404.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Page not found · AFTERHOURS</title></head><body><main><h1>Page not found</h1><p><a href="${basePath}/districts/">Browse the Journal</a></p><p><a href="${basePath}/">Return to AFTERHOURS</a></p></main></body></html>`);
+await fs.writeFile(path.join(outputRoot, 'tools.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta http-equiv="refresh" content="0;url=${basePath}/tools/"><title>ByteAfter Tools</title><link rel="stylesheet" href="${basePath}/byteafter-logo.css?v=1"><link rel="icon" type="image/png" sizes="128x128" href="${basePath}/byteafter-icon.png"></head><body><header><a class="brand" href="${basePath}/" aria-label="ByteAfter home"><span class="brand-mark brand-mark-3d" aria-hidden="true"><img src="${basePath}/byteafter-mark.webp" alt=""></span><span class="brand-word">Byte<span>After</span></span><i>®</i></a></header><p><a href="${basePath}/tools/">Open the Tools Hub</a></p><script>location.replace(${JSON.stringify(`${basePath}/tools/`)});</script></body></html>`);
+await fs.writeFile(path.join(outputRoot, '404.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Page not found · ByteAfter</title><link rel="stylesheet" href="${basePath}/byteafter-logo.css?v=1"><link rel="icon" type="image/png" sizes="128x128" href="${basePath}/byteafter-icon.png"></head><body><header><a class="brand" href="${basePath}/" aria-label="ByteAfter home"><span class="brand-mark brand-mark-3d" aria-hidden="true"><img src="${basePath}/byteafter-mark.webp" alt=""></span><span class="brand-word">Byte<span>After</span></span><i>®</i></a></header><main><h1>Page not found</h1><p><a href="${basePath}/districts/">Browse the Journal</a></p><p><a href="${basePath}/">Return to ByteAfter</a></p></main></body></html>`);
 for (const route of ['tools.html', '404.html']) {
   const file = path.join(outputRoot, route);
   const html = await fs.readFile(file, 'utf8');
