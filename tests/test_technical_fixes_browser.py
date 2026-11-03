@@ -179,12 +179,16 @@ class TechnicalFixesBrowserTest(unittest.TestCase):
 
     def test_sports_polling_interval_copy_and_filter_status_announcements_are_truthful_and_deduplicated(self):
         context, page = self.make_page()
+        worker_endpoint = 'https://afterhours-district.bird-timimus.workers.dev/api/v1/scores/basketball'
         payload = {
             'connected': True,
+            'stale': False,
             'updatedAt': '2026-10-31T12:00:00.000Z',
+            'supportedSports': ['basketball'],
+            'snapshotIntervalSeconds': 900,
             'matches': [
-                {'id': 'match-live', 'sport': 'football', 'league': 'Test League', 'home': {'name': 'Alpha', 'score': '0'}, 'away': {'name': 'Beta', 'score': '0'}, 'status': 'live'},
-                {'id': 'match-upcoming', 'sport': 'cricket', 'league': 'Test League', 'home': {'name': 'Gamma', 'score': '—'}, 'away': {'name': 'Delta', 'score': '—'}, 'status': 'upcoming'},
+                {'id': 'match-live', 'sport': 'basketball', 'league': 'Test League', 'home': {'name': 'Alpha', 'score': '80'}, 'away': {'name': 'Beta', 'score': '78'}, 'status': 'live'},
+                {'id': 'match-upcoming', 'sport': 'basketball', 'league': 'Test League', 'home': {'name': 'Gamma', 'score': '—'}, 'away': {'name': 'Delta', 'score': '—'}, 'status': 'upcoming'},
             ],
         }
         state = {'fail': False}
@@ -195,15 +199,17 @@ class TechnicalFixesBrowserTest(unittest.TestCase):
             else:
                 route.fulfill(status=200, content_type='application/json', body=json.dumps(payload))
 
-        page.route('**/sports-scores/scores.json*', feed)
+        page.route(f'{worker_endpoint}*', feed)
         page.add_init_script("window.__pollIntervals=[]; const original=window.setInterval.bind(window); window.setInterval=(fn, delay, ...args)=>{window.__pollIntervals.push(Number(delay)); return original(fn, delay, ...args);};")
         errors = []
         page.on('pageerror', lambda error: errors.append(str(error)))
         try:
             page.goto(f'{self.base}/sports-scores/', wait_until='networkidle')
             page.locator('#feed-state').get_by_text('First-party score feed connected').wait_for()
-            self.assertIn('every 60 seconds', page.locator('#feed-polling-copy').inner_text())
-            self.assertIn(60000, page.evaluate('window.__pollIntervals'))
+            self.assertIn('cached Basketball snapshots', page.locator('#feed-notice').inner_text())
+            self.assertIn('up to 15 minutes delayed', page.locator('#feed-notice').inner_text())
+            self.assertIn('every 900 seconds', page.locator('#feed-polling-copy').inner_text())
+            self.assertIn(900000, page.evaluate('window.__pollIntervals'))
             self.assertNotIn(1000, page.evaluate('window.__pollIntervals'))
             self.assertEqual(page.locator('#score-list').get_attribute('aria-live'), 'off')
             self.assertEqual(page.locator('#board-summary').get_attribute('role'), 'status')
@@ -223,16 +229,20 @@ class TechnicalFixesBrowserTest(unittest.TestCase):
             self.assertTrue(page.locator('#score-empty').is_visible())
 
             page.evaluate("window.__statusMutations=0; const watch=new MutationObserver(()=>window.__statusMutations++); for(const id of ['board-summary','feed-state','feed-updated']) watch.observe(document.getElementById(id), {subtree:true, childList:true, characterData:true}); window.__statusObserver=watch;")
-            with page.expect_response(lambda response: 'scores.json' in response.url and response.status == 200):
+            with page.expect_response(lambda response: worker_endpoint in response.url and response.status == 200):
                 page.get_by_role('button', name='Refresh').click()
             page.wait_for_timeout(150)
             self.assertEqual(page.evaluate('window.__statusMutations'), 0, 'unchanged polling does not re-announce identical status text')
 
+            page.get_by_role('button', name='All matches').press('Enter')
+            self.assertIn('All matches filter: 2 fixtures, 1 live', page.locator('#board-summary').inner_text())
             state['fail'] = True
-            with page.expect_response(lambda response: 'scores.json' in response.url and response.status == 503):
+            with page.expect_response(lambda response: worker_endpoint in response.url and response.status == 503):
                 page.get_by_role('button', name='Refresh').click()
-            page.locator('#feed-state').get_by_text('The same-site score feed is unavailable').wait_for()
-            self.assertIn('Feed not connected', page.locator('#board-summary').inner_text())
+            page.locator('#feed-state').get_by_text('The score feed is unavailable; showing the last successful snapshot').wait_for()
+            self.assertIn('Feed connected, stale', page.locator('#board-summary').inner_text())
+            self.assertIn('2 fixtures, 1 live', page.locator('#board-summary').inner_text())
+            self.assertEqual(page.locator('.match-card').count(), 2, 'transient feed errors preserve the last successful Basketball snapshot')
         finally:
             context.close()
         self.assertEqual(errors, [], f'Unexpected sports browser errors: {errors}')

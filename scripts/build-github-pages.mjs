@@ -11,6 +11,8 @@ const outputRoot = path.join(repoRoot, 'public');
 const basePath = (process.env.PAGES_BASE_PATH || '/After-hours').replace(/\/$/, '');
 const siteUrl = (process.env.PAGES_SITE_URL || `https://ibrahimbinselimbd.github.io${basePath}`).replace(/\/$/, '');
 const workerOrigin = 'https://afterhours-district.bird-timimus.workers.dev';
+const basketballFeedEndpoint = `${workerOrigin}/api/v1/scores/basketball`;
+const basketballFeedSentinel = '__AFTERHOURS_BASKETBALL_FEED_ENDPOINT__';
 const ignoredSourceFiles = new Set(['_headers', '_redirects', 'sitemap.xml']);
 const rootDirectories = new Set([
   'tools', 'media', 'assets', 'images', 'fonts', 'api', 'districts', 'article', 'info', 'sports-scores',
@@ -223,7 +225,11 @@ for (const file of await walk(outputRoot)) {
   }
 
   text = applyProjectBase(text, file);
+  // GitHub Pages links should use the Pages origin, but the public Basketball
+  // feed and the browser allowlist must retain the exact first-party Worker URL.
+  text = text.replaceAll(basketballFeedEndpoint, basketballFeedSentinel);
   text = text.replaceAll(workerOrigin, siteUrl);
+  text = text.replaceAll(basketballFeedSentinel, basketballFeedEndpoint);
   if (ext === '.html') text = addPageCanonical(text, relativePath, storyIds);
   await fs.writeFile(file, text);
 }

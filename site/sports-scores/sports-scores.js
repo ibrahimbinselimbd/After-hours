@@ -1,10 +1,14 @@
 (() => {
   'use strict';
 
-  // Browser reads an AFTERHOURS endpoint only. Goalserve credentials belong in a server secret.
+  // Browser reads only a same-origin static feed or the exact first-party Basketball Worker endpoint.
+  const basketballWorkerEndpoint = 'https://afterhours-district.bird-timimus.workers.dev/api/v1/scores/basketball';
   const configuredFeed = document.querySelector('meta[name="score-feed-endpoint"]')?.content || './scores.json';
-  const feedUrl = new URL(configuredFeed, window.location.href);
-  if (feedUrl.origin !== window.location.origin) throw new Error('Use an AFTERHOURS first-party feed endpoint, never Goalserve directly.');
+  let feedUrl;
+  try { feedUrl = new URL(configuredFeed, window.location.href); } catch { feedUrl = new URL('./scores.json', window.location.href); }
+  const isSameOriginFeed = feedUrl.origin === window.location.origin;
+  const isBasketballWorkerFeed = feedUrl.href.replace(/\/$/, '') === basketballWorkerEndpoint;
+  const feedAllowed = isSameOriginFeed || isBasketballWorkerFeed;
   const allowedSports = new Set(['football', 'cricket', 'tennis', 'basketball', 'badminton', 'f1', 'other']);
   const routeSport = document.querySelector('meta[name="score-sport"]')?.content || 'all';
   const routeSportLabel = document.querySelector('meta[name="score-sport-label"]')?.content || 'all sports';
@@ -28,7 +32,9 @@
 
   let matches = [];
   let feedConnected = false;
+  let feedStale = false;
   let feedUpdatedAt = null;
+  let feedMessage = '';
   let selectedSport = routeSport;
   let selectedState = 'all';
   let isRefreshing = false;
@@ -45,7 +51,7 @@
     const sport = String(item.sport || 'other').toLowerCase();
     const home = item.home && typeof item.home === 'object' ? item.home : {};
     const away = item.away && typeof item.away === 'object' ? item.away : {};
-    const name = value => String(value || '').trim().slice(0, 100);
+    const name = value => String(value ?? '').trim().slice(0, 100);
     const team = value => ({
       name: name(value.name) || 'Team TBC',
       shortName: name(value.shortName) || name(value.name).slice(0, 3).toUpperCase() || '—',
@@ -156,7 +162,8 @@
     const filterLabel = ({all: 'All matches', live: 'Live', upcoming: 'Upcoming', finished: 'Results'})[selectedState] || 'All matches';
     const fixtureLabel = `${visible.length} fixture${visible.length === 1 ? '' : 's'}`;
     const noMatches = visible.length ? '' : ', no matching fixtures';
-    setTextIfChanged(selectors.boardSummary, `${feedConnected ? 'Feed connected' : 'Feed not connected'}; ${routeSportLabel}, ${filterLabel} filter: ${fixtureLabel}, ${live} live${noMatches}.`);
+    const feedLabel = feedConnected ? (feedStale ? 'Feed connected, stale' : 'Feed connected') : 'Feed not connected';
+    setTextIfChanged(selectors.boardSummary, `${feedLabel}; ${routeSportLabel}, ${filterLabel} filter: ${fixtureLabel}, ${live} live${noMatches}.`);
     syncCards(visible);
     selectors.empty.hidden = visible.length > 0;
     selectors.empty.querySelector('h3').textContent = feedConnected
@@ -184,9 +191,10 @@
       return;
     }
     const date = new Date(feedUpdatedAt);
-    setTextIfChanged(selectors.feedUpdated, Number.isNaN(date.getTime())
+    const label = Number.isNaN(date.getTime())
       ? 'UPDATED / TIME UNKNOWN'
-      : `UPDATED / ${new Intl.DateTimeFormat(undefined, {hour: '2-digit', minute: '2-digit'}).format(date)}`);
+      : `LAST SUCCESS / ${new Intl.DateTimeFormat(undefined, {hour: '2-digit', minute: '2-digit'}).format(date)}`;
+    setTextIfChanged(selectors.feedUpdated, feedStale ? `${label} / STALE` : label);
   }
 
   async function refreshFeed() {
@@ -195,21 +203,22 @@
     selectors.refresh.disabled = true;
     selectors.list.setAttribute('aria-busy', 'true');
     try {
+      if (!feedAllowed) throw new Error('Score feed URL is not an allowed same-origin feed or the exact Basketball Worker endpoint');
       const url = new URL(feedUrl.href);
       url.searchParams.set('check', String(Date.now()));
-      const response = await fetch(url, {method: 'GET', cache: 'no-store', credentials: 'same-origin', headers: {Accept: 'application/json'}});
+      const response = await fetch(url, {method: 'GET', cache: 'no-store', credentials: isSameOriginFeed ? 'same-origin' : 'omit', headers: {Accept: 'application/json'}});
       if (!response.ok) throw new Error(`Feed returned ${response.status}`);
       const payload = await response.json();
       if (!payload || !Array.isArray(payload.matches)) throw new Error('The same-site score file has an invalid format');
       matches = payload.matches.map(normalizeMatch).filter(Boolean).slice(0, 250);
       feedConnected = payload.connected === true;
+      feedStale = payload.stale === true;
       feedUpdatedAt = payload.updatedAt || null;
-      updateFeedStatus(feedConnected ? 'First-party score feed connected' : 'First-party feed not connected');
+      feedMessage = typeof payload.message === 'string' ? payload.message.slice(0, 240) : '';
+      updateFeedStatus(feedStale ? (feedMessage || 'Basketball snapshot is stale or unavailable') : feedConnected ? 'First-party score feed connected' : (feedMessage || 'First-party feed not connected'), feedStale || !feedConnected);
     } catch (error) {
-      matches = [];
-      feedConnected = false;
-      feedUpdatedAt = null;
-      updateFeedStatus('The same-site score feed is unavailable', true);
+      feedStale = true;
+      updateFeedStatus('The score feed is unavailable; showing the last successful snapshot', true);
       console.warn('AFTERHOURS score feed could not be loaded:', error.message);
     } finally {
       updateTimestamp();

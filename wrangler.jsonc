@@ -4,11 +4,17 @@
   "main": "worker.js",
   "compatibility_date": "2026-10-19",
   "workers_dev": true,
+  "d1_databases": [{
+    "binding": "SCORES_DB",
+    "database_name": "afterhours-scores-cache",
+    "database_id": "3ccda0ff-b471-4f9a-8935-cf8d3536e6b8"
+  }],
   "assets": {
     "directory": "./site",
     "binding": "ASSETS",
     "run_worker_first": [
-      "/api/v1/passport-photo/*"
+      "/api/v1/passport-photo/*",
+      "/api/v1/scores/*"
     ],
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "none"

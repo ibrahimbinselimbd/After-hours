@@ -1,6 +1,9 @@
+import { BASKETBALL_PATH, handleBasketballRequest } from './services/scores/basketball.mjs';
+
 export default {
  async fetch(request,env){
   const url=new URL(request.url);
+  if(url.pathname===BASKETBALL_PATH)return handleBasketballRequest(request,env);
   if(url.pathname==="/api/v1/passport-photo/background-remove"){
    const reply=(code,status,message)=>new Response(JSON.stringify({ok:false,code,message}),{status,headers:{"content-type":"application/json; charset=utf-8","cache-control":"no-store","x-content-type-options":"nosniff"}});
    if(request.method!=="POST")return reply("method_not_allowed",405,"POST required");

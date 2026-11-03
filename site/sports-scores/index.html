@@ -4,20 +4,20 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#080a16">
-  <meta name="description" content="Browse seven AFTERHOURS sports score lanes for football, cricket, tennis, basketball, badminton, Formula 1 and more. No verified live feed is connected yet.">
+  <meta name="description" content="Browse seven AFTERHOURS sports score lanes, including cached Basketball snapshots with honest update and stale-status information.">
   <meta name="robots" content="noindex,follow">
-  <meta name="score-feed-endpoint" content="./scores.json">
-  <meta name="score-poll-interval-seconds" content="60">
+  <meta name="score-feed-endpoint" content="https://afterhours-district.bird-timimus.workers.dev/api/v1/scores/basketball">
+  <meta name="score-poll-interval-seconds" content="900">
   <meta property="og:site_name" content="AFTERHOURS">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Sports Scores & Fixtures — AFTERHOURS">
-  <meta property="og:description" content="Browse seven separate sports score lanes. No verified live data feed is connected yet.">
+  <meta property="og:description" content="Browse seven separate sports score lanes, with cached Basketball snapshots and honest feed status.">
   <meta property="og:url" content="https://afterhours-district.bird-timimus.workers.dev/sports-scores/">
   <link rel="canonical" href="https://afterhours-district.bird-timimus.workers.dev/sports-scores/">
   <title>Sports Scores & Fixtures — AFTERHOURS</title>
   <link rel="stylesheet" href="/fonts.css">
   <link rel="stylesheet" href="./sports-scores.css?v=2">
-  <script defer src="./sports-scores.js?v=4"></script>
+  <script defer src="./sports-scores.js?v=5"></script>
 </head>
 <body class="sports-page">
   <a class="skip-link" href="#scoreboard">Skip to the scoreboard</a>
@@ -46,7 +46,7 @@
         <div class="score-hero-copy">
           <div class="score-eyebrow"><i aria-hidden="true"></i> THE GLOBAL SPORTS FREQUENCY <span>001 / LIVE BOARD</span></div>
           <h1 id="score-title">One world.<br><em>Every game.</em></h1>
-          <p>Football, cricket, tennis, basketball, badminton and Formula 1—separate score lanes, with no verified live feed connected yet.</p>
+          <p>Football, cricket, tennis, basketball, badminton and Formula 1—separate score lanes, with Basketball snapshots served by the AFTERHOURS first-party feed.</p>
           <div class="score-hero-actions">
             <a class="score-primary" href="#scoreboard">Explore the board <span aria-hidden="true">↓</span></a>
             <span class="score-clean-note"><b aria-hidden="true">✳</b> No ads. No trackers. Provider keys stay server-side.</span>
@@ -92,7 +92,7 @@
 
         <div class="feed-notice" id="feed-notice" role="status" aria-live="polite">
           <span class="notice-mark" aria-hidden="true">i</span>
-          <div><strong id="feed-state">First-party feed not connected</strong><p>The display is ready for an AFTERHOURS server-side Goalserve adapter. No provider call or key is active in this page; the adapter must map your account's feed into the scoreboard format.</p><p id="feed-polling-copy">Automatic same-site feed checks run every 60 seconds while this page is visible. Use Refresh to check now.</p></div>
+          <div><strong id="feed-state">Waiting for cached Basketball snapshot</strong><p>The board reads cached Basketball snapshots from the AFTERHOURS first-party Worker. Snapshots may be up to 15 minutes delayed, or longer if the provider is unavailable or the free daily quota is reached; this is not 15-second realtime data.</p><p id="feed-polling-copy">Automatic same-site feed checks run every 900 seconds while this page is visible. Use Refresh to check now.</p></div>
           <span class="feed-update" id="feed-updated">NO FEED / WAITING</span>
         </div>
 
@@ -106,7 +106,7 @@
       <section class="score-data-note" aria-labelledby="data-note-title">
         <div class="data-note-icon" aria-hidden="true">⌁</div>
         <div><span class="board-kicker">BUILT FOR THE AFTERHOURS SIGNAL</span><h2 id="data-note-title">Fast by design.<br><em>Honest by default.</em></h2></div>
-        <p>The scoreboard reads only an AFTERHOURS same-origin feed and animates scores only when real data changes. This static GitHub Pages page does not connect to a provider by itself; no Goalserve adapter, package access or credentials are active. Check sport coverage—including badminton—against the <a href="https://www.goalserve.com/en/sport-data-feeds" target="_blank" rel="noopener noreferrer">official public catalogue</a> and the chosen subscription before enabling scores. No feed is connected, so the board stays empty.</p>
+        <p>The scoreboard reads only an AFTERHOURS first-party feed and animates scores only when real data changes. Basketball uses cached snapshots, with up to a 15-minute delay (longer if unavailable or the free API-Sports quota is reached), not 15-second realtime data. Provider credentials stay server-side; see the <a href="https://api-sports.io/documentation/basketball/v1" target="_blank" rel="noopener noreferrer">official API-Sports Basketball documentation</a> for the source contract.</p>
       </section>
     </div>
   </main>

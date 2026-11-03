@@ -113,11 +113,18 @@ test('sports lane generator sets the shared polling interval and live status con
   assert.equal(sportScorePages.length, 7);
   for (const page of sportScorePages) {
     const html = renderSportScorePage(page, `https://example.test/sports-scores/${page.slug}/`);
-    assert.match(html, /name="score-poll-interval-seconds" content="60"/);
-    assert.match(html, /Automatic same-site feed checks run every 60 seconds/);
+    const expectedSeconds = page.slug === 'basketball' ? 900 : 60;
+    assert.match(html, new RegExp(`name="score-poll-interval-seconds" content="${expectedSeconds}"`));
+    assert.match(html, new RegExp(`Automatic same-site feed checks run every ${expectedSeconds} seconds`));
     assert.match(html, /id="board-summary" role="status" aria-live="polite"/);
     assert.match(html, /id="feed-notice" role="status" aria-live="polite"/);
     assert.match(html, /id="score-list" aria-live="off"/);
-    assert.match(html, /sports-scores\.js\?v=4/);
+    assert.match(html, /sports-scores\.js\?v=5/);
+    if (page.slug === 'basketball') {
+      assert.match(html, /https:\/\/afterhours-district\.bird-timimus\.workers\.dev\/api\/v1\/scores\/basketball/);
+      assert.match(html, /api-sports\.io\/documentation\/basketball\/v1/);
+      assert.match(html, /up to 15 minutes delayed/);
+      assert.match(html, /not 15-second realtime/);
+    }
   }
 });
