@@ -18,7 +18,7 @@
   };
   if (!story) {
     document.title = 'Story not found | ByteAfter';
-    setMeta('description', 'The requested AFTERHOURS Journal story could not be found.');
+    setMeta('description', 'The requested ByteAfter Journal story could not be found.');
     setMeta('robots', 'noindex,follow');
     document.head.querySelector('link[rel="canonical"]')?.remove();
     const main = $('main');
@@ -52,12 +52,12 @@
     ai:{src:'editorial-technology.webp',alt:'An illustrated processor surrounded by electronic circuits',caption:'Technology illustration. This is a conceptual image, not a photograph of a system described in the report.'},
     gear:{src:'editorial-technology.webp',alt:'An illustrated processor on a circuit board',caption:'Hardware illustration. This image does not depict a specific product or configuration in the report.'},
     crypto:{src:'editorial-crypto.webp',alt:'A conceptual golden Bitcoin symbol with surrounding digital blocks',caption:'Cryptocurrency illustration, not a depiction of the specific project in this report. No investment recommendation is implied.'},
-    culture:{src:'city.jpg',alt:'City lights and architecture at night',caption:'Digital culture / AFTERHOURS visual essay. Illustrative city photography, not a scene from the reported event.'}
+    culture:{src:'city.jpg',alt:'City lights and architecture at night',caption:'Digital culture / ByteAfter visual essay. Illustrative city photography, not a scene from the reported event.'}
   };
-  const genericImage={src:'city.jpg',alt:'City architecture at night',caption:'AFTERHOURS editorial atmosphere. Illustrative photography, not an event or product described in this story.'};
+  const genericImage={src:'city.jpg',alt:'City architecture at night',caption:'ByteAfter editorial atmosphere. Illustrative photography, not an event or product described in this story.'};
   const pictures=Array.isArray(story.images)&&story.images.length?story.images:[illustrations[story.category]||genericImage];
   const imageUrls=pictures.map(image=>new URL(image.src,location.href).href);
-  setMeta('og:site_name','AFTERHOURS','property');
+  setMeta('og:site_name','ByteAfter','property');
   setMeta('og:type','article','property');
   setMeta('og:title',`${story.title} | ByteAfter`,'property');
   setMeta('og:description',story.excerpt,'property');
@@ -78,7 +78,7 @@
   $('article-sections').before(figure);
   $('article-sections').innerHTML=story.body.slice(1).map((p,i)=>`<section class="article-section" id="section-${i+1}"><h2><span>${String(i+1).padStart(2,'0')}</span>${esc(headings[i])}</h2><p>${esc(p)}</p></section>`).join('');
   $('toc').innerHTML=[{id:'article-content',label:'Overview'},...headings.map((label,i)=>({id:'section-'+(i+1),label})),{id:'source-note',label:'Sources & dates'}].map((x,i)=>`<a class="toc-link${i===0?' active':''}" href="#${x.id}" data-target="${x.id}">${esc(x.label)}</a>`).join('');
-  $('source-note').innerHTML=`<span class="note-kicker">SOURCES & DATES</span><p>Published by AFTERHOURS on ${date(story.publishedAt)}. Source report: ${date(story.date)}${story.updated?' (updated report; first published 16 October 2026)':''}. Reporting dates are not necessarily product launch dates. ${story.category==='crypto'?'For information only; not investment, tax or legal advice.':''}</p><ul>${story.sources.map(s=>`<li><a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.name)} ↗</a> · ${date(s.date)}</li>`).join('')}</ul><p>Original AFTERHOURS summary and context, based on the linked reporting. Product availability, prices and plans can change. No firsthand product testing is claimed.</p>`;
+  $('source-note').innerHTML=`<span class="note-kicker">SOURCES & DATES</span><p>Published by ByteAfter on ${date(story.publishedAt)}. Source report: ${date(story.date)}${story.updated?' (updated report; first published 16 October 2026)':''}. Reporting dates are not necessarily product launch dates. ${story.category==='crypto'?'For information only; not investment, tax or legal advice.':''}</p><ul>${story.sources.map(s=>`<li><a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.name)} ↗</a> · ${date(s.date)}</li>`).join('')}</ul><p>Original ByteAfter summary and context, based on the linked reporting. Product availability, prices and plans can change. No firsthand product testing is claimed.</p>`;
   // Newest publication first, then report date; tied dates keep editorial array order.
   const byDate=(a,b)=>(b.publishedAt||b.date).localeCompare(a.publishedAt||a.date)||b.date.localeCompare(a.date)||stories.indexOf(a)-stories.indexOf(b);
   const sameCategory=stories.filter(s=>s.category===story.category&&s.id!==story.id).sort(byDate);

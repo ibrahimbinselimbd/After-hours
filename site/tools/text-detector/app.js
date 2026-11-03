@@ -248,7 +248,7 @@ $("#text-file").addEventListener("change", async (event) => {
 $("#copy-report-button").addEventListener("click", async () => {
   if (!lastReport) return;
   const result = lastReport.result || {};
-  const report = ["AFTERHOURS TEXT SIGNAL — SCREENING REPORT", `Assessment: ${(result.assessment || "inconclusive").replace(/_/g, " ")}`, `AI-like model signal: ${result.ai_signal_score == null ? "Unavailable" : `${Math.round(result.ai_signal_score)}/100`}`, `Words: ${lastReport.word_count || 0}`, `Model: ${lastReport.model?.name || "RoBERTa / OpenAI detector"}`, "Notice: This model score is not a probability or proof of authorship and may be wrong."].join("\n");
+  const report = ["BYTEAFTER TEXT SIGNAL — SCREENING REPORT", `Assessment: ${(result.assessment || "inconclusive").replace(/_/g, " ")}`, `AI-like model signal: ${result.ai_signal_score == null ? "Unavailable" : `${Math.round(result.ai_signal_score)}/100`}`, `Words: ${lastReport.word_count || 0}`, `Model: ${lastReport.model?.name || "RoBERTa / OpenAI detector"}`, "Notice: This model score is not a probability or proof of authorship and may be wrong."].join("\n");
   try { await navigator.clipboard.writeText(report); announce("Report summary copied."); } catch { announce("Copy was blocked by the browser."); }
 });
 

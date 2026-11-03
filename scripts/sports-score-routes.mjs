@@ -3,15 +3,15 @@ const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, character =>
 export const sportScorePages = [
   {
     slug: 'football', sport: 'football', label: 'Football', icon: '⚽', title: 'Football Scores & Fixtures | ByteAfter',
-    description: 'Follow the AFTERHOURS football score page for live matches, fixtures and results. No verified football feed is connected, so no score data is displayed yet.',
+    description: 'Explore the ByteAfter football score page. No verified football feed is connected, so live scores, fixtures, and results are not available here yet.',
     intro: 'A dedicated page for association football (often called soccer): match status, two sides, score and competition details when a verified first-party feed supplies them. No live football feed is connected, and this page currently has no fixtures or results.',
     guide: 'The current score card can represent two sides, a competition, a score, match status, period, start time and venue when those fields are supplied. Competition coverage will depend on the verified feed and the account package; no league availability is promised here.',
-    coverage: 'Goalserve’s public catalogue lists Football and Soccer data-feed categories. That confirms the categories are advertised publicly, not that any specific league is included in the selected subscription or active for AFTERHOURS.',
+    coverage: 'Goalserve’s public catalogue lists Football and Soccer data-feed categories. That confirms the categories are advertised publicly, not that any specific league is included in the selected subscription or active for ByteAfter.',
     source: 'https://www.goalserve.com/en/sport-data-feeds', sourceLabel: 'Goalserve public sports-feed catalogue',
   },
   {
     slug: 'cricket', sport: 'cricket', label: 'Cricket', icon: '◉', title: 'Cricket Scores & Fixtures | ByteAfter',
-    description: 'Check the AFTERHOURS cricket score page for live matches, schedules and results. No verified cricket feed is connected, so no score data is displayed yet.',
+    description: 'Explore the ByteAfter cricket score page. No verified cricket feed is connected, so live scores, schedules, and results are not available here yet.',
     intro: 'A dedicated cricket route for match status, teams and score summaries when an approved first-party feed supplies them. No cricket feed is connected, and no live scorecard, fixture or result is being simulated.',
     guide: 'The shared score card currently treats each side’s score as plain text; it does not yet parse innings, overs or wickets into a cricket scorecard. A cricket-specific adapter and review are required before those fields can be promised or shown.',
     coverage: 'Goalserve’s public cricket page describes cricket feeds and names competitions including the Bangladesh Premier League. This does not confirm coverage in the intended Full Package subscription or the owner’s account.',
@@ -19,7 +19,7 @@ export const sportScorePages = [
   },
   {
     slug: 'tennis', sport: 'tennis', label: 'Tennis', icon: '◌', title: 'Tennis Scores & Match Results | ByteAfter',
-    description: 'Follow the AFTERHOURS tennis score page for match updates, fixtures and results. No verified tennis feed is connected, so no score data is displayed yet.',
+    description: 'Explore the ByteAfter tennis score page. No verified tennis feed is connected, so live scores, fixtures, and results are not available here yet.',
     intro: 'A dedicated tennis route for tournament matches and player or doubles-pair score summaries when a verified first-party feed supplies them. No tennis feed is connected, and there are no live matches or results on this page yet.',
     guide: 'The shared score card can hold two participants and one score string, but it does not yet format set-by-set games or point-by-point data. A tennis-specific adapter is needed before detailed tennis scoring can be represented accurately.',
     coverage: 'Goalserve’s public tennis page lists tours and competition types such as ATP, WTA, Challenger, ITF and Davis Cup. The exact coverage and fields for the intended subscription still need confirmation.',
@@ -27,16 +27,16 @@ export const sportScorePages = [
   },
   {
     slug: 'basketball', sport: 'basketball', label: 'Basketball', icon: '◉', title: 'Basketball Scores & Fixtures | ByteAfter',
-    description: 'Check the AFTERHOURS basketball score page for cached game snapshots, fixtures and results with honest update and stale-status information.',
-    intro: 'A dedicated basketball route for cached game snapshots, team scores and status from the AFTERHOURS first-party Worker. Snapshots may be up to 15 minutes delayed, or longer if unavailable or the free daily quota is reached; this is not 15-second realtime data.',
+    description: 'Check the ByteAfter Basketball page for API-Sports snapshots. Basketball is the only connected score feed; snapshots may be delayed and are not real-time.',
+    intro: 'A dedicated basketball route for cached game snapshots, team scores and status from the ByteAfter first-party Worker. Snapshots may be up to 15 minutes delayed, or longer if unavailable or the free daily quota is reached; this is not 15-second realtime data.',
     guide: 'The current shared card can display two teams, a score and a period label. It does not yet model a game clock, quarter-by-quarter score or player box score; those require verified source fields and a basketball-specific adapter.',
-    coverage: 'Basketball data is sourced through API-Sports and exposed by the AFTERHOURS first-party Worker as cached snapshots. The free API-Sports plan is limited to 100 requests per day; no purchase is enabled.',
+    coverage: 'Basketball data is sourced through API-Sports and exposed by the ByteAfter first-party Worker as cached snapshots. The free API-Sports plan is limited to 100 requests per day; no purchase is enabled.',
     source: 'https://api-sports.io/documentation/basketball/v1', sourceLabel: 'API-Sports Basketball documentation',
     feedEndpoint: 'https://afterhours-district.bird-timimus.workers.dev/api/v1/scores/basketball', pollSeconds: 900,
   },
   {
     slug: 'badminton', sport: 'badminton', label: 'Badminton', icon: '⌁', title: 'Badminton Scores & Match Results | ByteAfter',
-    description: 'The AFTERHOURS badminton score page is reserved for verified match data. No badminton feed is connected, and no scores or fixtures are available yet.',
+    description: 'The ByteAfter badminton score page is reserved for verified match data. No badminton feed is connected, and no scores or fixtures are available yet.',
     intro: 'A dedicated badminton route for singles or doubles matches if a suitable feed is confirmed and connected. There is no badminton score data here today, and no provider coverage is assumed.',
     guide: 'The generic card can represent two players or pairs and a plain-text score, but it does not parse game-by-game badminton scoring. A badminton-specific adapter and a confirmed data source are required before this page can report results.',
     coverage: 'Badminton is not explicitly named in the Goalserve public sports catalogue we checked. That absence does not prove the data is unavailable, but coverage remains unverified and must not be advertised as active.',
@@ -44,7 +44,7 @@ export const sportScorePages = [
   },
   {
     slug: 'formula-1', sport: 'f1', label: 'Formula 1', icon: '↗', title: 'Formula 1 Scores & Race Sessions | ByteAfter',
-    description: 'Follow the AFTERHOURS Formula 1 score page for verified race-session information. No Formula 1 feed is connected, and no session data or results are displayed yet.',
+    description: 'Follow the ByteAfter Formula 1 score page for verified race-session information. No Formula 1 feed is connected, and no session data or results are displayed yet.',
     intro: 'A dedicated Formula 1 route for verified race-weekend session information. No Formula 1 feed is connected, and this page currently contains no qualifying, sprint or race results.',
     guide: 'The current shared card is designed for a two-side match, not a race-session timetable or driver classification. An F1-specific feed adapter and leaderboard rendering are required before the page can publish session or finishing-order data.',
     coverage: 'Goalserve’s public F1 page lists Formula 1 and other racing series. This is public catalogue information only; the intended subscription, session fields and account access have not been verified.',
@@ -52,7 +52,7 @@ export const sportScorePages = [
   },
   {
     slug: 'more-sports', sport: 'other', label: 'More sports', icon: '＋', title: 'More Sports Scores | ByteAfter',
-    description: 'Browse the AFTERHOURS additional-sports score lane. No extra sports feed is connected or verified, so this page does not claim live coverage.',
+    description: 'Browse the ByteAfter additional-sports score lane. No extra sports feed is connected or verified, so this page does not claim live coverage.',
     intro: 'This route is a placeholder for sports beyond the six named lanes. No additional sports are currently being reported; a sport will appear here only after its provider coverage, data fields and first-party feed are verified.',
     guide: 'The current page model supports a small set of match-style fields. Every added sport needs an explicit provider-coverage check and a suitable data mapping; formats that need a different model must not be squeezed into a misleading match card.',
     coverage: 'Goalserve describes a broad Full Package and publishes a sports catalogue, but neither statement proves which feeds are included in an unpurchased account. The exact package and each sport must be confirmed before adding coverage claims.',
@@ -70,7 +70,7 @@ export function renderSportScorePage(page, canonicalUrl) {
   const feedEndpoint = page.feedEndpoint || '../scores.json';
   const pollSeconds = page.pollSeconds || 60;
   const feedCopy = isBasketball
-    ? 'The board reads cached Basketball snapshots from the AFTERHOURS first-party Worker. Snapshots may be up to 15 minutes delayed, or longer if the provider is unavailable or the free daily quota is reached; this is not 15-second realtime data.'
+    ? 'Only Basketball has a connected score feed. ByteAfter’s Worker relays cached Basketball snapshots from API-Sports; they may be up to 15 minutes delayed, or longer if the provider is unavailable or the free daily quota is reached. This is not real-time data.'
     : `No ${escapeHtml(statusName)} provider call or score key is active in this page. Coverage and data fields must be verified for the selected subscription before live information can appear.`;
   return `<!doctype html>
 <html lang="en">
@@ -100,7 +100,7 @@ export function renderSportScorePage(page, canonicalUrl) {
   <header class="sports-header">
     <a class="sports-brand" href="/" aria-label="ByteAfter home"><span class="brand-mark brand-mark-3d" aria-hidden="true"><img src="/byteafter-mark.webp" alt=""></span><span class="brand-name brand-word">Byte<span>After</span><small> / SPORTS SIGNAL</small></span></a>
     <nav class="sports-nav" aria-label="Main navigation"><a href="/#feed">The journal</a><a href="/districts/">The districts</a><a href="/tools/">Tools</a><a href="/sports-scores/" aria-current="page">Scores</a></nav>
-    <a class="sports-header-badge" href="/sports-scores/" aria-label="All sports scores"><span>SPORTS<small>LIVE BOARD</small></span><i aria-hidden="true"></i></a>
+    <a class="sports-header-badge" href="/sports-scores/" aria-label="All sports scores"><span>SPORTS<small>SCOREBOARD</small></span><i aria-hidden="true"></i></a>
   </header>
   <main>
     <div class="score-wrap">

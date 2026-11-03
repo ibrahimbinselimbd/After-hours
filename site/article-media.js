@@ -1,6 +1,6 @@
 /* Shared English editorial media defaults. Custom story.images take priority. */
 (() => {
-  const generatedCaption = concept => `Original AI-generated editorial illustration by AFTERHOURS. ${concept} This is a conceptual image, not a documentary photograph or an actual product, event, deployment, price, or live service.`;
+  const generatedCaption = concept => `Original AI-generated editorial illustration by ByteAfter. ${concept} This is a conceptual image, not a documentary photograph or an actual product, event, deployment, price, or live service.`;
   const images = {
     'world-id-banking-zoom-launch': {src:'/media/world-orb.png',alt:'World’s white Orb device used for proof-of-human verification',caption:'World’s Orb, a device used to verify a unique human for World ID. Product image: World / Tools for Humanity. This is not a photograph of a bank deployment.',source:'https://world.org/en/orb'},
     'power-to-the-players-act-ownership-offline-mode': {src:'art-power-to-the-players-act-ownership-offline-mode.webp',alt:'A game controller and golden key protected by a glass dome amid disconnected server racks',caption:generatedCaption('A visual metaphor for digital game ownership and continued offline access proposed by the bill.'),generated:true},

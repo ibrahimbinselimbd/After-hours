@@ -19,9 +19,9 @@
   };
   const title = heading.textContent.replace(/\s*\.\s*$/, '').trim();
   const description = summary.textContent.replace(/\s+/g, ' ').trim();
-  document.title = `${title} | AFTERHOURS`;
+  document.title = `${title} | ByteAfter`;
   setMeta('description', description);
-  setMeta('og:site_name', 'AFTERHOURS', 'property');
+  setMeta('og:site_name', 'ByteAfter', 'property');
   setMeta('og:type', 'website', 'property');
   setMeta('og:title', document.title, 'property');
   setMeta('og:description', description, 'property');

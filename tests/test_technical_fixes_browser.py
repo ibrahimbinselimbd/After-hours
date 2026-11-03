@@ -205,7 +205,7 @@ class TechnicalFixesBrowserTest(unittest.TestCase):
         page.on('pageerror', lambda error: errors.append(str(error)))
         try:
             page.goto(f'{self.base}/sports-scores/', wait_until='networkidle')
-            page.locator('#feed-state').get_by_text('First-party score feed connected').wait_for()
+            page.locator('#feed-state').get_by_text('Basketball score feed connected').wait_for()
             self.assertIn('cached Basketball snapshots', page.locator('#feed-notice').inner_text())
             self.assertIn('up to 15 minutes delayed', page.locator('#feed-notice').inner_text())
             self.assertIn('every 900 seconds', page.locator('#feed-polling-copy').inner_text())
@@ -241,7 +241,7 @@ class TechnicalFixesBrowserTest(unittest.TestCase):
             state['fail'] = True
             with page.expect_response(lambda response: worker_endpoint in response.url and response.status == 503):
                 page.get_by_role('button', name='Refresh').click()
-            page.locator('#feed-state').get_by_text('The score feed is unavailable; showing the last successful snapshot').wait_for()
+            page.locator('#feed-state').get_by_text('Basketball feed request failed; cached data may be stale').wait_for()
             self.assertIn('Feed connected, stale', page.locator('#board-summary').inner_text())
             self.assertIn('2 fixtures, 1 live', page.locator('#board-summary').inner_text())
             self.assertEqual(page.locator('.match-card').count(), 2, 'transient feed errors preserve the last successful Basketball snapshot')

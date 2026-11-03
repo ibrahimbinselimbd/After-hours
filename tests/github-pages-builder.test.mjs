@@ -120,9 +120,11 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
     assert.match(page, /href="\/After-hours\/byteafter-icon\.png"/, `${slug} should load the ByteAfter favicon`);
     assert.match(page, /src="\/After-hours\/byteafter-mark\.webp"/, `${slug} should use the approved ByteAfter mark`);
     assert.match(page, /property="og:site_name" content="ByteAfter"/, `${slug} should expose ByteAfter site metadata`);
+    assert.doesNotMatch(page, /AFTERHOURS|AFTER\/HOURS/, `${slug} should not expose the previous brand in public metadata or markup`);
     const title = page.match(/<title>([^<]+)<\/title>/i)?.[1] || '';
     const description = page.match(/<meta\s+name=["']description["']\s+content=(['"])([\s\S]*?)\1/i)?.[2] || '';
     const canonicalTags = [...page.matchAll(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["'][^>]*>/gi)];
+    assert.match(title, /\| ByteAfter$/, `${slug} should use the current brand in its title`);
     assert.ok(title.length > 12, `${slug} needs a descriptive title before JavaScript runs`);
     assert.ok(description.length > 40, `${slug} needs a useful meta description before JavaScript runs`);
     assert.equal(canonicalTags.length, 1, `${slug} should have exactly one canonical URL`);
@@ -159,6 +161,7 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
 
   const hub = await readFile(path.join(output, 'tools', 'index.html'), 'utf8');
   assert.match(hub, new RegExp(`rel=["']canonical["'] href=["']${base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/tools/`));
+  assert.doesNotMatch(hub, /AFTERHOURS|AFTER\/HOURS/);
   const toolkitCss = await readFile(path.join(output, 'tools', '_shared', 'toolkit.css'), 'utf8');
   assert.match(toolkitCss, /\.tool-hero h1\{[^}]*overflow-wrap:\s*anywhere/i, 'long tool headings should wrap instead of widening the mobile viewport');
   const detector = await readFile(path.join(output, 'tools', 'text-detector', 'index.html'), 'utf8');
@@ -197,6 +200,7 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
   const info = await readFile(path.join(output, 'info.html'), 'utf8');
   const notFound = await readFile(path.join(output, '404.html'), 'utf8');
   assert.match(home, /ByteAfter/);
+  assert.doesNotMatch(home, /AFTERHOURS|AFTER\/HOURS/);
   const brandedFooterPages = [
     'index.html', 'article.html', 'info.html', 'districts/index.html',
     'sports-scores/index.html', 'sports-scores/football/index.html', 'tools/index.html',
@@ -214,23 +218,30 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
   }
   assert.match(home, new RegExp(`rel=["']canonical["'] href=["']${base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/["']`));
   assert.match(district, /JOURNAL DISTRICT MAP/);
-  assert.match(district, new RegExp(`${base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/districts/`));
+  assert.doesNotMatch(district, /AFTERHOURS|AFTER\/HOURS/);
+  assert.match(district, new RegExp(`${base.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')}/districts/`));
+  const districtScript = await readFile(path.join(output, 'districts.js'), 'utf8');
+  assert.match(districtScript, /ByteAfter’s 500 active browser tools/);
+  assert.doesNotMatch(districtScript, /100 free tools/i);
   assert.match(article, /article\.html\?story=/);
+  assert.doesNotMatch(article, /AFTERHOURS|AFTER\/HOURS/);
   assert.doesNotMatch(article, /<link\s+rel=["']canonical["']/i, 'query-story template must not canonically identify every request as the first story');
   assert.match(article, /robots\.content='noindex,follow'/, 'unknown query story IDs must be excluded from indexing');
   assert.match(article, /ids\.includes\(requested\)/, 'only known story IDs should receive self canonicals');
   assert.match(info, /info\.html\?page=/);
   assert.match(info, /href="https:\/\/github\.com\/ibrahimbinselimbd\/After-hours\/issues"/);
   assert.match(info, /Public GitHub issue tracker · posts are public/);
+  assert.doesNotMatch(info, /AFTERHOURS|AFTER\/HOURS/);
   assert.doesNotMatch(info, /mailto:/i, 'the public Info page must not invent or expose a private email address');
   const infoContent = await readFile(path.join(output, 'info.js'), 'utf8');
+  assert.doesNotMatch(infoContent, /AFTERHOURS|AFTER\/HOURS/);
   assert.match(infoContent, /Draft/);
   assert.match(infoContent, /title:'Contact & corrections'/);
   assert.match(infoContent, /public corrections route/i);
   assert.match(infoContent, /Use <a href="https:\/\/github\.com\/ibrahimbinselimbd\/After-hours\/issues"/);
   assert.match(infoContent, /posts are public/i);
   assert.match(infoContent, /No response time is promised/i);
-  assert.match(infoContent, /owner states that AFTERHOURS collects only IP address, browser type and device type/i);
+  assert.match(infoContent, /owner states that ByteAfter collects only IP address, browser type and device type/i);
   assert.match(infoContent, /afterhours:planner-draft:\{slug\}/);
   assert.match(infoContent, /afterhours:new-tool-draft:\{slug\}/);
   assert.match(infoContent, /afterhours-heic-credits-v1/);
@@ -240,6 +251,9 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
   assert.match(infoContent, /<strong>Draft<\/strong>/);
   assert.doesNotMatch(infoContent, /Contact is coming soon/i);
   assert.doesNotMatch(infoContent, /Feedback contact coming soon/i);
+  const qrPage = await readFile(path.join(output, 'tools', 'qr-code-generator', 'index.html'), 'utf8');
+  assert.match(qrPage, /not a ByteAfter redirect/i);
+  assert.doesNotMatch(qrPage, /AFTERHOURS|AFTER\/HOURS/);
   assert.match(notFound, /noindex,nofollow/);
   assert.match(notFound, /href="\/After-hours\/districts\/"/);
   assert.match(notFound, /href="\/After-hours\/"/);
@@ -269,6 +283,9 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
 
   assert.equal(sportScorePages.length, 7, 'the scoreboard should retain six named sports plus the additional-sports lane');
   const scoreHub = await readFile(path.join(output, 'sports-scores', 'index.html'), 'utf8');
+  assert.match(scoreHub, /Only Basketball has a connected API-Sports (?:score )?feed/i);
+  assert.match(scoreHub, /other sports lanes do not have live scores here/i);
+  assert.doesNotMatch(scoreHub, /Every game|AFTERHOURS|AFTER\/HOURS/);
   const scoreTitles = new Set();
   const scoreDescriptions = new Set();
   for (const page of sportScorePages) {
@@ -314,6 +331,7 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
     if (file.endsWith('.html')) {
       const expectedPolicy = relative === 'tools/heic-to-jpg/index.html' ? 'no-referrer' : 'strict-origin-when-cross-origin';
       assert.deepEqual(referrerMetaValues(source), [expectedPolicy], `${relative} should have one safe document-level referrer policy`);
+      assert.doesNotMatch(source, /AFTERHOURS|AFTER\/HOURS/, `${relative} should not retain the previous public brand`);
     }
     const withoutAuthorizedBasketballFeed = source.replaceAll('https://afterhours-district.bird-timimus.workers.dev/api/v1/scores/basketball', '');
     assert.doesNotMatch(withoutAuthorizedBasketballFeed, /afterhours-district\.bird-timimus\.workers\.dev/i, `${path.relative(output, file)} should use GitHub Pages URLs except for the authorized Basketball feed`);

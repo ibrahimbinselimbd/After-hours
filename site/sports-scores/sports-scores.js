@@ -175,7 +175,7 @@
     selectors.empty.querySelector('.empty-copy p').textContent = feedConnected
       ? 'There are no fixtures for the selected sport and status. Try another lane or check again later.'
       : routeSport === 'all'
-        ? 'The interface is ready, but this static site needs a first-party feed to supply real fixtures and results. Nothing here is simulated.'
+        ? 'The Basketball feed has no matching data or is unavailable. Other sports do not have connected feeds here yet. Nothing is simulated.'
         : `No live, scheduled or completed ${routeSportLabel.toLowerCase()} data is being served. This page will show feed-backed information only after the sport and its data fields are verified.`;
   }
 
@@ -215,11 +215,17 @@
       feedStale = payload.stale === true;
       feedUpdatedAt = payload.updatedAt || null;
       feedMessage = typeof payload.message === 'string' ? payload.message.slice(0, 240) : '';
-      updateFeedStatus(feedStale ? (feedMessage || 'Basketball snapshot is stale or unavailable') : feedConnected ? 'First-party score feed connected' : (feedMessage || 'First-party feed not connected'), feedStale || !feedConnected);
+      const isBasketballLane = routeSport === 'all' || routeSport === 'basketball';
+      const staleFallback = isBasketballLane ? 'Basketball snapshot is stale or unavailable' : `No ${routeSportLabel} feed is connected`;
+      const statusFallback = isBasketballLane ? 'Basketball feed unavailable' : `No ${routeSportLabel} feed is connected`;
+      updateFeedStatus(feedStale ? (feedMessage || staleFallback) : feedConnected ? 'Basketball score feed connected' : (feedMessage || statusFallback), feedStale || !feedConnected);
     } catch (error) {
       feedStale = true;
-      updateFeedStatus('The score feed is unavailable; showing the last successful snapshot', true);
-      console.warn('AFTERHOURS score feed could not be loaded:', error.message);
+      const unavailableMessage = routeSport === 'all' || routeSport === 'basketball'
+        ? 'Basketball feed request failed; cached data may be stale'
+        : `No ${routeSportLabel} feed is connected`;
+      updateFeedStatus(unavailableMessage, true);
+      console.warn('ByteAfter score feed could not be loaded:', error.message);
     } finally {
       updateTimestamp();
       render();

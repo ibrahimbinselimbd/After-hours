@@ -4,14 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#080a16">
-  <meta name="description" content="Browse seven AFTERHOURS sports score lanes, including cached Basketball snapshots with honest update and stale-status information.">
+  <meta name="description" content="Browse seven sport lanes. Cached API-Sports Basketball snapshots are the only connected score data; other sports have no live scores here.">
   <meta name="robots" content="noindex,follow">
   <meta name="score-feed-endpoint" content="https://afterhours-district.bird-timimus.workers.dev/api/v1/scores/basketball">
   <meta name="score-poll-interval-seconds" content="900">
   <meta property="og:site_name" content="ByteAfter">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Sports Scores & Fixtures — AFTERHOURS">
-  <meta property="og:description" content="Browse seven separate sports score lanes, with cached Basketball snapshots and honest feed status.">
+  <meta property="og:title" content="Sports Scores & Fixtures — ByteAfter">
+  <meta property="og:description" content="Only Basketball has a connected API-Sports score feed. Its cached snapshots may be delayed; the other sports lanes do not have live scores here.">
   <meta property="og:url" content="https://afterhours-district.bird-timimus.workers.dev/sports-scores/">
   <link rel="canonical" href="https://afterhours-district.bird-timimus.workers.dev/sports-scores/">
   <title>Sports Scores & Fixtures — ByteAfter</title>
@@ -34,7 +34,7 @@
     </nav>
     <a class="sports-header-badge" href="/sports-scores/" aria-label="Live sports scoreboard, current page">
       <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9"/><path d="m12 3 2.6 4.1-1 4.2-3.6 2.2-4.5-.9M14.6 7.1l4.1.4M13.6 11.3l4 3.1M10 13.5l.6 5.4M5.5 12.6l-2.8 1.8M8.3 4.1l1.7 3"/></svg>
-      <span>SPORTS<small>LIVE BOARD</small></span>
+      <span>SPORTS<small>SCOREBOARD</small></span>
       <i aria-hidden="true"></i>
     </a>
   </header>
@@ -44,9 +44,9 @@
       <div class="score-breadcrumb"><a href="/">ByteAfter</a><span aria-hidden="true">/</span><span>SPORTS SIGNAL</span></div>
       <section class="score-hero" aria-labelledby="score-title">
         <div class="score-hero-copy">
-          <div class="score-eyebrow"><i aria-hidden="true"></i> THE GLOBAL SPORTS FREQUENCY <span>001 / LIVE BOARD</span></div>
-          <h1 id="score-title">One world.<br><em>Every game.</em></h1>
-          <p>Football, cricket, tennis, basketball, badminton and Formula 1—separate score lanes, with Basketball snapshots served by the AFTERHOURS first-party feed.</p>
+          <div class="score-eyebrow"><i aria-hidden="true"></i> THE GLOBAL SPORTS FREQUENCY <span>001 / BASKETBALL FEED</span></div>
+          <h1 id="score-title">Seven lanes.<br><em>Basketball only.</em></h1>
+          <p>Seven sport lanes are listed; only Basketball has a connected API-Sports feed. Its cached snapshots may be delayed. The other sports do not have live scores here yet.</p>
           <div class="score-hero-actions">
             <a class="score-primary" href="#scoreboard">Explore the board <span aria-hidden="true">↓</span></a>
             <span class="score-clean-note"><b aria-hidden="true">✳</b> No ads. No trackers. Provider keys stay server-side.</span>
@@ -54,16 +54,16 @@
         </div>
         <div class="score-hero-art" aria-hidden="true">
           <div class="score-orbit orbit-one"></div><div class="score-orbit orbit-two"></div><div class="score-orbit orbit-three"></div>
-          <div class="score-art-core"><svg viewBox="0 0 72 72" fill="none"><circle cx="36" cy="36" r="29"/><path d="m36 7 8.7 13.8-3.3 14-12.1 7.4-15.1-3M44.7 20.8l13.8 1.3M41.4 34.8l13.5 10.5M29.3 42.2 31.5 60M14.2 39.2l-9.4 6M23.7 10.8l5.7 10.1"/></svg><span>AFTER<br>HOURS</span></div>
+          <div class="score-art-core"><svg viewBox="0 0 72 72" fill="none"><circle cx="36" cy="36" r="29"/><path d="m36 7 8.7 13.8-3.3 14-12.1 7.4-15.1-3M44.7 20.8l13.8 1.3M41.4 34.8l13.5 10.5M29.3 42.2 31.5 60M14.2 39.2l-9.4 6M23.7 10.8l5.7 10.1"/></svg><span>BYTE<br>AFTER</span></div>
           <span class="score-coordinate coordinate-a">23°46′ N<br>90°24′ E</span><span class="score-coordinate coordinate-b">SPORT / 001<br>EST. NOW</span>
         </div>
       </section>
 
       <section class="score-board" id="scoreboard" aria-labelledby="board-title">
         <div class="board-heading">
-          <div><div class="board-kicker">01 / THE TRANSMISSION</div><h2 id="board-title">The score <span>signal.</span></h2><p>Choose a sport, then tune the board to live action, upcoming fixtures or final results.</p></div>
+          <div><div class="board-kicker">01 / THE TRANSMISSION</div><h2 id="board-title">The score <span>signal.</span></h2><p>Choose a sport to inspect its lane. Basketball snapshots are the only connected score data; other sports do not have live scores here.</p></div>
           <div class="board-stats" aria-label="Scoreboard summary">
-            <div><strong id="live-count">00</strong><small>LIVE NOW</small></div>
+            <div><strong id="live-count">00</strong><small>LIVE / BASKETBALL</small></div>
             <div><strong id="match-count">00</strong><small>ON THE BOARD</small></div>
             <div><strong id="sport-count">07</strong><small>SPORT LANES</small></div>
           </div>
@@ -92,21 +92,21 @@
 
         <div class="feed-notice" id="feed-notice" role="status" aria-live="polite">
           <span class="notice-mark" aria-hidden="true">i</span>
-          <div><strong id="feed-state">Waiting for cached Basketball snapshot</strong><p>The board reads cached Basketball snapshots from the AFTERHOURS first-party Worker. Snapshots may be up to 15 minutes delayed, or longer if the provider is unavailable or the free daily quota is reached; this is not 15-second realtime data.</p><p id="feed-polling-copy">Automatic same-site feed checks run every 900 seconds while this page is visible. Use Refresh to check now.</p></div>
+          <div><strong id="feed-state">Waiting for cached Basketball snapshot</strong><p>Only Basketball has a connected score feed. ByteAfter’s Worker relays cached Basketball snapshots from API-Sports; they may be up to 15 minutes delayed, or longer if the provider is unavailable or the free daily quota is reached. This is not real-time data.</p><p id="feed-polling-copy">Automatic same-site feed checks run every 900 seconds while this page is visible. Use Refresh to check now.</p></div>
           <span class="feed-update" id="feed-updated">NO FEED / WAITING</span>
         </div>
 
         <div class="score-grid" id="score-list" aria-live="off" aria-busy="false"></div>
         <div class="score-empty" id="score-empty">
           <div class="empty-orbit" aria-hidden="true"><span>0</span></div>
-          <div class="empty-copy"><span class="empty-kicker">SIGNAL CHECK / NO MATCH DATA</span><h3>No scores on the board—yet.</h3><p>The interface is ready, but this static site needs a first-party feed to supply real fixtures and results. Nothing here is simulated.</p></div>
+          <div class="empty-copy"><span class="empty-kicker">SIGNAL CHECK / NO MATCH DATA</span><h3>No scores on the board—yet.</h3><p>No Basketball matches are available from the feed right now. Other sports do not have connected feeds here yet. Nothing is simulated.</p></div>
         </div>
       </section>
 
       <section class="score-data-note" aria-labelledby="data-note-title">
         <div class="data-note-icon" aria-hidden="true">⌁</div>
-        <div><span class="board-kicker">BUILT FOR THE AFTERHOURS SIGNAL</span><h2 id="data-note-title">Fast by design.<br><em>Honest by default.</em></h2></div>
-        <p>The scoreboard reads only an AFTERHOURS first-party feed and animates scores only when real data changes. Basketball uses cached snapshots, with up to a 15-minute delay (longer if unavailable or the free API-Sports quota is reached), not 15-second realtime data. Provider credentials stay server-side; see the <a href="https://api-sports.io/documentation/basketball/v1" target="_blank" rel="noopener noreferrer">official API-Sports Basketball documentation</a> for the source contract.</p>
+        <div><span class="board-kicker">BUILT FOR THE BYTEAFTER SIGNAL</span><h2 id="data-note-title">Fast by design.<br><em>Honest by default.</em></h2></div>
+        <p>Basketball is the only connected score lane: its cached snapshots come from API-Sports via ByteAfter’s Worker and may be up to 15 minutes delayed, or longer if the provider is unavailable or its free daily quota is reached. Other sports do not currently have score feeds. Scores animate only when returned data changes; this is not real-time data. Provider credentials stay server-side; see the <a href="https://api-sports.io/documentation/basketball/v1" target="_blank" rel="noopener noreferrer">official API-Sports Basketball documentation</a> for the source contract.</p>
       </section>
     </div>
   </main>
