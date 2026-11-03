@@ -92,7 +92,7 @@ export function renderSportScorePage(page, canonicalUrl) {
   <link rel="canonical" href="${escapeHtml(canonicalUrl)}">
   <title>${escapeHtml(page.title)}</title>
   <link rel="stylesheet" href="/fonts.css">
-  <link rel="stylesheet" href="../sports-scores.css?v=3">
+  <link rel="stylesheet" href="../sports-scores.css?v=4">
   <script defer src="../sports-scores.js?v=5"></script>
 </head>
 <body class="sports-page" data-score-page="${escapeHtml(page.slug)}">

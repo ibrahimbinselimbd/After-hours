@@ -216,6 +216,7 @@ class TechnicalFixesBrowserTest(unittest.TestCase):
             self.assertEqual(page.locator('#board-summary').get_attribute('aria-live'), 'polite')
             self.assertEqual(page.locator('#feed-notice').get_attribute('aria-live'), 'polite')
             self.assertIn('2 fixtures, 1 live', page.locator('#board-summary').inner_text())
+            self.assertFalse(page.locator('#score-empty').is_visible(), 'real fixtures must hide the no-matches panel')
 
             live_filter = page.get_by_role('button', name='Live')
             live_filter.focus()
@@ -223,6 +224,7 @@ class TechnicalFixesBrowserTest(unittest.TestCase):
             self.assertEqual(live_filter.get_attribute('aria-pressed'), 'true')
             self.assertIn('Live filter: 1 fixture, 1 live', page.locator('#board-summary').inner_text())
             self.assertEqual(page.locator('.match-card').count(), 1)
+            self.assertFalse(page.locator('#score-empty').is_visible(), 'live match cards must not coexist with a visible empty state')
 
             page.get_by_role('button', name='Results').press('Enter')
             self.assertIn('Results filter: 0 fixtures, 0 live, no matching fixtures', page.locator('#board-summary').inner_text())
