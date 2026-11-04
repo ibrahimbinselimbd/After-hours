@@ -10,7 +10,7 @@ const shared = path.join(toolsRoot, '_shared');
 const newRoot = path.join(shared, 'new-tools');
 const manifestRoot = path.join(newRoot, 'manifests');
 const handlerRoot = path.join(newRoot, 'handlers');
-const sourceOrigin = 'https://afterhours-district.bird-timimus.workers.dev';
+const sourceOrigin = 'https://ibrahimbinselimbd.github.io/After-hours';
 const expectedExistingTools = 256;
 const expectedAddedTools = 244;
 const expectedCategories = [
@@ -199,17 +199,17 @@ for (let index = 0; index < catalogTools.length; index++) {
   const manifest = manifests.find(item => item.category.id === tool.categoryId);
   const definition = manifest.tools.find(item => item.slug === tool.slug);
   const canonical = `${sourceOrigin}${tool.href}`;
-  const pageTitle = `${tool.title} | AFTERHOURS`;
+  const pageTitle = `${tool.title} | ByteAfter`;
   const description = String(tool.description).replace(/\s+/g, ' ').trim().slice(0, 220);
   const structuredData = {
     '@context': 'https://schema.org',
     '@graph': [
-      { '@type': 'WebPage', '@id': `${canonical}#webpage`, url: canonical, name: pageTitle, description, inLanguage: 'en', isPartOf: { '@type': 'WebSite', name: 'AFTERHOURS', url: `${sourceOrigin}/` }, mainEntity: { '@id': `${canonical}#application` } },
+      { '@type': 'WebPage', '@id': `${canonical}#webpage`, url: canonical, name: pageTitle, description, inLanguage: 'en', isPartOf: { '@type': 'WebSite', name: 'ByteAfter', url: `${sourceOrigin}/` }, mainEntity: { '@id': `${canonical}#application` } },
       { '@type': 'WebApplication', '@id': `${canonical}#application`, name: tool.title, url: canonical, description, applicationCategory: 'UtilitiesApplication', isAccessibleForFree: true, browserRequirements: 'JavaScript enabled; modern browser with local storage' },
     ],
   };
   const config = { slug: tool.slug, title: tool.title, description, limitations: definition.limitations, fields: definition.fields };
-  const html = `<!doctype html>\n<html lang="en"><head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<meta name="theme-color" content="#080b12">\n<meta http-equiv="Content-Security-Policy" content="${esc(csp)}">\n<link rel="stylesheet" href="/tools/_shared/toolkit.css">\n<link rel="stylesheet" href="/tools/_shared/planner.css">\n<script defer src="/tools/_shared/toolkit.js"></script>\n<script defer src="/tools/_shared/new-tools/handlers/${tool.categoryId}.js"></script>\n<script defer src="/tools/_shared/new-tools/runtime.js"></script>\n<title>${esc(pageTitle)}</title>\n<meta name="description" content="${esc(description)}">\n<meta name="robots" content="index,follow">\n<link rel="canonical" href="${esc(canonical)}">\n<meta property="og:site_name" content="AFTERHOURS">\n<meta property="og:type" content="website">\n<meta property="og:title" content="${esc(pageTitle)}">\n<meta property="og:description" content="${esc(description)}">\n<meta property="og:url" content="${esc(canonical)}">\n<meta property="og:locale" content="en_US">\n<meta name="twitter:card" content="summary">\n<meta name="twitter:title" content="${esc(pageTitle)}">\n<meta name="twitter:description" content="${esc(description)}">\n<script type="application/ld+json">${safeJson(structuredData)}</script>\n</head><body data-title="${esc(tool.title)}" data-category="${esc(manifest.category.title)}" data-index="${257 + index}" data-description="${esc(description)}" data-slug="${esc(tool.slug)}"><div id="tool-shell"></div><script id="new-tool-config" type="application/json">${safeJson(config)}</script><noscript><main><h1>${esc(tool.title)}</h1><p>${esc(description)}</p><p>This free utility runs in your browser. Its inputs are not sent to a server.</p></main></noscript></body></html>\n`;
+  const html = `<!doctype html>\n<html lang="en"><head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<meta name="theme-color" content="#080b12">\n<meta http-equiv="Content-Security-Policy" content="${esc(csp)}">\n<link rel="stylesheet" href="/tools/_shared/toolkit.css">\n<link rel="stylesheet" href="/tools/_shared/planner.css">\n<script defer src="/tools/_shared/toolkit.js"></script>\n<script defer src="/tools/_shared/new-tools/handlers/${tool.categoryId}.js"></script>\n<script defer src="/tools/_shared/new-tools/runtime.js"></script>\n<title>${esc(pageTitle)}</title>\n<meta name="description" content="${esc(description)}">\n<meta name="robots" content="index,follow">\n<link rel="canonical" href="${esc(canonical)}">\n<meta property="og:site_name" content="ByteAfter">\n<meta property="og:type" content="website">\n<meta property="og:title" content="${esc(pageTitle)}">\n<meta property="og:description" content="${esc(description)}">\n<meta property="og:url" content="${esc(canonical)}">\n<meta property="og:locale" content="en_US">\n<meta name="twitter:card" content="summary">\n<meta name="twitter:title" content="${esc(pageTitle)}">\n<meta name="twitter:description" content="${esc(description)}">\n<script type="application/ld+json">${safeJson(structuredData)}</script>\n</head><body data-title="${esc(tool.title)}" data-category="${esc(manifest.category.title)}" data-index="${257 + index}" data-description="${esc(description)}" data-slug="${esc(tool.slug)}"><div id="tool-shell"></div><script id="new-tool-config" type="application/json">${safeJson(config)}</script><noscript><main><h1>${esc(tool.title)}</h1><p>${esc(description)}</p><p>This free utility runs in your browser. Its inputs are not sent to a server.</p></main></noscript></body></html>\n`;
   const directory = path.join(toolsRoot, tool.slug);
   await fs.mkdir(directory, { recursive: true });
   await fs.writeFile(path.join(directory, 'index.html'), html);
@@ -232,6 +232,9 @@ let hub = await fs.readFile(hubFile, 'utf8');
 if (!hub.includes('/tools/_shared/new-tools-catalog-data.js')) {
   hub = hub.replace('<script defer src="/tools/catalog.js', '<script defer src="/tools/_shared/new-tools-catalog-data.js"></script><script defer src="/tools/catalog.js');
 }
+if (!hub.includes('/tools/_shared/network-tools-catalog-data.js')) {
+  hub = hub.replace('<script defer src="/tools/catalog.js', '<script defer src="/tools/_shared/network-tools-catalog-data.js"></script><script defer src="/tools/catalog.js');
+}
 const cardStart = '<!-- NEW TOOL CATEGORIES START -->';
 const cardEnd = '<!-- NEW TOOL CATEGORIES END -->';
 const pathEsc = value => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -248,18 +251,18 @@ else {
   if (!hub.includes(insertion)) throw new Error('Could not locate the end of the category-card grid.');
   hub = hub.replace(insertion, `${markedCards}</div><p id="empty-state"`);
 }
-hub = hub.replace(/<title>[^<]*<\/title>/i, '<title>Free Online Tools for Everyday Work &amp; Life | AFTERHOURS</title>');
-hub = hub.replace(/(<meta name="description" content=")[^"]*(">)/i, '$1Explore 500 free browser-local tools in 20 useful categories for daily work and life. Process your inputs on this device; no paid APIs or live lookups are required.$2');
-hub = hub.replace(/(<meta property="og:title" content=")[^"]*(">)/i, '$1Free Online Tools for Everyday Work &amp; Life | AFTERHOURS$2');
-hub = hub.replace(/(<meta property="og:description" content=")[^"]*(">)/i, '$1Explore 500 free browser-local tools across 20 useful categories. Use practical local utilities for everyday work and life.$2');
-hub = hub.replace(/(<meta name="twitter:title" content=")[^"]*(">)/i, '$1Free Online Tools for Everyday Work &amp; Life | AFTERHOURS$2');
-hub = hub.replace(/(<meta name="twitter:description" content=")[^"]*(">)/i, '$1Browse 500 free browser-local tools across 20 categories for everyday work, home, travel, learning and more.$2');
-hub = hub.replace(/256 free browser-based tools/gi, '500 free browser-based tools');
-hub = hub.replace(/256 active AFTERHOURS browser tools/g, '500 active AFTERHOURS browser tools');
-hub = hub.replace(/Explore 256 free browser-based tools/g, 'Explore 500 free browser-based tools');
-hub = hub.replace(/256 FREE TOOLS AVAILABLE/g, '500 FREE TOOLS AVAILABLE');
-hub = hub.replace(/256 TOOLS AVAILABLE/g, '500 TOOLS AVAILABLE');
-hub = hub.replace(/10 DISTRICTS · 256 TOOLS AVAILABLE/g, '20 DISTRICTS · 500 TOOLS AVAILABLE');
+hub = hub.replace(/<title>[^<]*<\/title>/i, '<title>Free Online Tools for Everyday Work &amp; Life | ByteAfter</title>');
+hub = hub.replace(/(<meta name="description" content=")[^"]*(">)/i, '$1Explore 550 free browser-local and network tools in 20 useful categories. Most run locally; selected network checks query named public services directly from your browser after you run them.$2');
+hub = hub.replace(/(<meta property="og:title" content=")[^"]*(">)/i, '$1Free Online Tools for Everyday Work &amp; Life | ByteAfter$2');
+hub = hub.replace(/(<meta property="og:description" content=")[^"]*(">)/i, '$1Explore 550 free browser-local and network tools across 20 categories. Most run locally; selected network checks query named free public services directly after you run them.$2');
+hub = hub.replace(/(<meta name="twitter:title" content=")[^"]*(">)/i, '$1Free Online Tools for Everyday Work &amp; Life | ByteAfter$2');
+hub = hub.replace(/(<meta name="twitter:description" content=")[^"]*(">)/i, '$1Browse 550 free browser-local and network tools across 20 categories; selected network checks make direct public lookups only when you run them.$2');
+hub = hub.replace(/256 free browser-based tools/gi, '550 free browser-based and network tools');
+hub = hub.replace(/256 active ByteAfter browser tools/g, '550 active ByteAfter free tools');
+hub = hub.replace(/Explore 256 free browser-based tools/g, 'Explore 550 free browser-based and network tools');
+hub = hub.replace(/256 FREE TOOLS AVAILABLE/g, '550 FREE TOOLS AVAILABLE');
+hub = hub.replace(/256 TOOLS AVAILABLE/g, '550 TOOLS AVAILABLE');
+hub = hub.replace(/10 DISTRICTS · 256 TOOLS AVAILABLE/g, '20 DISTRICTS · 550 TOOLS AVAILABLE');
 const schemaMatch = hub.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/i);
 if (!schemaMatch) throw new Error('Tools Hub JSON-LD could not be found.');
 const schema = JSON.parse(schemaMatch[1]);
@@ -267,14 +270,19 @@ const graph = schema['@graph'] || [];
 const collection = graph.find(item => item['@type'] === 'CollectionPage');
 const itemList = graph.find(item => item['@type'] === 'ItemList');
 if (!collection || !itemList) throw new Error('Tools Hub CollectionPage or ItemList schema is missing.');
-collection.description = 'Explore 500 free browser-local tools across 20 useful categories for everyday work and life. Process your inputs on this device, with no paid APIs or live-data claims.';
-itemList.name = '500 active AFTERHOURS browser tools';
-itemList.numberOfItems = expectedExistingTools + expectedAddedTools;
-itemList.itemListElement = [...existingTools.map(tool => ({ title: tool.title, href: tool.href })), ...catalogTools.map(tool => ({ title: tool.title, href: tool.href }))]
+collection.description = 'Explore 550 free browser-local and network tools across 20 categories. Most run on this device; selected network checks query named public services directly from your browser after you run them.';
+itemList.name = '550 active ByteAfter free tools';
+const networkCatalogSource = await fs.readFile(path.join(shared, 'network-tools-catalog-data.js'), 'utf8');
+const networkCatalogMatch = networkCatalogSource.match(/^window\.AHNetworkToolCatalog\s*=\s*([\s\S]*);\s*$/);
+if (!networkCatalogMatch) throw new Error('The network tools catalog data is invalid.');
+const networkTools = JSON.parse(networkCatalogMatch[1]).tools || [];
+if (networkTools.length !== 50) throw new Error(`Expected 50 network tools; found ${networkTools.length}.`);
+itemList.numberOfItems = expectedExistingTools + expectedAddedTools + networkTools.length;
+itemList.itemListElement = [...existingTools.map(tool => ({ title: tool.title, href: tool.href })), ...catalogTools.map(tool => ({ title: tool.title, href: tool.href })), ...networkTools.map(tool => ({ title: tool.title, href: tool.href }))]
   .sort((left, right) => left.title.localeCompare(right.title))
   .map((tool, index) => ({ '@type': 'ListItem', position: index + 1, name: tool.title, url: `${sourceOrigin}${tool.href}` }));
 hub = hub.replace(schemaMatch[0], `<script type="application/ld+json">${safeJson(schema)}</script>`);
 await fs.writeFile(hubFile, hub);
 
-console.log(`Generated ${expectedAddedTools} unique local tools in ${manifests.length} new categories; total active routes: ${expectedExistingTools + expectedAddedTools}.`);
+console.log(`Generated ${expectedAddedTools} unique local tools in ${manifests.length} new categories; total active routes: ${expectedExistingTools + expectedAddedTools + networkTools.length}.`);
 console.log(`Validated ${handlerSlugs.length} distinct handler functions with non-empty sample outputs.`);

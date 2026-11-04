@@ -38,18 +38,23 @@ async function activeToolPages() {
   return pages.sort((a, b) => a.slug.localeCompare(b.slug));
 }
 
-test('all 500 active source tool routes have unique canonicals, excluding the disabled detector', async () => {
+test('all 550 active source tool routes have unique canonicals, excluding the disabled detector', async () => {
   const hubHtml = await readFile(path.join(tools, 'index.html'), 'utf8');
   const hubCanonical = capture(hubHtml, /<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i, 'Tools Hub canonical');
-  const origin = new URL(hubCanonical).origin;
+  const hubUrl = new URL(hubCanonical);
+  assert.equal(hubUrl.protocol, 'https:');
   const pages = await activeToolPages();
-  assert.equal(pages.length, 500, 'expected exactly 500 active tool routes');
+  assert.equal(pages.length, 550, 'expected exactly 550 active tool routes');
 
   const canonicalRoutes = new Set([hubCanonical]);
   for (const { slug, path: pagePath } of pages) {
     const html = await readFile(pagePath, 'utf8');
     const canonical = capture(html, /<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i, `${slug} canonical`);
-    assert.equal(canonical, `${origin}/tools/${slug}/`, `${slug} should use its canonical route`);
+    const canonicalUrl = new URL(canonical);
+    assert.equal(canonicalUrl.protocol, 'https:', `${slug} canonical should use HTTPS`);
+    assert.ok(canonicalUrl.pathname.endsWith(`/tools/${slug}/`), `${slug} should use its canonical route`);
+    assert.equal(canonicalUrl.search, '', `${slug} canonical should not have query parameters`);
+    assert.equal(canonicalUrl.hash, '', `${slug} canonical should not have a fragment`);
     assert.ok(!canonicalRoutes.has(canonical), `${slug} canonical should be unique`);
     canonicalRoutes.add(canonical);
   }

@@ -9,7 +9,7 @@ const output = path.join(root, 'site/tools/_shared/tool-art');
 function loadCategories() {
   const sandbox = { window: {}, document: { querySelector: () => null, querySelectorAll: () => [] }, console };
   vm.createContext(sandbox);
-  for (const file of ['site/tools/_shared/planner-catalog-data.js', 'site/tools/_shared/new-tools-catalog-data.js']) {
+  for (const file of ['site/tools/_shared/planner-catalog-data.js', 'site/tools/_shared/new-tools-catalog-data.js', 'site/tools/_shared/network-tools-catalog-data.js']) {
     vm.runInContext(fs.readFileSync(path.join(root, file), 'utf8'), sandbox, { filename: file });
   }
   vm.runInContext(`${fs.readFileSync(path.join(root, 'site/tools/catalog.js'), 'utf8')}\n;globalThis.__categories = categories;`, sandbox, { filename: 'site/tools/catalog.js' });
@@ -337,16 +337,18 @@ ${artifact(family, 455, 148, .98, accent, seed ^ 0x9e3779b9, 'output')}
 
 const categories = loadCategories();
 const tools = categories.flatMap(category => category.availableTools.map(item => ({ category, item })));
-if (categories.length !== 20 || tools.length !== 500) throw new Error(`Expected 20 categories / 500 tools, found ${categories.length} / ${tools.length}`);
+if (categories.length !== 20 || tools.length !== 550) throw new Error(`Expected 20 categories / 550 tools, found ${categories.length} / ${tools.length}`);
 fs.mkdirSync(output, { recursive: true });
 const expected = new Set();
+let created = 0;
+let preserved = 0;
 for (const { category, item } of tools) {
   const slug = item.href.split('/').filter(Boolean).pop();
   const file = `${slug}.svg`;
   expected.add(file);
-  fs.writeFileSync(path.join(output, file), buildSvg(category, item), 'utf8');
+  const target = path.join(output, file);
+  if (fs.existsSync(target)) { preserved++; continue; }
+  fs.writeFileSync(target, buildSvg(category, item), 'utf8');
+  created++;
 }
-for (const file of fs.readdirSync(output)) {
-  if (file.endsWith('.svg') && !expected.has(file)) fs.unlinkSync(path.join(output, file));
-}
-console.log(`Generated ${expected.size} unique function-specific animated SVG previews in ${path.relative(root, output)}.`);
+console.log(`Ensured ${expected.size} animated tool previews in ${path.relative(root, output)}; created ${created} new assets and preserved ${preserved} existing assets.`);

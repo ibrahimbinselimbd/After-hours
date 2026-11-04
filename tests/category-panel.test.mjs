@@ -17,6 +17,7 @@ async function loadCategories() {
   vm.createContext(sandbox);
   vm.runInContext(await read('site/tools/_shared/planner-catalog-data.js'), sandbox);
   vm.runInContext(await read('site/tools/_shared/new-tools-catalog-data.js'), sandbox);
+  vm.runInContext(await read('site/tools/_shared/network-tools-catalog-data.js'), sandbox);
   vm.runInContext(`${await read('site/tools/catalog.js')}\n;globalThis.__categories = categories;`, sandbox);
   return sandbox.__categories;
 }
@@ -43,11 +44,11 @@ test('each active tool resolves to its own local WebP workspace preview under ei
   const categories = await loadCategories();
   const active = categories.flatMap(category => category.availableTools);
   assert.equal(categories.length, 20);
-  assert.equal(active.length, 500);
-  assert.equal(new Set(active.map(item => item.href)).size, 500);
+  assert.equal(active.length, 550);
+  assert.equal(new Set(active.map(item => item.href)).size, 550);
   for (const pageUrl of ['https://example.test/tools/', 'https://example.test/After-hours/tools/?category=developer-utilities']) {
     const urls = active.map(tool => previewUrl(tool, pageUrl));
-    assert.equal(new Set(urls).size, 500, 'each active tool should have its own preview URL');
+    assert.equal(new Set(urls).size, 550, 'each active tool should have its own preview URL');
     for (const url of urls) {
       const parsed = new URL(url);
       assert.equal(parsed.origin, 'https://example.test');
@@ -56,12 +57,12 @@ test('each active tool resolves to its own local WebP workspace preview under ei
   }
 });
 
-test('all 500 real workspace screenshots map one-to-one, remain unique and stay lightweight', async () => {
+test('all 550 real workspace screenshots map one-to-one, remain unique and stay lightweight', async () => {
   const categories = await loadCategories();
   const tools = categories.flatMap(category => category.availableTools);
   const expected = Array.from(tools, tool => `${slugFor(tool)}.webp`).sort();
   const files = (await fs.readdir(previewRoot)).filter(file => file.endsWith('.webp')).sort();
-  assert.equal(files.length, 500, 'exactly one WebP preview is expected for every active tool');
+  assert.equal(files.length, 550, 'exactly one WebP preview is expected for every active tool');
   assert.deepEqual(files, expected, 'preview filenames must exactly match the active tool routes');
 
   const hashes = new Set();
@@ -75,7 +76,7 @@ test('all 500 real workspace screenshots map one-to-one, remain unique and stay 
     hashes.add(createHash('sha256').update(asset).digest('hex'));
     totalBytes += asset.length;
   }
-  assert.equal(hashes.size, 500, 'every tool must have a distinct real-interface screenshot');
+  assert.equal(hashes.size, 550, 'every tool must have a distinct real-interface screenshot');
   assert.ok(totalBytes <= 6 * 1024 * 1024, `all local previews should stay below 6 MiB, found ${totalBytes}`);
 });
 

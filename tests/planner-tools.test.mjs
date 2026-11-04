@@ -117,7 +117,7 @@ test('planner pages contain unique crawlable metadata and use the existing local
   assert.equal(canonicalSet.size, 100);
 });
 
-test('hub catalog data, ItemList schema, and screenshot editor route reflect exactly 500 active tools', () => {
+test('hub catalog data, ItemList schema, and screenshot editor route reflect exactly 550 active tools', () => {
   const dataSource = fs.readFileSync(path.join(root, 'site/tools/_shared/planner-catalog-data.js'), 'utf8');
   const dataWindow = {};
   vm.runInNewContext(dataSource, {window: dataWindow});
@@ -125,16 +125,17 @@ test('hub catalog data, ItemList schema, and screenshot editor route reflect exa
   assert.equal(new Set(dataWindow.AHPlannerTools.map(tool => tool.slug)).size, 100);
   const hub = fs.readFileSync(path.join(root, 'site/tools/index.html'), 'utf8');
   assert.ok(hub.indexOf('planner-catalog-data.js') < hub.indexOf('catalog.js'), 'catalog data loads before category rendering');
-  const categorySandbox = {window: {AHPlannerTools: [], AHNewToolCatalog: {tools: []}}, document: {querySelector: () => null, querySelectorAll: () => []}, console};
+  assert.ok(hub.indexOf('network-tools-catalog-data.js') < hub.indexOf('catalog.js'), 'network catalog data loads before category rendering');
+  const categorySandbox = {window: {AHPlannerTools: [], AHNewToolCatalog: {tools: []}, AHNetworkToolCatalog: {tools: []}}, document: {querySelector: () => null, querySelectorAll: () => []}, console};
   vm.createContext(categorySandbox);
-  for (const file of ['planner-catalog-data.js', 'new-tools-catalog-data.js']) vm.runInContext(fs.readFileSync(path.join(root, 'site/tools/_shared', file), 'utf8'), categorySandbox);
+  for (const file of ['planner-catalog-data.js', 'new-tools-catalog-data.js', 'network-tools-catalog-data.js']) vm.runInContext(fs.readFileSync(path.join(root, 'site/tools/_shared', file), 'utf8'), categorySandbox);
   vm.runInContext(fs.readFileSync(path.join(root, 'site/tools/catalog.js'), 'utf8') + '\n;globalThis.__categories = categories;', categorySandbox);
   const categories = categorySandbox.__categories;
   const activeTools = categories.flatMap(category => category.availableTools);
   assert.equal(categories.length, 20);
-  assert.equal(activeTools.length, 500);
+  assert.equal(activeTools.length, 550);
   const visibleHub = hub.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, ' ');
-  assert.match(visibleHub, /A home for 500 active browser tools across 20 useful categories/i);
+  assert.match(visibleHub, /A home for 550 free browser and network tools across 20 useful categories/i);
   assert.match(visibleHub, /244 new tools share/i);
   assert.match(visibleHub, /Choose a category to see its available tools/i);
   assert.match(visibleHub, /All 20 categories/i);
@@ -157,8 +158,8 @@ test('hub catalog data, ItemList schema, and screenshot editor route reflect exa
   assert.ok(schemaText, 'hub has crawlable JSON-LD');
   const schema = JSON.parse(schemaText);
   const itemList = schema['@graph'].find(item => item['@type'] === 'ItemList');
-  assert.equal(itemList.numberOfItems, 500);
-  assert.equal(itemList.itemListElement.length, 500);
+  assert.equal(itemList.numberOfItems, 550);
+  assert.equal(itemList.itemListElement.length, 550);
   assert.ok(itemList.itemListElement.some(item => item.url.endsWith('/tools/screenshot-photo-text-editor/')));
   assert.ok(!itemList.itemListElement.some(item => item.url.endsWith('/tools/text-detector/')));
   const editorPage = fs.readFileSync(path.join(toolFolder('screenshot-photo-text-editor'), 'index.html'), 'utf8');

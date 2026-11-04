@@ -116,10 +116,12 @@ function staticFieldMarkup(field, slug) {
   return `<label class="field" for="${id}"><span>${label}</span><input id="${id}" type="${field.type}" placeholder="${escapeHtml(field.placeholder || '')}" disabled>${help}</label>`;
 }
 
-function staticToolMarkup({slug, title, description, category, fields}) {
+function staticToolMarkup({slug, title, description, category, fields, mode='local'}) {
+  const remote = mode === 'remote';
+  const sameOrigin = mode === 'same-origin';
   const controls = (Array.isArray(fields) ? fields : []).slice(0, 20).map(field => staticFieldMarkup(field, slug)).filter(Boolean).join('');
   const controlNote = controls ? '' : '<p class="privacy-note">Interactive controls load in this browser when JavaScript is enabled.</p>';
-  return `<header class="tool-header"><a class="brand" href="/" aria-label="ByteAfter home"><span class="brand-mark brand-mark-3d" aria-hidden="true"><img src="/byteafter-mark.webp" alt=""></span><span class="brand-word">Byte<span>After</span></span><i>®</i></a><nav aria-label="Breadcrumb"><a href="/tools/">Tools Hub</a><span>/</span><b>${escapeHtml(title)}</b></nav><a class="back-link" href="/tools/">← All tools</a></header><main class="tool-main"><div class="breadcrumb"><a href="/tools/">THE UTILITY DISTRICT</a><span>/</span><b>${escapeHtml(category || 'BROWSER TOOLS')}</b></div><section class="tool-hero"><div class="eyebrow">BROWSER-LOCAL TOOL</div><h1>${escapeHtml(title)}</h1><p class="tool-static-description">${escapeHtml(description)}</p><div class="hero-tags"><span>PROCESS ON THIS DEVICE</span><span>JAVASCRIPT REQUIRED</span><span>FREE TO USE</span></div></section><section class="workspace" aria-label="${escapeHtml(title)} preview"><h2>Local workspace preview</h2><p class="privacy-note">This initial preview is generated from the tool definition. Enable JavaScript to use the interactive controls. Inputs stay in this browser and are not sent to a server.</p><div class="field-grid tool-static-controls">${controls}${controlNote}</div><div class="actions"><button class="button button-main" type="button" disabled>Enable JavaScript to run this tool</button></div></section></main>`;
+  return `<header class="tool-header"><a class="brand" href="/" aria-label="ByteAfter home"><span class="brand-mark brand-mark-3d" aria-hidden="true"><img src="/byteafter-mark.webp" alt=""></span><span class="brand-word">Byte<span>After</span></span><i>®</i></a><nav aria-label="Breadcrumb"><a href="/tools/">Tools Hub</a><span>/</span><b>${escapeHtml(title)}</b></nav><a class="back-link" href="/tools/">← All tools</a></header><main class="tool-main"><div class="breadcrumb"><a href="/tools/">THE UTILITY DISTRICT</a><span>/</span><b>${escapeHtml(category || 'BROWSER TOOLS')}</b></div><section class="tool-hero"><div class="eyebrow">${remote ? 'LIVE NETWORK TOOL' : sameOrigin ? 'SAME-SITE NETWORK SAMPLE' : 'BROWSER-LOCAL TOOL'}</div><h1>${escapeHtml(title)}</h1><p class="tool-static-description">${escapeHtml(description)}</p><div class="hero-tags">${remote ? '<span>DIRECT BROWSER REQUEST</span><span>PROVIDER SHOWN</span><span>FREE TO USE</span>' : sameOrigin ? '<span>SAME-SITE SAMPLE</span><span>NO USER FILE UPLOAD</span><span>FREE TO USE</span>' : '<span>PROCESS ON THIS DEVICE</span><span>JAVASCRIPT REQUIRED</span><span>FREE TO USE</span>'}</div></section><section class="workspace" aria-label="${escapeHtml(title)} preview"><h2>${remote ? 'Live network check preview' : sameOrigin ? 'Same-site transfer preview' : 'Local workspace preview'}</h2><p class="privacy-note">${remote ? 'The live query runs only after you press Run. The named public service may receive your query and public IP; the request goes directly from this browser, not through ByteAfter servers. Enable JavaScript to use the check.' : sameOrigin ? 'This sample fetches a fixed file from this site after you press Run. The site host may receive ordinary connection metadata; no file from you is uploaded.' : 'This initial preview is generated from the tool definition. Enable JavaScript to use the interactive controls. Inputs stay in this browser and are not sent to a server.'}</p><div class="field-grid tool-static-controls">${controls}${controlNote}</div><div class="actions"><button class="button button-main" type="button" disabled>Enable JavaScript to run this tool</button></div></section></main>`;
 }
 
 function addPageCanonical(html, relativePath, storyIds) {
@@ -212,7 +214,7 @@ for (const file of await walk(outputRoot)) {
       }
       const shellPattern = /<div\s+id=["']tool-shell["']\s*>\s*<\/div>/i;
       if (shellPattern.test(text)) {
-        const fallback = staticToolMarkup({slug, title, description, category, fields: config?.fields});
+        const fallback = staticToolMarkup({slug, title, description, category, fields: config?.fields, mode: bodyData(text, 'request-mode')});
         text = text.replace(shellPattern, `<div id="tool-shell">${fallback}</div>`);
         text = text.replace(/<noscript\b[^>]*>[\s\S]*?<\/noscript>/gi, '');
       }
@@ -264,7 +266,7 @@ for (const entry of await fs.readdir(toolsRoot, { withFileTypes: true })) {
   }
 }
 const uniqueRoutes = [...new Set(routes)];
-if (uniqueRoutes.length !== 500) throw new Error(`Expected 500 active tool routes; found ${uniqueRoutes.length}.`);
+if (uniqueRoutes.length !== 550) throw new Error(`Expected 550 active tool routes; found ${uniqueRoutes.length}.`);
 
 const urls = [
   `${siteUrl}/`,

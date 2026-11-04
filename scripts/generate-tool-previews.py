@@ -20,7 +20,7 @@ CATALOG = r"""
 const fs=require('node:fs'),vm=require('node:vm');
 const box={window:{},document:{querySelector:()=>null,querySelectorAll:()=>[]}};
 vm.createContext(box);
-for(const file of ['site/tools/_shared/planner-catalog-data.js','site/tools/_shared/new-tools-catalog-data.js','site/tools/catalog.js'])vm.runInContext(fs.readFileSync(file,'utf8'),box);
+for(const file of ['site/tools/_shared/planner-catalog-data.js','site/tools/_shared/new-tools-catalog-data.js','site/tools/_shared/network-tools-catalog-data.js','site/tools/catalog.js'])vm.runInContext(fs.readFileSync(file,'utf8'),box);
 vm.runInContext('globalThis.tools=categories.flatMap(c=>c.availableTools)',box);
 process.stdout.write(JSON.stringify(box.tools));
 """

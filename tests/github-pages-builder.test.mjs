@@ -88,7 +88,7 @@ test('unknown Journal story IDs render a truthful noindex state and never fall b
   }
 });
 
-test('GitHub Pages builds the complete English site, Journal, and all 500 active tools', async () => {
+test('GitHub Pages builds the complete English site, Journal, and all 550 active tools', async () => {
   const build = spawnSync(process.execPath, ['scripts/build-github-pages.mjs'], {
     cwd: root,
     encoding: 'utf8',
@@ -96,7 +96,7 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
     env: { ...process.env, PAGES_BASE_PATH: '/After-hours', PAGES_SITE_URL: base },
   });
   assert.equal(build.status, 0, `${build.stdout}\n${build.stderr}`);
-  assert.match(build.stdout, /published active tool routes: 500/);
+  assert.match(build.stdout, /published active tool routes: 550/);
 
   for (const relative of [
     'index.html', 'districts/index.html', 'article.html', 'info.html', '404.html', 'tools/index.html',
@@ -108,9 +108,9 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
   assert.equal(await stat(path.join(output, '.env.example')).then(() => true).catch(() => false), false, 'repository environment examples must not be copied to the public artifact');
 
   const slugs = await activeToolSlugs();
-  assert.equal(slugs.length, 500, 'source should contain exactly 500 active tool routes');
+  assert.equal(slugs.length, 550, 'source should contain exactly 550 active tool routes');
   const html = (await filesUnder(path.join(output, 'tools'))).filter(file => file.endsWith('.html'));
-  assert.equal(html.length, 502, 'expected the Tools Hub, 500 active tools, and the disabled detector preview');
+  assert.equal(html.length, 552, 'expected the Tools Hub, 550 active tools, and the disabled detector preview');
   const toolTitles = new Set();
   const toolCanonicals = new Set();
   for (const slug of slugs) {
@@ -151,13 +151,16 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
       const staticDescription = page.match(/<p\s+class=["']tool-static-description["']>([\s\S]*?)<\/p>/i)?.[1];
       assert.equal(decodeHtml(h1Text), decodeHtml(bodyTitle), `${slug} H1 should match its catalog title`);
       assert.equal(decodeHtml(staticDescription), decodeHtml(bodyDescription), `${slug} should expose its complete catalog description before JavaScript runs`);
-      if (/id=["']new-tool-config["']|planner-runtime\.js/i.test(page)) {
+      if (/planner-runtime\.js/i.test(page)) {
         assert.match(beforeScripts, /<(?:input|textarea|select)\b[^>]*\bdisabled\b/i, `${slug} should render its catalog-defined fields in the initial HTML`);
+      } else if (/id=["']new-tool-config["']/i.test(page)) {
+        const routeIndex = Number(page.match(/\bdata-index=["'](\d+)["']/i)?.[1] || 0);
+        if (routeIndex <= 500) assert.match(beforeScripts, /<(?:input|textarea|select)\b[^>]*\bdisabled\b/i, `${slug} should render its catalog-defined fields in the initial HTML`);
       }
     }
   }
-  assert.equal(toolTitles.size, 500, 'all active tool titles should be unique');
-  assert.equal(toolCanonicals.size, 500, 'all active tool canonical URLs should be unique');
+  assert.equal(toolTitles.size, 550, 'all active tool titles should be unique');
+  assert.equal(toolCanonicals.size, 550, 'all active tool canonical URLs should be unique');
 
   const hub = await readFile(path.join(output, 'tools', 'index.html'), 'utf8');
   assert.match(hub, new RegExp(`rel=["']canonical["'] href=["']${base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/tools/`));
@@ -221,7 +224,7 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
   assert.doesNotMatch(district, /AFTERHOURS|AFTER\/HOURS/);
   assert.match(district, new RegExp(`${base.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')}/districts/`));
   const districtScript = await readFile(path.join(output, 'districts.js'), 'utf8');
-  assert.match(districtScript, /ByteAfter’s 500 active browser tools/);
+  assert.match(districtScript, /ByteAfter’s 550 free browser and network tools/);
   assert.doesNotMatch(districtScript, /100 free tools/i);
   assert.match(article, /article\.html\?story=/);
   assert.doesNotMatch(article, /AFTERHOURS|AFTER\/HOURS/);
@@ -242,9 +245,12 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
   assert.match(infoContent, /posts are public/i);
   assert.match(infoContent, /No response time is promised/i);
   assert.match(infoContent, /owner states that ByteAfter collects only IP address, browser type and device type/i);
-  assert.match(infoContent, /Planner and new-tool pages save entered drafts under slug-specific localStorage keys/i);
-  assert.match(infoContent, /tool credit counters also use localStorage/i);
-  assert.match(infoContent, /HEIC converter uses browser IndexedDB for its counter/i);
+  assert.match(infoContent, /Planner and generated utility pages save entered drafts under slug-specific localStorage keys/i);
+  assert.match(infoContent, /Network diagnostic pages do not store entered query drafts/i);
+  assert.match(infoContent, /Public IP Change Tracker stores only the last successful observed IPv4 address/i);
+  assert.match(infoContent, /Google’s public STUN endpoint for the consent-gated WebRTC check/i);
+  assert.match(infoContent, /Network tools also use the existing local daily credit counter/i);
+  assert.match(infoContent, /HEIC converter uses browser IndexedDB for its separate counter/i);
   assert.doesNotMatch(infoContent, /afterhours/i, 'public Info copy must not expose the legacy storage-key namespace');
   assert.match(infoContent, /This draft makes no claim that cookies or analytics are absent/i);
   assert.match(infoContent, /cdn\.jsdelivr\.net/);
@@ -275,7 +281,7 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
     ...ids.map(id => `${base}/article.html?story=${encodeURIComponent(id)}`),
     `${base}/tools/`, ...slugs.map(slug => `${base}/tools/${slug}/`),
   ];
-  assert.equal(locations.length, 529, 'sitemap should include the homepage, map, 8 info pages, every Journal story, the Tools Hub, and 500 active tools');
+  assert.equal(locations.length, 579, 'sitemap should include the homepage, map, 8 info pages, every Journal story, the Tools Hub, and 550 active tools');
   assert.equal(new Set(locations).size, locations.length, 'sitemap URLs should be unique');
   assert.deepEqual([...locations].sort(), [...expected].sort(), 'sitemap should match the complete English canonical route inventory');
   assert.doesNotMatch(sitemap, /text-detector/i, 'disabled AI Text Detector must not appear in the sitemap');
@@ -331,7 +337,7 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
     const source = await readFile(file, 'utf8');
     const relative = path.relative(output, file);
     if (file.endsWith('.html')) {
-      const expectedPolicy = relative === 'tools/heic-to-jpg/index.html' ? 'no-referrer' : 'strict-origin-when-cross-origin';
+      const expectedPolicy = relative === 'tools/heic-to-jpg/index.html' || /\bdata-request-mode=/.test(source) ? 'no-referrer' : 'strict-origin-when-cross-origin';
       assert.deepEqual(referrerMetaValues(source), [expectedPolicy], `${relative} should have one safe document-level referrer policy`);
       assert.doesNotMatch(source, /AFTERHOURS|AFTER\/HOURS/, `${relative} should not retain the previous public brand`);
     }

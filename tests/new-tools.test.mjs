@@ -22,6 +22,7 @@ async function loadCategories() {
   vm.createContext(sandbox);
   vm.runInContext(await fs.readFile(path.join(shared, 'planner-catalog-data.js'), 'utf8'), sandbox);
   vm.runInContext(await fs.readFile(path.join(shared, 'new-tools-catalog-data.js'), 'utf8'), sandbox);
+  vm.runInContext(await fs.readFile(path.join(shared, 'network-tools-catalog-data.js'), 'utf8'), sandbox);
   vm.runInContext(`${await fs.readFile(path.join(toolsRoot, 'catalog.js'), 'utf8')}\n;globalThis.__categories=categories;`, sandbox);
   return sandbox.__categories;
 }
@@ -53,13 +54,13 @@ const newTools = manifests.flatMap(manifest => manifest.tools.map(tool => ({ ...
   }
 });
 
-test('expanded catalog and hub expose exactly 500 active routes across twenty categories', async () => {
+test('expanded catalog and hub expose exactly 550 active routes across twenty categories', async () => {
   const categories = await loadCategories();
   const active = categories.flatMap(category => category.availableTools);
   assert.equal(categories.length, 20);
-  assert.equal(active.length, 500);
-  assert.equal(new Set(active.map(tool => tool.href)).size, 500);
-  assert.equal(new Set(active.map(tool => normalized(tool.title))).size, 500);
+  assert.equal(active.length, 550);
+  assert.equal(new Set(active.map(tool => tool.href)).size, 550);
+  assert.equal(new Set(active.map(tool => normalized(tool.title))).size, 550);
   assert.ok(!active.some(tool => tool.href === '/tools/text-detector/'));
   const hub = await fs.readFile(path.join(toolsRoot, 'index.html'), 'utf8');
   assert.ok(hub.indexOf('new-tools-catalog-data.js') < hub.indexOf('catalog.js'));
@@ -68,8 +69,8 @@ test('expanded catalog and hub expose exactly 500 active routes across twenty ca
   const itemListText = hub.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/i)?.[1];
   assert.ok(itemListText, 'hub has static JSON-LD');
   const itemList = JSON.parse(itemListText)['@graph'].find(item => item['@type'] === 'ItemList');
-  assert.equal(itemList.numberOfItems, 500);
-  assert.equal(itemList.itemListElement.length, 500);
+  assert.equal(itemList.numberOfItems, 550);
+  assert.equal(itemList.itemListElement.length, 550);
   assert.ok(!itemList.itemListElement.some(item => /text-detector/i.test(item.url)));
 });
 

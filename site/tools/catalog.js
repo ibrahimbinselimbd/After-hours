@@ -66,14 +66,14 @@ const categories = [
     {title:'Channel Splitter',href:'/tools/channel-splitter/',description:'Split a multi-channel recording into separate mono WAV files.',icon:'⇥'},
     {title:'Waveform Cutter',href:'/tools/waveform-cutter/',description:'Cut a time range from supported local audio and save PCM WAV.',icon:'⌁'},
     {title:'Fade Generator',href:'/tools/fade-generator/',description:'Apply linear fade-in and fade-out envelopes to local audio.',icon:'∿'}],upcomingTools:['Loudness Checker']},
-  {id:'web-seo',title:'Web & SEO',description:'Create site icons and optimized SVGs, parse URLs, or build readable search/social metadata and crawler rules.',accent_color:'#8ed9fb',availableTools:[
+  {id:'web-seo',title:'Web, Network & SEO',description:'Explore DNS records and network answers alongside practical web, search and metadata utilities.',accent_color:'#8ed9fb',availableTools:[
     {title:'Meta & Open Graph Tag Builder',href:'/tools/meta-tag-generator/',description:'Create escaped HTML, Open Graph and Twitter card tags with a preview.',icon:'</>'},
     {title:'robots.txt Generator',href:'/tools/robots-txt-generator/',description:'Draft crawler rules, test a path and learn what robots.txt cannot do.',icon:'⌘'},
     {title:'Favicon & App Icon Generator',href:'/tools/favicon-generator/',description:'Create common icon sizes from one image and download a ZIP locally.',icon:'◉'},
     {title:'SVG Optimizer',href:'/tools/svg-optimizer/',description:'Sanitize and minify SVG markup, compare bytes and preview the result.',icon:'◇'},
     {title:'URL Encoder / Decoder & Parser',href:'/tools/url-encoder-decoder-parser/',description:'Encode or decode URL components and inspect URL parts without fetching the address.',icon:'↗'}
   ],upcomingTools:['Sitemap Planner','Link Checker','Canonical Checker','Structured Data Preview','Redirect Map Builder','Heading Outline','Open Graph Image Checker']},
-  {id:'developer-utilities',title:'Developer Utilities',description:'Validate, compare, convert and format code and structured data locally.',accent_color:'#b4befd',availableTools:[
+  {id:'developer-utilities',title:'Network & Developer Utilities',description:'Inspect IP ranges, calculate subnets, compare DNS answers and work with code and structured data.',accent_color:'#b4befd',availableTools:[
     {title:'JSON Formatter & Validator',href:'/tools/json-formatter/',description:'Validate, format or minify JSON without sending a payload.',icon:'{}'},
     {title:'Regex Tester',href:'/tools/regex-tester/',description:'Test JavaScript regular expressions with matches and replacement preview.',icon:'.*'},
     {title:'Text / Code Diff Checker',href:'/tools/text-code-diff/',description:'Compare two text or code inputs with line highlights and a unified diff.',icon:'±'},
@@ -194,6 +194,15 @@ for(const spec of newCategorySpecs){
   categories.push({id:spec.id,title:spec.title,description:spec.description,accent_color:spec.accent_color,availableTools:spec.tools.map(tool=>({title:tool.title,href:tool.href,description:tool.description,icon:tool.icon||'✦'})),upcomingTools:[]});
 }
 // END GENERATED 20-CATEGORY EXPANSION
+const networkToolSpecs=(window.AHNetworkToolCatalog||{}).tools||[];
+for(const tool of networkToolSpecs){
+  const category=categories.find(item=>item.id===tool.categoryId);
+  const href=`/tools/${tool.slug}/`;
+  if(!category) throw new Error(`Unknown network-tool category: ${tool.categoryId}`);
+  if(plannedRoutes.has(href)||categories.some(item=>item.availableTools.some(existing=>existing.title===tool.title))) throw new Error(`Duplicate network tool: ${tool.slug}`);
+  category.availableTools.push({title:tool.title,href,description:tool.description,icon:tool.icon||plannerIcons[tool.categoryId]||'✦'});
+  plannedRoutes.add(href);
+}
 const search=document.querySelector('#category-search');
 const cards=[...document.querySelectorAll('.category')];
 const dialog=document.querySelector('#category-dialog');
@@ -212,7 +221,7 @@ for (const card of cards) {
 }
 const availableCount=categories.reduce((sum,item)=>sum+item.availableTools.length,0);
 const policy=document.querySelectorAll('.policy-item small');
-if(policy[0]) policy[0].textContent='Image Size Optimizer, QR Code Generator, Passport & Visa Photo Studio and the new browser-local tools share one existing 10-credit daily browser-local counter. HEIC retains its separate existing 10-credit counter. Successful actions only; failed actions cost no credits. Credits reset at local midnight and are not account-wide or server-enforced.';
+if(policy[0]) policy[0].textContent='Image Size Optimizer, QR Code Generator, Passport & Visa Photo Studio and all new tools share the existing 10-credit daily browser-local counter. HEIC retains its separate existing 10-credit counter. Successful actions only; failed actions cost no credits. Network checks contact named public services directly from your browser only after you run them; providers may receive the query and public IP. Credits reset at local midnight and are not account-wide or server-enforced.';
 if(policy[1]) policy[1].textContent='All tools are free. No premium-only tiers or paid APIs.';
 const policyLabel=document.querySelector('.policy-label');
 if(policyLabel) policyLabel.textContent=`${availableCount} TOOLS AVAILABLE · ALL FREE`;
