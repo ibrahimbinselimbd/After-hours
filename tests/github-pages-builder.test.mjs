@@ -286,6 +286,7 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
   assert.match(scoreHub, /Only Basketball has a connected API-Sports (?:score )?feed/i);
   assert.match(scoreHub, /other sports lanes do not have live scores here/i);
   assert.doesNotMatch(scoreHub, /Every game|AFTERHOURS|AFTER\/HOURS/);
+  assert.doesNotMatch(scoreHub, /<span>BYTE<br>AFTER<\/span>/i, 'the decorative hero core must not contain a branded text stamp');
   const scoreTitles = new Set();
   const scoreDescriptions = new Set();
   for (const page of sportScorePages) {
