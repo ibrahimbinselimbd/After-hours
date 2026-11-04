@@ -14,6 +14,7 @@ The network checks run only after a visitor presses Run. Live requests originate
 - [Google Public DNS JSON API](https://developers.google.com/speed/public-dns/docs/doh/json) is used as a second public recursive resolver for selected comparisons. Comparing two recursive resolvers is a small snapshot, not proof of worldwide DNS propagation or authoritative-zone state.
 - Resolver latency is measured with browser `performance.now()` around HTTPS requests and includes the visitor's browser, network and resolver/CDN path. It is not ICMP ping.
 - A returned TTL is the resolver response value and may reflect cache age; it is not necessarily the authoritative zone's configured TTL.
+- DNS response codes follow [RFC 1035](https://www.rfc-editor.org/rfc/rfc1035): `Status 0` is NOERROR and `Status 3` is Name Error (NXDOMAIN). [RFC 6761](https://www.rfc-editor.org/rfc/rfc6761) says names beneath `.invalid` should return NXDOMAIN. The MX checker treats nonzero DNS status as a failed lookup; a NOERROR response with an empty MX answer remains a successful no-MX result.
 - The DNSSEC AD flag is shown as a resolver-provided signal. An unset flag alone does not prove DNSSEC failure; the tools do not independently validate a complete signature chain.
 - SPF analysis is deliberately bounded (at most 15 TXT queries and depth 5) and reports a structural estimate, not full SPF evaluation. Macro expansion and some mechanisms remain unresolved.
 

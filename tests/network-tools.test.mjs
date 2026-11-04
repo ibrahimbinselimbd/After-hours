@@ -195,6 +195,7 @@ test('Null MX preference zero and root exchange reports that the domain accepts 
   assert.match(output.text, /Null MX: 0 \./);
   assert.match(output.text, /does not accept email/i);
   assert.match(output.text, /RFC 7505/);
+  assert.match(output.text, /DNS response: NOERROR \(status 0\)/);
   const page = await read('site/tools/mx-priority-target-checker/index.html');
   assert.match(page, /RFC 7505: Null MX/);
   assert.match(page, /rfc-editor\.org\/rfc\/rfc7505/);
@@ -236,6 +237,7 @@ test('failed network results show one no-credit notice in details and do not cha
     addEventListener(name, handler) { this.listeners[name] = handler; }
     get childElementCount() { return this.children.length; }
   }
+  const nxdomainEngine = makeEngine({fetch: async () => response({Status: 3, Answer: []})});
   const created = [];
   const host = new Element('div');
   const configNode = {textContent: JSON.stringify({slug: 'failure-test', handler: 'failure', mode: 'local', fields: [], sources: []})};
@@ -246,7 +248,10 @@ test('failed network results show one no-credit notice in details and do not cha
   };
   let charges = 0;
   const window = {
-    AHNetworkTools: {failure: async () => ({ok: false, text: 'Resolver failed. No credit was used. No credit was used.'})},
+    AHNetworkTools: {failure: async () => {
+      const result = await nxdomainEngine.handlers['mx-priority-target-checker']({domain: 'example.invalid'});
+      return {...result, text: `${result.text} No credit was used.`};
+    }},
     AHToolkit: {
       credits: {canRun: () => true, charge: () => { charges++; return true; }},
       status: (element, text, level) => { element.hidden = false; element.textContent = text; element.dataset.level = level; },
@@ -261,8 +266,39 @@ test('failed network results show one no-credit notice in details and do not cha
   const status = created.find(element => element.className === 'status');
   assert.ok(run && output && status, 'runtime creates the run control, result and status regions');
   await run.listeners.click();
+  assert.match(output.textContent, /NXDOMAIN/);
   assert.equal((output.textContent.match(/No credit was used\./g) || []).length, 1);
   assert.doesNotMatch(status.textContent, /No credit was used/i);
   assert.match(status.textContent, /See the result details below/);
   assert.equal(charges, 0, 'failed actions never call the shared credit charger');
+});
+
+
+test('MX checker fails NXDOMAIN but accepts a NOERROR response with no MX records', async () => {
+  const nxdomainRequests = [];
+  const nxdomainEngine = makeEngine({fetch: async url => {
+    nxdomainRequests.push(new URL(url));
+    return response({Status: 3, Answer: []});
+  }});
+  const failed = await nxdomainEngine.handlers['mx-priority-target-checker']({domain: 'example.invalid'});
+  assert.equal(failed.ok, false);
+  assert.match(failed.text, /NXDOMAIN \(DNS status 3\)/);
+  assert.match(failed.text, /No credit was used\./);
+  assert.doesNotMatch(failed.text, /No MX records were returned/);
+  assert.equal(nxdomainRequests.length, 1, 'NXDOMAIN stops after the MX query');
+  assert.equal(nxdomainRequests[0].searchParams.get('type'), 'MX');
+
+  const noMxRequests = [];
+  const noMxEngine = makeEngine({fetch: async url => {
+    noMxRequests.push(new URL(url));
+    return response({Status: 0, Answer: []});
+  }});
+  const noMx = await noMxEngine.handlers['mx-priority-target-checker']({domain: 'www.example.com'});
+  assert.equal(noMx.ok, true);
+  assert.match(noMx.text, /DNS response: NOERROR \(status 0\)/);
+  assert.match(noMx.text, /MX records: 0/);
+  assert.match(noMx.text, /No MX records were returned/);
+  assert.doesNotMatch(noMx.text, /No credit was used/);
+  assert.equal(noMxRequests.length, 1, 'a successful empty MX answer does not trigger target lookups');
+  assert.equal(noMxRequests[0].searchParams.get('type'), 'MX');
 });

@@ -276,6 +276,11 @@
   tools['mx-priority-target-checker']=async values=>{try{
     const name=hostname(values.domain);
     const mx=await queryDns(name,'MX');
+    if(Number(mx.data.Status)!==0){
+      const status=Number(mx.data.Status);
+      const detail=status===3?'NXDOMAIN (DNS status 3); the queried domain does not exist':`DNS status ${mx.data.Status} (${statusName(mx)}); the resolver did not return NOERROR`;
+      return errorResult(new Error(detail),'MX lookup failed');
+    }
     const records=answers(mx).map(item=>{
       const match=String(item.data||'').trim().match(/^(\d+)\s+(\S+)$/);
       if(!match)return null;
@@ -286,14 +291,14 @@
     const nullMx=records.filter(record=>record.nullMx);
     if(nullMx.length){
       if(records.length!==1||nullMx[0].priority!==0)return errorResult(new Error('A Null MX must be the only MX record and have preference 0 (RFC 7505).'),'MX record set is invalid');
-      return report('MX record and email acceptance',[`Domain: ${name}`,'MX records: 1','Null MX: 0 .','Email acceptance: This domain does not accept email (Null MX; RFC 7505).','No MX target address lookups were performed for this no-service record.'].join('\n'),`${mx.provider}; MX lookup made directly from this browser; Null MX semantics per RFC 7505`,mx.observedAt);
+      return report('MX record and email acceptance',[`Domain: ${name}`,`DNS response: ${statusName(mx)} (status ${mx.data.Status})`,'MX records: 1','Null MX: 0 .','Email acceptance: This domain does not accept email (Null MX; RFC 7505).','No MX target address lookups were performed for this no-service record.'].join('\n'),`${mx.provider}; MX lookup made directly from this browser; Null MX semantics per RFC 7505`,mx.observedAt);
     }
     const lines=[];
     for(const rec of records.slice(0,8)){
       const [a,aaaa]=await Promise.all([queryDns(rec.host,'A'),queryDns(rec.host,'AAAA')]);
       lines.push(`Priority ${rec.priority} — ${rec.host}\n  A: ${answerData(a).join(', ')||'(none returned)'}\n  AAAA: ${answerData(aaaa).join(', ')||'(none returned)'}`);
     }
-    return report('MX priority and target addresses',[`Domain: ${name}`,`MX records: ${records.length}`,lines.join('\n')||'No MX records were returned.',`Address lookups do not test SMTP ports, TLS, mailbox acceptance or mail delivery.`].join('\n\n'),'Cloudflare DNS-over-HTTPS; MX plus target A/AAAA queries',mx.observedAt);
+    return report('MX priority and target addresses',[`Domain: ${name}`,`DNS response: ${statusName(mx)} (status ${mx.data.Status})`,`MX records: ${records.length}`,lines.join('\n')||'No MX records were returned.',`Address lookups do not test SMTP ports, TLS, mailbox acceptance or mail delivery.`].join('\n\n'),'Cloudflare DNS-over-HTTPS; MX plus target A/AAAA queries',mx.observedAt);
   }catch(e){return errorResult(e,'MX target inspection failed');}};
   tools['caa-issuance-policy-checker']=async values=>{try{const name=hostname(values.domain);const r=await queryDns(name,'CAA');const rows=answerData(r);const notes=rows.map(text=>{const m=text.match(/^(\d+)\s+(issuewild|issue|iodef)\s+(.+)$/i);return m?`${m[2]}: ${m[3]} (flags ${m[1]})`:text;});return dnsReport('CAA issuance policy interpretation',r,`Observed CAA directives:\n${notes.join('\n')||'(no CAA answer returned; absence is not a certificate-authority guarantee)'}\nInterpretation is based only on returned DNS text; certificate-authority behavior and inherited parent records are not fully evaluated here.`);}catch(e){return errorResult(e,'CAA policy check failed');}};
   tools['dnssec-record-inspector']=async values=>{try{const name=hostname(values.domain);const type=safe(values.recordType||'DS');const r=await queryDns(name,type,'cloudflare',true);return dnsReport('DNSSEC record inspection',r,`DNSSEC OK (DO) requested: yes\nAuthenticated Data (AD): ${r.data.AD??'not supplied'}\nThe displayed records are resolver output; this page does not independently verify a signature chain.`);}catch(e){return errorResult(e,'DNSSEC record inspection failed');}};
