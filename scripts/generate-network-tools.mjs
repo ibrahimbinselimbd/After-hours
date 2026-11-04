@@ -58,6 +58,7 @@ const source={
   ipwho:{label:'IPWho.is API documentation',url:'https://ipwhois.io/documentation'},
   cloudflare:{label:'Cloudflare DNS-over-HTTPS documentation',url:'https://developers.cloudflare.com/1.1.1.1/encryption/dns-over-https/make-api-requests/dns-json/'},
   google:{label:'Google Public DNS JSON API documentation',url:'https://developers.google.com/speed/public-dns/docs/doh/json'},
+  nullMx:{label:'RFC 7505: Null MX',url:'https://www.rfc-editor.org/rfc/rfc7505'},
   iana4:{label:'IANA IPv4 special-purpose registry',url:'https://www.iana.org/assignments/iana-ipv4-special-registry/iana-ipv4-special-registry.xhtml'},
   iana6:{label:'IANA IPv6 special-purpose registry',url:'https://www.iana.org/assignments/iana-ipv6-special-registry/iana-ipv6-special-registry.xhtml'},
   networkInfo:{label:'MDN Network Information API reference',url:'https://developer.mozilla.org/en-US/docs/Web/API/NetworkInformation'},
@@ -67,6 +68,7 @@ const source={
 };
 const compareDns=new Set(['my-dns-resolver-check','dns-propagation-comparison','dns-resolver-latency-check','dns-answer-consistency-check','doh-query-url-builder']);
 function sourcesFor(tool){
+  if(tool.slug==='mx-priority-target-checker')return [source.cloudflare,source.nullMx];
   if(tool.slug==='ip-special-use-checker')return [source.iana4,source.iana6];
   if(tool.slug==='browser-network-profile')return [source.networkInfo];
   if(tool.slug==='vpn-webrtc-leak-check')return [source.ipify,source.webRtc,source.icePrivacy];

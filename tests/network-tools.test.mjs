@@ -182,3 +182,87 @@ test('a failed public DNS lookup is reported as unavailable instead of invented 
   assert.match(output.text, /No credit was used/);
   assert.doesNotMatch(output.text, /93\.184\.216\.34/);
 });
+
+
+test('Null MX preference zero and root exchange reports that the domain accepts no email', async () => {
+  const seen = [];
+  const engine = makeEngine({fetch: async url => {
+    seen.push(new URL(url));
+    return response({Status: 0, Answer: [{name: 'example.com.', TTL: 3600, data: '0 .'}]});
+  }});
+  const output = await engine.handlers['mx-priority-target-checker']({domain: 'example.com'});
+  assert.equal(output.ok, true);
+  assert.match(output.text, /Null MX: 0 \./);
+  assert.match(output.text, /does not accept email/i);
+  assert.match(output.text, /RFC 7505/);
+  const page = await read('site/tools/mx-priority-target-checker/index.html');
+  assert.match(page, /RFC 7505: Null MX/);
+  assert.match(page, /rfc-editor\.org\/rfc\/rfc7505/);
+  assert.equal(seen.length, 1, 'Null MX does not trigger target A/AAAA lookups');
+  assert.equal(seen[0].searchParams.get('type'), 'MX');
+
+  const mixedRequests = [];
+  const mixedEngine = makeEngine({fetch: async url => {
+    mixedRequests.push(new URL(url));
+    return response({Status: 0, Answer: [
+      {name: 'example.com.', TTL: 3600, data: '0 .'},
+      {name: 'example.com.', TTL: 3600, data: '10 mail.example.com.'},
+    ]});
+  }});
+  const mixed = await mixedEngine.handlers['mx-priority-target-checker']({domain: 'example.com'});
+  assert.equal(mixed.ok, false, 'Null MX cannot be combined with ordinary MX targets');
+  assert.match(mixed.text, /Null MX must be the only MX record and have preference 0/);
+  assert.equal(mixedRequests.length, 1, 'invalid mixed MX sets do not trigger target lookups');
+});
+
+test('IANA Port Control Protocol Anycast entries are classified for IPv4 and IPv6', async () => {
+  const {handlers} = makeEngine();
+  const ipv4 = await handlers['ip-special-use-checker']({address: '192.0.0.9'});
+  assert.equal(ipv4.ok, true);
+  assert.match(ipv4.text, /Matched common special-use range: 192\.0\.0\.9\/32/);
+  assert.match(ipv4.text, /Port Control Protocol Anycast \(RFC 7723\)/);
+  const ipv6 = await handlers['ip-special-use-checker']({address: '2001:1::1'});
+  assert.equal(ipv6.ok, true);
+  assert.match(ipv6.text, /Matched common special-use range: 2001:1::1\/128/);
+  assert.match(ipv6.text, /Port Control Protocol Anycast \(RFC 7723\)/);
+});
+
+test('failed network results show one no-credit notice in details and do not charge', async () => {
+  class Element {
+    constructor(tag) { this.tagName = String(tag).toUpperCase(); this.children = []; this.listeners = {}; this.dataset = {}; this.textContent = ''; this.hidden = false; this.disabled = false; this.value = ''; }
+    append(...nodes) { this.children.push(...nodes); }
+    replaceChildren(...nodes) { this.children = nodes; }
+    setAttribute(name, value) { (this.attributes ||= {})[name] = value; }
+    addEventListener(name, handler) { this.listeners[name] = handler; }
+    get childElementCount() { return this.children.length; }
+  }
+  const created = [];
+  const host = new Element('div');
+  const configNode = {textContent: JSON.stringify({slug: 'failure-test', handler: 'failure', mode: 'local', fields: [], sources: []})};
+  const document = {
+    body: {dataset: {slug: 'failure-test'}},
+    getElementById(id) { return id === 'tool-content' ? host : id === 'new-tool-config' ? configNode : null; },
+    createElement(tag) { const element = new Element(tag); created.push(element); return element; },
+  };
+  let charges = 0;
+  const window = {
+    AHNetworkTools: {failure: async () => ({ok: false, text: 'Resolver failed. No credit was used. No credit was used.'})},
+    AHToolkit: {
+      credits: {canRun: () => true, charge: () => { charges++; return true; }},
+      status: (element, text, level) => { element.hidden = false; element.textContent = text; element.dataset.level = level; },
+      copy: async () => true,
+      downloadText: () => {},
+    },
+  };
+  const runtime = await read('site/tools/_shared/network-tools/runtime.js');
+  vm.runInNewContext(runtime, {window, document});
+  const run = created.find(element => element.tagName === 'BUTTON' && element.textContent === 'Run locally ↗');
+  const output = created.find(element => element.tagName === 'PRE');
+  const status = created.find(element => element.className === 'status');
+  assert.ok(run && output && status, 'runtime creates the run control, result and status regions');
+  await run.listeners.click();
+  assert.equal((output.textContent.match(/No credit was used\./g) || []).length, 1);
+  assert.doesNotMatch(status.textContent, /No credit was used/i);
+  assert.match(status.textContent, /See the result details below/);
+  assert.equal(charges, 0, 'failed actions never call the shared credit charger');
+});

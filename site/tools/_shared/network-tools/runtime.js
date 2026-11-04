@@ -108,8 +108,9 @@
       const text=typeof response==='string'?response:response?.text;
       if (typeof text!=='string'||!text.trim()) throw new Error('No readable result was produced. Check the inputs and try again.');
       if (text.length>120000) throw new Error('The result is too large to display safely.');
-      currentText=text; output.textContent=text; resultBox.hidden=false; copy.disabled=false; download.disabled=false;
-      if (response?.ok===false) api.status(status,`${text.split('\n')[0]} No credit was used.`, 'error');
+      const displayText=response?.ok===false?`${text.replace(/(?:\s*No credit was used\.?)+/gi,'').trim()}\n\nNo credit was used.`:text;
+      currentText=displayText; output.textContent=displayText; resultBox.hidden=false; copy.disabled=false; download.disabled=false;
+      if (response?.ok===false) api.status(status,'The check failed. See the result details below.','error');
       else {
         const charged=api.credits.charge();
         api.status(status,charged?'Completed. One shared daily credit was used.':'Completed, but no credit was deducted because the shared counter changed.',charged?'success':'warn');
