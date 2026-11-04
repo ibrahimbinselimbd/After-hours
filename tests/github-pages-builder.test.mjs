@@ -242,9 +242,10 @@ test('GitHub Pages builds the complete English site, Journal, and all 500 active
   assert.match(infoContent, /posts are public/i);
   assert.match(infoContent, /No response time is promised/i);
   assert.match(infoContent, /owner states that ByteAfter collects only IP address, browser type and device type/i);
-  assert.match(infoContent, /afterhours:planner-draft:\{slug\}/);
-  assert.match(infoContent, /afterhours:new-tool-draft:\{slug\}/);
-  assert.match(infoContent, /afterhours-heic-credits-v1/);
+  assert.match(infoContent, /Planner and new-tool pages save entered drafts under slug-specific localStorage keys/i);
+  assert.match(infoContent, /tool credit counters also use localStorage/i);
+  assert.match(infoContent, /HEIC converter uses browser IndexedDB for its counter/i);
+  assert.doesNotMatch(infoContent, /afterhours/i, 'public Info copy must not expose the legacy storage-key namespace');
   assert.match(infoContent, /This draft makes no claim that cookies or analytics are absent/i);
   assert.match(infoContent, /cdn\.jsdelivr\.net/);
   assert.match(infoContent, /esm\.sh/);
