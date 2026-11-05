@@ -1,257 +1,119 @@
-(() => {
-  'use strict';
+const allowedSports = new Set(['football', 'cricket']);
+const routeSport = document.querySelector('meta[name="score-sport"]')?.content || 'all';
+const routeSportLabel = document.querySelector('meta[name="score-sport-label"]')?.content || 'Football + Cricket';
+const feedUrl = document.querySelector('meta[name="score-feed-endpoint"]')?.content || './scores.json';
+const stateLabels = {all: 'All matches', live: 'Live', upcoming: 'Upcoming', finished: 'Results'};
+const ui = {
+  list: document.querySelector('#score-list'), empty: document.querySelector('#score-empty'),
+  notice: document.querySelector('#feed-notice'), feedState: document.querySelector('#feed-state'),
+  feedCopy: document.querySelector('#feed-copy'), feedUpdated: document.querySelector('#feed-updated'),
+  summary: document.querySelector('#board-summary'), liveCount: document.querySelector('#live-count'),
+  matchCount: document.querySelector('#match-count'), refresh: document.querySelector('#refresh-scores')
+};
+let matches = [];
+let connected = false;
+let failed = false;
+let selectedState = 'all';
+let isChecking = false;
+const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+const pad = value => String(value).padStart(2, '0');
+const labelStatus = status => status === 'live' ? 'LIVE' : status === 'finished' ? 'FINAL' : 'UP NEXT';
 
-  // Browser reads only a same-origin static feed or the exact first-party Basketball Worker endpoint.
-  const basketballWorkerEndpoint = 'https://afterhours-district.bird-timimus.workers.dev/api/v1/scores/basketball';
-  const configuredFeed = document.querySelector('meta[name="score-feed-endpoint"]')?.content || './scores.json';
-  let feedUrl;
-  try { feedUrl = new URL(configuredFeed, window.location.href); } catch { feedUrl = new URL('./scores.json', window.location.href); }
-  const isSameOriginFeed = feedUrl.origin === window.location.origin;
-  const isBasketballWorkerFeed = feedUrl.href.replace(/\/$/, '') === basketballWorkerEndpoint;
-  const feedAllowed = isSameOriginFeed || isBasketballWorkerFeed;
-  const allowedSports = new Set(['football', 'cricket', 'tennis', 'basketball', 'badminton', 'f1', 'other']);
-  const routeSport = document.querySelector('meta[name="score-sport"]')?.content || 'all';
-  const routeSportLabel = document.querySelector('meta[name="score-sport-label"]')?.content || 'all sports';
-  const configuredPollSeconds = Number(document.querySelector('meta[name="score-poll-interval-seconds"]')?.content);
-  const pollIntervalSeconds = Number.isFinite(configuredPollSeconds) && configuredPollSeconds >= 10
-    ? Math.min(3600, Math.floor(configuredPollSeconds))
-    : 60;
-  const pollIntervalMs = pollIntervalSeconds * 1000;
-  const selectors = {
-    list: document.querySelector('#score-list'),
-    empty: document.querySelector('#score-empty'),
-    notice: document.querySelector('#feed-notice'),
-    feedState: document.querySelector('#feed-state'),
-    feedUpdated: document.querySelector('#feed-updated'),
-    boardSummary: document.querySelector('#board-summary'),
-    liveCount: document.querySelector('#live-count'),
-    matchCount: document.querySelector('#match-count'),
-    refresh: document.querySelector('#refresh-scores'),
-    pollingCopy: document.querySelector('#feed-polling-copy')
-  };
+function normalizeMatch(item, index) {
+  if (!item || typeof item !== 'object') return null;
+  const sport = String(item.sport || '').toLowerCase();
+  if (!allowedSports.has(sport) || (routeSport !== 'all' && sport !== routeSport)) return null;
+  const status = String(item.status || '').toLowerCase();
+  if (!['live', 'upcoming', 'finished'].includes(status)) return null;
+  const home = item.home && typeof item.home === 'object' ? item.home : {};
+  const away = item.away && typeof item.away === 'object' ? item.away : {};
+  const clean = value => String(value ?? '').trim().slice(0, 120);
+  return {id: clean(item.id) || `${sport}-${index}`, sport, league: clean(item.league), status,
+    home: {name: clean(home.name), score: home.score}, away: {name: clean(away.name), score: away.score},
+    period: clean(item.period), startTime: clean(item.startTime), venue: clean(item.venue)};
+}
 
-  let matches = [];
-  let feedConnected = false;
-  let feedStale = false;
-  let feedUpdatedAt = null;
-  let feedMessage = '';
-  let selectedSport = routeSport;
-  let selectedState = 'all';
-  let isRefreshing = false;
+function renderCard(match) {
+  const team = side => `<div class="match-team"><span class="team-mark" aria-hidden="true">${esc((side.name || '—').replace(/[^a-z0-9]/gi, '').slice(0, 3).toUpperCase())}</span><span class="team-name">${esc(side.name || 'Team not supplied')}</span><strong class="team-score">${side.score === null || side.score === undefined || side.score === '' ? '—' : esc(side.score)}</strong></div>`;
+  return `<article class="match-card" data-match-id="${esc(match.id)}"><div class="match-top"><span class="match-league">${esc(match.league || (match.sport === 'football' ? 'Football' : 'Cricket'))}</span><span class="match-state ${esc(match.status)}">${labelStatus(match.status)}</span></div><div class="match-teams">${team(match.home)}${team(match.away)}</div><div class="match-bottom"><span>${esc(match.period || match.startTime || 'Match details not supplied')}</span><span>${esc(match.venue || match.sport.toUpperCase())}</span></div></article>`;
+}
 
-  if (selectors.pollingCopy) {
-    selectors.pollingCopy.textContent = `Automatic same-site feed checks run every ${pollIntervalSeconds} seconds while this page is visible. Use Refresh to check now.`;
+function render() {
+  const visible = matches.filter(match => selectedState === 'all' || match.status === selectedState);
+  const live = visible.filter(match => match.status === 'live').length;
+  if (ui.liveCount) ui.liveCount.textContent = pad(live);
+  if (ui.matchCount) ui.matchCount.textContent = pad(visible.length);
+  if (ui.summary) ui.summary.textContent = failed ? 'Preview error — local draft file unavailable'
+    : connected ? `${routeSportLabel}; ${stateLabels[selectedState]}, ${visible.length} fixture${visible.length === 1 ? '' : 's'}, ${live} live.`
+    : 'Draft — provider feed not connected; no matches loaded';
+  if (ui.list) { ui.list.innerHTML = visible.map(renderCard).join(''); ui.list.hidden = !visible.length; }
+  if (ui.empty) {
+    ui.empty.hidden = visible.length > 0;
+    const heading = ui.empty.querySelector('h3');
+    const copy = ui.empty.querySelector('.empty-copy p');
+    const kicker = ui.empty.querySelector('.empty-kicker');
+    if (heading) heading.textContent = failed ? 'The local preview could not load.' : connected ? 'No matching fixtures.' : 'No scores are being shown.';
+    if (copy) copy.textContent = failed ? 'The local draft snapshot could not be read. Try Check draft again. No provider request has been made.'
+      : connected ? 'No fixtures match this sport and status filter in the connected response.'
+      : 'Football and Cricket feeds are not connected. Fixtures, scores, live status and match details remain unavailable until coverage and API access are verified. Nothing here is simulated.';
+    if (kicker) kicker.textContent = failed ? 'PREVIEW / ERROR' : connected ? 'FILTER / NO MATCHES' : 'DRAFT / NO VERIFIED MATCH DATA';
   }
+  if (ui.feedState) ui.feedState.textContent = failed ? 'Draft file error' : connected ? 'Feed reports connected' : 'Draft — not connected';
+  if (ui.feedCopy) ui.feedCopy.textContent = failed ? 'The local draft snapshot could not be loaded. No external provider was contacted.'
+    : connected ? 'The local snapshot reports a connection, but this UI draft does not verify provider coverage or API access.'
+    : 'No Sportmonks access or feed has been verified. This preview makes no provider request, and no score, event or match state is simulated.';
+  if (ui.feedUpdated) ui.feedUpdated.textContent = failed ? 'PREVIEW / ERROR' : connected ? 'LOCAL SNAPSHOT' : 'DRAFT / OFFLINE';
+  if (ui.notice) ui.notice.classList.toggle('has-error', failed);
+}
 
-  const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-  const pad = value => String(value).padStart(2, '0');
-
-  function normalizeMatch(item, index) {
-    if (!item || typeof item !== 'object') return null;
-    const sport = String(item.sport || 'other').toLowerCase();
-    const home = item.home && typeof item.home === 'object' ? item.home : {};
-    const away = item.away && typeof item.away === 'object' ? item.away : {};
-    const name = value => String(value ?? '').trim().slice(0, 100);
-    const team = value => ({
-      name: name(value.name) || 'Team TBC',
-      shortName: name(value.shortName) || name(value.name).slice(0, 3).toUpperCase() || '—',
-      score: value.score === null || value.score === undefined || value.score === '' ? '—' : String(value.score).slice(0, 12)
-    });
-    const state = String(item.status || 'upcoming').toLowerCase();
-    const status = ({in_progress: 'live', live: 'live', scheduled: 'upcoming', pre: 'upcoming', completed: 'finished', final: 'finished', post: 'finished'})[state] || state;
-    if (!['live', 'upcoming', 'finished'].includes(status)) return null;
-    return {
-      id: name(item.id) || `${sport}-${index}`,
-      sport: allowedSports.has(sport) ? sport : 'other',
-      league: name(item.league) || 'Fixture',
-      home: team(home),
-      away: team(away),
-      status,
-      period: name(item.period).slice(0, 50),
-      startTime: name(item.startTime),
-      venue: name(item.venue).slice(0, 80)
-    };
+async function checkLocalDraft() {
+  if (isChecking || !ui.refresh) return;
+  isChecking = true; ui.refresh.disabled = true;
+  if (ui.list) ui.list.setAttribute('aria-busy', 'true');
+  failed = false; render();
+  try {
+    const url = new URL(feedUrl, window.location.href);
+    if (url.origin !== window.location.origin) throw new Error('Draft file must be same-origin');
+    const response = await fetch(url, {method: 'GET', cache: 'no-store', credentials: 'same-origin', headers: {Accept: 'application/json'}});
+    if (!response.ok) throw new Error(`Draft file returned ${response.status}`);
+    const payload = await response.json();
+    if (!payload || !Array.isArray(payload.matches)) throw new Error('Invalid local draft format');
+    connected = payload.connected === true;
+    matches = connected ? payload.matches.map(normalizeMatch).filter(Boolean).slice(0, 250) : [];
+  } catch (error) {
+    connected = false; matches = []; failed = true;
+    console.warn('ByteAfter local sports draft could not be read:', error.message);
+  } finally {
+    render(); ui.refresh.disabled = false;
+    if (ui.list) ui.list.setAttribute('aria-busy', 'false');
+    isChecking = false;
   }
+}
 
-  function initials(team) {
-    const value = team.shortName || team.name;
-    return value.replace(/[^a-z0-9]/gi, '').slice(0, 3).toUpperCase() || '—';
-  }
-
-  function timeLabel(match) {
-    if (match.status === 'live') return match.period || 'In play';
-    if (match.status === 'finished') return match.period || 'Full time';
-    if (!match.startTime) return 'Scheduled';
-    const date = new Date(match.startTime);
-    if (Number.isNaN(date.getTime())) return 'Scheduled';
-    return new Intl.DateTimeFormat(undefined, {weekday: 'short', hour: '2-digit', minute: '2-digit'}).format(date);
-  }
-
-  function statusLabel(status) {
-    return status === 'live' ? 'LIVE' : status === 'finished' ? 'FINAL' : 'UP NEXT';
-  }
-
-  function setTextIfChanged(element, value) {
-    if (element && element.textContent !== value) element.textContent = value;
-  }
-
-  function renderMatch(match) {
-    return `<article class="match-card" data-match-id="${escapeHtml(match.id)}">
-      <div class="match-top"><span class="match-league">${escapeHtml(match.league)}</span><span class="match-state ${match.status}">${statusLabel(match.status)}</span></div>
-      <div class="match-teams">
-        <div class="match-team" data-team-side="home"><span class="team-mark" aria-hidden="true">${escapeHtml(initials(match.home))}</span><span class="team-name">${escapeHtml(match.home.name)}</span><strong class="team-score">${escapeHtml(match.home.score)}</strong></div>
-        <div class="match-team" data-team-side="away"><span class="team-mark" aria-hidden="true">${escapeHtml(initials(match.away))}</span><span class="team-name">${escapeHtml(match.away.name)}</span><strong class="team-score">${escapeHtml(match.away.score)}</strong></div>
-      </div>
-      <div class="match-bottom"><span class="match-period">${escapeHtml(timeLabel(match))}</span><span>${escapeHtml(match.venue || match.sport.toUpperCase())}</span></div>
-    </article>`;
-  }
-
-  function setScore(scoreNode, score) {
-    const nextScore = String(score);
-    if (scoreNode.textContent === nextScore) return;
-    scoreNode.textContent = nextScore;
-    scoreNode.classList.remove('score-updated');
-    void scoreNode.offsetWidth;
-    scoreNode.classList.add('score-updated');
-  }
-
-  function updateMatchCard(card, match) {
-    card.dataset.matchId = match.id;
-    card.querySelector('.match-league').textContent = match.league;
-    const state = card.querySelector('.match-state');
-    state.className = `match-state ${match.status}`;
-    state.textContent = statusLabel(match.status);
-    for (const side of ['home', 'away']) {
-      const team = match[side];
-      const row = card.querySelector(`[data-team-side="${side}"]`);
-      row.querySelector('.team-mark').textContent = initials(team);
-      row.querySelector('.team-name').textContent = team.name;
-      setScore(row.querySelector('.team-score'), team.score);
+for (const button of document.querySelectorAll('[data-state]')) {
+  button.addEventListener('click', () => {
+    selectedState = button.dataset.state || 'all';
+    for (const tab of document.querySelectorAll('[data-state]')) {
+      const active = tab === button; tab.classList.toggle('is-active', active); tab.setAttribute('aria-pressed', String(active));
     }
-    card.querySelector('.match-period').textContent = timeLabel(match);
-    card.querySelector('.match-bottom span:last-child').textContent = match.venue || match.sport.toUpperCase();
-  }
-
-  function createMatchCard(match) {
-    const template = document.createElement('template');
-    template.innerHTML = renderMatch(match).trim();
-    const card = template.content.firstElementChild;
-    updateMatchCard(card, match);
-    return card;
-  }
-
-  function syncCards(visible) {
-    const existing = new Map(Array.from(selectors.list.querySelectorAll('.match-card'), card => [card.dataset.matchId, card]));
-    const ordered = visible.map(match => {
-      const card = existing.get(match.id) || createMatchCard(match);
-      updateMatchCard(card, match);
-      return card;
-    });
-    const current = Array.from(selectors.list.children);
-    if (current.length !== ordered.length || current.some((card, index) => card !== ordered[index])) {
-      selectors.list.replaceChildren(...ordered);
-    }
-    selectors.list.hidden = !visible.length;
-  }
-
-  function render() {
-    const visible = matches.filter(match => (selectedSport === 'all' || match.sport === selectedSport) && (selectedState === 'all' || match.status === selectedState));
-    const live = visible.filter(match => match.status === 'live').length;
-    selectors.liveCount.textContent = pad(live);
-    selectors.matchCount.textContent = pad(visible.length);
-    const filterLabel = ({all: 'All matches', live: 'Live', upcoming: 'Upcoming', finished: 'Results'})[selectedState] || 'All matches';
-    const fixtureLabel = `${visible.length} fixture${visible.length === 1 ? '' : 's'}`;
-    const noMatches = visible.length ? '' : ', no matching fixtures';
-    const feedLabel = feedConnected ? (feedStale ? 'Feed connected, stale' : 'Feed connected') : 'Feed not connected';
-    setTextIfChanged(selectors.boardSummary, `${feedLabel}; ${routeSportLabel}, ${filterLabel} filter: ${fixtureLabel}, ${live} live${noMatches}.`);
-    syncCards(visible);
-    selectors.empty.hidden = visible.length > 0;
-    selectors.empty.querySelector('h3').textContent = feedConnected
-      ? `No ${routeSportLabel === 'all sports' ? 'matches' : `${routeSportLabel} matches`} in this lane right now.`
-      : routeSport === 'all' ? 'No scores on the board—yet.' : `No ${routeSportLabel.toLowerCase()} scores available yet.`;
-    selectors.empty.querySelector('.empty-kicker').textContent = feedConnected
-      ? 'FILTER CHECK / NO MATCH DATA'
-      : 'SIGNAL CHECK / NO MATCH DATA';
-    selectors.empty.querySelector('.empty-copy p').textContent = feedConnected
-      ? 'There are no fixtures for the selected sport and status. Try another lane or check again later.'
-      : routeSport === 'all'
-        ? 'The Basketball feed has no matching data or is unavailable. Other sports do not have connected feeds here yet. Nothing is simulated.'
-        : `No live, scheduled or completed ${routeSportLabel.toLowerCase()} data is being served. This page will show feed-backed information only after the sport and its data fields are verified.`;
-  }
-
-  function updateFeedStatus(message, isError = false) {
-    const alreadyError = selectors.notice.classList.contains('has-error');
-    if (selectors.feedState.textContent !== message) selectors.feedState.textContent = message;
-    if (alreadyError !== isError) selectors.notice.classList.toggle('has-error', isError);
-  }
-
-  function updateTimestamp() {
-    if (!feedUpdatedAt) {
-      setTextIfChanged(selectors.feedUpdated, feedConnected ? 'UPDATED / TIME UNKNOWN' : 'NO FEED / WAITING');
-      return;
-    }
-    const date = new Date(feedUpdatedAt);
-    const label = Number.isNaN(date.getTime())
-      ? 'UPDATED / TIME UNKNOWN'
-      : `LAST SUCCESS / ${new Intl.DateTimeFormat(undefined, {hour: '2-digit', minute: '2-digit'}).format(date)}`;
-    setTextIfChanged(selectors.feedUpdated, feedStale ? `${label} / STALE` : label);
-  }
-
-  async function refreshFeed() {
-    if (isRefreshing) return;
-    isRefreshing = true;
-    selectors.refresh.disabled = true;
-    selectors.list.setAttribute('aria-busy', 'true');
-    try {
-      if (!feedAllowed) throw new Error('Score feed URL is not an allowed same-origin feed or the exact Basketball Worker endpoint');
-      const url = new URL(feedUrl.href);
-      url.searchParams.set('check', String(Date.now()));
-      const response = await fetch(url, {method: 'GET', cache: 'no-store', credentials: isSameOriginFeed ? 'same-origin' : 'omit', headers: {Accept: 'application/json'}});
-      if (!response.ok) throw new Error(`Feed returned ${response.status}`);
-      const payload = await response.json();
-      if (!payload || !Array.isArray(payload.matches)) throw new Error('The same-site score file has an invalid format');
-      matches = payload.matches.map(normalizeMatch).filter(Boolean).slice(0, 250);
-      feedConnected = payload.connected === true;
-      feedStale = payload.stale === true;
-      feedUpdatedAt = payload.updatedAt || null;
-      feedMessage = typeof payload.message === 'string' ? payload.message.slice(0, 240) : '';
-      const isBasketballLane = routeSport === 'all' || routeSport === 'basketball';
-      const staleFallback = isBasketballLane ? 'Basketball snapshot is stale or unavailable' : `No ${routeSportLabel} feed is connected`;
-      const statusFallback = isBasketballLane ? 'Basketball feed unavailable' : `No ${routeSportLabel} feed is connected`;
-      updateFeedStatus(feedStale ? (feedMessage || staleFallback) : feedConnected ? 'Basketball score feed connected' : (feedMessage || statusFallback), feedStale || !feedConnected);
-    } catch (error) {
-      feedStale = true;
-      const unavailableMessage = routeSport === 'all' || routeSport === 'basketball'
-        ? 'Basketball feed request failed; cached data may be stale'
-        : `No ${routeSportLabel} feed is connected`;
-      updateFeedStatus(unavailableMessage, true);
-      console.warn('ByteAfter score feed could not be loaded:', error.message);
-    } finally {
-      updateTimestamp();
-      render();
-      selectors.refresh.disabled = false;
-      selectors.list.setAttribute('aria-busy', 'false');
-      isRefreshing = false;
-    }
-  }
-
-  document.querySelectorAll('[data-state]').forEach(button => {
-    button.addEventListener('click', () => {
-      selectedState = button.dataset.state || 'all';
-      document.querySelectorAll('[data-state]').forEach(tab => {
-        const active = tab === button;
-        tab.classList.toggle('is-active', active);
-        tab.setAttribute('aria-pressed', String(active));
-      });
-      render();
-    });
+    render();
   });
+}
 
-  selectors.refresh.addEventListener('click', refreshFeed);
-  render();
-  refreshFeed();
-  window.setInterval(() => {
-    if (document.visibilityState !== 'visible') return;
-    refreshFeed();
-  }, pollIntervalMs);
-})();
+for (const button of document.querySelectorAll('[data-detail-section]')) {
+  button.addEventListener('click', () => {
+    const group = button.closest('[data-detail-group]');
+    if (!group) return;
+    for (const tab of group.querySelectorAll('[data-detail-section]')) {
+      const active = tab === button; tab.classList.toggle('is-active', active); tab.setAttribute('aria-selected', String(active)); tab.tabIndex = active ? 0 : -1;
+    }
+    const panel = group.querySelector('[data-detail-panel]');
+    const sport = group.dataset.detailGroup === 'football' ? 'Football' : 'Cricket';
+    const label = button.textContent.trim();
+    panel.innerHTML = `<p class="detail-empty">Unavailable — no verified ${sport} fixture or feed is connected. ${esc(label)} data will appear only if supplied by an authorized provider response.</p>`;
+  });
+}
+
+ui.refresh?.addEventListener('click', checkLocalDraft);
+render();
+checkLocalDraft();

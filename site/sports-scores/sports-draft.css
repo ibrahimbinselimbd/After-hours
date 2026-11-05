@@ -1,0 +1,38 @@
+/* Draft-only presentation: the existing Sports Scores visual language is retained. */
+.sports-draft-page .draft-hero{min-height:390px}
+.sports-draft-page .draft-scope{display:grid;grid-template-columns:48px 1fr;gap:18px;align-items:start;margin:30px 0 12px;padding:20px 22px;border:1px solid #ffb86b48;background:linear-gradient(100deg,#ffb86b0b,#a78bfa0a 72%,transparent);}
+.sports-draft-page .draft-scope-mark{display:grid;width:38px;height:38px;place-items:center;border:1px solid #ffb86b85;border-radius:50%;color:#ffd7ad;font:700 18px 'Barlow Condensed',sans-serif}
+.sports-draft-page .draft-scope h2{margin:7px 0;color:#f4f5ff;font:700 clamp(21px,3vw,29px)/1.05 'Barlow Condensed',sans-serif;text-transform:uppercase}
+.sports-draft-page .draft-scope h2 em{color:#ffd29d;font-style:normal}
+.sports-draft-page .draft-scope p{max-width:980px;margin:0;color:#bdc6d9;font-size:11px;line-height:1.8}
+.sports-draft-page .draft-lanes{padding:57px 0 12px}
+.sports-draft-page .draft-lane-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:23px}
+.sports-draft-page .draft-lane-card{position:relative;display:flex;min-height:250px;flex-direction:column;align-items:flex-start;padding:22px 24px;border:1px solid #b2bfff26;background:radial-gradient(ellipse at 90% 10%,#53f5ff0b,transparent 53%),linear-gradient(140deg,#111a2b,#0b1020 72%);transition:border-color .2s,transform .2s,background .2s;overflow:hidden}
+.sports-draft-page .draft-lane-card:after{position:absolute;right:-54px;bottom:-74px;width:190px;height:190px;border:1px solid #53f5ff24;border-radius:50%;content:'';transform:scaleY(.56);pointer-events:none}
+.sports-draft-page .draft-lane-card:hover,.sports-draft-page .draft-lane-card:focus-visible{transform:translateY(-3px);border-color:#53f5ff75;outline:none}
+.sports-draft-page .cricket-lane{background:radial-gradient(ellipse at 90% 10%,#a78bfa11,transparent 53%),linear-gradient(140deg,#14152c,#0b1020 72%)}
+.sports-draft-page .lane-symbol{display:grid;width:42px;height:42px;place-items:center;border:1px solid #53f5ff40;color:var(--cyan);font-size:21px}
+.sports-draft-page .cricket-lane .lane-symbol{border-color:#a78bfa58;color:#c6b3ff}
+.sports-draft-page .lane-index{margin-top:17px;color:#8c98b1;font:8px monospace;letter-spacing:1.3px}
+.sports-draft-page .draft-lane-card h3{margin:5px 0 5px;color:#f5f6ff;font:800 38px/.95 'Barlow Condensed',sans-serif;text-transform:uppercase}
+.sports-draft-page .draft-lane-card p{max-width:510px;margin:6px 0 17px;color:#b2bdd3;font-size:11px;line-height:1.75}
+.sports-draft-page .lane-state{display:flex;align-items:center;gap:8px;margin-top:auto;color:#97a4ba;font:8px monospace;letter-spacing:1px}
+.sports-draft-page .lane-state i{width:6px;height:6px;border-radius:50%;background:#ffbd76;box-shadow:0 0 9px #ffbd7690}
+.sports-draft-page .lane-state b{margin-left:7px;color:#b8faff;font-size:14px}
+.sports-draft-page .draft-feed-notice{border-color:#ffbd7645;background:linear-gradient(100deg,#ffbd760b,#a78bfa08)}
+.sports-draft-page .draft-feed-notice .notice-mark{border-color:#ffbd7666;color:#ffd39e}
+.sports-draft-page .draft-feed-notice strong{color:#ffe0ba}
+.sports-draft-page .draft-feed-notice .feed-update{color:#ffd09a}
+.sports-draft-page .draft-data-note{grid-template-columns:58px 1fr 1.45fr}
+.sports-draft-page .draft-doc-links{color:#aeb8cd;font-size:10px;line-height:1.8}
+.sports-draft-page .draft-doc-links p{margin:0 0 10px}
+.sports-draft-page .draft-doc-links a{color:#bdfbff;text-decoration:underline;text-decoration-color:#53f5ff55;text-underline-offset:3px}
+.sports-draft-page .draft-data-limit{padding-top:8px;border-top:1px solid var(--line)}
+.sports-draft-page .score-empty{margin-top:12px}
+.sports-draft-page .board-controls{flex-wrap:wrap}
+.sports-draft-page #refresh-scores{white-space:nowrap}
+.sports-draft-page #refresh-scores:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.sports-draft-page .score-grid[hidden],.sports-draft-page .score-empty[hidden]{display:none}
+@media(max-width:900px){.sports-draft-page .draft-data-note{grid-template-columns:52px 1fr}.sports-draft-page .draft-doc-links{grid-column:2}}
+@media(max-width:700px){.sports-draft-page .draft-scope{grid-template-columns:34px 1fr;gap:12px;padding:16px}.sports-draft-page .draft-scope-mark{width:30px;height:30px;font-size:16px}.sports-draft-page .draft-lanes{padding-top:43px}.sports-draft-page .draft-lane-grid{grid-template-columns:1fr;gap:10px}.sports-draft-page .draft-lane-card{min-height:220px;padding:18px}.sports-draft-page .board-heading{align-items:flex-start}.sports-draft-page .board-controls{align-items:flex-start}.sports-draft-page .state-filter{width:100%;padding-bottom:2px}.sports-draft-page .board-tools{width:100%;justify-content:space-between;white-space:normal}.sports-draft-page .draft-feed-notice{align-items:flex-start}.sports-draft-page .draft-feed-notice .feed-update{max-width:84px;white-space:normal;text-align:right}.sports-draft-page .draft-data-note{grid-template-columns:42px 1fr;gap:13px;padding:18px}.sports-draft-page .draft-data-note .data-note-icon{width:40px;height:40px}.sports-draft-page .draft-doc-links{grid-column:1/-1}.sports-draft-page .score-empty{align-items:flex-start;gap:15px;padding:18px}.sports-draft-page .empty-orbit{flex-basis:54px;width:54px;height:54px;font-size:24px}.sports-draft-page .empty-copy h3{font-size:24px}}
+@media(prefers-reduced-motion:reduce){.sports-draft-page .draft-lane-card{transition:none}.sports-draft-page .draft-lane-card:hover{transform:none}}

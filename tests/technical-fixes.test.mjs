@@ -108,23 +108,23 @@ test('home and learning civil-date calculations are stable in UTC, Dhaka, and a 
   }
 });
 
-test('sports lane generator sets the shared polling interval and live status contract on every page', async () => {
-  const {sportScorePages, renderSportScorePage} = await import('../scripts/sports-score-routes.mjs');
+test('sports draft keeps seven legacy definitions but generates only disconnected Football and Cricket lanes', async () => {
+  const {sportScorePages, publicSportScorePages, renderSportScorePage} = await import('../scripts/sports-score-routes.mjs');
   assert.equal(sportScorePages.length, 7);
-  for (const page of sportScorePages) {
+  assert.deepEqual(publicSportScorePages.map(page => page.slug), ['football', 'cricket']);
+  for (const page of publicSportScorePages) {
     const html = renderSportScorePage(page, `https://example.test/sports-scores/${page.slug}/`);
-    const expectedSeconds = page.slug === 'basketball' ? 900 : 60;
-    assert.match(html, new RegExp(`name="score-poll-interval-seconds" content="${expectedSeconds}"`));
-    assert.match(html, new RegExp(`Automatic same-site feed checks run every ${expectedSeconds} seconds`));
+    assert.match(html, /name="score-feed-endpoint" content="\.\.\/scores\.json"/);
+    assert.match(html, /name="robots" content="noindex,nofollow"/);
+    assert.match(html, /Unavailable — no verified/);
+    assert.match(html, /Manual local snapshot check only/);
     assert.match(html, /id="board-summary" role="status" aria-live="polite"/);
     assert.match(html, /id="feed-notice" role="status" aria-live="polite"/);
     assert.match(html, /id="score-list" aria-live="off"/);
-    assert.match(html, /sports-scores\.js\?v=5/);
-    if (page.slug === 'basketball') {
-      assert.match(html, /https:\/\/afterhours-district\.bird-timimus\.workers\.dev\/api\/v1\/scores\/basketball/);
-      assert.match(html, /api-sports\.io\/documentation\/basketball\/v1/);
-      assert.match(html, /up to 15 minutes delayed/);
-      assert.match(html, /not 15-second realtime/);
-    }
+    assert.match(html, /sports-scores\.js\?v=6/);
+    assert.doesNotMatch(html, /afterhours-district|api-sports\.io/i);
   }
+  const script = fs.readFileSync(path.join(root, 'site/sports-scores/sports-scores.js'), 'utf8');
+  assert.match(script, /new Set\(\['football', 'cricket'\]\)/);
+  assert.doesNotMatch(script, /setInterval|afterhours-district|api-sports\.io/i);
 });

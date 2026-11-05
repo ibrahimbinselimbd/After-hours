@@ -3,7 +3,7 @@ import { readdir, readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { test } from 'node:test';
-import { sportScorePages } from '../scripts/sports-score-routes.mjs';
+import { publicSportScorePages, sportScorePages } from '../scripts/sports-score-routes.mjs';
 
 const root = path.resolve('.');
 const site = path.join(root, 'site');
@@ -206,7 +206,7 @@ test('GitHub Pages builds the complete English site, Journal, and all 550 active
   assert.doesNotMatch(home, /AFTERHOURS|AFTER\/HOURS/);
   const brandedFooterPages = [
     'index.html', 'article.html', 'info.html', 'districts/index.html',
-    'sports-scores/index.html', 'sports-scores/football/index.html', 'tools/index.html',
+    'sports-scores/index.html', 'sports-scores/football/index.html', 'sports-scores/cricket/index.html', 'tools/index.html',
     'tools/background-remover/index.html', 'tools/heic-to-jpg/index.html',
     'tools/image-size-optimizer/index.html', 'tools/qr-code-generator/index.html',
     'tools/text-detector/index.html', 'tools/passport-photo-studio/index.html',
@@ -288,15 +288,20 @@ test('GitHub Pages builds the complete English site, Journal, and all 550 active
   assert.match(sitemap, /^<\?xml version="1\.0" encoding="UTF-8"\?>/);
   assert.match(await readFile(path.join(output, 'robots.txt'), 'utf8'), new RegExp(`Sitemap: ${base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/sitemap\\.xml`));
 
-  assert.equal(sportScorePages.length, 7, 'the scoreboard should retain six named sports plus the additional-sports lane');
+  assert.equal(sportScorePages.length, 7, 'all seven legacy sports definitions remain in source');
+  assert.deepEqual(publicSportScorePages.map(page => page.slug), ['football', 'cricket']);
   const scoreHub = await readFile(path.join(output, 'sports-scores', 'index.html'), 'utf8');
-  assert.match(scoreHub, /Only Basketball has a connected API-Sports (?:score )?feed/i);
-  assert.match(scoreHub, /other sports lanes do not have live scores here/i);
+  assert.match(scoreHub, /Football \+ Cricket/);
+  assert.match(scoreHub, /Football Starter is limited to five leagues/);
+  assert.doesNotMatch(scoreHub, /Tennis|Basketball|Badminton|Formula 1|More sports/i);
+  assert.doesNotMatch(scoreHub, /afterhours-district|api-sports\.io/i);
   assert.doesNotMatch(scoreHub, /Every game|AFTERHOURS|AFTER\/HOURS/);
   assert.doesNotMatch(scoreHub, /<span>BYTE<br>AFTER<\/span>/i, 'the decorative hero core must not contain a branded text stamp');
+  const publicScoreRoutes = (await readdir(path.join(output, 'sports-scores'), { withFileTypes: true })).filter(entry => entry.isDirectory()).map(entry => entry.name).sort();
+  assert.deepEqual(publicScoreRoutes, ['cricket', 'football']);
   const scoreTitles = new Set();
   const scoreDescriptions = new Set();
-  for (const page of sportScorePages) {
+  for (const page of publicSportScorePages) {
     const relative = `sports-scores/${page.slug}/index.html`;
     const pageHtml = await readFile(path.join(output, relative), 'utf8');
     const canonicalTags = [...pageHtml.matchAll(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["'][^>]*>/gi)];
@@ -306,18 +311,12 @@ test('GitHub Pages builds the complete English site, Journal, and all 550 active
     assert.ok(description.length > 80, `${page.slug} needs a meaningful route-specific description`);
     assert.equal(canonicalTags.length, 1, `${page.slug} must have one self-referencing canonical`);
     assert.equal(canonicalTags[0][1], `${base}/sports-scores/${page.slug}/`, `${page.slug} canonical must match its public route`);
-    assert.match(pageHtml, /<meta\s+name=["']robots["']\s+content=["']noindex,follow["']/i, `${page.slug} remains crawlable but excluded until real sport data is available`);
+    assert.match(pageHtml, /<meta\s+name=["']robots["']\s+content=["']noindex,nofollow["']/i, `${page.slug} is an unpublished draft route`);
     assert.match(pageHtml, new RegExp(`<meta\\s+name=["']score-sport["']\\s+content=["']${page.sport}["']`, 'i'));
     assert.match(pageHtml, /<h1\b[^>]*>[\s\S]*?<\/h1>/i, `${page.slug} needs a useful server-rendered heading`);
-    assert.match(pageHtml, /No (?:verified )?(?:live|provider|sport|badminton|Formula 1|cricket|football|tennis|basketball)/i, `${page.slug} must not imply that scores are currently available`);
-    assert.match(pageHtml, /data-feed-endpoint|score-feed-endpoint/i, `${page.slug} should use the same-origin feed contract`);
-    if (page.slug === 'basketball') {
-      assert.match(pageHtml, /api-sports\.io\/documentation\/basketball\/v1/i);
-      assert.match(pageHtml, /afterhours-district\.bird-timimus\.workers\.dev\/api\/v1\/scores\/basketball/);
-      assert.doesNotMatch(pageHtml, /Goalserve/i);
-    } else {
-      assert.match(pageHtml, /Goalserve|provider|coverage/i, `${page.slug} should explain its provider/coverage limitation`);
-    }
+    assert.match(pageHtml, /Unavailable — no verified/);
+    assert.match(pageHtml, /score-feed-endpoint/);
+    assert.doesNotMatch(pageHtml, /Tennis|Basketball|Badminton|Formula 1|More sports|api-sports\.io|afterhours-district/i);
     assert.ok(!locations.includes(`${base}/sports-scores/${page.slug}/`), `${page.slug} noindex route must not be listed in the sitemap`);
     assert.match(scoreHub, new RegExp(`href=["']${'/After-hours/sports-scores/'}${page.slug}/["']`), `${page.slug} must be reachable by a crawlable hub link`);
     assert.ok(!scoreTitles.has(title), `${page.slug} title must be unique`);
@@ -325,12 +324,12 @@ test('GitHub Pages builds the complete English site, Journal, and all 550 active
     scoreTitles.add(title);
     scoreDescriptions.add(description);
   }
-  assert.equal(scoreTitles.size, 7);
-  assert.equal(scoreDescriptions.size, 7);
+  assert.equal(scoreTitles.size, 2);
+  assert.equal(scoreDescriptions.size, 2);
   const scoreScript = await readFile(path.join(output, 'sports-scores', 'sports-scores.js'), 'utf8');
   assert.match(scoreScript, /score-sport-label/);
-  assert.match(scoreScript, /afterhours-district\.bird-timimus\.workers\.dev\/api\/v1\/scores\/basketball/);
-  assert.match(scoreScript, /credentials: isSameOriginFeed \? 'same-origin' : 'omit'/);
+  assert.match(scoreScript, /new Set\(\['football', 'cricket'\]\)/);
+  assert.doesNotMatch(scoreScript, /afterhours-district|api-sports\.io|setInterval/i);
 
   const publicTextFiles = (await filesUnder(output)).filter(file => /\.(?:html|js|mjs|css|json|xml|txt)$/.test(file));
   for (const file of publicTextFiles) {
@@ -341,8 +340,7 @@ test('GitHub Pages builds the complete English site, Journal, and all 550 active
       assert.deepEqual(referrerMetaValues(source), [expectedPolicy], `${relative} should have one safe document-level referrer policy`);
       assert.doesNotMatch(source, /AFTERHOURS|AFTER\/HOURS/, `${relative} should not retain the previous public brand`);
     }
-    const withoutAuthorizedBasketballFeed = source.replaceAll('https://afterhours-district.bird-timimus.workers.dev/api/v1/scores/basketball', '');
-    assert.doesNotMatch(withoutAuthorizedBasketballFeed, /afterhours-district\.bird-timimus\.workers\.dev/i, `${path.relative(output, file)} should use GitHub Pages URLs except for the authorized Basketball feed`);
+    assert.doesNotMatch(source, /afterhours-district\.bird-timimus\.workers\.dev/i, `${path.relative(output, file)} should not expose the old basketball feed host`);
     assert.doesNotMatch(source, /(?:href|src)=(['"])\/(?:tools|districts|journal|article|info)\//i, `${path.relative(output, file)} should not retain a root-relative project route`);
   }
 

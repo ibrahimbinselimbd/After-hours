@@ -1,6 +1,8 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "connected": false,
+  "source": "draft only — no Sportmonks feed configured",
   "updatedAt": null,
+  "supportedSports": ["football", "cricket"],
   "matches": []
 }

@@ -1,21 +1,22 @@
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, character => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[character]));
 
+// Keep every pre-existing sport definition in source for rollback/reference. Only the two requested lanes are built publicly.
 export const sportScorePages = [
   {
     slug: 'football', sport: 'football', label: 'Football', icon: '⚽', title: 'Football Scores & Fixtures | ByteAfter',
-    description: 'Explore the ByteAfter football score page. No verified football feed is connected, so live scores, fixtures, and results are not available here yet.',
-    intro: 'A dedicated page for association football (often called soccer): match status, two sides, score and competition details when a verified first-party feed supplies them. No live football feed is connected, and this page currently has no fixtures or results.',
-    guide: 'The current score card can represent two sides, a competition, a score, match status, period, start time and venue when those fields are supplied. Competition coverage will depend on the verified feed and the account package; no league availability is promised here.',
-    coverage: 'Goalserve’s public catalogue lists Football and Soccer data-feed categories. That confirms the categories are advertised publicly, not that any specific league is included in the selected subscription or active for ByteAfter.',
-    source: 'https://www.goalserve.com/en/sport-data-feeds', sourceLabel: 'Goalserve public sports-feed catalogue',
+    description: 'Unpublished Football scoreboard draft. No Sportmonks feed or API access is connected; worldwide coverage is a target, not a verified promise.',
+    intro: 'A dedicated association-football lane. The worldwide coverage target is not yet verified, and this draft shows no fixtures, scores or match events until coverage and API access are confirmed.',
+    guide: 'Sportmonks Football v3 fixture responses document scores, participants, events, lineups and statistics includes. This draft keeps those match-detail surfaces unavailable until a verified fixture and the relevant fields are returned.',
+    coverage: 'Football Starter is limited to five leagues and cannot meet the all-world target. Football Enterprise requires a custom quote; selected-league coverage, trial status and API access remain unverified.',
+    source: 'https://docs.sportmonks.com/v3/tutorials-and-guides/tutorials/livescores-and-fixtures/fixtures', sourceLabel: 'Sportmonks Football fixtures documentation',
   },
   {
     slug: 'cricket', sport: 'cricket', label: 'Cricket', icon: '◉', title: 'Cricket Scores & Fixtures | ByteAfter',
-    description: 'Explore the ByteAfter cricket score page. No verified cricket feed is connected, so live scores, schedules, and results are not available here yet.',
-    intro: 'A dedicated cricket route for match status, teams and score summaries when an approved first-party feed supplies them. No cricket feed is connected, and no live scorecard, fixture or result is being simulated.',
-    guide: 'The shared score card currently treats each side’s score as plain text; it does not yet parse innings, overs or wickets into a cricket scorecard. A cricket-specific adapter and review are required before those fields can be promised or shown.',
-    coverage: 'Goalserve’s public cricket page describes cricket feeds and names competitions including the Bangladesh Premier League. This does not confirm coverage in the intended Full Package subscription or the owner’s account.',
-    source: 'https://www.goalserve.com/en/sport-data-feeds/cricket-api/description/14', sourceLabel: 'Goalserve cricket feed details',
+    description: 'Unpublished Cricket scoreboard draft. No Sportmonks feed or API access is connected; worldwide coverage is not verified.',
+    intro: 'A dedicated cricket lane for innings-based scorecards. Cricket coverage is not verified for the requested worldwide scope, and no fixtures or results are displayed in this disconnected draft.',
+    guide: 'Sportmonks Cricket v2 fixture and livescore docs list runs, scoreboards, batting, bowling, lineup, balls and venue includes. The scorecard and delivery panels remain unavailable until a verified fixture response supplies those fields.',
+    coverage: 'The requested scope is worldwide Cricket. Exact competition access under the selected plan, trial status and API access are not verified, so this page does not claim global availability.',
+    source: 'https://docs.sportmonks.com/v2/cricket-api/our-api/fixtures/get-fixture-by-id', sourceLabel: 'Sportmonks Cricket fixture documentation',
   },
   {
     slug: 'tennis', sport: 'tennis', label: 'Tennis', icon: '◌', title: 'Tennis Scores & Match Results | ByteAfter',
@@ -60,78 +61,51 @@ export const sportScorePages = [
   },
 ];
 
+export const publicSportScorePages = sportScorePages.filter(page => ['football', 'cricket'].includes(page.slug));
+
+function detailPanel(page) {
+  const isFootball = page.slug === 'football';
+  const tabs = isFootball
+    ? [['overview', 'Overview & score'], ['events', 'Events'], ['lineups', 'Line-ups'], ['statistics', 'Statistics']]
+    : [['overview', 'Overview & innings'], ['scorecard', 'Scorecard'], ['balls', 'Ball-by-ball'], ['lineup', 'Playing XI'], ['match', 'Match info']];
+  const labels = tabs.map(([id, label], index) => `<button type="button" role="tab" class="state-tab${index === 0 ? ' is-active' : ''}" data-detail-section="${id}" aria-selected="${index === 0}"${index ? ' tabindex="-1"' : ''}>${label}</button>`).join('');
+  const placeholder = isFootball
+    ? 'Unavailable — no verified Football fixture is connected. Scores, events, lineups and statistics will remain empty until returned by an authorized fixture response.'
+    : 'Unavailable — no verified Cricket fixture is connected. Innings, batting, bowling, balls and lineup will remain empty until returned by an authorized fixture response.';
+  const docs = isFootball
+    ? '<a href="https://docs.sportmonks.com/v3/tutorials-and-guides/tutorials/livescores-and-fixtures/fixtures" target="_blank" rel="noopener noreferrer">fixtures</a>, <a href="https://docs.sportmonks.com/v3/tutorials-and-guides/tutorials/includes/events" target="_blank" rel="noopener noreferrer">events</a>, <a href="https://docs.sportmonks.com/v3/tutorials-and-guides/tutorials/includes/lineups" target="_blank" rel="noopener noreferrer">lineups</a> and <a href="https://docs.sportmonks.com/v3/tutorials-and-guides/tutorials/statistics/fixture-statistics" target="_blank" rel="noopener noreferrer">fixture statistics</a>'
+    : '<a href="https://docs.sportmonks.com/v2/cricket-api/our-api/fixtures/get-fixture-by-id" target="_blank" rel="noopener noreferrer">fixture by ID</a> and <a href="https://docs.sportmonks.com/v2/cricket-api/our-api/livescores-and-fixtures/get-all-livescores" target="_blank" rel="noopener noreferrer">livescores</a>';
+  return `<section class="draft-match-centres" id="match-centres" aria-labelledby="match-centres-title"><div class="board-heading"><div><div class="board-kicker">MATCH CENTRE / DATA-BACKED ONLY</div><h2 id="match-centres-title">Full match detail. <span>Unavailable for now.</span></h2><p>These sections are placeholders only. They stay unavailable until verified feed access supplies the sport-specific fields.</p></div></div><div class="detail-panel" data-detail-group="${page.slug}"><h3>${escapeHtml(page.label)} match centre</h3><div class="detail-tabs" role="tablist" aria-label="${escapeHtml(page.label)} match detail sections">${labels}</div><div class="detail-content" data-detail-panel role="tabpanel"><p class="detail-empty">${placeholder}</p></div><p class="detail-source">Documented fields: ${docs}.</p></div></section>`;
+}
+
 export function renderSportScorePage(page, canonicalUrl) {
-  const otherPages = sportScorePages.map(item => {
+  const otherPages = publicSportScorePages.map(item => {
     const current = item.slug === page.slug;
     return `<a class="sport-tab${current ? ' is-active' : ''}" href="/sports-scores/${item.slug}/"${current ? ' aria-current="page"' : ''}><span class="sport-tab-icon" aria-hidden="true">${escapeHtml(item.icon)}</span>${escapeHtml(item.label)}</a>`;
   }).join('');
   const statusName = page.label.toLowerCase();
-  const isBasketball = page.slug === 'basketball';
-  const feedEndpoint = page.feedEndpoint || '../scores.json';
-  const pollSeconds = page.pollSeconds || 60;
-  const feedCopy = isBasketball
-    ? 'Only Basketball has a connected score feed. ByteAfter’s Worker relays cached Basketball snapshots from API-Sports; they may be up to 15 minutes delayed, or longer if the provider is unavailable or the free daily quota is reached. This is not real-time data.'
-    : `No ${escapeHtml(statusName)} provider call or score key is active in this page. Coverage and data fields must be verified for the selected subscription before live information can appear.`;
+  const feedEndpoint = '../scores.json';
   return `<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#080a16">
-  <meta name="description" content="${escapeHtml(page.description)}">
-  <meta name="robots" content="noindex,follow">
-  <meta name="score-feed-endpoint" content="${escapeHtml(feedEndpoint)}">
-  <meta name="score-poll-interval-seconds" content="${pollSeconds}">
-  <meta name="score-sport" content="${escapeHtml(page.sport)}">
-  <meta name="score-sport-label" content="${escapeHtml(page.label)}">
-  <meta property="og:site_name" content="ByteAfter">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="${escapeHtml(page.title)}">
-  <meta property="og:description" content="${escapeHtml(page.description)}">
-  <meta property="og:url" content="${escapeHtml(canonicalUrl)}">
-  <link rel="canonical" href="${escapeHtml(canonicalUrl)}">
-  <title>${escapeHtml(page.title)}</title>
-  <link rel="stylesheet" href="/fonts.css">
-  <link rel="stylesheet" href="../sports-scores.css?v=4">
-  <script defer src="../sports-scores.js?v=5"></script>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#080a16">
+  <meta name="description" content="${escapeHtml(page.description)}"><meta name="robots" content="noindex,nofollow">
+  <meta name="score-feed-endpoint" content="${feedEndpoint}"><meta name="score-sport" content="${escapeHtml(page.sport)}"><meta name="score-sport-label" content="${escapeHtml(page.label)}">
+  <meta property="og:site_name" content="ByteAfter"><meta property="og:type" content="website"><meta property="og:title" content="${escapeHtml(page.title)}"><meta property="og:description" content="${escapeHtml(page.description)}"><meta property="og:url" content="${escapeHtml(canonicalUrl)}">
+  <link rel="canonical" href="${escapeHtml(canonicalUrl)}"><title>${escapeHtml(page.title)} — Draft</title><link rel="stylesheet" href="/fonts.css"><link rel="stylesheet" href="../sports-scores.css?v=4"><link rel="stylesheet" href="../sports-draft.css?v=1"><link rel="stylesheet" href="../match-details.css?v=1"><script type="module" src="../sports-scores.js?v=6"></script>
 </head>
-<body class="sports-page" data-score-page="${escapeHtml(page.slug)}">
+<body class="sports-page sports-draft-page" data-score-page="${escapeHtml(page.slug)}">
   <a class="skip-link" href="#scoreboard">Skip to the ${escapeHtml(statusName)} scoreboard</a>
-  <header class="sports-header">
-    <a class="sports-brand" href="/" aria-label="ByteAfter home"><span class="brand-mark brand-mark-3d" aria-hidden="true"><img src="/byteafter-mark.webp" alt=""></span><span class="brand-name brand-word">Byte<span>After</span><small> / SPORTS SIGNAL</small></span></a>
-    <nav class="sports-nav" aria-label="Main navigation"><a href="/#feed">The journal</a><a href="/districts/">The districts</a><a href="/tools/">Tools</a><a href="/sports-scores/" aria-current="page">Scores</a></nav>
-    <a class="sports-header-badge" href="/sports-scores/" aria-label="All sports scores"><span>SPORTS<small>SCOREBOARD</small></span><i aria-hidden="true"></i></a>
-  </header>
-  <main>
-    <div class="score-wrap">
-      <div class="score-breadcrumb"><a href="/">ByteAfter</a><span aria-hidden="true">/</span><a href="/sports-scores/">ALL SPORTS</a><span aria-hidden="true">/</span><span>${escapeHtml(page.label.toUpperCase())}</span></div>
-      <section class="score-hero" aria-labelledby="score-title">
-        <div class="score-hero-copy">
-          <div class="score-eyebrow"><i aria-hidden="true"></i> SPORT SCORE PAGE <span>${escapeHtml(page.label.toUpperCase())}</span></div>
-          <h1 id="score-title">${escapeHtml(page.label)}<br><em>scores.</em></h1>
-          <p>${escapeHtml(page.intro)}</p>
-          <div class="score-hero-actions"><a class="score-primary" href="#scoreboard">View ${escapeHtml(page.label)} board <span aria-hidden="true">↓</span></a><span class="score-clean-note"><b aria-hidden="true">✳</b> No simulated scores. Feed status is shown plainly.</span></div>
-        </div>
-        <div class="score-hero-art" aria-hidden="true"><div class="score-orbit orbit-one"></div><div class="score-orbit orbit-two"></div><div class="score-orbit orbit-three"></div><div class="score-art-core"><span>${escapeHtml(page.label.toUpperCase())}</span></div></div>
-      </section>
-      <section class="score-board" id="scoreboard" aria-labelledby="board-title">
-        <div class="board-heading"><div><div class="board-kicker">SPORT LANE / ${escapeHtml(page.label.toUpperCase())}</div><h2 id="board-title">${escapeHtml(page.label)} <span>score signal.</span></h2><p>${escapeHtml(page.intro)}</p></div>
-          <div class="board-stats" aria-label="Scoreboard summary"><div><strong id="live-count">00</strong><small>LIVE NOW</small></div><div><strong id="match-count">00</strong><small>ON THIS PAGE</small></div><div><strong>01</strong><small>SPORT LANE</small></div></div>
-        </div>
-        <nav class="sport-filter" aria-label="Other sports score pages"><a class="sport-tab" href="/sports-scores/">✳ All sports</a>${otherPages}</nav>
-        <div class="board-controls">
-          <div class="state-filter" role="group" aria-label="Filter ${escapeHtml(page.label)} matches by status"><button type="button" class="state-tab is-active" data-state="all" aria-pressed="true">All matches</button><button type="button" class="state-tab" data-state="live" aria-pressed="false">Live <i aria-hidden="true"></i></button><button type="button" class="state-tab" data-state="upcoming" aria-pressed="false">Upcoming</button><button type="button" class="state-tab" data-state="finished" aria-pressed="false">Results</button></div>
-          <div class="board-tools"><span id="board-summary" role="status" aria-live="polite">Waiting for the site’s ${escapeHtml(statusName)} score feed</span><button type="button" id="refresh-scores"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M6.2 9A6.5 6.5 0 0 1 17 6l3 6M4 12l3 6a6.5 6.5 0 0 0 10.8-3"/></svg> Refresh</button></div>
-        </div>
-        <div class="feed-notice" id="feed-notice" role="status" aria-live="polite"><span class="notice-mark" aria-hidden="true">i</span><div><strong id="feed-state">${isBasketball ? 'Waiting for cached Basketball snapshot' : 'First-party feed not connected'}</strong><p>${feedCopy}</p><p id="feed-polling-copy">Automatic same-site feed checks run every ${pollSeconds} seconds while this page is visible. Use Refresh to check now.</p></div><span class="feed-update" id="feed-updated">NO FEED / WAITING</span></div>
-        <div class="score-grid" id="score-list" aria-live="off" aria-busy="false"></div>
-        <div class="score-empty" id="score-empty"><div class="empty-orbit" aria-hidden="true"><span>0</span></div><div class="empty-copy"><span class="empty-kicker">${escapeHtml(page.label.toUpperCase())} / NO VERIFIED DATA</span><h3>No ${escapeHtml(statusName)} scores available yet.</h3><p>No live scores, fixtures or results are served for this lane today. The site will show feed-backed data only after the provider feed and its sport-specific fields are verified.</p></div></div>
-      </section>
-      <section class="score-data-note" aria-labelledby="page-guide-title"><div class="data-note-icon" aria-hidden="true">${escapeHtml(page.icon)}</div><div><span class="board-kicker">PAGE GUIDE / ${escapeHtml(page.label.toUpperCase())}</span><h2 id="page-guide-title">What this lane<br><em>can show.</em></h2></div><div><p>${escapeHtml(page.guide)}</p><p>${escapeHtml(page.coverage)} <a href="${escapeHtml(page.source)}" target="_blank" rel="noopener noreferrer">${escapeHtml(page.sourceLabel)}</a>.</p><p><strong>Indexing status:</strong> This route is crawlable but intentionally marked noindex while its verified feed and useful live content are unavailable. Review page quality and data accuracy before changing that directive.</p></div></section>
-    </div>
-  </main>
-  <footer class="score-footer"><a href="/" class="brand footer-brand" aria-label="ByteAfter home"><span class="brand-mark brand-mark-3d" aria-hidden="true"><img src="/byteafter-mark.webp" alt=""></span><span class="brand-word">Byte<span>After</span></span><sup aria-hidden="true">®</sup></a><span>LESS NOISE. MORE SIGNAL.</span><a href="/sports-scores/">All sports scores ↗</a></footer>
+  <header class="sports-header"><a class="sports-brand" href="/" aria-label="ByteAfter home"><span class="brand-mark brand-mark-3d" aria-hidden="true"><img src="/byteafter-mark.webp" alt=""></span><span class="brand-name brand-word">Byte<span>After</span><small> / SPORTS SIGNAL</small></span></a><nav class="sports-nav" aria-label="Main navigation"><a href="/#feed">The journal</a><a href="/districts/">The districts</a><a href="/tools/">Tools</a><a href="/sports-scores/" aria-current="page">Scores</a></nav><a class="sports-header-badge" href="/sports-scores/" aria-label="Sports draft"><span>SPORTS<small>DRAFT / OFFLINE</small></span><i aria-hidden="true"></i></a></header>
+  <main><div class="score-wrap"><div class="score-breadcrumb"><a href="/">ByteAfter</a><span aria-hidden="true">/</span><a href="/sports-scores/">SPORTS DRAFT</a><span aria-hidden="true">/</span><span>${escapeHtml(page.label.toUpperCase())}</span></div>
+    <section class="score-hero draft-hero" aria-labelledby="score-title"><div class="score-hero-copy"><div class="score-eyebrow"><i aria-hidden="true"></i> DRAFT / FEED NOT CONNECTED <span>${escapeHtml(page.label.toUpperCase())}</span></div><h1 id="score-title">${escapeHtml(page.label)}<br><em>scores.</em></h1><p>${escapeHtml(page.intro)}</p><div class="score-hero-actions"><a class="score-primary" href="#scoreboard">View ${escapeHtml(page.label)} board <span aria-hidden="true">↓</span></a><span class="score-clean-note"><b aria-hidden="true">✳</b> No live data / no simulation</span></div></div><div class="score-hero-art" aria-hidden="true"><div class="score-orbit orbit-one"></div><div class="score-orbit orbit-two"></div><div class="score-orbit orbit-three"></div><div class="score-art-core"><span>${escapeHtml(page.label.toUpperCase())}</span></div><span class="score-coordinate coordinate-a">WORLDWIDE<br>TARGET ONLY</span><span class="score-coordinate coordinate-b">NOT<br>CONNECTED</span></div></section>
+    <section class="score-board" id="scoreboard" aria-labelledby="board-title"><div class="board-heading"><div><div class="board-kicker">SPORT LANE / ${escapeHtml(page.label.toUpperCase())}</div><h2 id="board-title">${escapeHtml(page.label)} <span>score signal.</span></h2><p>${escapeHtml(page.coverage)}</p></div><div class="board-stats" aria-label="Scoreboard summary"><div><strong id="live-count">00</strong><small>LIVE / VERIFIED ONLY</small></div><div><strong id="match-count">00</strong><small>ON THIS PAGE</small></div><div><strong>01</strong><small>SPORT LANE</small></div></div></div>
+      <nav class="sport-filter" aria-label="Choose a sport lane">${otherPages}</nav><div class="board-controls"><div class="state-filter" role="group" aria-label="Filter ${escapeHtml(page.label)} matches by status"><button type="button" class="state-tab is-active" data-state="all" aria-pressed="true">All matches</button><button type="button" class="state-tab" data-state="live" aria-pressed="false">Live <i aria-hidden="true"></i></button><button type="button" class="state-tab" data-state="upcoming" aria-pressed="false">Upcoming</button><button type="button" class="state-tab" data-state="finished" aria-pressed="false">Results</button></div><div class="board-tools"><span id="board-summary" role="status" aria-live="polite">Draft — provider feed not connected</span><button type="button" id="refresh-scores">Check draft</button></div></div>
+      <div class="feed-notice draft-feed-notice" id="feed-notice" role="status" aria-live="polite"><span class="notice-mark" aria-hidden="true">i</span><div><strong id="feed-state">Draft — not connected</strong><p id="feed-copy">${escapeHtml(page.coverage)} No provider API request is made here. No score or match state is simulated.</p><p id="feed-polling-copy">Manual local snapshot check only. No background polling.</p></div><span class="feed-update" id="feed-updated">DRAFT / OFFLINE</span></div>
+      <div class="score-grid" id="score-list" aria-live="off" aria-busy="false" hidden></div><div class="score-empty" id="score-empty"><div class="empty-orbit" aria-hidden="true"><span>0</span></div><div class="empty-copy"><span class="empty-kicker">${escapeHtml(page.label.toUpperCase())} / UNAVAILABLE</span><h3>No ${escapeHtml(statusName)} scores are being shown.</h3><p>${escapeHtml(page.intro)} Nothing is simulated.</p></div></div>
+    </section>${detailPanel(page)}
+    <section class="score-data-note draft-data-note"><div class="data-note-icon" aria-hidden="true">⌁</div><div><span class="board-kicker">DOCUMENTED FIELDS / NOT LIVE</span><h2>Scope, fields<br><em>and limits.</em></h2></div><p>${escapeHtml(page.guide)} ${escapeHtml(page.coverage)} <a href="${escapeHtml(page.source)}" target="_blank" rel="noopener noreferrer">${escapeHtml(page.sourceLabel)}</a>. This route is noindex while feed access and useful live content are unavailable.</p></section>
+  </div></main><footer class="score-footer"><a href="/" class="brand footer-brand" aria-label="ByteAfter home"><span class="brand-mark brand-mark-3d" aria-hidden="true"><img src="/byteafter-mark.webp" alt=""></span><span class="brand-word">Byte<span>After</span></span></a><span>LESS NOISE. MORE SIGNAL.</span><a href="/sports-scores/">Back to two-sport draft ↗</a></footer>
 </body>
-</html>
-`;
+</html>`;
 }

@@ -4,22 +4,27 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#080a16">
-  <meta name="description" content="Browse seven sport lanes. Cached API-Sports Basketball snapshots are the only connected score data; other sports have no live scores here.">
-  <meta name="robots" content="noindex,follow">
-  <meta name="score-feed-endpoint" content="https://afterhours-district.bird-timimus.workers.dev/api/v1/scores/basketball">
-  <meta name="score-poll-interval-seconds" content="900">
+  <meta name="description" content="Unpublished Sports Scores draft for Football and Cricket. Worldwide coverage is a target, not a verified feed; no API is connected and no scores are simulated.">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="score-feed-endpoint" content="./scores.json">
+  <meta name="score-sport" content="all">
+  <meta name="score-sport-label" content="Football + Cricket">
   <meta property="og:site_name" content="ByteAfter">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Sports Scores & Fixtures — ByteAfter">
-  <meta property="og:description" content="Only Basketball has a connected API-Sports score feed. Its cached snapshots may be delayed; the other sports lanes do not have live scores here.">
-  <meta property="og:url" content="https://afterhours-district.bird-timimus.workers.dev/sports-scores/">
-  <link rel="canonical" href="https://afterhours-district.bird-timimus.workers.dev/sports-scores/">
-  <title>Sports Scores & Fixtures — ByteAfter</title>
+  <meta property="og:title" content="Football + Cricket Scores — Draft | ByteAfter">
+  <meta property="og:description" content="An unpublished, disconnected draft. Worldwide Football and Cricket coverage is not verified.">
+  <meta property="og:url" content="https://ibrahimbinselimbd.github.io/After-hours/sports-scores/">
+  <link rel="canonical" href="https://ibrahimbinselimbd.github.io/After-hours/sports-scores/">
+  <title>Football + Cricket Scores — Draft | ByteAfter</title>
   <link rel="stylesheet" href="/fonts.css">
   <link rel="stylesheet" href="./sports-scores.css?v=4">
-  <script defer src="./sports-scores.js?v=5"></script>
-<link rel="stylesheet" href="/byteafter-logo.css?v=1"><link rel="icon" type="image/png" sizes="128x128" href="/byteafter-icon.png"></head>
-<body class="sports-page">
+  <link rel="stylesheet" href="./sports-draft.css?v=1">
+  <link rel="stylesheet" href="./match-details.css?v=1">
+  <script type="module" src="./sports-scores.js?v=6"></script>
+  <link rel="stylesheet" href="/byteafter-logo.css?v=1">
+  <link rel="icon" type="image/png" sizes="128x128" href="/byteafter-icon.png">
+</head>
+<body class="sports-page sports-draft-page">
   <a class="skip-link" href="#scoreboard">Skip to the scoreboard</a>
   <header class="sports-header">
     <a class="sports-brand" href="/" aria-label="ByteAfter home">
@@ -27,59 +32,67 @@
       <span class="brand-name brand-word">Byte<span>After</span><small> / SPORTS SIGNAL</small></span>
     </a>
     <nav class="sports-nav" aria-label="Main navigation">
-      <a href="/#feed">The journal</a>
-      <a href="/districts/">The districts</a>
-      <a href="/tools/">Tools</a>
-      <a href="/sports-scores/" aria-current="page">Scores</a>
+      <a href="/#feed">The journal</a><a href="/districts/">The districts</a><a href="/tools/">Tools</a><a href="/sports-scores/" aria-current="page">Scores</a>
     </nav>
-    <a class="sports-header-badge" href="/sports-scores/" aria-label="Live sports scoreboard, current page">
+    <a class="sports-header-badge" href="/sports-scores/" aria-label="Sports scoreboard draft, current page">
       <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9"/><path d="m12 3 2.6 4.1-1 4.2-3.6 2.2-4.5-.9M14.6 7.1l4.1.4M13.6 11.3l4 3.1M10 13.5l.6 5.4M5.5 12.6l-2.8 1.8M8.3 4.1l1.7 3"/></svg>
-      <span>SPORTS<small>SCOREBOARD</small></span>
-      <i aria-hidden="true"></i>
+      <span>SPORTS<small>DRAFT / OFFLINE</small></span><i aria-hidden="true"></i>
     </a>
   </header>
-
   <main>
     <div class="score-wrap">
-      <div class="score-breadcrumb"><a href="/">ByteAfter</a><span aria-hidden="true">/</span><span>SPORTS SIGNAL</span></div>
-      <section class="score-hero" aria-labelledby="score-title">
+      <div class="score-breadcrumb"><a href="/">ByteAfter</a><span aria-hidden="true">/</span><span>SPORTS / DRAFT</span></div>
+      <section class="score-hero draft-hero" aria-labelledby="score-title">
         <div class="score-hero-copy">
-          <div class="score-eyebrow"><i aria-hidden="true"></i> THE GLOBAL SPORTS FREQUENCY <span>001 / BASKETBALL FEED</span></div>
-          <h1 id="score-title">Seven lanes.<br><em>Basketball only.</em></h1>
-          <p>Seven sport lanes are listed; only Basketball has a connected API-Sports feed. Its cached snapshots may be delayed. The other sports do not have live scores here yet.</p>
-          <div class="score-hero-actions">
-            <a class="score-primary" href="#scoreboard">Explore the board <span aria-hidden="true">↓</span></a>
-            <span class="score-clean-note"><b aria-hidden="true">✳</b> No ads. No trackers. Provider keys stay server-side.</span>
-          </div>
+          <div class="score-eyebrow"><i aria-hidden="true"></i> GLOBAL SPORTS / UNPUBLISHED DRAFT <span>FOOTBALL + CRICKET</span></div>
+          <h1 id="score-title">Two lanes.<br><em>One world.</em></h1>
+          <p>Football and Cricket are the only sports in this draft. Worldwide coverage is the goal—not a verified promise. No provider feed is connected, no live request is made, and no scores or match events are simulated.</p>
+          <div class="score-hero-actions"><a class="score-primary" href="#scoreboard">Explore the board <span aria-hidden="true">↓</span></a><span class="score-clean-note"><b aria-hidden="true">✳</b> DRAFT / NOT CONNECTED</span></div>
         </div>
         <div class="score-hero-art" aria-hidden="true">
           <div class="score-orbit orbit-one"></div><div class="score-orbit orbit-two"></div><div class="score-orbit orbit-three"></div>
-          <div class="score-art-core"><svg viewBox="0 0 72 72" fill="none"><circle cx="36" cy="36" r="29"/><path d="m36 7 8.7 13.8-3.3 14-12.1 7.4-15.1-3M44.7 20.8l13.8 1.3M41.4 34.8l13.5 10.5M29.3 42.2 31.5 60M14.2 39.2l-9.4 6M23.7 10.8l5.7 10.1"/></svg></div>
-          <span class="score-coordinate coordinate-a">23°46′ N<br>90°24′ E</span><span class="score-coordinate coordinate-b">SPORT / 001<br>EST. NOW</span>
+          <div class="score-art-core"><span>02<br>SPORTS</span></div>
+          <span class="score-coordinate coordinate-a">WORLDWIDE<br>TARGET ONLY</span><span class="score-coordinate coordinate-b">NO FEED<br>NO SCORES</span>
+        </div>
+      </section>
+
+      <section class="draft-scope" aria-labelledby="scope-title">
+        <div class="draft-scope-mark" aria-hidden="true">!</div>
+        <div>
+          <span class="board-kicker">COVERAGE CHECK / BLOCKER</span>
+          <h2 id="scope-title">Worldwide is the target, <em>not confirmed access.</em></h2>
+          <p>Football Starter is limited to five leagues and cannot meet the all-world target. Football Enterprise needs a custom quote. Cricket competition coverage, the final plan, trial status and API access are not verified. This draft stays disconnected; no trial, upgrade, billing or league selection has been made.</p>
+        </div>
+      </section>
+
+      <section class="draft-lanes" aria-labelledby="lanes-title">
+        <div class="board-heading">
+          <div><div class="board-kicker">00 / CHOOSE A LANE</div><h2 id="lanes-title">Only two sports. <span>Nothing else.</span></h2><p>Open a lane for its sport-specific scoreboard and match-centre layout. Both pages remain empty until a verified feed and coverage are confirmed.</p></div>
+          <div class="board-stats" aria-label="Draft scope"><div><strong>02</strong><small>SPORTS IN DRAFT</small></div><div><strong>00</strong><small>CONNECTED FEEDS</small></div></div>
+        </div>
+        <div class="draft-lane-grid">
+          <a class="draft-lane-card football-lane" href="/sports-scores/football/" aria-label="Open Football scoreboard draft">
+            <span class="lane-symbol" aria-hidden="true">⚽</span><span class="lane-index">LANE 01 / FOOTBALL</span><h3>Football</h3>
+            <p>Fixture, score periods, match events, lineups and statistics—only where the connected fixture response supplies them.</p>
+            <span class="lane-state"><i aria-hidden="true"></i> NOT CONNECTED <b aria-hidden="true">↗</b></span>
+          </a>
+          <a class="draft-lane-card cricket-lane" href="/sports-scores/cricket/" aria-label="Open Cricket scoreboard draft">
+            <span class="lane-symbol" aria-hidden="true">◉</span><span class="lane-index">LANE 02 / CRICKET</span><h3>Cricket</h3>
+            <p>Innings, batting and bowling cards, ball-by-ball, XIs and venue—only where returned in the fixture response.</p>
+            <span class="lane-state"><i aria-hidden="true"></i> NOT CONNECTED <b aria-hidden="true">↗</b></span>
+          </a>
         </div>
       </section>
 
       <section class="score-board" id="scoreboard" aria-labelledby="board-title">
         <div class="board-heading">
-          <div><div class="board-kicker">01 / THE TRANSMISSION</div><h2 id="board-title">The score <span>signal.</span></h2><p>Choose a sport to inspect its lane. Basketball snapshots are the only connected score data; other sports do not have live scores here.</p></div>
-          <div class="board-stats" aria-label="Scoreboard summary">
-            <div><strong id="live-count">00</strong><small>LIVE / BASKETBALL</small></div>
-            <div><strong id="match-count">00</strong><small>ON THE BOARD</small></div>
-            <div><strong id="sport-count">07</strong><small>SPORT LANES</small></div>
-          </div>
+          <div><div class="board-kicker">01 / THE TRANSMISSION</div><h2 id="board-title">The score <span>signal.</span></h2><p>Only verified feed data can appear here. Until the provider, selected coverage and API access are confirmed, the board stays disconnected.</p></div>
+          <div class="board-stats" aria-label="Scoreboard summary"><div><strong id="live-count">00</strong><small>LIVE / VERIFIED ONLY</small></div><div><strong id="match-count">00</strong><small>ON THE BOARD</small></div><div><strong>02</strong><small>SPORT LANES</small></div></div>
         </div>
-
-        <nav class="sport-filter" aria-label="Choose a sports score page">
-          <a class="sport-tab is-active" href="/sports-scores/" aria-current="page"><span class="sport-tab-icon" aria-hidden="true">✳</span>All sports</a>
-          <a class="sport-tab" href="/sports-scores/football/"><span class="sport-tab-icon" aria-hidden="true">⚽</span>Football</a>
+        <nav class="sport-filter" aria-label="Choose a sport lane">
+          <a class="sport-tab is-active" href="/sports-scores/football/" aria-current="page"><span class="sport-tab-icon" aria-hidden="true">⚽</span>Football</a>
           <a class="sport-tab" href="/sports-scores/cricket/"><span class="sport-tab-icon" aria-hidden="true">◉</span>Cricket</a>
-          <a class="sport-tab" href="/sports-scores/tennis/"><span class="sport-tab-icon" aria-hidden="true">◌</span>Tennis</a>
-          <a class="sport-tab" href="/sports-scores/basketball/"><span class="sport-tab-icon" aria-hidden="true">◉</span>Basketball</a>
-          <a class="sport-tab" href="/sports-scores/badminton/"><span class="sport-tab-icon" aria-hidden="true">⌁</span>Badminton</a>
-          <a class="sport-tab" href="/sports-scores/formula-1/"><span class="sport-tab-icon" aria-hidden="true">↗</span>Formula 1</a>
-          <a class="sport-tab" href="/sports-scores/more-sports/"><span class="sport-tab-icon" aria-hidden="true">＋</span>More</a>
         </nav>
-
         <div class="board-controls">
           <div class="state-filter" role="group" aria-label="Filter matches by status">
             <button type="button" class="state-tab is-active" data-state="all" aria-pressed="true">All matches</button>
@@ -87,30 +100,45 @@
             <button type="button" class="state-tab" data-state="upcoming" aria-pressed="false">Upcoming</button>
             <button type="button" class="state-tab" data-state="finished" aria-pressed="false">Results</button>
           </div>
-          <div class="board-tools"><span id="board-summary" role="status" aria-live="polite">Waiting for the site’s score feed</span><button type="button" id="refresh-scores"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M6.2 9A6.5 6.5 0 0 1 17 6l3 6M4 12l3 6a6.5 6.5 0 0 0 10.8-3"/></svg> Refresh</button></div>
+          <div class="board-tools"><span id="board-summary" role="status" aria-live="polite">Draft — provider feed not connected</span><button type="button" id="refresh-scores"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M6.2 9A6.5 6.5 0 0 1 17 6l3 6M4 12l3 6a6.5 6.5 0 0 0 10.8-3"/></svg> Check draft</button></div>
         </div>
-
-        <div class="feed-notice" id="feed-notice" role="status" aria-live="polite">
-          <span class="notice-mark" aria-hidden="true">i</span>
-          <div><strong id="feed-state">Waiting for cached Basketball snapshot</strong><p>Only Basketball has a connected score feed. ByteAfter’s Worker relays cached Basketball snapshots from API-Sports; they may be up to 15 minutes delayed, or longer if the provider is unavailable or the free daily quota is reached. This is not real-time data.</p><p id="feed-polling-copy">Automatic same-site feed checks run every 900 seconds while this page is visible. Use Refresh to check now.</p></div>
-          <span class="feed-update" id="feed-updated">NO FEED / WAITING</span>
+        <div class="feed-notice draft-feed-notice" id="feed-notice" role="status" aria-live="polite">
+          <span class="notice-mark" aria-hidden="true">i</span><div><strong id="feed-state">Draft — not connected</strong><p id="feed-copy">No Sportmonks access or feed has been verified. This preview makes no provider request, and no score, event or match state is simulated.</p><p id="feed-polling-copy">Use Check draft to re-read the local empty-state file. No background polling.</p></div><span class="feed-update" id="feed-updated">DRAFT / OFFLINE</span>
         </div>
-
-        <div class="score-grid" id="score-list" aria-live="off" aria-busy="false"></div>
+        <div class="score-grid" id="score-list" aria-live="off" aria-busy="false" hidden></div>
         <div class="score-empty" id="score-empty">
-          <div class="empty-orbit" aria-hidden="true"><span>0</span></div>
-          <div class="empty-copy"><span class="empty-kicker">SIGNAL CHECK / NO MATCH DATA</span><h3>No scores on the board—yet.</h3><p>No Basketball matches are available from the feed right now. Other sports do not have connected feeds here yet. Nothing is simulated.</p></div>
+          <div class="empty-orbit" aria-hidden="true"><span>0</span></div><div class="empty-copy"><span class="empty-kicker">DRAFT / NO VERIFIED MATCH DATA</span><h3>No scores are being shown.</h3><p>Football and Cricket feeds are not connected. Fixtures, scores, live status and match details will appear only after coverage and API access are verified. Nothing here is simulated.</p></div>
         </div>
       </section>
 
-      <section class="score-data-note" aria-labelledby="data-note-title">
-        <div class="data-note-icon" aria-hidden="true">⌁</div>
-        <div><span class="board-kicker">BUILT FOR THE BYTEAFTER SIGNAL</span><h2 id="data-note-title">Fast by design.<br><em>Honest by default.</em></h2></div>
-        <p>Basketball is the only connected score lane: its cached snapshots come from API-Sports via ByteAfter’s Worker and may be up to 15 minutes delayed, or longer if the provider is unavailable or its free daily quota is reached. Other sports do not currently have score feeds. Scores animate only when returned data changes; this is not real-time data. Provider credentials stay server-side; see the <a href="https://api-sports.io/documentation/basketball/v1" target="_blank" rel="noopener noreferrer">official API-Sports Basketball documentation</a> for the source contract.</p>
+      <section class="draft-match-centres" id="match-centres" aria-labelledby="match-centres-title">
+        <div class="board-heading"><div><div class="board-kicker">MATCH CENTRE / DATA-BACKED ONLY</div><h2 id="match-centres-title">Full match detail. <span>No invented fields.</span></h2><p>Sections below are ready for documented fields; each remains empty until a verified fixture with the required includes is available.</p></div></div>
+        <div class="detail-panel" data-detail-group="football">
+          <h3>Football match centre</h3><div class="detail-tabs" role="tablist" aria-label="Football match detail sections">
+            <button type="button" role="tab" class="state-tab is-active" data-detail-section="overview" aria-selected="true">Overview &amp; score</button><button type="button" role="tab" class="state-tab" data-detail-section="events" aria-selected="false" tabindex="-1">Events</button><button type="button" role="tab" class="state-tab" data-detail-section="lineups" aria-selected="false" tabindex="-1">Line-ups</button><button type="button" role="tab" class="state-tab" data-detail-section="statistics" aria-selected="false" tabindex="-1">Statistics</button>
+          </div>
+          <div class="detail-content" data-detail-panel role="tabpanel"><p class="detail-empty">No fixture is selected. Score periods, participants, events, lineups and match statistics appear only when returned in a verified fixture response.</p></div>
+          <p class="detail-source">Fields follow Sportmonks Football v3 fixture includes: <a href="https://docs.sportmonks.com/v3/tutorials-and-guides/tutorials/livescores-and-fixtures/fixtures" target="_blank" rel="noopener noreferrer">fixtures</a>, <a href="https://docs.sportmonks.com/v3/tutorials-and-guides/tutorials/includes/events" target="_blank" rel="noopener noreferrer">events</a>, <a href="https://docs.sportmonks.com/v3/tutorials-and-guides/tutorials/includes/lineups" target="_blank" rel="noopener noreferrer">lineups</a> and <a href="https://docs.sportmonks.com/v3/tutorials-and-guides/tutorials/statistics/fixture-statistics" target="_blank" rel="noopener noreferrer">fixture statistics</a>.</p>
+        </div>
+        <div class="detail-panel" data-detail-group="cricket">
+          <h3>Cricket match centre</h3><div class="detail-tabs" role="tablist" aria-label="Cricket match detail sections">
+            <button type="button" role="tab" class="state-tab is-active" data-detail-section="overview" aria-selected="true">Overview &amp; innings</button><button type="button" role="tab" class="state-tab" data-detail-section="scorecard" aria-selected="false" tabindex="-1">Scorecard</button><button type="button" role="tab" class="state-tab" data-detail-section="balls" aria-selected="false" tabindex="-1">Ball-by-ball</button><button type="button" role="tab" class="state-tab" data-detail-section="lineup" aria-selected="false" tabindex="-1">Playing XI</button><button type="button" role="tab" class="state-tab" data-detail-section="match" aria-selected="false" tabindex="-1">Match info</button>
+          </div>
+          <div class="detail-content" data-detail-panel role="tabpanel"><p class="detail-empty">No fixture is selected. Innings, batting, bowling, delivery, lineup and venue fields appear only when returned in a verified fixture response.</p></div>
+          <p class="detail-source">Fields follow Sportmonks Cricket v2 fixture/livescore includes: <a href="https://docs.sportmonks.com/v2/cricket-api/our-api/fixtures/get-fixture-by-id" target="_blank" rel="noopener noreferrer">fixture by ID</a> and <a href="https://docs.sportmonks.com/v2/cricket-api/our-api/livescores-and-fixtures/get-all-livescores" target="_blank" rel="noopener noreferrer">livescores</a>.</p>
+        </div>
+      </section>
+
+      <section class="score-data-note draft-data-note" aria-labelledby="data-note-title">
+        <div class="data-note-icon" aria-hidden="true">⌁</div><div><span class="board-kicker">DOCUMENTED FIELDS / NOT LIVE</span><h2 id="data-note-title">Different sports.<br><em>Different scorecards.</em></h2></div>
+        <div class="draft-doc-links">
+          <p><strong>Football:</strong> fixtures can provide scores, participants, events, lineups and statistics through documented includes. See <a href="https://docs.sportmonks.com/v3/tutorials-and-guides/tutorials/livescores-and-fixtures/fixtures" target="_blank" rel="noopener noreferrer">fixtures</a>, <a href="https://docs.sportmonks.com/v3/tutorials-and-guides/tutorials/includes/events" target="_blank" rel="noopener noreferrer">events</a>, <a href="https://docs.sportmonks.com/v3/tutorials-and-guides/tutorials/includes/lineups" target="_blank" rel="noopener noreferrer">lineups</a> and <a href="https://docs.sportmonks.com/v3/tutorials-and-guides/tutorials/statistics/fixture-statistics" target="_blank" rel="noopener noreferrer">fixture statistics</a>.</p>
+          <p><strong>Cricket:</strong> the v2 fixture/livescore docs list runs, batting, bowling, lineup, balls, scoreboards and venue includes. See <a href="https://docs.sportmonks.com/v2/cricket-api/our-api/fixtures/get-fixture-by-id" target="_blank" rel="noopener noreferrer">fixture by ID</a> and <a href="https://docs.sportmonks.com/v2/cricket-api/our-api/livescores-and-fixtures/get-all-livescores" target="_blank" rel="noopener noreferrer">livescores</a>.</p>
+          <p class="draft-data-limit"><strong>Integration limit:</strong> this is a UI/data-shape draft, not a connected Sportmonks integration. Actual league access, response availability and plan coverage still require verification.</p>
+        </div>
       </section>
     </div>
   </main>
-
-  <footer class="score-footer"><a href="/" class="brand footer-brand" aria-label="ByteAfter home"><span class="brand-mark brand-mark-3d" aria-hidden="true"><img src="/byteafter-mark.webp" alt=""></span><span class="brand-word">Byte<span>After</span></span><sup aria-hidden="true">®</sup></a><span>LESS NOISE. MORE SIGNAL.</span><a href="/#feed">Back to the journal ↗</a></footer>
+  <footer class="score-footer"><a href="/" class="brand footer-brand" aria-label="ByteAfter home"><span class="brand-mark brand-mark-3d" aria-hidden="true"><img src="/byteafter-mark.webp" alt=""></span><span class="brand-word">Byte<span>After</span></span></a><span>LESS NOISE. MORE SIGNAL.</span><a href="/sports-scores/">Sports draft / two lanes</a></footer>
 </body>
 </html>

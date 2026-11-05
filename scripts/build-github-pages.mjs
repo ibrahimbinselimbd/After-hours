@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
-import { renderSportScorePage, sportScorePages } from './sports-score-routes.mjs';
+import { publicSportScorePages, renderSportScorePage } from './sports-score-routes.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const siteRoot = path.join(repoRoot, 'site');
@@ -152,7 +152,7 @@ await fs.cp(siteRoot, outputRoot, {
   },
 });
 
-for (const page of sportScorePages) {
+for (const page of publicSportScorePages) {
   const relativePath = path.join('sports-scores', page.slug, 'index.html');
   const targetPath = path.join(outputRoot, relativePath);
   await fs.mkdir(path.dirname(targetPath), { recursive: true });
