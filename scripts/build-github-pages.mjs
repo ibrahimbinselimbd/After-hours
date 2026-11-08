@@ -97,6 +97,12 @@ function ensureDocumentReferrerMeta(html) {
   return html.replace(/<head\b[^>]*>/i, head => `${head}\n  ${tag}`);
 }
 
+function insertBeforeLastBodyClose(html, markup) {
+  const closingIndex = html.toLowerCase().lastIndexOf('</body>');
+  if (closingIndex < 0) return html;
+  return `${html.slice(0, closingIndex)}${markup}${html.slice(closingIndex)}`;
+}
+
 function ensureThemeAssets(html) {
   html = upsertMeta(html, 'name', 'theme-color', '#080a16');
   const hasThemeStylesheet = /<link\b[^>]*\bhref=["'][^"']*theme-toggle\.css(?:[?#][^"']*)?["'][^>]*>/i.test(html);
@@ -104,7 +110,7 @@ function ensureThemeAssets(html) {
   const hasThemeController = /<script\b[^>]*\bsrc=["'][^"']*theme-toggle\.js(?:[?#][^"']*)?["'][^>]*>/i.test(html);
   if (!hasThemeStylesheet) html = html.replace(/<\/head>/i, `<link rel="stylesheet" href="${basePath}/theme-toggle.css?v=1"></head>`);
   if (!hasPagesStylesheet) html = html.replace(/<\/head>/i, `<link rel="stylesheet" href="${basePath}/pages-theme.css?v=1"></head>`);
-  if (!hasThemeController) html = html.replace(/<\/body>/i, `<script defer src="${basePath}/theme-toggle.js?v=1"></script></body>`);
+  if (!hasThemeController) html = insertBeforeLastBodyClose(html, `<script defer src="${basePath}/theme-toggle.js?v=1"></script>`);
   return html;
 }
 

@@ -595,3 +595,57 @@ header #search-open:active { transform: none; }
   header .brand { font-size: 13px; }
   header .brand-mark { font-size: 28px; margin-right: 8px; }
 }
+
+
+/* Compact mobile core navigation: no hamburger, icon boxes, or visible quiz route before launch. */
+#mobile-core-navigation { display: none; }
+@media (max-width: 700px) {
+  header #mobile-core-navigation {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(8px, 4vw, 22px);
+    width: 100%;
+    min-height: 44px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  header #mobile-core-navigation a,
+  header #mobile-core-navigation button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 8px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    color: #d7e3f7;
+    font: 700 12px/1.2 system-ui, sans-serif;
+    letter-spacing: .03em;
+    text-decoration: none;
+  }
+  header #mobile-core-navigation a:hover,
+  header #mobile-core-navigation a:focus-visible { color: #8ff8ff; text-decoration: underline; text-underline-offset: 4px; }
+  header #mobile-core-navigation button:disabled { color: #aeb8c4; opacity: .72; cursor: not-allowed; }
+  header .header-actions .sports-entry,
+  header .header-actions .tools-entry { display: none; }
+}
+.mobile-core-nav-status {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

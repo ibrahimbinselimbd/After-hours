@@ -36,3 +36,9 @@ body.reduce-motion .article-section,body.reduce-motion .article-section::before,
 
 html:has(body.reduce-motion){scroll-behavior:auto!important}
 body.reduce-motion .signal-figure:after{transition:none}
+
+
+/* Keep section numbers visually distinct from their accessible heading text. */
+.article-section h2 { display: flex; align-items: baseline; gap: .65em; }
+.article-section h2 .section-number { display: inline-block; flex: none; font-variant-numeric: tabular-nums; }
+.article-section h2 .section-title { min-width: 0; }

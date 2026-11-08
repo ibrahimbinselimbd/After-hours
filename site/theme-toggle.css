@@ -366,11 +366,14 @@ html[data-theme="day"] .theme-toggle:focus-visible { outline-color: #286f84; }
 
 @media (max-width: 700px) {
   .theme-toggle {
-    top: 52vh;
+    top: auto;
+    bottom: max(14px, env(safe-area-inset-bottom, 0px));
     right: max(12px, env(safe-area-inset-right, 0px));
+    transform: none;
     width: 46px;
     height: 46px;
   }
+  .theme-toggle:active { transform: none; }
 }
 
 @media (max-width: 360px) {

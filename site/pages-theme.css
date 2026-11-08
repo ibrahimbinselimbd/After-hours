@@ -522,3 +522,206 @@ html[data-theme="day"] .sports-draft-page .draft-doc-links a {
     padding-right: 58px;
   }
 }
+
+
+/* Focused day-mode corrections for the confirmed mobile and contrast findings. */
+html[data-theme="day"] body:has(.hero-facts) {
+  --bg: #f1f4ef;
+  --bg2: #f6f8f4;
+  --panel: #fbfcf8;
+  --panel2: #edf3ef;
+  --ink: #20333d;
+  --muted: #52656e;
+  --dim: #40545f;
+  --line: #cbd8d4;
+  color: #20333d;
+  background: radial-gradient(ellipse at 72% 8%, rgba(83, 120, 132, .08), transparent 34rem), #f1f4ef;
+}
+html[data-theme="day"] body:has(.hero-facts) .hero-copy,
+html[data-theme="day"] body:has(.hero-facts) .section-intro,
+html[data-theme="day"] body:has(.hero-facts) .fact small { color: #40545f; }
+html[data-theme="day"] body:has(.hero-facts) .preview-chip {
+  color: #405b36;
+  border-color: #b7c89b;
+  background: #eaf1df;
+}
+
+html[data-theme="day"] .frequency-feed .editorial-note,
+html[data-theme="day"] .frequency-feed .edition-note,
+html[data-theme="day"] .frequency-feed .console-caption,
+html[data-theme="day"] .frequency-feed .console-footer,
+html[data-theme="day"] .frequency-feed .feed-status,
+html[data-theme="day"] .frequency-feed .story-meta,
+html[data-theme="day"] .frequency-feed .category-channel .channel-copy small { color: #40545f; }
+html[data-theme="day"] .frequency-feed .edition-note strong { color: #20333d; }
+html[data-theme="day"] .frequency-feed .category-channel[aria-pressed="true"] .channel-copy small { color: #20333d; }
+
+html[data-theme="day"] body.tools-page dialog #dialog-description,
+html[data-theme="day"] body.tools-page dialog .tools-heading { color: #40545f; }
+html[data-theme="day"] body.tools-page .hub-hero p,
+html[data-theme="day"] body.tools-page .category p,
+html[data-theme="day"] body.tools-page .category .card-head,
+html[data-theme="day"] body.tools-page .category .planned,
+html[data-theme="day"] body.tools-page .category .card-bottom,
+html[data-theme="day"] body.tools-page .build-note { color: #40545f; }
+html[data-theme="day"] body.tools-page .hub-footer {
+  color: #40545f;
+  background: #f1f4ef;
+  border-color: #cbd8d4;
+}
+html[data-theme="day"] body.tools-page .hub-footer a { color: #286f78; }
+html[data-theme="day"] body.tools-page .hub-footer small { color: #52656e; }
+html[data-theme="day"] body.tools-page input::placeholder { color: #52656e; opacity: 1; }
+
+html[data-theme="day"] body.tools-page .brand-word,
+html[data-theme="day"] body.sports-page .brand-word,
+html[data-theme="day"] body:has(#profile) .brand-word,
+html[data-theme="day"] body:has(#qr-canvas) .brand-word,
+html[data-theme="day"] body:has(#dropzone) .brand-word { color: #20333d !important; }
+html[data-theme="day"] body.tools-page .brand-word > span,
+html[data-theme="day"] body.sports-page .brand-word > span,
+html[data-theme="day"] body:has(#profile) .brand-word > span,
+html[data-theme="day"] body:has(#qr-canvas) .brand-word > span,
+html[data-theme="day"] body:has(#dropzone) .brand-word > span { color: #3f745d !important; }
+
+/* Passport Studio uses bespoke inline styling; map its saved shared day theme to a light canvas. */
+html[data-theme="day"] body:has(#profile) {
+  --ink: #20333d;
+  --line: #cbd8d4;
+  --lime: #3f745d;
+  --purple: #7058a0;
+  color: #20333d;
+  background: #f1f4ef;
+}
+html[data-theme="day"] body:has(#profile) .site-header { background: #f9fbf7; border-bottom-color: #cbd8d4; }
+html[data-theme="day"] body:has(#profile) .site-header nav,
+html[data-theme="day"] body:has(#profile) .back,
+html[data-theme="day"] body:has(#profile) .crumb { color: #52656e; }
+html[data-theme="day"] body:has(#profile) .hero h1 span { -webkit-text-stroke-color: #536d76; }
+html[data-theme="day"] body:has(#profile) .hero p,
+html[data-theme="day"] body:has(#profile) .privacy p,
+html[data-theme="day"] body:has(#profile) .head p,
+html[data-theme="day"] body:has(#profile) .filemeta,
+html[data-theme="day"] body:has(#profile) .field,
+html[data-theme="day"] body:has(#profile) .tokens,
+html[data-theme="day"] body:has(#profile) .micro,
+html[data-theme="day"] body:has(#profile) .consent,
+html[data-theme="day"] body:has(#profile) .range label,
+html[data-theme="day"] body:has(#profile) .dimout span,
+html[data-theme="day"] body:has(#profile) .metric,
+html[data-theme="day"] body:has(#profile) .steps p,
+html[data-theme="day"] body:has(#profile) .foot { color: #40545f; }
+html[data-theme="day"] body:has(#profile) .tags span { color: #40545f; border-color: #c3d2cd; background: #f8faf6; }
+html[data-theme="day"] body:has(#profile) .privacy,
+html[data-theme="day"] body:has(#profile) .box,
+html[data-theme="day"] body:has(#profile) .panel,
+html[data-theme="day"] body:has(#profile) .steps article { border-color: #cbd8d4; }
+html[data-theme="day"] body:has(#profile) .box,
+html[data-theme="day"] body:has(#profile) .panel,
+html[data-theme="day"] body:has(#profile) .steps article { background: #fbfcf8; color: #20333d; }
+html[data-theme="day"] body:has(#profile) .drop { color: #20333d; background: #edf4e9; border-color: #9db992; }
+html[data-theme="day"] body:has(#profile) .drop span,
+html[data-theme="day"] body:has(#profile) .drop small,
+html[data-theme="day"] body:has(#profile) .empty,
+html[data-theme="day"] body:has(#profile) .dimout span,
+html[data-theme="day"] body:has(#profile) .outpreview span { color: #52656e; }
+html[data-theme="day"] body:has(#profile) .field input,
+html[data-theme="day"] body:has(#profile) .field select { color: #20333d; background: #ffffff; border-color: #bdcec9; color-scheme: light; }
+html[data-theme="day"] body:has(#profile) .field input::placeholder { color: #65777e; opacity: 1; }
+html[data-theme="day"] body:has(#profile) .tokens b,
+html[data-theme="day"] body:has(#profile) .dimout b { color: #356b54; }
+html[data-theme="day"] body:has(#profile) .dimout { border-color: #cbd8d4; }
+html[data-theme="day"] body:has(#profile) .note { background: #f2eef8; border-color: #d2c6e5; }
+html[data-theme="day"] body:has(#profile) .note p,
+html[data-theme="day"] body:has(#profile) .warn p { color: #4d5c64; }
+html[data-theme="day"] body:has(#profile) .note strong { color: #20333d; }
+html[data-theme="day"] body:has(#profile) .note a { color: #286f78; }
+html[data-theme="day"] body:has(#profile) .warn { background: #fff8e8; border-color: #d8c79c; }
+html[data-theme="day"] body:has(#profile) .warn b { color: #77531e; }
+html[data-theme="day"] body:has(#profile) .canvasstage { background: #f7faf6; border-color: #cbd8d4; }
+html[data-theme="day"] body:has(#profile) .canvasstage.empty-state canvas { background: #f3f8e5; }
+html[data-theme="day"] body:has(#profile) .outpreview { background: #f7faf6; border-color: #cbd8d4; }
+html[data-theme="day"] body:has(#profile) .metric { border-bottom-color: #d5dfdb; }
+
+/* QR print-check guidance remains legible in both the empty and verified states. */
+html[data-theme="day"] body:has(#qr-canvas) { color: #20333d; background: #f1f4ef; }
+html[data-theme="day"] body:has(#qr-canvas) .site-header,
+html[data-theme="day"] body:has(#qr-canvas) .workspace,
+html[data-theme="day"] body:has(#qr-canvas) .settings,
+html[data-theme="day"] body:has(#qr-canvas) .results,
+html[data-theme="day"] body:has(#qr-canvas) .how,
+html[data-theme="day"] body:has(#qr-canvas) .check-panel { color: #20333d; background-color: #fbfcf8; border-color: #cbd8d4; }
+html[data-theme="day"] body:has(#qr-canvas) .site-header { border-bottom-color: #cbd8d4; }
+html[data-theme="day"] body:has(#qr-canvas) .hero p,
+html[data-theme="day"] body:has(#qr-canvas) .workspace-head p,
+html[data-theme="day"] body:has(#qr-canvas) .privacy-note small,
+html[data-theme="day"] body:has(#qr-canvas) .setting-note,
+html[data-theme="day"] body:has(#qr-canvas) .check-panel > p,
+html[data-theme="day"] body:has(#qr-canvas) .check-row span,
+html[data-theme="day"] body:has(#qr-canvas) .payload-label,
+html[data-theme="day"] body:has(#qr-canvas) .fine-print,
+html[data-theme="day"] body:has(#qr-canvas) .how p,
+html[data-theme="day"] body:has(#qr-canvas) .static-note { color: #40545f; }
+html[data-theme="day"] body:has(#qr-canvas) .hero-tags span { color: #40545f; background: #f8faf6; border-color: #c3d2cd; }
+html[data-theme="day"] body:has(#qr-canvas) .check-row { border-color: #d5dfdb; }
+html[data-theme="day"] body:has(#qr-canvas) .check-row b { color: #20333d; }
+html[data-theme="day"] body:has(#qr-canvas) .privacy-note,
+html[data-theme="day"] body:has(#qr-canvas) .qr-stage { background: #f2f6f1; border-color: #cbd8d4; }
+html[data-theme="day"] body:has(#qr-canvas) input::placeholder,
+html[data-theme="day"] body:has(#qr-canvas) textarea::placeholder { color: #65777e; opacity: 1; }
+html[data-theme="day"] body:has(#qr-canvas) .site-footer { color: #40545f; border-top-color: #cbd8d4; }
+
+/* HEIC converter helper copy and empty queue use the same high-contrast day palette. */
+html[data-theme="day"] body:has(#dropzone) { color: #20333d; background: #f1f4ef; }
+html[data-theme="day"] body:has(#dropzone) .site-header,
+html[data-theme="day"] body:has(#dropzone) .workspace,
+html[data-theme="day"] body:has(#dropzone) .settings,
+html[data-theme="day"] body:has(#dropzone) .results,
+html[data-theme="day"] body:has(#dropzone) .faq details,
+html[data-theme="day"] body:has(#dropzone) .steps article { color: #20333d; background-color: #fbfcf8; border-color: #cbd8d4; }
+html[data-theme="day"] body:has(#dropzone) .hero p,
+html[data-theme="day"] body:has(#dropzone) .workspace-head p,
+html[data-theme="day"] body:has(#dropzone) .privacy-note small,
+html[data-theme="day"] body:has(#dropzone) .dropzone p,
+html[data-theme="day"] body:has(#dropzone) .dropzone small,
+html[data-theme="day"] body:has(#dropzone) .drop-foot,
+html[data-theme="day"] body:has(#dropzone) .local-proof p,
+html[data-theme="day"] body:has(#dropzone) .control-label,
+html[data-theme="day"] body:has(#dropzone) .range-hints,
+html[data-theme="day"] body:has(#dropzone) .setting-note,
+html[data-theme="day"] body:has(#dropzone) .credit-panel small,
+html[data-theme="day"] body:has(#dropzone) .queue-summary small,
+html[data-theme="day"] body:has(#dropzone) .empty-state p,
+html[data-theme="day"] body:has(#dropzone) .empty-state span,
+html[data-theme="day"] body:has(#dropzone) .fine-print,
+html[data-theme="day"] body:has(#dropzone) .how p,
+html[data-theme="day"] body:has(#dropzone) .faq p { color: #40545f; }
+html[data-theme="day"] body:has(#dropzone) .dropzone,
+html[data-theme="day"] body:has(#dropzone) .local-proof,
+html[data-theme="day"] body:has(#dropzone) .queue,
+html[data-theme="day"] body:has(#dropzone) .empty-state,
+html[data-theme="day"] body:has(#dropzone) .credit-panel { background: #f2f6f1; border-color: #cbd8d4; }
+html[data-theme="day"] body:has(#dropzone) input::placeholder,
+html[data-theme="day"] body:has(#dropzone) select { color: #40545f; }
+html[data-theme="day"] body:has(#dropzone) .site-footer { color: #40545f; border-top-color: #cbd8d4; }
+
+/* Article context links and the site footer's exploration panel need a light-theme pair. */
+html[data-theme="day"] body:has(#article-content) .site-header nav,
+html[data-theme="day"] body:has(#article-content) .site-header nav a,
+html[data-theme="day"] body:has(#article-content) .site-header .nav-current,
+html[data-theme="day"] body:has(#article-content) .site-header .nav-slash { color: #40545f; }
+html[data-theme="day"] body:has(#article-content) .site-header .back-link { color: #286f78 !important; }
+html[data-theme="day"] .ah-footer__explore { color: #20333d; background: linear-gradient(135deg, #edf4ef, #f1edf8 55%, #f8f4e9); }
+html[data-theme="day"] .ah-footer__section-top h2 { color: #20333d; }
+html[data-theme="day"] .ah-footer__section-top h2 span { color: #40545f; }
+
+html[data-theme="day"] body:has(#dropzone) .hero-tags span {
+  color: #40545f;
+  background: #f8faf6;
+  border-color: #c3d2cd;
+}
+
+html[data-theme="day"] body.tools-page #category-search::placeholder {
+  color: #52656e;
+  opacity: 1;
+}

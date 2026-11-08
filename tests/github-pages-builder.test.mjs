@@ -212,6 +212,17 @@ test('GitHub Pages builds the complete English site, Journal, and all 550 active
   const article = await readFile(path.join(output, 'article.html'), 'utf8');
   const info = await readFile(path.join(output, 'info.html'), 'utf8');
   const notFound = await readFile(path.join(output, '404.html'), 'utf8');
+  const passport = await readFile(path.join(output, 'tools', 'passport-photo-studio', 'index.html'), 'utf8');
+  const passportAppStart = passport.indexOf("(()=>{'use strict';");
+  const passportAppEnd = passport.indexOf('</script>', passportAppStart);
+  const passportApp = passport.slice(passportAppStart, passportAppEnd);
+  const themeController = '<script defer src="/After-hours/theme-toggle.js?v=1"></script>';
+  const themeControllerIndex = passport.indexOf(themeController);
+  assert.ok(passportAppStart >= 0 && passportAppEnd > passportAppStart, 'Passport Studio app script should remain complete');
+  assert.match(passportApp, /initProfiles\(\)/, 'Passport Studio profile initialization should stay inside its app script');
+  assert.doesNotThrow(() => new Function(passportApp), 'Passport Studio app script should remain syntactically valid after theme injection');
+  assert.ok(themeControllerIndex > passportAppEnd, 'theme controller must be injected after the Passport Studio app script');
+  assert.ok(themeControllerIndex < passport.lastIndexOf('</body>'), 'theme controller must be inside the real document body');
   assert.match(home, /ByteAfter/);
   assert.doesNotMatch(home, /AFTERHOURS|AFTER\/HOURS/);
   const brandedFooterPages = [
