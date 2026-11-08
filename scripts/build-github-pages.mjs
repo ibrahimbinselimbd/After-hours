@@ -97,6 +97,17 @@ function ensureDocumentReferrerMeta(html) {
   return html.replace(/<head\b[^>]*>/i, head => `${head}\n  ${tag}`);
 }
 
+function ensureThemeAssets(html) {
+  html = upsertMeta(html, 'name', 'theme-color', '#080a16');
+  const hasThemeStylesheet = /<link\b[^>]*\bhref=["'][^"']*theme-toggle\.css(?:[?#][^"']*)?["'][^>]*>/i.test(html);
+  const hasPagesStylesheet = /<link\b[^>]*\bhref=["'][^"']*pages-theme\.css(?:[?#][^"']*)?["'][^>]*>/i.test(html);
+  const hasThemeController = /<script\b[^>]*\bsrc=["'][^"']*theme-toggle\.js(?:[?#][^"']*)?["'][^>]*>/i.test(html);
+  if (!hasThemeStylesheet) html = html.replace(/<\/head>/i, `<link rel="stylesheet" href="${basePath}/theme-toggle.css?v=1"></head>`);
+  if (!hasPagesStylesheet) html = html.replace(/<\/head>/i, `<link rel="stylesheet" href="${basePath}/pages-theme.css?v=1"></head>`);
+  if (!hasThemeController) html = html.replace(/<\/body>/i, `<script defer src="${basePath}/theme-toggle.js?v=1"></script></body>`);
+  return html;
+}
+
 function staticFieldMarkup(field, slug) {
   const key = field?.id || field?.name || '';
   if (!/^[a-zA-Z][\w-]{0,40}$/.test(key) || !['text', 'textarea', 'number', 'date', 'select', 'checkbox'].includes(field.type)) return '';
@@ -225,6 +236,7 @@ for (const file of await walk(outputRoot)) {
     }
     if (ext === '.html') {
       text = ensureDocumentReferrerMeta(text);
+      text = ensureThemeAssets(text);
       if (!text.includes('byteafter-logo.css')) text = text.replace(/<\/head>/i, '<link rel="stylesheet" href="/byteafter-logo.css?v=1"></head>');
       if (!text.includes('byteafter-icon.png')) text = text.replace(/<\/head>/i, '<link rel="icon" type="image/png" sizes="128x128" href="/byteafter-icon.png"></head>');
       text = upsertMeta(text, 'property', 'og:site_name', 'ByteAfter');
@@ -248,8 +260,9 @@ await fs.writeFile(path.join(outputRoot, 'tools.html'), `<!doctype html><html la
 await fs.writeFile(path.join(outputRoot, '404.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Page not found · ByteAfter</title><link rel="stylesheet" href="${basePath}/byteafter-logo.css?v=1"><link rel="icon" type="image/png" sizes="128x128" href="${basePath}/byteafter-icon.png"></head><body><header><a class="brand" href="${basePath}/" aria-label="ByteAfter home"><span class="brand-mark brand-mark-3d" aria-hidden="true"><img src="${basePath}/byteafter-mark.webp" alt=""></span><span class="brand-word">Byte<span>After</span></span><i>®</i></a></header><main><h1>Page not found</h1><p><a href="${basePath}/districts/">Browse the Journal</a></p><p><a href="${basePath}/">Return to ByteAfter</a></p></main></body></html>`);
 for (const route of ['tools.html', '404.html']) {
   const file = path.join(outputRoot, route);
-  const html = await fs.readFile(file, 'utf8');
-  await fs.writeFile(file, ensureDocumentReferrerMeta(html));
+  let html = await fs.readFile(file, 'utf8');
+  html = ensureDocumentReferrerMeta(html);
+  await fs.writeFile(file, ensureThemeAssets(html));
 }
 
 const catalog = await fs.readFile(path.join(outputRoot, 'tools', 'catalog.js'), 'utf8');

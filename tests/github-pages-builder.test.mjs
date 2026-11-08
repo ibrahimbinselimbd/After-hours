@@ -111,6 +111,16 @@ test('GitHub Pages builds the complete English site, Journal, and all 550 active
   assert.equal(slugs.length, 550, 'source should contain exactly 550 active tool routes');
   const html = (await filesUnder(path.join(output, 'tools'))).filter(file => file.endsWith('.html'));
   assert.equal(html.length, 552, 'expected the Tools Hub, 550 active tools, and the disabled detector preview');
+  const everyPage = (await filesUnder(output)).filter(file => file.endsWith('.html'));
+  assert.ok(everyPage.length >= 557, 'the Pages artifact should include all English page families');
+  for (const file of everyPage) {
+    const page = await readFile(file, 'utf8');
+    const relative = path.relative(output, file);
+    assert.equal((page.match(/<link\b[^>]*\bhref=["'][^"']*theme-toggle\.css(?:[?#][^"']*)?["']/gi) || []).length, 1, `${relative} should load exactly one shared theme stylesheet`);
+    assert.equal((page.match(/<link\b[^>]*\bhref=["'][^"']*pages-theme\.css(?:[?#][^"']*)?["']/gi) || []).length, 1, `${relative} should load exactly one Pages day-mode stylesheet`);
+    assert.equal((page.match(/<script\b[^>]*\bsrc=["'][^"']*theme-toggle\.js(?:[?#][^"']*)?["'][^>]*>/gi) || []).length, 1, `${relative} should load exactly one theme controller`);
+    assert.match(page, /<meta\s+name=["']theme-color["']\s+content=["']#080a16["']/i, `${relative} should define the default night browser chrome color`);
+  }
   const toolTitles = new Set();
   const toolCanonicals = new Set();
   for (const slug of slugs) {
