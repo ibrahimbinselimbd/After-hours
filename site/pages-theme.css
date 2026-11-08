@@ -487,3 +487,38 @@ html[data-theme="day"] .tool-main .button:disabled {
   background: #e4eae6;
   border-color: #c3d2cd;
 }
+
+/* Preserve readable caution/offline disclosures in the Football + Cricket draft. */
+html[data-theme="day"] .sports-draft-page .draft-scope {
+  color: #20333d;
+  background: linear-gradient(105deg, #fff8e8, #f3eff8 70%, #f1f5f0);
+  border-color: #d9c495;
+  box-shadow: 0 10px 26px rgba(31, 48, 57, .06);
+}
+html[data-theme="day"] .sports-draft-page .draft-scope-mark {
+  color: #80561d;
+  background: #fffdf7;
+  border-color: #cfab70;
+}
+html[data-theme="day"] .sports-draft-page .draft-scope h2 { color: #20333d; }
+html[data-theme="day"] .sports-draft-page .draft-scope h2 em { color: #8a5223; }
+html[data-theme="day"] .sports-draft-page .draft-scope p { color: #52656e; }
+html[data-theme="day"] .sports-draft-page .draft-feed-notice .notice-mark {
+  color: #775222;
+  background: #fff9ee;
+  border-color: #d4b47b;
+}
+html[data-theme="day"] .sports-draft-page .draft-feed-notice strong { color: #584978; }
+html[data-theme="day"] .sports-draft-page .draft-feed-notice .feed-update { color: #6d5835; }
+html[data-theme="day"] .sports-draft-page .draft-doc-links a {
+  color: #286f78;
+  text-decoration-color: #6f9f99;
+}
+
+/* Keep the fixed theme control clear of the mobile Sports hero status label. */
+@media (max-width: 700px) {
+  .sports-draft-page .score-hero-actions .score-clean-note {
+    flex-basis: 100%;
+    padding-right: 58px;
+  }
+}
