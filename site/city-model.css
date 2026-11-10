@@ -1,0 +1,41 @@
+/* English homepage city model: a larger scene, with horizontal-only interaction. */
+.hero .city-instrument {
+  width: 40%;
+  max-width: 500px;
+  top: 10px;
+  right: 0;
+}
+.hero .city-instrument .touch-stage {
+  height: 400px;
+  touch-action: pan-y;
+}
+@media (min-width: 701px) {
+  .hero { min-height: 700px; }
+  .hero .hero-copy { min-height: 600px; }
+}
+@media (min-width: 1500px) {
+  .hero { min-height: 740px; }
+  .hero .hero-copy { min-height: 640px; }
+  .hero .city-instrument { max-width: 560px; right: 1%; }
+  .hero .city-instrument .touch-stage { height: 440px; }
+}
+@media (min-width: 701px) and (max-width: 1000px) {
+  .hero { min-height: 610px; }
+  .hero .hero-copy { min-height: 510px; }
+  .hero .city-instrument { width: 41%; max-width: none; top: 30px; }
+  .hero .city-instrument .touch-stage { height: 300px; }
+}
+@media (max-width: 700px) {
+  .hero .city-instrument {
+    width: 100%;
+    max-width: 420px;
+    top: auto;
+    right: auto;
+    margin: 12px 0 22px;
+  }
+  .hero .city-instrument .touch-stage { height: clamp(250px, 76vw, 320px); }
+}
+/* Keep the existing canvas available while the GLB/module loads or if it fails. */
+.touch-stage > model-viewer { opacity: 0; pointer-events: none; }
+.touch-stage.model-ready > model-viewer { opacity: 1; pointer-events: auto; }
+.touch-stage.model-ready > canvas { display: none !important; }
