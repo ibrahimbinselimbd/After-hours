@@ -14,10 +14,23 @@
  const size=240; sphere.width=sphere.height=size;const pixels=sc.createImageData(size,size),normals=[];
  for(let y=0;y<size;y++)for(let x=0;x<size;x++){const nx=(x+.5-size/2)/(size/2),ny=(y+.5-size/2)/(size/2),d=nx*nx+ny*ny;if(d<=1){const nz=Math.sqrt(1-d),light=Math.max(.12,nx*(-.48)+ny*(-.5)+nz*.68),edge=Math.pow(1-nz,3);normals.push([4*(y*size+x),nx,ny,nz,light,edge]);}}
  let texture=null,tw=0,th=0;const image=new Image();image.onload=()=>{const c=document.createElement('canvas');tw=c.width=image.width;th=c.height=image.height;const x=c.getContext('2d');x.drawImage(image,0,0);texture=x.getImageData(0,0,tw,th).data;wake();};image.src='earth.jpg';
- function render(t){ctx.clearRect(0,0,w,h);const r=Math.min(w*.31,h*.385)*1.18,cx=w/2,cy=h*.49;
+ // Estimate the Sun’s subsolar point in the Earth texture’s Greenwich-based coordinates.
+ let sunX=1,sunY=0,sunZ=0,lastSunMinute=-1;
+ function updateSun(){
+  const now=Date.now(),minute=Math.floor(now/60000);if(minute===lastSunMinute)return;lastSunMinute=minute;
+  const jd=now/86400000+2440587.5,T=(jd-2451545)/36525,rad=Math.PI/180;
+  const L0=((280.46646+T*(36000.76983+T*.0003032))%360+360)%360,M=(357.52911+T*(35999.05029-.0001537*T))*rad,e=.016708634-T*(.000042037+.0000001267*T);
+  const C=(1.914602-T*(.004817+.000014*T))*Math.sin(M)+(.019993-.000101*T)*Math.sin(2*M)+.000289*Math.sin(3*M);
+  const omega=(125.04-1934.136*T)*rad,lambda=(L0+C-.00569-.00478*Math.sin(omega))*rad,eps=(23.439291-.0130042*T+.00256*Math.cos(omega))*rad;
+  const dec=Math.asin(Math.sin(eps)*Math.sin(lambda)),y=Math.pow(Math.tan(eps/2),2);
+  const eq=4*(180/Math.PI)*(y*Math.sin(2*L0*rad)-2*e*Math.sin(M)+4*e*y*Math.sin(M)*Math.cos(2*L0*rad)-.5*y*y*Math.sin(4*L0*rad)-1.25*e*e*Math.sin(2*M));
+  const d=new Date(now),utc=d.getUTCHours()*60+d.getUTCMinutes()+d.getUTCSeconds()/60,lon=((720-(utc+eq))/4)*rad;
+  sunX=Math.cos(dec)*Math.sin(lon);sunY=Math.sin(dec);sunZ=Math.cos(dec)*Math.cos(lon);
+ }
+ function render(t){updateSun();ctx.clearRect(0,0,w,h);const r=Math.min(w*.31,h*.385)*1.18,cx=w/2,cy=h*.49;
  const glow=ctx.createRadialGradient(cx,cy,r*.85,cx,cy,r*1.4);glow.addColorStop(0,'#5dbdff22');glow.addColorStop(.4,'#3c78d818');glow.addColorStop(1,'#3c78d800');ctx.fillStyle=glow;ctx.fillRect(0,0,w,h);
  ctx.save();ctx.translate(cx,cy);ctx.rotate(-.30);ctx.strokeStyle='#91baff44';ctx.lineWidth=.8;ctx.beginPath();ctx.ellipse(0,0,r*1.37,r*.36,0,0,Math.PI*2);ctx.stroke();ctx.restore();
- if(texture){const out=pixels.data,ca=Math.cos(angle),sa=Math.sin(angle),ct=Math.cos(tilt),st=Math.sin(tilt);for(const [i,nx,ny,nz,light,edge] of normals){const yy=ny*ct+nz*st,zz=-ny*st+nz*ct,xx=nx*ca-zz*sa,z=nx*sa+zz*ca;const u=((Math.atan2(xx,z)/Math.PI/2+.5)%1+1)%1,v=Math.acos(Math.max(-1,Math.min(1,-yy)))/Math.PI,j=(Math.min(th-1,Math.floor(v*th))*tw+Math.min(tw-1,Math.floor(u*tw)))*4;out[i]=Math.min(255,texture[j]*light+edge*45);out[i+1]=Math.min(255,texture[j+1]*light+edge*110);out[i+2]=Math.min(255,texture[j+2]*light+edge*175);out[i+3]=255;}sc.putImageData(pixels,0,0);ctx.drawImage(sphere,cx-r,cy-r,2*r,2*r);}else{const g=ctx.createRadialGradient(cx-r*.35,cy-r*.4,r*.1,cx,cy,r);g.addColorStop(0,'#478bba');g.addColorStop(1,'#06152d');ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();}
+ if(texture){const out=pixels.data,ca=Math.cos(angle),sa=Math.sin(angle),ct=Math.cos(tilt),st=Math.sin(tilt);for(const [i,nx,ny,nz,light,edge] of normals){const yy=ny*ct+nz*st,zz=-ny*st+nz*ct,xx=nx*ca-zz*sa,z=nx*sa+zz*ca;const solar=xx*sunX-yy*sunY+z*sunZ,q=Math.max(0,Math.min(1,(solar+.04)/.10)),smooth=q*q*(3-2*q),daylight=Math.max(0,Math.min(1,solar)),illumination=.16+.84*smooth*(.78+.22*daylight)*(1+.05*daylight),lit=Math.min(1,light*illumination);const u=((Math.atan2(xx,z)/Math.PI/2+.5)%1+1)%1,v=Math.acos(Math.max(-1,Math.min(1,-yy)))/Math.PI,j=(Math.min(th-1,Math.floor(v*th))*tw+Math.min(tw-1,Math.floor(u*tw)))*4;out[i]=Math.min(255,texture[j]*lit+edge*45);out[i+1]=Math.min(255,texture[j+1]*lit+edge*110);out[i+2]=Math.min(255,texture[j+2]*lit+edge*175);out[i+3]=255;}sc.putImageData(pixels,0,0);ctx.drawImage(sphere,cx-r,cy-r,2*r,2*r);}else{const g=ctx.createRadialGradient(cx-r*.35,cy-r*.4,r*.1,cx,cy,r);g.addColorStop(0,'#478bba');g.addColorStop(1,'#06152d');ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();}
  ctx.strokeStyle='#a4e1ff85';ctx.lineWidth=.7;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();
  ctx.save();ctx.translate(cx,cy);ctx.rotate(-.30);const rg=ctx.createLinearGradient(-r,0,r,0);rg.addColorStop(0,'#6fcaff00');rg.addColorStop(.4,'#a9e9ffbb');rg.addColorStop(1,'#c4adff22');ctx.strokeStyle=rg;ctx.lineWidth=1.2;ctx.beginPath();ctx.ellipse(0,0,r*1.37,r*.36,0,0,Math.PI);ctx.stroke();const a=-t*.00015;const dx=Math.cos(a)*r*1.37,dy=Math.sin(a)*r*.36;ctx.fillStyle='#b9ecff';ctx.shadowColor='#7af3ff';ctx.shadowBlur=8;ctx.beginPath();ctx.arc(dx,dy,2,0,Math.PI*2);ctx.fill();ctx.restore();
  ctx.fillStyle='#aac4d6';ctx.font='6px monospace';ctx.textAlign='left';ctx.fillText('EARTH / 001',12,h*.78);ctx.textAlign='right';ctx.fillText('23.4° AXIAL TILT',w-12,h*.22);
@@ -39,5 +52,5 @@
  hero.addEventListener('pointermove',e=>{if(e.pointerType==='mouse'&&!down)ink(e);},{passive:true});
  new ResizeObserver(resize).observe(pad);new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(visible)wake();else{cancelAnimationFrame(raf);raf=0;}},{threshold:.01}).observe(hero);
  new MutationObserver(()=>{cancelAnimationFrame(raf);raf=0;readout.textContent=reduced()?'STILL MODE / ARROWS TO ROTATE':'DRAG TO EXPLORE';wake();}).observe(document.body,{attributes:true,attributeFilter:['class']});
- document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAnimationFrame(raf);raf=0;}else wake();});motion.addEventListener('change',wake);addEventListener('resize',resize,{passive:true});resize();wake();
+ document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAnimationFrame(raf);raf=0;}else wake();});motion.addEventListener('change',wake);addEventListener('resize',resize,{passive:true});setInterval(()=>{if(reduced()&&!document.hidden&&visible)render(performance.now());},60000);resize();wake();
 })();
