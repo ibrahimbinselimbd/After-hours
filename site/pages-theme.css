@@ -482,10 +482,11 @@ html[data-theme="day"] .tool-main .privacy-note strong { color: #32684a; }
   .reader-line { padding-right: 58px; }
 }
 html[data-theme="day"] .tool-main .button:disabled {
-  opacity: .78;
-  color: #5a6b72;
+  opacity: 1;
+  color: #52616c;
   background: #e4eae6;
   border-color: #c3d2cd;
+  cursor: not-allowed;
 }
 
 /* Preserve readable caution/offline disclosures in the Football + Cricket draft. */
@@ -724,4 +725,563 @@ html[data-theme="day"] body:has(#dropzone) .hero-tags span {
 html[data-theme="day"] body.tools-page #category-search::placeholder {
   color: #52656e;
   opacity: 1;
+}
+
+/* Final Day contrast corrections for the confirmed washed-out labels and sports draft surfaces. */
+html[data-theme="day"] body.tools-page .draft-pill {
+  color: #37624e;
+  background: #e8f2df;
+  border-color: #8fae9e;
+}
+html[data-theme="day"] body.tools-page .category-search input::placeholder,
+html[data-theme="day"] body.tools-page #category-search::placeholder {
+  color: #40545f;
+  opacity: 1;
+}
+html[data-theme="day"] body.tools-page .hub-footer {
+  color: #52656e;
+  border-top-color: #cbd8d4;
+}
+html[data-theme="day"] body.tools-page .hub-footer strong {
+  color: #20333d;
+}
+
+html[data-theme="day"] body.sports-draft-page .draft-lane-card {
+  color: #243842;
+  background: linear-gradient(140deg, #ffffff, #eef5ef 72%, #f2edf8);
+  border-color: #c5d7d0;
+  box-shadow: 0 12px 28px rgba(31, 48, 57, .08);
+}
+html[data-theme="day"] body.sports-draft-page .draft-lane-card:hover,
+html[data-theme="day"] body.sports-draft-page .draft-lane-card:focus-visible {
+  border-color: #76a59b;
+  box-shadow: 0 16px 34px rgba(31, 48, 57, .13);
+}
+html[data-theme="day"] body.sports-draft-page .cricket-lane {
+  background: linear-gradient(140deg, #ffffff, #f1eef8 72%, #eef5ef);
+}
+html[data-theme="day"] body.sports-draft-page .lane-symbol {
+  color: #286f78;
+  border-color: #8fb8b0;
+  background: #edf5f1;
+}
+html[data-theme="day"] body.sports-draft-page .cricket-lane .lane-symbol {
+  color: #66519a;
+  border-color: #b2a3d3;
+  background: #f1edf8;
+}
+html[data-theme="day"] body.sports-draft-page .lane-index,
+html[data-theme="day"] body.sports-draft-page .lane-state,
+html[data-theme="day"] body.sports-draft-page .draft-lane-card p {
+  color: #52656e;
+}
+html[data-theme="day"] body.sports-draft-page .draft-lane-card h3 {
+  color: #20333d;
+}
+html[data-theme="day"] body.sports-draft-page .lane-state b {
+  color: #286f78;
+}
+
+html[data-theme="day"] body.sports-page .detail-panel {
+  color: #243842;
+  background: linear-gradient(145deg, #ffffff, #f1f5ef 76%, #f3eef8);
+  border-color: #cbd9d5;
+  box-shadow: 0 12px 28px rgba(31, 48, 57, .08);
+}
+html[data-theme="day"] body.sports-page .detail-panel > h3,
+html[data-theme="day"] body.sports-page .detail-content h3 {
+  color: #20333d;
+}
+html[data-theme="day"] body.sports-page .detail-content {
+  background: #f7faf6;
+  border-color: #c2d3ce;
+}
+html[data-theme="day"] body.sports-page .detail-content h4 {
+  color: #37515b;
+}
+html[data-theme="day"] body.sports-page .detail-empty,
+html[data-theme="day"] body.sports-page .detail-caption,
+html[data-theme="day"] body.sports-page .detail-source {
+  color: #52656e;
+}
+html[data-theme="day"] body.sports-page .detail-caption code {
+  color: #286f78;
+}
+html[data-theme="day"] body.sports-page .detail-table th {
+  color: #405861;
+}
+html[data-theme="day"] body.sports-page .detail-table td {
+  color: #304650;
+}
+html[data-theme="day"] body.sports-page .detail-table th,
+html[data-theme="day"] body.sports-page .detail-table td {
+  border-bottom-color: #d5dfdb;
+}
+html[data-theme="day"] body.sports-page .detail-source a {
+  color: #286f78;
+  text-decoration-color: #6f9f99;
+}
+html[data-theme="day"] body.sports-page .match-detail-button {
+  color: #315f66;
+  background: #edf5f1;
+  border-color: #9bbdb8;
+}
+html[data-theme="day"] body.sports-page .match-detail-button:focus-visible {
+  outline-color: #286f78;
+}
+
+html[data-theme="day"] body.tools-page .policy-label {
+  color: #584978 !important;
+}
+html[data-theme="day"] body.sports-page .score-footer,
+html[data-theme="day"] body.sports-page .score-footer > span,
+html[data-theme="day"] body.sports-page .score-footer > a:not(.footer-brand) {
+  color: #40545f;
+}
+html[data-theme="day"] body:has(#article-content) .related > .eyebrow,
+html[data-theme="day"] body:has(#article-content) .related > .eyebrow a {
+  color: #286f78;
+}
+
+/* Keyboard-accessible controls must remain readable when revealed on focus. */
+html[data-theme="day"] body a.skip,
+html[data-theme="day"] body a.skip-link {
+  color: #20333d !important;
+  background: #d9eeea !important;
+}
+html[data-theme="day"] body a.skip:focus-visible,
+html[data-theme="day"] body a.skip-link:focus-visible,
+html[data-theme="day"] body #motion-toggle:focus-visible {
+  outline: 3px solid #286f78 !important;
+  outline-offset: 3px;
+}
+html[data-theme="day"] body:has(#article-content) .article-rail .toc-link {
+  color: #40545f !important;
+}
+html[data-theme="day"] body:has(#article-content) .article-rail .toc-link:hover,
+html[data-theme="day"] body:has(#article-content) .article-rail .toc-link:focus-visible,
+html[data-theme="day"] body:has(#article-content) .article-rail .toc-link.active {
+  color: #286f78 !important;
+}
+html[data-theme="day"] body:has(#article-content) .motion-button,
+html[data-theme="day"] body:has(#article-content) #motion-toggle {
+  color: #286f78 !important;
+}
+html[data-theme="day"] body.sports-page a.sport-tab {
+  color: #40545f !important;
+  background: #f8faf6 !important;
+  border-color: #b8c9c3 !important;
+}
+html[data-theme="day"] body.sports-page a.sport-tab.is-active {
+  color: #20333d !important;
+  background: #e8f2df !important;
+  border-color: #8fae9e !important;
+}
+html[data-theme="day"] body:has(#article-content) .article-rail .toc-link:focus-visible,
+html[data-theme="day"] body:has(#article-content) .motion-button:focus-visible,
+html[data-theme="day"] body.sports-page a.sport-tab:focus-visible {
+  outline: 3px solid #286f78 !important;
+  outline-offset: 3px;
+}
+html[data-theme="day"] body header .sports-entry small,
+html[data-theme="day"] body header .tools-entry small,
+html[data-theme="day"] body .ah-footer__arrow {
+  color: #286f78 !important;
+}
+html[data-theme="day"] body:has(#article-content) .article-section h2 .section-title {
+  color: #40545f !important;
+}
+html[data-theme="day"] body:has(#article-content) .article-end > span:last-child {
+  color: #286f78 !important;
+}
+html[data-theme="day"] body:has(.dims) .dims .multiply {
+  color: #52616c !important;
+}
+html[data-theme="day"] body:has(.dims) .metric {
+  color: #405861 !important;
+}
+html[data-theme="day"] body:has(.dims) .metric b {
+  color: #20333d !important;
+}
+html[data-theme="day"] body:has(.dims) button:disabled {
+  opacity: 1 !important;
+  color: #52616c !important;
+  border-color: #9eb5aa !important;
+  background: #e8eee9 !important;
+  cursor: not-allowed;
+}
+html[data-theme="day"] body :is(a[href], button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])):focus-visible {
+  outline: 3px solid #286f84 !important;
+  outline-offset: 3px;
+}
+/* Additional Day-mode fixes from independent QA; all rules are theme-scoped. */
+html[data-theme="day"] body.cut-page .hero-copy > p {
+  color: #40545f !important;
+}
+html[data-theme="day"] body.cut-page .site-header .back-link {
+  color: #286f78 !important;
+}
+html[data-theme="day"] body:has(#qr-canvas) #url::placeholder {
+  color: #40545f !important;
+  opacity: 1;
+}
+html[data-theme="day"] body button:disabled,
+html[data-theme="day"] body input:disabled,
+html[data-theme="day"] body select:disabled,
+html[data-theme="day"] body textarea:disabled,
+html[data-theme="day"] body [aria-disabled="true"] {
+  opacity: 1 !important;
+  filter: none !important;
+}
+html[data-theme="day"] body button:disabled,
+html[data-theme="day"] body [aria-disabled="true"] {
+  color: #52616c !important;
+  border-color: #9eb5aa !important;
+  background-color: #e8eee9 !important;
+  cursor: not-allowed;
+}
+
+/* Text Detector Day palette: replace its low-contrast Night-only editorial copy. */
+html[data-theme="day"] body.signal-page {
+  --bg: #f1f4ef;
+  --panel: #fbfcf8;
+  --line: #cbd8d4;
+  --muted: #52616c;
+  --dim: #52616c;
+  --text: #20333d;
+  --lime: #286f78;
+  --violet: #594b7a;
+  --danger: #7b3535;
+  color: #20333d;
+  background: #f1f4ef;
+}
+html[data-theme="day"] body.signal-page .site-header,
+html[data-theme="day"] body.signal-page .mode-card,
+html[data-theme="day"] body.signal-page .editor-shell,
+html[data-theme="day"] body.signal-page .assessment-card,
+html[data-theme="day"] body.signal-page .stats-card,
+html[data-theme="day"] body.signal-page .segment-card,
+html[data-theme="day"] body.signal-page .empty-report,
+html[data-theme="day"] body.signal-page .steps article {
+  color: #20333d;
+  background: #fbfcf8;
+  border-color: #cbd8d4;
+}
+html[data-theme="day"] body.signal-page .site-header nav,
+html[data-theme="day"] body.signal-page .breadcrumb,
+html[data-theme="day"] body.signal-page .breadcrumb a,
+html[data-theme="day"] body.signal-page .art-coordinate,
+html[data-theme="day"] body.signal-page .hero-tags span,
+html[data-theme="day"] body.signal-page .mode-index,
+html[data-theme="day"] body.signal-page .mode-card small,
+html[data-theme="day"] body.signal-page .editor-top,
+html[data-theme="day"] body.signal-page .editor-bottom,
+html[data-theme="day"] body.signal-page .workspace-head p,
+html[data-theme="day"] body.signal-page .privacy-note small,
+html[data-theme="day"] body.signal-page .report-disclaimer,
+html[data-theme="day"] body.signal-page .assessment-card > p,
+html[data-theme="day"] body.signal-page .score-label,
+html[data-theme="day"] body.signal-page .score-block small,
+html[data-theme="day"] body.signal-page .stat-row,
+html[data-theme="day"] body.signal-page .segments-head p,
+html[data-theme="day"] body.signal-page .segments-head > span,
+html[data-theme="day"] body.signal-page .segment-top,
+html[data-theme="day"] body.signal-page .segment-card p,
+html[data-theme="day"] body.signal-page .segment-meter strong,
+html[data-theme="day"] body.signal-page .report-footer-note,
+html[data-theme="day"] body.signal-page .empty-report p,
+html[data-theme="day"] body.signal-page .steps p,
+html[data-theme="day"] body.signal-page .progress-panel p,
+html[data-theme="day"] body.signal-page .fine-print,
+html[data-theme="day"] body.signal-page .site-footer,
+html[data-theme="day"] body.signal-page .footer-status {
+  color: #40545f;
+}
+html[data-theme="day"] body.signal-page .site-header { border-bottom-color: #cbd8d4; }
+html[data-theme="day"] body.signal-page .site-header nav span,
+html[data-theme="day"] body.signal-page .eyebrow,
+html[data-theme="day"] body.signal-page .eyebrow-index,
+html[data-theme="day"] body.signal-page .section-kicker,
+html[data-theme="day"] body.signal-page .hero h1 em,
+html[data-theme="day"] body.signal-page .mode-index,
+html[data-theme="day"] body.signal-page .privacy-note strong,
+html[data-theme="day"] body.signal-page .editor-live,
+html[data-theme="day"] body.signal-page .editor-bottom strong,
+html[data-theme="day"] body.signal-page .score-label strong,
+html[data-theme="day"] body.signal-page .steps article > span,
+html[data-theme="day"] body.signal-page .fine-print > span {
+  color: #286f78;
+}
+html[data-theme="day"] body.signal-page .hero-copy > p,
+html[data-theme="day"] body.signal-page .mode-note,
+html[data-theme="day"] body.signal-page .report-disclaimer strong,
+html[data-theme="day"] body.signal-page .privacy-note,
+html[data-theme="day"] body.signal-page .report-caveat p,
+html[data-theme="day"] body.signal-page .editor-shell textarea {
+  color: #40545f;
+}
+html[data-theme="day"] body.signal-page .hero { border-bottom-color: #cbd8d4; }
+html[data-theme="day"] body.signal-page .hero h1 { color: #20333d; }
+html[data-theme="day"] body.signal-page .hero h1 span { -webkit-text-stroke-color: #40545f; }
+html[data-theme="day"] body.signal-page .hero-tags span { border-color: #c3d2cd; }
+html[data-theme="day"] body.signal-page .signal-card {
+  background: linear-gradient(145deg, #fbfcf8, #e8eee9);
+  border-color: #aebeb7;
+  box-shadow: 0 20px 45px rgba(31, 48, 57, .12);
+}
+html[data-theme="day"] body.signal-page .signal-card-top,
+html[data-theme="day"] body.signal-page .signal-card-bottom { color: #52616c; }
+html[data-theme="day"] body.signal-page .signal-orbit-mark { color: #d5d9d3; }
+html[data-theme="day"] body.signal-page .mode-note { background: #edf4ee; border-left-color: #6f9b8e; }
+html[data-theme="day"] body.signal-page .mode-card.is-active {
+  background: #e9f2ed;
+  border-color: #6e9d8e;
+  box-shadow: inset 3px 0 #286f78;
+}
+html[data-theme="day"] body.signal-page .privacy-note,
+html[data-theme="day"] body.signal-page .report-caveat {
+  background: #f6f8f3;
+  border-color: #cbd8d4;
+}
+html[data-theme="day"] body.signal-page .editor-top,
+html[data-theme="day"] body.signal-page .editor-bottom,
+html[data-theme="day"] body.signal-page .editor-actions,
+html[data-theme="day"] body.signal-page .score-block { border-color: #d5dfdb; }
+html[data-theme="day"] body.signal-page .editor-shell textarea {
+  background: #ffffff;
+  color: #20333d;
+}
+html[data-theme="day"] body.signal-page .editor-shell textarea::placeholder { color: #52616c; opacity: 1; }
+html[data-theme="day"] body.signal-page .button-quiet {
+  color: #29414a;
+  background: #edf3ef;
+  border-color: #bdceca;
+}
+html[data-theme="day"] body.signal-page .button-main {
+  color: #ffffff;
+  background: #286f78;
+  border-color: #286f78;
+}
+html[data-theme="day"] body.signal-page .segment-tag { color: #514078; }
+html[data-theme="day"] body.signal-page .segment-tag.high { color: #77531e; }
+html[data-theme="day"] body.signal-page .report-caveat strong { color: #77531e; }
+html[data-theme="day"] body.signal-page .stat-row strong { color: #20333d; }
+html[data-theme="day"] body.signal-page .score-track,
+html[data-theme="day"] body.signal-page .segment-meter > div { background: #dfe8e3; }
+html[data-theme="day"] body.signal-page .site-footer { border-top-color: #cbd8d4; }
+html[data-theme="day"] body.signal-page .site-footer > a { color: #286f78; }
+/* Keep all remaining tool copy legible when its original stylesheet uses Night colors. */
+html[data-theme="day"] body.cut-page :where(a,button,input,select,textarea,output,label,p,small,strong,b,em,span,div,li,h1,h2,h3,h4,summary) {
+  color: #20333d !important;
+}
+html[data-theme="day"] body.cut-page .site-header,
+html[data-theme="day"] body.cut-page .site-footer {
+  background-color: #fbfcf8;
+  border-color: #cbd8d4;
+}
+html[data-theme="day"] body.cut-page .site-header nav a,
+html[data-theme="day"] body.cut-page .site-header .back-link,
+html[data-theme="day"] body.cut-page .site-footer a,
+html[data-theme="day"] body.cut-page .brand-word span,
+html[data-theme="day"] body.cut-page .eyebrow,
+html[data-theme="day"] body.cut-page .section-kicker,
+html[data-theme="day"] body.cut-page .local-pill {
+  color: #286f78 !important;
+}
+html[data-theme="day"] body.cut-page .brand-word { color: #20333d !important; }
+html[data-theme="day"] body.cut-page input:not([type="color"]):not([type="range"]),
+html[data-theme="day"] body.cut-page select,
+html[data-theme="day"] body.cut-page textarea {
+  color: #20333d !important;
+  background: #ffffff !important;
+  border-color: #aebeb7 !important;
+}
+html[data-theme="day"] body.cut-page input::placeholder,
+html[data-theme="day"] body.cut-page textarea::placeholder {
+  color: #52616c !important;
+  opacity: 1;
+}
+html[data-theme="day"] body.cut-page .button-main {
+  color: #ffffff !important;
+  background: #286f78;
+  border-color: #286f78;
+}
+html[data-theme="day"] body.cut-page .button:not(.button-main):not(:disabled) {
+  color: #20333d !important;
+  background: #edf3ef;
+  border-color: #bdceca;
+}
+html[data-theme="day"] body.cut-page .drop-zone,
+html[data-theme="day"] body.cut-page .signal-card,
+html[data-theme="day"] body.cut-page .tool-panel,
+html[data-theme="day"] body.cut-page .result-card {
+  color: #20333d;
+  background-color: #fbfcf8;
+  border-color: #bdceca;
+}
+
+html[data-theme="day"] body:has(#qr-canvas) :where(a,button,input,select,textarea,output,label,p,small,strong,b,em,span,div,li,h1,h2,h3,h4,summary) {
+  color: #20333d !important;
+}
+html[data-theme="day"] body:has(#qr-canvas) .site-header,
+html[data-theme="day"] body:has(#qr-canvas) .site-footer,
+html[data-theme="day"] body:has(#qr-canvas) .settings,
+html[data-theme="day"] body:has(#qr-canvas) .results,
+html[data-theme="day"] body:has(#qr-canvas) .how {
+  color: #20333d;
+  background-color: #fbfcf8;
+  border-color: #cbd8d4;
+}
+html[data-theme="day"] body:has(#qr-canvas) .site-header nav a,
+html[data-theme="day"] body:has(#qr-canvas) .site-header .back-link,
+html[data-theme="day"] body:has(#qr-canvas) .site-footer a,
+html[data-theme="day"] body:has(#qr-canvas) .brand-word span,
+html[data-theme="day"] body:has(#qr-canvas) .section-kicker,
+html[data-theme="day"] body:has(#qr-canvas) .local-pill {
+  color: #286f78 !important;
+}
+html[data-theme="day"] body:has(#qr-canvas) .brand-word { color: #20333d !important; }
+html[data-theme="day"] body:has(#qr-canvas) input:not([type="color"]):not([type="range"]),
+html[data-theme="day"] body:has(#qr-canvas) select,
+html[data-theme="day"] body:has(#qr-canvas) textarea {
+  color: #20333d !important;
+  background: #ffffff !important;
+  border-color: #aebeb7 !important;
+}
+html[data-theme="day"] body:has(#qr-canvas) input::placeholder,
+html[data-theme="day"] body:has(#qr-canvas) textarea::placeholder {
+  color: #52616c !important;
+  opacity: 1 !important;
+}
+html[data-theme="day"] body:has(#qr-canvas) .button-main,
+html[data-theme="day"] body:has(#qr-canvas) #generate {
+  color: #ffffff !important;
+  background: #286f78;
+  border-color: #286f78;
+}
+html[data-theme="day"] body:has(#qr-canvas) .button:not(.button-main):not(:disabled) {
+  color: #20333d !important;
+  background: #edf3ef;
+  border-color: #bdceca;
+}
+html[data-theme="day"] body:has(#qr-canvas) .button.active {
+  color: #ffffff !important;
+  background: #286f78;
+  border-color: #286f78;
+}
+html[data-theme="day"] body:has(#qr-canvas) .qr-stage,
+html[data-theme="day"] body:has(#qr-canvas) .check-panel,
+html[data-theme="day"] body:has(#qr-canvas) .payload-preview,
+html[data-theme="day"] body:has(#qr-canvas) .steps article {
+  color: #20333d;
+  background: #f6f8f3;
+  border-color: #cbd8d4;
+}
+html[data-theme="day"] body:has(#qr-canvas) #toast,
+html[data-theme="day"] body:has(#qr-canvas) #toast * {
+  color: #f6f8f3 !important;
+  background-color: #26343a;
+}
+
+html[data-theme="day"] body.signal-page :where(a,button,input,select,textarea,output,label,p,small,strong,b,em,span,div,li,h1,h2,h3,h4,summary,code,i) {
+  color: #20333d !important;
+}
+html[data-theme="day"] body.signal-page a:not(.brand),
+html[data-theme="day"] body.signal-page .brand-word span,
+html[data-theme="day"] body.signal-page .eyebrow,
+html[data-theme="day"] body.signal-page .section-kicker,
+html[data-theme="day"] body.signal-page .mode-index,
+html[data-theme="day"] body.signal-page .hero h1 em,
+html[data-theme="day"] body.signal-page .privacy-note strong,
+html[data-theme="day"] body.signal-page .editor-live,
+html[data-theme="day"] body.signal-page .editor-bottom strong,
+html[data-theme="day"] body.signal-page .score-label strong,
+html[data-theme="day"] body.signal-page .steps article > span {
+  color: #286f78 !important;
+}
+html[data-theme="day"] body.signal-page .site-header,
+html[data-theme="day"] body.signal-page .editor-shell,
+html[data-theme="day"] body.signal-page .mode-card,
+html[data-theme="day"] body.signal-page .assessment-card,
+html[data-theme="day"] body.signal-page .stats-card,
+html[data-theme="day"] body.signal-page .segment-card,
+html[data-theme="day"] body.signal-page .empty-report,
+html[data-theme="day"] body.signal-page .steps article,
+html[data-theme="day"] body.signal-page .signal-card {
+  background: #fbfcf8;
+  border-color: #cbd8d4;
+}
+html[data-theme="day"] body.signal-page input:not([type="color"]):not([type="range"]),
+html[data-theme="day"] body.signal-page select,
+html[data-theme="day"] body.signal-page textarea {
+  color: #20333d !important;
+  background: #ffffff !important;
+  border-color: #aebeb7 !important;
+}
+html[data-theme="day"] body.signal-page input::placeholder,
+html[data-theme="day"] body.signal-page textarea::placeholder { color: #52616c !important; opacity: 1; }
+html[data-theme="day"] body.signal-page .button-main {
+  color: #ffffff !important;
+  background: #286f78 !important;
+  border-color: #286f78 !important;
+}
+html[data-theme="day"] body.signal-page .button-quiet {
+  color: #20333d !important;
+  background: #edf3ef !important;
+  border-color: #bdceca !important;
+}
+html[data-theme="day"] body.signal-page .mode-card.is-active,
+html[data-theme="day"] body.signal-page .mode-note,
+html[data-theme="day"] body.signal-page .privacy-note {
+  background: #edf4ee;
+  border-color: #c3d2cd;
+}
+html[data-theme="day"] body.signal-page .report-caveat {
+  background: #f6f3e9;
+  border-color: #d8c89f;
+}
+html[data-theme="day"] body.signal-page .report-caveat strong,
+html[data-theme="day"] body.signal-page .segment-tag.high { color: #77531e !important; }
+html[data-theme="day"] body.signal-page .toast,
+html[data-theme="day"] body.signal-page .toast * {
+  color: #f6f8f3 !important;
+  background-color: #26343a;
+}
+html[data-theme="day"] body .hero .hotspot > span {
+  color: #405861 !important;
+}
+html[data-theme="day"] body:has(#article-content) .article-rail .toc-link {
+  color: #40545f !important;
+}
+html[data-theme="day"] body .hotspot > span {
+  color: #1f5967 !important;
+}
+html[data-theme="day"] body .article-rail .toc-link,
+html[data-theme="day"] body .article-rail .toc-link:hover,
+html[data-theme="day"] body .article-rail .toc-link:focus-visible,
+html[data-theme="day"] body .article-rail .toc-link.active {
+  color: #1f5967 !important;
+}
+html[data-theme="day"] body :is(a[href], button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])):focus-visible {
+  outline-color: #1f5967 !important;
+  transition: none !important;
+}
+html[data-theme="day"] body.cut-page #process-button:disabled {
+  color: #52616c !important;
+  background-color: #e8eee9 !important;
+  border-color: #9eb5aa !important;
+  opacity: 1 !important;
+  box-shadow: none !important;
+  cursor: not-allowed;
+}
+html[data-theme="day"] body:has(#qr-canvas) #generate :is(span,b,strong,em) {
+  color: #ffffff !important;
+}
+html[data-theme="day"] body:has(#qr-canvas) #generate:focus-visible {
+  outline: 3px solid #1f5967 !important;
+  outline-offset: 3px !important;
+  transition: none !important;
+}
+html[data-theme="day"] body #motion-toggle {
+  color: #286f78 !important;
 }

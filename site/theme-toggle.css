@@ -383,3 +383,99 @@ html[data-theme="day"] .theme-toggle:focus-visible { outline-color: #286f84; }
 @media (prefers-reduced-motion: reduce) {
   .theme-toggle { transition: none; }
 }
+
+/* Homepage day-mode contrast pass.
+   The builder appends pages-theme.css after this file; the body-qualified rules
+   below intentionally carry one extra specificity level so homepage readability
+   remains stable in the built public output without touching night mode. */
+html[data-theme="day"] body header nav,
+html[data-theme="day"] body header #search-open,
+html[data-theme="day"] body header .motion,
+html[data-theme="day"] body header .sports-entry,
+html[data-theme="day"] body header .tools-entry {
+  color: #243640;
+}
+html[data-theme="day"] body header nav .active,
+html[data-theme="day"] body header nav a:hover,
+html[data-theme="day"] body header nav a span,
+html[data-theme="day"] body header .sports-entry:hover,
+html[data-theme="day"] body header .tools-entry:hover {
+  color: #1d2a35;
+}
+html[data-theme="day"] body header .sports-entry:focus-visible,
+html[data-theme="day"] body header .tools-entry:focus-visible,
+html[data-theme="day"] body #search-open:focus-visible,
+html[data-theme="day"] body .motion:focus-visible,
+html[data-theme="day"] body .theme-toggle:focus-visible,
+html[data-theme="day"] body .hero .touch-stage:focus-visible,
+html[data-theme="day"] body .hero .ambient-switch button:focus-visible,
+html[data-theme="day"] body .hero .text-button:focus-visible,
+html[data-theme="day"] body .frequency-search-launch:focus-visible,
+html[data-theme="day"] body .category-channel:focus-visible,
+html[data-theme="day"] body .district-grid button:focus-visible,
+html[data-theme="day"] body .ah-footer a:focus-visible,
+html[data-theme="day"] body .ah-footer button:focus-visible {
+  outline: 3px solid #286f84;
+  outline-offset: 3px;
+}
+html[data-theme="day"] body #mobile-core-navigation button:disabled {
+  color: #52616c;
+  opacity: 1;
+}
+html[data-theme="day"] body header #mobile-core-navigation a {
+  color: #243640;
+}
+html[data-theme="day"] body header #mobile-core-navigation a:focus-visible {
+  outline: 3px solid #286f84;
+  outline-offset: 2px;
+}
+
+html[data-theme="day"] body .hero .city-hud {
+  opacity: 1;
+}
+html[data-theme="day"] body .hero .touch-heading > span {
+  color: #304854;
+}
+html[data-theme="day"] body .hero .touch-heading > b {
+  color: #98375e;
+}
+html[data-theme="day"] body .hero .city-hud,
+html[data-theme="day"] body .hero .hero-top,
+html[data-theme="day"] body .hero .hero-foot,
+html[data-theme="day"] body .hero .coordinates,
+html[data-theme="day"] body .hero .city-status,
+html[data-theme="day"] body .hero .vertical-label,
+html[data-theme="day"] body .hero .touch-meter {
+  color: #40545f;
+}
+html[data-theme="day"] body .hero .touch-instruction small,
+html[data-theme="day"] body .hero .touch-meter span:last-child,
+html[data-theme="day"] body .hero .discovery small,
+html[data-theme="day"] body .hero .issue {
+  color: #52616c;
+}
+
+/* search.css supplies a blue placeholder that is too light on the day surface. */
+html[data-theme="day"] body #search-dialog #search-input::placeholder,
+html[data-theme="day"] body #search-dialog input::placeholder,
+html[data-theme="day"] body #terminal input::placeholder {
+  color: #52616c;
+  opacity: 1;
+}
+html[data-theme="day"] body #search-dialog .search-chips button,
+html[data-theme="day"] body #search-dialog .search-footer kbd,
+html[data-theme="day"] body #search-dialog .dialog-close {
+  color: #40535e;
+}
+html[data-theme="day"] body #search-dialog #search-trends span,
+html[data-theme="day"] body #search-dialog #search-summary {
+  color: #52616c;
+}
+html[data-theme="day"] body #search-dialog #search-trends button {
+  color: #5b4780;
+}
+html[data-theme="day"] body #search-dialog .search-chips button:focus-visible,
+html[data-theme="day"] body #search-dialog .dialog-close:focus-visible {
+  outline: 3px solid #286f84;
+  outline-offset: 3px;
+}

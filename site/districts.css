@@ -111,3 +111,272 @@ body{overflow-x:hidden}.subtopic{appearance:none;cursor:pointer;text-align:left;
   .category-button, .subtopic { transition: none !important; }
   .category-button:hover { transform: none; }
 }
+
+/* Districts Day mode: keep the mint/violet identity, but replace Night-only
+ * panel surfaces and text with a readable light-canvas treatment.  The extra
+ * body scope intentionally wins the late pages-theme.css build injection. */
+html[data-theme="day"] body {
+  background: #f1f4ed;
+  color: #20333d;
+}
+
+html[data-theme="day"] body .topbar {
+  background: rgba(248, 250, 245, .97);
+  border-bottom-color: #c4d2cc;
+}
+html[data-theme="day"] body .brand,
+html[data-theme="day"] body .status { color: #20333d; }
+html[data-theme="day"] body .brand small,
+html[data-theme="day"] body .nav { color: #52616c; }
+html[data-theme="day"] body .nav a:hover,
+html[data-theme="day"] body .nav a:focus-visible { color: #286f78; }
+html[data-theme="day"] body .status i { box-shadow: 0 0 10px #8caf35; }
+
+html[data-theme="day"] body .console,
+html[data-theme="day"] body .detail,
+html[data-theme="day"] body .directory-card,
+html[data-theme="day"] body .allocation-row,
+html[data-theme="day"] body .guardrail {
+  color: #20333d;
+  border-color: #b8c9c3;
+  box-shadow: 0 10px 24px rgba(31, 48, 57, .10);
+}
+html[data-theme="day"] body .console {
+  background: linear-gradient(140deg, #e5efe9, #f8faf6 48%, #eee8f5);
+}
+html[data-theme="day"] body .detail {
+  background: radial-gradient(ellipse at 100% 0, color-mix(in srgb, var(--glow, #286f84) 17%, transparent) 0%, transparent 36%), linear-gradient(145deg, #f8faf7, #edf3ef 48%, #f0ebf6);
+  background-color: #f8faf7;
+}
+html[data-theme="day"] body .directory-card { background: linear-gradient(145deg, #f8faf7, #eaf1ed); }
+html[data-theme="day"] body .allocation-row { background: linear-gradient(95deg, #f8faf7, #e9f0ec); }
+html[data-theme="day"] body .guardrail { background: linear-gradient(145deg, #f6f8f4, #ebeef5); }
+
+html[data-theme="day"] body .console-top,
+html[data-theme="day"] body .console-foot,
+html[data-theme="day"] body .subtopic-head { color: #405861; }
+html[data-theme="day"] body .console-intro,
+html[data-theme="day"] body .detail-desc,
+html[data-theme="day"] body .directory-top p,
+html[data-theme="day"] body .directory-card summary p,
+html[data-theme="day"] body .allocation-name small,
+html[data-theme="day"] body .guardrail p { color: #52616c; }
+html[data-theme="day"] body .console h3,
+html[data-theme="day"] body .detail h3,
+html[data-theme="day"] body .directory-top h3,
+html[data-theme="day"] body .directory-card h4,
+html[data-theme="day"] body .guardrail h3,
+html[data-theme="day"] body .allocation-name { color: #20333d; }
+html[data-theme="day"] body .detail-head,
+html[data-theme="day"] body .console-top,
+html[data-theme="day"] body .console-foot { border-color: #c7d4cf; }
+
+html[data-theme="day"] body .search {
+  background: #ffffff;
+  color: #20333d;
+  border-color: #8faea4;
+  box-shadow: inset 0 2px 6px rgba(31, 48, 57, .08);
+}
+html[data-theme="day"] body .search::placeholder { color: #66777d; }
+html[data-theme="day"] body .search:focus {
+  border-color: #286f78;
+  box-shadow: 0 0 0 3px rgba(40, 111, 120, .18), inset 0 2px 6px rgba(31, 48, 57, .08);
+}
+
+html[data-theme="day"] body .category-button {
+  color: #20333d;
+  border-color: #b8c9c3;
+  background: #f7faf7;
+}
+html[data-theme="day"] body .category-button:hover:not(:disabled),
+html[data-theme="day"] body .category-button:focus-visible:not(:disabled) {
+  border-color: #6f9e92;
+  background: #eaf3ee;
+}
+html[data-theme="day"] body .category-button[aria-pressed="true"] {
+  border-color: color-mix(in srgb, var(--tone) 68%, #52706c);
+  background: color-mix(in srgb, var(--tone) 13%, #f7faf7);
+  box-shadow: inset 3px 0 var(--tone);
+}
+html[data-theme="day"] body .cat-label strong { color: #20333d; }
+html[data-theme="day"] body .cat-label small,
+html[data-theme="day"] body .cat-plan small { color: #52616c; }
+html[data-theme="day"] body .cat-code { color: #286f78; }
+html[data-theme="day"] body .cat-plan,
+html[data-theme="day"] body .detail .micro,
+html[data-theme="day"] body .allocation-value b { color: #405861; }
+html[data-theme="day"] body .search-status { color: #52616c; }
+
+html[data-theme="day"] body .subtopic {
+  color: #304650;
+  border-color: #b7c9c3;
+  background: #f7faf7;
+  box-shadow: inset 0 1px rgba(255, 255, 255, .9), 0 3px 0 #d6e1dc;
+}
+html[data-theme="day"] body .subtopic:hover:not(:disabled),
+html[data-theme="day"] body .subtopic:focus-visible:not(:disabled) {
+  border-color: #6f9e92;
+  background: #eaf3ee;
+}
+html[data-theme="day"] body .subtopic[aria-pressed="true"] {
+  color: #20333d;
+  border-color: color-mix(in srgb, var(--tone) 68%, #52706c);
+  background: color-mix(in srgb, var(--tone) 13%, #f7faf7);
+  box-shadow: inset 3px 0 var(--tone);
+}
+
+html[data-theme="day"] body .directory-card summary:focus-visible,
+html[data-theme="day"] body .category-button:focus-visible,
+html[data-theme="day"] body .search:focus-visible,
+html[data-theme="day"] body .subtopic:focus-visible,
+html[data-theme="day"] body .outline-button:focus-visible,
+html[data-theme="day"] body .clear-search:focus-visible,
+html[data-theme="day"] body a:focus-visible {
+  outline: 3px solid #286f78;
+  outline-offset: 3px;
+}
+html[data-theme="day"] body .directory-card .directory-subtopics span,
+html[data-theme="day"] body .directory-card .directory-topic {
+  color: #304650;
+  border-color: #b8c9c3;
+  background: #ffffff;
+}
+html[data-theme="day"] body .directory-card .directory-note { color: #405861; background: #edf3ef; }
+html[data-theme="day"] body .allocation-value small,
+html[data-theme="day"] body .total-stamp span,
+html[data-theme="day"] body .plan-footnote { color: #52616c; }
+html[data-theme="day"] body .bar-track { background: #dfe9e4; border-color: #a9beb6; }
+html[data-theme="day"] body .outline-button,
+html[data-theme="day"] body .clear-search {
+  color: #20333d;
+  border-color: #91ada4;
+  background: #f7faf7;
+}
+html[data-theme="day"] body .outline-button:hover:not(:disabled),
+html[data-theme="day"] body .outline-button:focus-visible:not(:disabled),
+html[data-theme="day"] body .clear-search:hover:not(:disabled) {
+  color: #20333d;
+  border-color: #286f78;
+  background: #eaf3ee;
+}
+html[data-theme="day"] body :is(button, input, a)[disabled],
+html[data-theme="day"] body :is(button, input, a)[aria-disabled="true"] {
+  color: #52616c;
+  border-color: #c8d3cf;
+  background: #e8eeeb;
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+
+/* Districts Day contrast completion: existing feed, hero cue, plan cards, and footer. */
+html[data-theme="day"] body .hero .eyebrow,
+html[data-theme="day"] body .section-no,
+html[data-theme="day"] body .existing-feed .section-no {
+  color: #286f78;
+}
+html[data-theme="day"] body .hero-copy,
+html[data-theme="day"] body .section-intro,
+html[data-theme="day"] body .hero-actions .secondary {
+  color: #405861;
+}
+html[data-theme="day"] body .existing-feed {
+  border-top-color: #8faea4;
+}
+html[data-theme="day"] body .existing-feed h3 {
+  color: #20333d;
+}
+html[data-theme="day"] body .existing-count {
+  color: #286f78;
+  border-color: #8faea4;
+  background: #e8f1ed;
+}
+html[data-theme="day"] body .existing-feed-note {
+  color: #405861;
+}
+html[data-theme="day"] body .existing-story,
+html[data-theme="day"] body .existing-empty {
+  color: #20333d;
+  border-color: #9eb5aa;
+  background: linear-gradient(145deg, #f8faf7, #e8eee9);
+  box-shadow: 0 8px 20px rgba(31, 48, 57, .08);
+}
+html[data-theme="day"] body .existing-story small {
+  color: #52616c;
+}
+html[data-theme="day"] body .existing-story h4,
+html[data-theme="day"] body .existing-story h4 a {
+  color: #20333d;
+}
+html[data-theme="day"] body .existing-story p,
+html[data-theme="day"] body .existing-empty {
+  color: #405861;
+}
+html[data-theme="day"] body .existing-story a,
+html[data-theme="day"] body .existing-empty a {
+  color: #286f78;
+}
+html[data-theme="day"] body .existing-story a:focus-visible {
+  outline-color: #286f78;
+}
+html[data-theme="day"] body .plan-section {
+  background: #e8eee9;
+  color: #20333d;
+  border-top-color: #b8c9c3;
+}
+html[data-theme="day"] body .plan-section .section-no,
+html[data-theme="day"] body .plan-section .section-intro,
+html[data-theme="day"] body .plan-section .plan-footnote {
+  color: #405861;
+}
+html[data-theme="day"] body .plan-section .plan-footnote strong {
+  color: #20333d;
+}
+html[data-theme="day"] body .plan-section .section-head h2,
+html[data-theme="day"] body .plan-section .section-head h2 span {
+  color: #20333d;
+}
+html[data-theme="day"] body .plan-section .guardrail {
+  color: #20333d;
+  border-color: #9eb5aa;
+  background: linear-gradient(145deg, #f8faf7, #e8eee9);
+}
+html[data-theme="day"] body .plan-section .guardrail .micro {
+  color: #286f78;
+}
+html[data-theme="day"] body .plan-section .guardrail h3 {
+  color: #20333d;
+}
+html[data-theme="day"] body .plan-section .guardrail p {
+  color: #405861;
+}
+html[data-theme="day"] body .footer {
+  color: #405861;
+  border-top-color: #b8c9c3;
+  background: #f1f4ed;
+}
+html[data-theme="day"] body .footer a,
+html[data-theme="day"] body .footer strong {
+  color: #405861;
+}
+html[data-theme="day"] body #hero-title em {
+  color: #286f78;
+}
+html[data-theme="day"] body .atlas-label {
+  color: #405861;
+}
+html[data-theme="day"] body .total-stamp strong {
+  color: #584978;
+}
+html[data-theme="day"] body .no-results {
+  color: #405861 !important;
+  border-color: #9eb5aa;
+  background: #edf3ef;
+}
+html[data-theme="day"] body .footer .brand,
+html[data-theme="day"] body .footer .brand-word,
+html[data-theme="day"] body .footer .brand-word span,
+html[data-theme="day"] body .footer .end-mark {
+  color: #286f78;
+}

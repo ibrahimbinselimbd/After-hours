@@ -89,3 +89,21 @@ a.ah-footer__wordmark.brand .brand-mark-3d{
   height:26px!important;
   margin-right:8px!important;
 }
+
+/* Day mode: the shared lockup above intentionally wins the cascade, so give
+   its text a light-surface-safe treatment without changing the approved mark
+   image or the default/night palette. */
+html[data-theme="day"] .brand .brand-word,
+html[data-theme="day"] .sports-brand .brand-word,
+html[data-theme="day"] .site-footer .brand-word,
+html[data-theme="day"] .tool-footer .brand-word,
+html[data-theme="day"] .ah-footer__wordmark .brand-word{
+  color:#20333d!important;
+}
+html[data-theme="day"] .brand .brand-word>span,
+html[data-theme="day"] .sports-brand .brand-word>span,
+html[data-theme="day"] .site-footer .brand-word>span,
+html[data-theme="day"] .tool-footer .brand-word>span,
+html[data-theme="day"] .ah-footer__wordmark .brand-word>span{
+  color:#286f78!important;
+}
