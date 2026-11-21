@@ -3,6 +3,9 @@
   const api = window.AHToolkit;
   const tools = window.AHNetworkTools;
   const host = document.getElementById('tool-content');
+  // This provider-backed lookup has no ByteAfter credit cap; suppress the generic local-credit UI on this route.
+  document.getElementById('credit-pill')?.remove();
+  document.querySelector('.tool-main .workspace > .credit-note')?.remove();
   if (!api || !tools || !host || typeof tools['what-is-my-ip'] !== 'function' || typeof tools['ip-geolocation-lookup'] !== 'function') {
     throw new Error('Network tool dependencies did not initialize.');
   }
