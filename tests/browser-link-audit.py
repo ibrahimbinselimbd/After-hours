@@ -48,12 +48,13 @@ with sync_playwright() as p:
             if journal.is_visible():
                 journal.click()
                 assert page.url == base + '/#feed'
+                page.locator('#feed').wait_for(state='visible')
                 assert page.locator('#feed').is_visible()
         go('/tools/')
         page.locator('[data-category="developer-utilities"]').click()
         page.locator('#category-dialog').wait_for(state='visible')
-        assert int(page.locator('.modal-status').inner_text().split()[0]) == 68
-        assert page.locator('#dialog-tools a').count() == 68
+        assert int(page.locator('.modal-status').inner_text().split()[0]) == 81
+        assert page.locator('#dialog-tools a').count() == 81
         expected_columns = 3 if width > 1000 else 2
         column_count = page.locator('#dialog-tools').evaluate('(el) => getComputedStyle(el).gridTemplateColumns.split(" ").length')
         assert column_count == expected_columns, [width, column_count, expected_columns]
@@ -73,7 +74,7 @@ with sync_playwright() as p:
                 clipping: descendants.some(el => el.scrollWidth > el.clientWidth + 1),
             };
         })''')
-        assert len(card_checks) == 68
+        assert len(card_checks) == 81
         assert all(check['src'].startswith(base + '/tools/_shared/previews/') and check['src'].endswith('.webp') for check in card_checks), card_checks
         assert all(check['width'] == '640' and check['height'] == '360' and check['naturalWidth'] > 0 for check in card_checks), card_checks
         assert not any(check['clipping'] for check in card_checks), [check for check in card_checks if check['clipping']]
@@ -82,7 +83,7 @@ with sync_playwright() as p:
         assert page.locator('#dialog-tools a:visible').get_attribute('href').endswith('/tools/json-formatter/')
         assert page.locator('#category-search-status').inner_text() == '1 matching item'
         page.locator('#dialog-tool-search').fill('')
-        assert page.locator('#dialog-tools a:visible').count() == 68
+        assert page.locator('#dialog-tools a:visible').count() == 81
         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
         page.locator('#category-dialog').evaluate('(el) => { el.scrollTop = el.scrollHeight; }')
         modal_top = page.locator('#category-dialog').bounding_box()['y']

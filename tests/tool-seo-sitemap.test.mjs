@@ -50,6 +50,15 @@ test('all 550 active source tool routes have unique canonicals, excluding the di
   for (const { slug, path: pagePath } of pages) {
     const html = await readFile(pagePath, 'utf8');
     const canonical = capture(html, /<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i, `${slug} canonical`);
+    const cspTag = html.match(/<meta\b[^>]*http-equiv=["']Content-Security-Policy["'][^>]*>/i)?.[0] ?? '';
+    const csp = cspTag.match(/\bcontent="([^"]*)"/i)?.[1]?.replaceAll('&#39;', "'") ?? '';
+    if (/\bdefault-src\s+'none'/i.test(csp)) {
+      const imgSrc = csp.match(/(?:^|;)\s*img-src\s+([^;]*)/i)?.[1] ?? '';
+      const imageSources = imgSrc.trim().split(/\s+/);
+      const allowedImageSources = new Set(["'self'", 'blob:', 'data:']);
+      assert.ok(imageSources.includes("'self'"), `${slug} restrictive CSP should allow same-origin brand and preview images`);
+      assert.ok(imageSources.every(source => allowedImageSources.has(source)), `${slug} restrictive CSP must not allow external image sources: ${imgSrc}`);
+    }
     const canonicalUrl = new URL(canonical);
     assert.equal(canonicalUrl.protocol, 'https:', `${slug} canonical should use HTTPS`);
     assert.ok(canonicalUrl.pathname.endsWith(`/tools/${slug}/`), `${slug} should use its canonical route`);
