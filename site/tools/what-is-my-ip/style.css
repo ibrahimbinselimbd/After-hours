@@ -1,0 +1,37 @@
+.ba-ip-checker{--ba-ip-accent:#d3fb56;--ba-ip-ink:#f2f6fb;--ba-ip-muted:#bdc9d7;--ba-ip-panel:#101b2b;--ba-ip-border:#43566c;--ba-ip-field:#0c1624;color:var(--ba-ip-ink);display:grid;gap:16px}
+html[data-theme="day"] .ba-ip-checker{--ba-ip-accent:#3f741b;--ba-ip-ink:#192921;--ba-ip-muted:#43594c;--ba-ip-panel:#f4f8f3;--ba-ip-border:#aabdaf;--ba-ip-field:#fff}
+.ba-ip-checker *{box-sizing:border-box}
+.ba-ip-disclosure{margin:0;padding:14px 16px;border:1px solid var(--ba-ip-border);border-left:4px solid var(--ba-ip-accent);background:var(--ba-ip-panel);color:var(--ba-ip-muted);font-size:13px;line-height:1.65}
+.ba-ip-disclosure strong{color:var(--ba-ip-ink)}
+.ba-ip-disclosure a,.ba-ip-provider-link{color:var(--ba-ip-accent);text-decoration:underline;text-underline-offset:3px}
+.ba-ip-card{min-width:0;border:1px solid var(--ba-ip-border);background:var(--ba-ip-panel);padding:clamp(16px,3vw,24px)}
+.ba-ip-card-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.ba-ip-kicker{margin:0;color:var(--ba-ip-muted);font:600 12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.12em;text-transform:uppercase}
+.ba-ip-state{display:inline-flex;align-items:center;gap:8px;color:var(--ba-ip-muted);font:600 11px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase}
+.ba-ip-state:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--ba-ip-accent);flex:none}
+.ba-ip-state[data-kind="error"]:before{background:#c0392b}
+.ba-ip-address{margin:4px 0 14px;color:var(--ba-ip-accent);font:700 clamp(25px,5.2vw,54px)/1.15 ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;letter-spacing:-.04em}
+.ba-ip-address[data-empty="true"]{color:var(--ba-ip-muted);font-size:clamp(17px,3vw,24px);letter-spacing:0}
+.ba-ip-meta{display:flex;gap:8px 18px;flex-wrap:wrap;margin:0;color:var(--ba-ip-muted);font:12px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace}
+.ba-ip-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.ba-ip-button{min-height:42px;padding:10px 15px;border:1px solid var(--ba-ip-border);background:transparent;color:var(--ba-ip-ink);font:inherit;font-size:12px;font-weight:700;line-height:1.3;cursor:pointer}
+.ba-ip-button-primary{border-color:var(--ba-ip-accent);background:var(--ba-ip-accent);color:#11190f}
+.ba-ip-button:hover:not(:disabled){filter:brightness(1.08)}
+.ba-ip-button:disabled{cursor:wait;opacity:.68}
+.ba-ip-checker button:focus-visible,.ba-ip-checker input:focus-visible,.ba-ip-checker summary:focus-visible{outline:3px solid var(--ba-ip-accent);outline-offset:3px}
+.ba-ip-form{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end}
+.ba-ip-field{display:grid;gap:7px;min-width:0;color:var(--ba-ip-ink);font-size:13px;font-weight:700}
+.ba-ip-optional{color:var(--ba-ip-muted);font-weight:400}
+.ba-ip-field input{width:100%;min-width:0;min-height:44px;padding:10px 12px;border:1px solid var(--ba-ip-border);border-radius:2px;background:var(--ba-ip-field);color:var(--ba-ip-ink);font:14px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace}
+.ba-ip-field input::placeholder{color:var(--ba-ip-muted);opacity:.9}
+.ba-ip-hint{margin:9px 0 0;color:var(--ba-ip-muted);font-size:12px;line-height:1.6}
+.ba-ip-status{margin:0;padding:11px 13px;border:1px solid var(--ba-ip-border);background:var(--ba-ip-panel);color:var(--ba-ip-ink);font-size:13px;line-height:1.55}
+.ba-ip-status[hidden],.ba-ip-result[hidden]{display:none}
+.ba-ip-status[data-kind="error"]{border-color:#c0392b}
+.ba-ip-result{min-width:0;border:1px solid var(--ba-ip-border);background:var(--ba-ip-panel);padding:16px}
+.ba-ip-result h3{margin:0 0 10px;color:var(--ba-ip-ink);font-size:14px}
+.ba-ip-result pre{margin:0;max-height:320px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--ba-ip-ink);font:12px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace}
+.ba-ip-raw{margin-top:12px;color:var(--ba-ip-muted);font-size:12px}
+.ba-ip-raw summary{cursor:pointer}
+.ba-ip-raw pre{margin-top:10px}
+@media(max-width:560px){.ba-ip-form{grid-template-columns:minmax(0,1fr)}.ba-ip-form .ba-ip-button{width:100%}.ba-ip-actions .ba-ip-button{flex:1 1 42%}.ba-ip-card{padding:15px}}

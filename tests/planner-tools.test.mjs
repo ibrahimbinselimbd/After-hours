@@ -91,6 +91,21 @@ test('all 100 planners have bounded supported fields and callable plain-text loc
   }
 });
 
+test('shared day-theme workspace text has readable foreground colors for planners and new tools', () => {
+  const css = fs.readFileSync(path.join(root, 'site/tools/_shared/planner.css'), 'utf8');
+  for (const selector of ['.planner-lede', '.planner-limitations', '.planner-local-note', '.planner-fields .field-help']) {
+    assert.ok(css.includes(`html[data-theme="day"] ${selector}`), `${selector} is overridden in day theme`);
+  }
+  assert.match(css, /html\[data-theme="day"\] \.planner-local-note strong\{color:#35520a\}/);
+});
+
+test('eDPI converter returns the correct centimeter-scale cm/360 value', () => {
+  const output = handlers['edpi-cm-360-sensitivity-converter']({dpi: 800, sensitivity: 0.5, yaw: 0.022});
+  assert.match(output.summary, /estimated cm\/360: 103\.91 cm/);
+  const target = handlers['edpi-cm-360-sensitivity-converter']({dpi: 800, sensitivity: 0.5, yaw: 0.022, targetCm: 103.91});
+  assert.match(target.details, /try sensitivity 0\.5000 as a starting point/);
+});
+
 test('planner pages contain unique crawlable metadata and use the existing local runtime/credit pool', () => {
   const runtime = fs.readFileSync(path.join(root, 'site/tools/_shared/planner-runtime.js'), 'utf8');
   assert.match(runtime, /credits\.canRun\s*\(/);

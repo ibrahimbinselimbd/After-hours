@@ -105,12 +105,27 @@ for (const button of document.querySelectorAll('[data-detail-section]')) {
     const group = button.closest('[data-detail-group]');
     if (!group) return;
     for (const tab of group.querySelectorAll('[data-detail-section]')) {
-      const active = tab === button; tab.classList.toggle('is-active', active); tab.setAttribute('aria-selected', String(active)); tab.tabIndex = active ? 0 : -1;
+      const active = tab === button; tab.classList.toggle('is-active', active); tab.setAttribute('aria-selected', String(active)); tab.tabIndex = 0;
     }
     const panel = group.querySelector('[data-detail-panel]');
     const sport = group.dataset.detailGroup === 'football' ? 'Football' : 'Cricket';
     const label = button.textContent.trim();
     panel.innerHTML = `<p class="detail-empty">Unavailable — no verified ${sport} fixture or feed is connected. ${esc(label)} data will appear only if supplied by an authorized provider response.</p>`;
+  });
+}
+
+for (const group of document.querySelectorAll('[role="tablist"]')) {
+  const tabs = [...group.querySelectorAll('[role="tab"]')];
+  tabs.forEach(tab => {
+    tab.removeAttribute('tabindex');
+    tab.addEventListener('keydown', event => {
+      if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key)) return;
+      event.preventDefault();
+      const current = tabs.indexOf(tab);
+      const next = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : (current + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+      tabs[next].focus();
+      tabs[next].click();
+    });
   });
 }
 

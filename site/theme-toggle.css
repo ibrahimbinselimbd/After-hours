@@ -217,6 +217,7 @@ html[data-theme="day"] .district-grid > button > span,
 html[data-theme="day"] .district-grid i,
 html[data-theme="day"] .district-grid .district-index,
 html[data-theme="day"] .district-grid .district-circuit { color: #426c70; }
+html[data-theme="day"] .district-grid .district-index { color: #244e55; }
 html[data-theme="day"] .district-grid button:hover,
 html[data-theme="day"] .district-grid button:focus-visible {
   color: #1b2d37;

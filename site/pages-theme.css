@@ -281,9 +281,10 @@ html[data-theme="day"] .tool-main .tool-table th { color: #304851; background: #
 html[data-theme="day"] .tool-main .drop-zone { color: #3e555e; background: #f8faf7; border-color: #a9c1b8; }
 html[data-theme="day"] .tool-main .drop-zone:hover,
 html[data-theme="day"] .tool-main .drop-zone:focus-within { background: #eaf4ee; }
+html[data-theme="day"] body .tool-main input[type="file"] { color: #405861; }
 html[data-theme="day"] .tool-main .notice { color: #3e555e; background: #edf5ee; }
-html[data-theme="day"] .tool-main .tool-footer { color: #586a72; border-top-color: #cbd9d5; }
-html[data-theme="day"] .tool-main .tool-footer a,
+html[data-theme="day"] .tool-footer { color: #586a72; border-top-color: #cbd9d5; }
+html[data-theme="day"] .tool-footer a,
 html[data-theme="day"] .tool-main .network-source-links a { color: #286f78; }
 html[data-theme="day"] .tool-main .network-consent > span { color: #354b54 !important; }
 /* The generated PDF Merger footer sits outside .tool-main. */
@@ -292,6 +293,21 @@ html[data-theme="day"] body[data-title="PDF Merger"] .tool-footer > a:first-chil
 }
 html[data-theme="day"] .tool-main .network-tool-workspace .result h2 { color: #37515b; }
 html[data-theme="day"] .theme-toggle { box-shadow: 0 8px 24px rgba(31, 47, 58, .20), 0 0 0 5px rgba(117, 93, 170, .10); }
+
+/* Media-tool cards remain dark in Day mode, so keep their text on a light foreground. */
+html[data-theme="day"] body[data-title="Animated GIF Optimizer"] .tool-main .workspace .card,
+html[data-theme="day"] body[data-title="Audio Format Converter"] .tool-main .workspace .card,
+html[data-theme="day"] body[data-title="Speech to Text"] .tool-main .workspace .card,
+html[data-theme="day"] body[data-title="Video Compressor"] .tool-main .workspace .card,
+html[data-theme="day"] body[data-title="Video to GIF"] .tool-main .workspace .card {
+  --text: #f3f5f8;
+  color: #f3f5f8;
+}
+html[data-theme="day"] body[data-title="Animated GIF Optimizer"] .tool-main .workspace .card h2,
+html[data-theme="day"] body[data-title="Audio Format Converter"] .tool-main .workspace .card h2,
+html[data-theme="day"] body[data-title="Speech to Text"] .tool-main .workspace .card h2,
+html[data-theme="day"] body[data-title="Video Compressor"] .tool-main .workspace .card h2,
+html[data-theme="day"] body[data-title="Video to GIF"] .tool-main .workspace .card h2 { color: #f3f5f8; }
 
 /* Sports score pages receive their own body-level palette, so override it locally. */
 html[data-theme="day"] body.sports-page {

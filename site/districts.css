@@ -205,6 +205,7 @@ html[data-theme="day"] body .cat-code { color: #286f78; }
 html[data-theme="day"] body .cat-plan,
 html[data-theme="day"] body .detail .micro,
 html[data-theme="day"] body .allocation-value b { color: #405861; }
+html[data-theme="day"] body #category-detail .allocation-badge strong { color: #244e55; }
 html[data-theme="day"] body .search-status { color: #52616c; }
 
 html[data-theme="day"] body .subtopic {

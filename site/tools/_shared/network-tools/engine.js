@@ -10,7 +10,10 @@
   const timestamp = () => new Date().toISOString();
   const result = (text, ok = true) => ({text, ok});
   const report = (title, body, source, observed = timestamp()) => result(`${title}\nObserved: ${observed}\nSource: ${source}\n\n${body}`);
-  const errorResult = (error, context = 'The check could not be completed') => result(`${context}: ${error?.message || 'no usable response was received'}. No credit was used.`, false);
+  const errorResult = (error, context = 'The check could not be completed') => {
+    const message = error?.message || 'no usable response was received';
+    return result(`${context}: ${message.replace(/[.!?]+$/, '')}. No credit was used.`, false);
+  };
   const safe = value => String(value ?? '').trim();
   const validateIp = value => {
     const v4 = parseIPv4(value);
@@ -165,7 +168,7 @@
     return [`IP: ${data.ip || 'not reported'}`,`Approximate IP location: ${location}`,`Coordinates (database estimate): ${point}`,`Time zone: ${timezone}`,`Country code: ${data.country_code || 'not reported'}`].join('\n');
   }
   function dnsStatusExplain(code) {
-    const map = {0:'NOERROR — the name exists; the requested record may still be absent.',1:'FORMERR — the DNS server could not parse the query.',2:'SERVFAIL — the resolver failed to complete the query.',3:'NXDOMAIN — the queried name does not exist.',4:'NOTIMP — the server does not implement this operation.',5:'REFUSED — the server refused this query.',6:'YXDOMAIN — a name that should not exist does exist.',7:'YXRRSET — a record set that should not exist does exist.',8:'NXRRSET — the requested record set does not exist.',9:'NOTAUTH — the server is not authoritative for the zone.',10:'NOTZONE — the query refers to a name outside the zone.',11:'DSO-TYPE-I — DNS Stateful Operations response.'};
+    const map = {0:'NOERROR — the server completed the query without a DNS error. This alone does not prove the hostname exists; check the response answer section for the requested record.',1:'FORMERR — the DNS server could not parse the query.',2:'SERVFAIL — the resolver failed to complete the query.',3:'NXDOMAIN — the queried name does not exist.',4:'NOTIMP — the server does not implement this operation.',5:'REFUSED — the server refused this query.',6:'YXDOMAIN — a name that should not exist does exist.',7:'YXRRSET — a record set that should not exist does exist.',8:'NXRRSET — the requested record set does not exist.',9:'NOTAUTH — the server is not authoritative for the zone.',10:'NOTZONE — the query refers to a name outside the zone.',11:'DSO-TYPE-I — DNS Stateful Operations response.'};
     return map[Number(code)] || `Unknown or extended response code ${code}; consult the resolver's documentation.`;
   }
   function maskForPrefix(prefix) { return prefix === 0 ? 0n : ((1n << 32n)-1n) ^ ((1n << BigInt(32-prefix))-1n); }

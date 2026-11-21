@@ -169,9 +169,9 @@
     "edpi-cm-360-sensitivity-converter": (v) => {
       const dpi = clamp(num(v.dpi), 100, 50000), sens = clamp(num(v.sensitivity), 0.001, 1000), yaw = clamp(num(v.yaw, 0.022), 0.0001, 10);
       const edpi = dpi * sens;
-      const cm360 = 36000 / (dpi * sens * yaw);
+      const cm360 = 914.4 / (dpi * sens * yaw);
       const target = num(v.targetCm, 0);
-      const targetSensitivity = target > 0 ? 36000 / (dpi * yaw * target) : 0;
+      const targetSensitivity = target > 0 ? 914.4 / (dpi * yaw * target) : 0;
       return result(`eDPI: ${round(edpi, 2)}; estimated cm/360: ${round(cm360, 2)} cm.`, target > 0 ? `For approximately ${round(target, 2)} cm/360 at ${dpi} DPI, try sensitivity ${round(targetSensitivity, 4)} as a starting point.` : "No target cm/360 was supplied.", ["The cm/360 formula is an approximation and should be verified in the specific game."]);
     },
     "game-audio-mix-voice-chat-balance-planner": (v) => {

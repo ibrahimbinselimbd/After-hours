@@ -302,3 +302,15 @@ test('MX checker fails NXDOMAIN but accepts a NOERROR response with no MX record
   assert.equal(noMxRequests.length, 1, 'a successful empty MX answer does not trigger target lookups');
   assert.equal(noMxRequests[0].searchParams.get('type'), 'MX');
 });
+
+test('DNS NOERROR does not alone claim hostname existence and invalid-IP errors have single punctuation', async () => {
+  const {handlers} = makeEngine();
+  const decoded = await handlers['dns-response-code-decoder']({status: '0'});
+  assert.match(decoded.text, /NOERROR — the server completed the query without a DNS error/);
+  assert.match(decoded.text, /does not prove the hostname exists/);
+  assert.doesNotMatch(decoded.text, /NOERROR[^\n]*the name exists/);
+  const invalid = await handlers['ip-address-validator']({address: 'not-an-ip'});
+  assert.equal(invalid.ok, false);
+  assert.match(invalid.text, /Enter a valid IPv4 or IPv6 address\. No credit was used\./);
+  assert.doesNotMatch(invalid.text, /address\.\./);
+});
