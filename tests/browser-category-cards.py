@@ -54,9 +54,17 @@ with sync_playwright() as p:
                     alt:image?.getAttribute('alt'), title:title?.textContent, accessibleLabel:card.getAttribute('aria-label'),
                     clipped:[card,title,footer].some(el=>el.scrollWidth>el.clientWidth+1)};
             })''')
+            theme = page.locator('html').get_attribute('data-theme')
+            theme_aware = {'typescript-config-explorer', 'unix-timestamp-converter', 'acoustic-panel-coverage-planner',
+                           'bedding-rotation-planner', 'shared-space-agreement-builder', 'image-cropper', 'image-meme-maker'}
+            night_fallbacks = {'image-cropper', 'image-meme-maker'}
             for card in check:
                 slug = urlparse(card['href']).path.strip('/').split('/')[-1]
-                assert card['src'] == base + '/tools/_shared/previews/' + slug + '.webp', card
+                if slug in theme_aware and not (theme == 'night' and slug in night_fallbacks):
+                    filename = f'{slug}-{theme}.webp'
+                else:
+                    filename = f'{slug}.webp'
+                assert card['src'] == base + '/tools/_shared/previews/' + filename, card
                 assert card['width'] == 640 and card['height'] == 360 and card['title'], card
                 assert card['loading'] == 'lazy' and card['decoding'] == 'async' and card['priority'] == 'low', card
                 assert card['alt'] == '' and card['accessibleLabel'], card
@@ -78,12 +86,12 @@ with sync_playwright() as p:
             assert modal_top <= page.locator('#dialog-title').bounding_box()['y'] < modal_top + 110
             assert modal_top <= page.locator('.modal-close').bounding_box()['y'] < modal_top + 110
             page.locator('.modal-close').click()
-        assert count == 500
-        assert len(assets) == 500, 'every tool must use its own real workspace screenshot'
+        assert count == 550
+        assert len(assets) == 550, 'every active tool must use its own real workspace screenshot'
         assert not errors and not bad and not submissions, {'errors':errors,'bad':bad,'submissions':submissions}
         records.append({'width':width,'height':height,'categories':20,'active_cards':count,'unique_real_previews':len(assets),
                         'columns':3 if width>1000 else 2,'overflow':False,'reduced_motion':'disabled','errors':errors,'failed_requests':bad})
-        print(f'{width}px: all 20 category popups / 500 individual previews passed', flush=True)
+        print(f'{width}px: all 20 category popups / 550 individual previews passed', flush=True)
         page.close()
     page = browser.new_page(viewport={'width':1440,'height':1000}, reduced_motion='no-preference')
     page.goto(base + '/tools/?category=data-spreadsheets', wait_until='networkidle')
@@ -119,12 +127,12 @@ def verify_asset(url):
         image.verify()
     return len(data), hashlib.sha256(data).hexdigest()
 
-assert len(assets) == 500
+assert len(assets) == 550
 with concurrent.futures.ThreadPoolExecutor(max_workers=12) as pool:
     verified = list(pool.map(verify_asset, sorted(assets)))
 total_bytes = sum(size for size, _ in verified)
-assert len({digest for _, digest in verified}) == 500, 'preview image bytes must be unique per tool'
+assert len({digest for _, digest in verified}) == 550, 'preview image bytes must be unique per tool'
 assert total_bytes <= 6 * 1024 * 1024, f'real preview payload too large: {total_bytes}'
-records.append({'verified_real_webp_previews':500,'unique_image_hashes':500,'total_bytes':total_bytes,'largest_bytes':max(size for size,_ in verified)})
+records.append({'verified_real_webp_previews':550,'unique_image_hashes':550,'total_bytes':total_bytes,'largest_bytes':max(size for size,_ in verified)})
 (out / 'results.json').write_text(json.dumps(records, indent=2) + '\n')
 print(json.dumps(records, indent=2), flush=True)

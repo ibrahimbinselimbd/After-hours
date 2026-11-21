@@ -21,7 +21,13 @@ with sync_playwright() as playwright:
         assert toggle.get_attribute('title') == 'Switch to day mode'
         rect = toggle.bounding_box()
         assert rect is not None and rect['x'] >= 0 and rect['x'] + rect['width'] <= width, f'{width}px: toggle must fit the viewport'
-        assert abs((rect['y'] + rect['height'] / 2) - height * .52) < 2, f'{width}px: toggle must stay at the marked viewport position'
+        if width <= 700:
+            bottom_gap = height - (rect['y'] + rect['height'])
+            right_gap = width - (rect['x'] + rect['width'])
+            assert abs(bottom_gap - 14) < 2, f'{width}px: mobile toggle must keep its bottom safe-area gap'
+            assert abs(right_gap - 12) < 2, f'{width}px: mobile toggle must keep its right safe-area gap'
+        else:
+            assert abs((rect['y'] + rect['height'] / 2) - height * .52) < 2, f'{width}px: desktop toggle must stay at the marked viewport position'
         assert page.locator('#theme-toggle').evaluate('(el) => getComputedStyle(el).position') == 'fixed'
 
         icon_night = toggle.inner_html()
