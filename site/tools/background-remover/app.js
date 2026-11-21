@@ -85,7 +85,12 @@ function renderQueue() {
   clearButton.disabled = !queue.length || isProcessing || isZipping;
   fileInput.disabled = isZipping;
   processButton.disabled = isProcessing || isZipping || !queue.some(x => x.status === 'queued' || x.status === 'error');
-  processButton.innerHTML = isProcessing ? '<span class="button-spark">✳</span> Processing batch…' : '<span class="button-spark">✳</span> ' + (queue.some(x => x.status === 'queued' || x.status === 'error') ? 'Remove backgrounds' : 'All images processed') + ' <span aria-hidden="true">↗</span>';
+  const hasPendingImages = queue.some(x => x.status === 'queued' || x.status === 'error');
+  const allImagesProcessed = queue.length > 0 && queue.every(x => x.status === 'done');
+  const idleProcessLabel = queue.length === 0 ? 'Add images to begin'
+    : hasPendingImages ? 'Remove backgrounds'
+      : allImagesProcessed ? 'All images processed' : 'Batch in progress';
+  processButton.innerHTML = isProcessing ? '<span class="button-spark">✳</span> Processing batch…' : '<span class="button-spark">✳</span> ' + idleProcessLabel + ' <span aria-hidden="true">↗</span>';
   stopButton.hidden = !isProcessing;
   zipButton.disabled = !canMakeZip() || isProcessing || isZipping;
   $('#zip-count').textContent = countLabel(queue.filter(x => x.status === 'done' && x.resultBlob).length);

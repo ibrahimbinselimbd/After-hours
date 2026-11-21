@@ -81,6 +81,84 @@ body:has(dialog[open]) { overflow: hidden; }
 .tool-preview img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; transform-origin: center; backface-visibility: hidden; }
 .tool-preview::before { content: ''; position: absolute; z-index: 1; inset: 0; pointer-events: none; background: linear-gradient(180deg, #ffffff08, transparent 22%), linear-gradient(0deg, #080d1699, transparent 24%); }
 .tool-preview::after { content: ''; position: absolute; z-index: 1; inset: -50%; pointer-events: none; background: linear-gradient(110deg, transparent 40%, #cdebe90c 48%, #ffffff16 50%, transparent 60%); transform: translateX(-70%); }
+/* Keep the TypeScript catalog thumbnail's lower workspace details visible in both themes. */
+html[data-theme="day"] .tools-page dialog #dialog-tools .featured-tool[href="/tools/typescript-config-explorer/"] .tool-preview::before {
+  background: linear-gradient(180deg, #ffffff10, transparent 22%), linear-gradient(0deg, #eaf3ee14, transparent 24%);
+}
+/* This card already uses light Day artwork; opt it out of the global Day image inversion. */
+html[data-theme="day"] .tools-page dialog #dialog-tools .featured-tool[href="/tools/typescript-config-explorer/"] .tool-preview img {
+  filter: none;
+}
+html:not([data-theme="day"]) .tools-page dialog #dialog-tools .featured-tool[href="/tools/typescript-config-explorer/"] .tool-preview::before {
+  background: linear-gradient(180deg, #ffffff08, transparent 22%), linear-gradient(0deg, #080d1644, transparent 24%);
+}
+/* Keep the Unix Timestamp Converter's dedicated catalog artwork defined in both themes. */
+html[data-theme="day"] .tools-page dialog #dialog-tools .featured-tool[href="/tools/unix-timestamp-converter/"] .tool-preview::before {
+  background: linear-gradient(180deg, #ffffff08, transparent 22%), linear-gradient(0deg, #eaf3ee08, transparent 24%);
+}
+html[data-theme="day"] .tools-page dialog #dialog-tools .featured-tool[href="/tools/unix-timestamp-converter/"] .tool-preview img,
+html:not([data-theme="day"]) .tools-page dialog #dialog-tools .featured-tool[href="/tools/unix-timestamp-converter/"] .tool-preview img {
+  filter: none;
+}
+html:not([data-theme="day"]) .tools-page dialog #dialog-tools .featured-tool[href="/tools/unix-timestamp-converter/"] .tool-preview::before {
+  background: linear-gradient(180deg, #ffffff08, transparent 22%), linear-gradient(0deg, #080d1644, transparent 24%);
+}
+/* Keep the acoustic planner's theme-native catalog snapshots defined at card size. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href$="/acoustic-panel-coverage-planner/"] .tool-preview::before {
+  background: linear-gradient(180deg, #ffffff08, transparent 22%), linear-gradient(0deg, #eaf3ee08, transparent 24%);
+}
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href$="/acoustic-panel-coverage-planner/"] .tool-preview img,
+html:not([data-theme="day"]) body.tools-page dialog #dialog-tools .featured-tool[href$="/acoustic-panel-coverage-planner/"] .tool-preview img {
+  filter: none;
+}
+html:not([data-theme="day"]) body.tools-page dialog #dialog-tools .featured-tool[href$="/acoustic-panel-coverage-planner/"] .tool-preview::before {
+  background: linear-gradient(180deg, #ffffff08, transparent 22%), linear-gradient(0deg, #080d1644, transparent 24%);
+}
+/* Use Bedding's tuned, theme-native snapshots; bypass inherited Day inversion only on this card. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href$="/bedding-rotation-planner/"] .tool-preview::before {
+  background: linear-gradient(180deg, #ffffff08, transparent 22%), linear-gradient(0deg, #eaf3ee08, transparent 24%);
+}
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href$="/bedding-rotation-planner/"] .tool-preview img {
+  filter: brightness(.9) contrast(1.08);
+}
+html:not([data-theme="day"]) body.tools-page dialog #dialog-tools .featured-tool[href$="/bedding-rotation-planner/"] .tool-preview img {
+  filter: none;
+}
+html:not([data-theme="day"]) body.tools-page dialog #dialog-tools .featured-tool[href$="/bedding-rotation-planner/"] .tool-preview::before {
+  background: linear-gradient(180deg, #ffffff08, transparent 22%), linear-gradient(0deg, #080d1644, transparent 24%);
+}
+/* Lift the Picture Grid capture for a defined light Day preview and readable dark Night detail. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href$="/picture-grid-layout-planner/"] .tool-preview img {
+  filter: invert(1) hue-rotate(180deg) saturate(.92) contrast(1.05);
+}
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href$="/picture-grid-layout-planner/"] .tool-preview::before {
+  background: linear-gradient(180deg, #ffffff08, transparent 22%), linear-gradient(0deg, #eaf3ee08, transparent 24%);
+}
+html:not([data-theme="day"]) body.tools-page dialog #dialog-tools .featured-tool[href$="/picture-grid-layout-planner/"] .tool-preview img {
+  filter: brightness(1.25) contrast(1.35);
+}
+html:not([data-theme="day"]) body.tools-page dialog #dialog-tools .featured-tool[href$="/picture-grid-layout-planner/"] .tool-preview::before {
+  background: linear-gradient(180deg, #ffffff08, transparent 22%), linear-gradient(0deg, #080d1644, transparent 24%);
+}
+/* Use Shared Space's native theme captures; lift dark Night detail locally. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href$="/shared-space-agreement-builder/"] .tool-preview img {
+  filter: brightness(.90) contrast(1.08);
+}
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href$="/shared-space-agreement-builder/"] .tool-preview::before {
+  background: linear-gradient(180deg, #ffffff08, transparent 22%), linear-gradient(0deg, #eaf3ee08, transparent 24%);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href$="/shared-space-agreement-builder/"] .tool-preview img {
+  filter: brightness(1.5) contrast(1.05);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href$="/shared-space-agreement-builder/"] .tool-preview::before {
+  background: linear-gradient(180deg, #ffffff08, transparent 22%), linear-gradient(0deg, #080d1633, transparent 24%);
+}
+/* Keep the Shared Space action text legible in Night without changing its artwork or category accent. */
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href$="/shared-space-agreement-builder/"] .open-label {
+  color: #c4f0d8;
+}
+/* Keep the Picture Grid preview action unobstructed at every card size. */
+#dialog-tools .featured-tool[href$="/picture-grid-layout-planner/"] .preview-caption { display: none; }
 .preview-caption { position: absolute; z-index: 2; left: 11px; bottom: 9px; padding: 4px 7px; border: 1px solid #c9e68c28; border-radius: 999px; background: #050a12c9; color: #d4dfed; font: 8px/1.3 monospace; letter-spacing: .06em; backdrop-filter: blur(8px); }
 .preview-caption::before { content: ''; display: inline-block; width: 4px; height: 4px; margin: 0 6px 1px 0; border-radius: 50%; background: var(--category-accent); }
 .tool-title-line { display: block; min-width: 0; padding: 15px 16px 10px; }
@@ -143,6 +221,8 @@ body:has(dialog[open]) { overflow: hidden; }
   #dialog-tools .featured-tool { border-radius: 12px; }
   .tool-preview { aspect-ratio: 16 / 9; }
   .preview-caption { left: 9px; bottom: 7px; font-size: 8px; letter-spacing: .01em; }
+  /* Keep Bedding's preview controls unobstructed without changing its card geometry. */
+  #dialog-tools .featured-tool[href$="/bedding-rotation-planner/"] .preview-caption { display: none; }
   .tool-title-line { padding: 11px 10px 10px; }
   .tool-meta b { font-size: 14px; line-height: 1.35; }
   .tool-meta small { -webkit-line-clamp: 3; font-size: 12px; line-height: 1.45; margin-top: 7px; }
@@ -179,4 +259,13 @@ body:has(dialog[open]) { overflow: hidden; }
   #dialog-tools *, #dialog-tools *::before, #dialog-tools *::after { animation: none !important; transition: none !important; }
   #dialog-tools .featured-tool, #dialog-tools .featured-tool:hover, #dialog-tools .featured-tool:focus-visible { animation: none !important; transition: none !important; transform: none !important; translate: none !important; }
   .tool-preview img, .featured-tool:hover .tool-arrow { transform: none !important; }
+}
+/* #43 Night-only lift for Study Distraction Protocol Builder; Day stays native. */
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href$="/distraction-protocol-builder/"] .tool-preview img {
+  filter: brightness(1.65) contrast(1.15);
+}
+
+/* #44 Night-only lift for Research Question Refiner preview; Day stays native. */
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href$="/research-question-refiner/"] .tool-preview img {
+  filter: brightness(1.5) contrast(1.1);
 }

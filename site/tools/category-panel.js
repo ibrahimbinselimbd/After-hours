@@ -6,6 +6,23 @@ const categorySearchStatus = document.querySelector('#category-search-status');
 let previewObserver;
 const cardTiltMotion = window.matchMedia('(prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine)');
 const toolCardGrid = document.querySelector('#dialog-tools');
+const themePreviewSlugs = new Set(['typescript-config-explorer', 'unix-timestamp-converter', 'acoustic-panel-coverage-planner', 'bedding-rotation-planner', 'shared-space-agreement-builder', 'image-cropper', 'image-meme-maker']);
+const activePreviewTheme = () => document.documentElement.dataset.theme === 'day' ? 'day' : 'night';
+const previewAssetName = (slug, theme) => {
+  if (theme === 'night' && ['image-cropper', 'image-meme-maker'].includes(slug)) return `${slug}.webp`;
+  return `${slug}-${theme}.webp`;
+};
+function syncThemePreviewImages() {
+  const theme = activePreviewTheme();
+  for (const image of toolCardGrid?.querySelectorAll('img[data-theme-preview-slug]') || []) {
+    if (image.dataset.themePreview === theme) continue;
+    image.dataset.themePreview = theme;
+    image.src = new URL(previewAssetName(image.dataset.themePreviewSlug, theme), toolPreviewBase).href;
+  }
+}
+if ('MutationObserver' in window) {
+  new MutationObserver(syncThemePreviewImages).observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
+}
 toolCardGrid?.addEventListener('pointermove', event => {
   if (!cardTiltMotion.matches || event.pointerType === 'touch') return;
   const card = event.target.closest('.featured-tool');
@@ -77,7 +94,13 @@ function openCategory(id, trigger) {
     preview.setAttribute('aria-hidden', 'true');
     const image = document.createElement('img');
     const slug = item.href.split('/').filter(Boolean).pop();
-    image.src = new URL(`${slug}.webp`, toolPreviewBase).href;
+    if (themePreviewSlugs.has(slug)) {
+      image.dataset.themePreviewSlug = slug;
+      image.dataset.themePreview = activePreviewTheme();
+      image.src = new URL(previewAssetName(slug, image.dataset.themePreview), toolPreviewBase).href;
+    } else {
+      image.src = new URL(`${slug}.webp`, toolPreviewBase).href;
+    }
     image.alt = '';
     image.width = 640;
     image.height = 360;

@@ -380,3 +380,13 @@ html[data-theme="day"] body .footer .brand-word span,
 html[data-theme="day"] body .footer .end-mark {
   color: #286f78;
 }
+
+
+/* Keep dark-theme secondary labels legible on the Day detail-card surface. */
+html[data-theme="day"] body #category-detail .topic-context {
+  color: #405861;
+}
+html[data-theme="day"] body #category-detail .allocation-badge small,
+html[data-theme="day"] body #category-detail .subtopic-head span:last-child {
+  color: #52616c;
+}

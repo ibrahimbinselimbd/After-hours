@@ -121,3 +121,80 @@ body[data-title="Batch File Renamer"] .tool-form .actions {
   max-width: 100%;
   flex-wrap: wrap;
 }
+
+/* TOML Validator & Formatter preview: keep the editor readable in both themes. */
+html[data-theme="day"] body[data-title="TOML Validator & Formatter"] .workspace {
+  color-scheme: light;
+  color: #1d302b;
+  background: linear-gradient(145deg, #f7faf7, #e9f0eb);
+  border-color: #a9bcb1;
+  box-shadow: 0 14px 40px rgba(30, 57, 46, .14);
+}
+html[data-theme="day"] body[data-title="TOML Validator & Formatter"] .workspace h2 { color: #1b2d29; }
+html[data-theme="day"] body[data-title="TOML Validator & Formatter"] .workspace #tool-content .hint { color: #52645c; }
+html[data-theme="day"] body[data-title="TOML Validator & Formatter"] .workspace .field > span,
+html[data-theme="day"] body[data-title="TOML Validator & Formatter"] .workspace .field > label { color: #334c43; }
+html[data-theme="day"] body[data-title="TOML Validator & Formatter"] .workspace textarea {
+  color: #1e302b;
+  background: #fff;
+  border-color: #9fb3a8;
+}
+html[data-theme="day"] body[data-title="TOML Validator & Formatter"] .workspace textarea::placeholder { color: #687a71; opacity: 1; }
+html[data-theme="day"] body[data-title="TOML Validator & Formatter"] .workspace textarea:focus { border-color: #587f70; box-shadow: 0 0 0 3px rgba(88, 127, 112, .17); }
+html[data-theme="day"] body[data-title="TOML Validator & Formatter"] .workspace .actions .button {
+  color: #233b33;
+  background: #e1eae4;
+  border-color: #99ada2;
+}
+html[data-theme="day"] body[data-title="TOML Validator & Formatter"] .workspace .actions .button-main {
+  color: #172116;
+  background: #d3ef83;
+  border-color: #8cae4b;
+}
+html[data-theme="day"] body[data-title="TOML Validator & Formatter"] .workspace .actions .button:disabled { opacity: .78; }
+html[data-theme="day"] body[data-title="TOML Validator & Formatter"] .workspace .privacy-note,
+html[data-theme="day"] body[data-title="TOML Validator & Formatter"] .workspace .credit-note { color: #52645c; }
+html[data-theme="day"] body[data-title="TOML Validator & Formatter"] .workspace .privacy-note strong,
+html[data-theme="day"] body[data-title="TOML Validator & Formatter"] .workspace .credit-note strong { color: #315548; }
+html[data-theme="day"] body[data-title="TOML Validator & Formatter"] .workspace .credit-note { border-top-color: #bdcbc2; }
+html[data-theme="day"] body[data-title="TOML Validator & Formatter"] .workspace .status { color: #33483f; background: #e3ebe5; border-color: #9eb2a6; }
+html[data-theme="day"] body[data-title="TOML Validator & Formatter"] .workspace .result { color: #20342d; background: #fff; border-color: #a9bcb1; }
+html[data-theme="day"] body[data-title="TOML Validator & Formatter"] .workspace .result pre { color: #20342d; }
+
+html:not([data-theme="day"]) body[data-title="TOML Validator & Formatter"] .workspace {
+  color-scheme: dark;
+  color: #edf3f8;
+  background: linear-gradient(145deg, #1c293a, #131e2c);
+  border-color: #53677d;
+  box-shadow: 0 16px 46px rgba(0, 0, 0, .38);
+}
+html:not([data-theme="day"]) body[data-title="TOML Validator & Formatter"] .workspace h2 { color: #f2f6fb; }
+html:not([data-theme="day"]) body[data-title="TOML Validator & Formatter"] .workspace #tool-content .hint { color: #c2cfdd; }
+html:not([data-theme="day"]) body[data-title="TOML Validator & Formatter"] .workspace .field > span,
+html:not([data-theme="day"]) body[data-title="TOML Validator & Formatter"] .workspace .field > label { color: #d6e0eb; }
+html:not([data-theme="day"]) body[data-title="TOML Validator & Formatter"] .workspace textarea {
+  color: #f0f5fa;
+  background: #0c1624;
+  border-color: #5e7188;
+}
+html:not([data-theme="day"]) body[data-title="TOML Validator & Formatter"] .workspace textarea::placeholder { color: #a9b8c8; opacity: 1; }
+html:not([data-theme="day"]) body[data-title="TOML Validator & Formatter"] .workspace textarea:focus { border-color: #a7dcae; box-shadow: 0 0 0 3px rgba(167, 220, 174, .16); }
+html:not([data-theme="day"]) body[data-title="TOML Validator & Formatter"] .workspace .actions .button {
+  color: #f0f4f8;
+  background: #27374b;
+  border-color: #5e7188;
+}
+html:not([data-theme="day"]) body[data-title="TOML Validator & Formatter"] .workspace .actions .button-main {
+  color: #141a10;
+  background: #d3fb56;
+  border-color: #d3fb56;
+}
+html:not([data-theme="day"]) body[data-title="TOML Validator & Formatter"] .workspace .actions .button:disabled { opacity: .78; }
+html:not([data-theme="day"]) body[data-title="TOML Validator & Formatter"] .workspace .privacy-note,
+html:not([data-theme="day"]) body[data-title="TOML Validator & Formatter"] .workspace .credit-note { color: #b9c6d4; }
+html:not([data-theme="day"]) body[data-title="TOML Validator & Formatter"] .workspace .privacy-note strong,
+html:not([data-theme="day"]) body[data-title="TOML Validator & Formatter"] .workspace .credit-note strong { color: #e1f1d5; }
+html:not([data-theme="day"]) body[data-title="TOML Validator & Formatter"] .workspace .credit-note { border-top-color: #43566c; }
+html:not([data-theme="day"]) body[data-title="TOML Validator & Formatter"] .workspace .status { color: #e4edf6; background: #1b2b3e; border-color: #60758c; }
+html:not([data-theme="day"]) body[data-title="TOML Validator & Formatter"] .workspace .result { color: #edf3f8; background: #0c1624; border-color: #53677d; }
+html:not([data-theme="day"]) body[data-title="TOML Validator & Formatter"] .workspace .result pre { color: #e3ecf5; }

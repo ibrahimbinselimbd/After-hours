@@ -74,6 +74,15 @@ html[data-theme="day"] .ah-footer {
   background: linear-gradient(125deg, #edf3ee, #eef0f5 58%, #f2edf7);
 }
 
+/* The Frequency Router label stays legible in both themes; other shadow fixes are Day-only. */
+.frequency-feed .console-top > span:first-child { color: #d8e4f1; font-size: 9.5px; }
+html[data-theme="day"] .frequency-feed .console-top > span:first-child { color: #3e5963; }
+html[data-theme="day"] .console-title,
+html[data-theme="day"] h3.console-title { text-shadow: none; }
+html[data-theme="day"] #stories .card-visual,
+html[data-theme="day"] #stories .card-visual:hover { box-shadow: 0 8px 18px rgba(31, 48, 57, .12); }
+html[data-theme="day"] .feature-transmission { box-shadow: 0 12px 28px rgba(31, 48, 57, .12), inset 0 1px rgba(255, 255, 255, .8); }
+
 /* Shared editorial and information page surfaces. */
 html[data-theme="day"] .site-header,
 html[data-theme="day"] .article-header,
@@ -277,6 +286,10 @@ html[data-theme="day"] .tool-main .tool-footer { color: #586a72; border-top-colo
 html[data-theme="day"] .tool-main .tool-footer a,
 html[data-theme="day"] .tool-main .network-source-links a { color: #286f78; }
 html[data-theme="day"] .tool-main .network-consent > span { color: #354b54 !important; }
+/* The generated PDF Merger footer sits outside .tool-main. */
+html[data-theme="day"] body[data-title="PDF Merger"] .tool-footer > a:first-child {
+  color: #245f64;
+}
 html[data-theme="day"] .tool-main .network-tool-workspace .result h2 { color: #37515b; }
 html[data-theme="day"] .theme-toggle { box-shadow: 0 8px 24px rgba(31, 47, 58, .20), 0 0 0 5px rgba(117, 93, 170, .10); }
 
@@ -353,6 +366,260 @@ html[data-theme="day"] body.tools-page .empty-state { color: #465c66; background
 html[data-theme="day"] body.tools-page .build-note { color: #50636c; }
 html[data-theme="day"] body.tools-page .build-note i { background: #3f745f; }
 html[data-theme="day"] body.tools-page .modal-status { color: #356b5c; background: #edf5ee; border-color: #adc8bd; }
+
+/* Day-mode category dialog chrome and light rendering for dark tool screenshots. */
+html[data-theme="day"] body.tools-page dialog {
+  color: #20333d;
+  border-color: #b9cbc6;
+  background: radial-gradient(ellipse at 95% 0%, rgba(208, 195, 231, .25), transparent 48%), linear-gradient(145deg, #fcfdf9, #f1f5f1);
+  box-shadow: 0 24px 72px rgba(31, 48, 57, .22), inset 0 1px #fff;
+}
+html[data-theme="day"] body.tools-page dialog .panel-top {
+  color: #20333d;
+  border-bottom-color: #d5dfdb;
+  background: rgba(249, 251, 247, .97);
+}
+html[data-theme="day"] body.tools-page dialog .district-code { color: #50656f; }
+html[data-theme="day"] body.tools-page dialog .district-code span { color: #71838a; }
+html[data-theme="day"] body.tools-page dialog .panel-title-group h2 { color: #20333d; }
+html[data-theme="day"] body.tools-page dialog .modal-close {
+  color: #344f59;
+  border-color: #bdcec8;
+  background: #f8faf6;
+}
+html[data-theme="day"] body.tools-page dialog .modal-close:hover,
+html[data-theme="day"] body.tools-page dialog .modal-close:focus-visible { color: #20333d; border-color: #6a9385; background: #eaf2ed; }
+html[data-theme="day"] body.tools-page dialog .tool-search {
+  color: #405a64;
+  border-bottom-color: #d5dfdb;
+  background: rgba(242, 246, 241, .98);
+}
+html[data-theme="day"] body.tools-page dialog .tool-search > span { color: #34777b; }
+html[data-theme="day"] body.tools-page dialog .tool-search input {
+  color: #20333d;
+  border-color: #baccc6;
+  background: #fbfcf8;
+}
+html[data-theme="day"] body.tools-page dialog .tool-search input::placeholder { color: #586d75; }
+html[data-theme="day"] body.tools-page dialog .tools-heading { color: #4c626b; }
+html[data-theme="day"] body.tools-page dialog .modal-status { color: #356b5c; }
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool {
+  color: #20333d;
+  border-color: #ccd9d5;
+  background: linear-gradient(150deg, #ffffff, #f3f7f2 74%);
+  box-shadow: 0 8px 22px rgba(31, 48, 57, .10), inset 0 1px #fff;
+}
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool:hover,
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool:focus-visible {
+  border-color: #8aaea0;
+  box-shadow: 0 12px 26px rgba(31, 48, 57, .14), inset 0 1px #fff;
+}
+html[data-theme="day"] body.tools-page dialog #dialog-tools .tool-preview::before {
+  background: linear-gradient(180deg, rgba(255, 255, 255, .12), transparent 22%), linear-gradient(0deg, rgba(243, 247, 242, .14), transparent 24%);
+}
+html[data-theme="day"] body.tools-page dialog #dialog-tools .tool-preview img {
+  filter: invert(1) hue-rotate(180deg) saturate(.92);
+}
+/* CODEOWNERS and Renovate previews use native Day artwork. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href$="/tools/codeowners-match-simulator/"] .tool-preview img,
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href$="/tools/renovate-rule-trace/"] .tool-preview img {
+  filter: none;
+}
+/* Restore form-label contrast for this dense workspace capture in Day; Night keeps the source pixels. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="problem-details-validator/"] .tool-preview img {
+  filter: invert(.84) hue-rotate(180deg) saturate(.92) contrast(1.65) brightness(.98);
+}
+/* Keep the source-white drawing/crop canvases from being inverted in Day mode. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="image-drawing-board/"] .tool-preview img,
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="image-cropper/"] .tool-preview img {
+  filter: none;
+}
+/* The Meme Maker's dedicated light Day artwork must not inherit the hub-wide inversion. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="image-meme-maker/"] .tool-preview img {
+  filter: none;
+}
+/* Keep the AI Image Upscaler preview light and defined in Day; Night keeps the original dark pixels. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="image-upscaler/"] .tool-preview img {
+  filter: invert(.82) hue-rotate(180deg) saturate(.92) contrast(1.65) brightness(.98);
+}
+/* Lighten only this dark workspace capture in Day while preserving its form contrast; Night keeps source pixels. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="controller-deadzone-input-tester/"] .tool-preview img {
+  filter: invert(.82) hue-rotate(180deg) saturate(.92) contrast(1.15);
+}
+/* Keep this dense dark workspace light and readable in Day, while lifting detail locally in Night. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="cross-platform-game-backlog-session-tracker/"] .tool-preview img {
+  filter: invert(.88) hue-rotate(180deg) saturate(.92) contrast(1.2);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="cross-platform-game-backlog-session-tracker/"] .tool-preview img {
+  filter: brightness(1.4) contrast(1.15);
+}
+/* Keep this calculator preview light and legible in Day, with a local lift for Night detail. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="discount-calculator/"] .tool-preview img {
+  filter: invert(.85) hue-rotate(180deg) saturate(.92) contrast(1.18);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="discount-calculator/"] .tool-preview img {
+  filter: brightness(1.5) contrast(1.2);
+}
+/* Keep this planner's preview light and readable in Day, with clearer detail on a dark Night surface. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="home-maintenance-schedule-planner/"] .tool-preview img {
+  filter: invert(.88) hue-rotate(180deg) saturate(.92) contrast(1.5) brightness(.92);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="home-maintenance-schedule-planner/"] .tool-preview img {
+  filter: brightness(1.7) contrast(1.15);
+}
+/* Night-only clarity lift for this dark source preview; Day stays on the shared treatment. */
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="inclusive-language-review-assistant/"] .tool-preview img {
+  filter: brightness(1.65) contrast(1.15);
+}
+/* Lift this underexposed workspace in Night only; Day keeps its existing shared preview treatment. */
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="localization-screenshot-text-overflow-qa/"] .tool-preview img {
+  filter: brightness(1.5) contrast(1.08);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="localization-screenshot-text-overflow-qa/"] .tool-preview::before {
+  background: linear-gradient(180deg, #ffffff08, transparent 22%), linear-gradient(0deg, #080d1666, transparent 24%);
+}
+/* Keep the lecture-notes fields light and distinct in Day, with a clearer dark Night preview. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="lecture-notes-topic-coverage-checker/"] .tool-preview img {
+  filter: invert(.78) hue-rotate(180deg) saturate(.92) contrast(1.45) brightness(.95);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="lecture-notes-topic-coverage-checker/"] .tool-preview img {
+  filter: brightness(1.7) contrast(1.15);
+}
+/* Keep this flashcards preview light and legible in Day, with clear controls on a dark Night surface. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="notes-to-flashcards-generator/"] .tool-preview img {
+  filter: invert(.84) hue-rotate(180deg) saturate(1) contrast(1.65) brightness(.98);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="notes-to-flashcards-generator/"] .tool-preview img {
+  filter: brightness(1.7) contrast(1.15);
+}
+/* Keep this plant-care preview light and crisp in Day; preserve the original Night image. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="plant-care-vacation-watering-planner/"] .tool-preview img {
+  filter: invert(.82) hue-rotate(180deg) saturate(1) contrast(1.7) brightness(.99);
+}
+/* Keep the reading preview light in Day; clarify controls while preserving its dark Night workspace. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="reading-comprehension-question-maker/"] .tool-preview img {
+  filter: invert(.65) hue-rotate(180deg) saturate(1) contrast(2.2) brightness(.98);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="reading-comprehension-question-maker/"] .tool-preview img {
+  filter: brightness(1.65) contrast(1.3);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="reading-comprehension-question-maker/"] .tool-preview::before {
+  background: linear-gradient(180deg, #ffffff08, transparent 22%), linear-gradient(0deg, #080d1666, transparent 24%);
+}
+/* Lift detail in the bracket builder's dark workspace without changing its Day rendering. */
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="tournament-bracket-seeding-builder/"] .tool-preview img {
+  filter: brightness(1.7) contrast(1.15);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="tournament-bracket-seeding-builder/"] .tool-preview::before {
+  background: linear-gradient(180deg, #ffffff08, transparent 22%), linear-gradient(0deg, #080d1666, transparent 24%);
+}
+/* Keep Fade Generator's workspace light and defined in Day, with a local Night clarity lift. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="fade-generator/"] .tool-preview img {
+  filter: invert(.72) hue-rotate(180deg) saturate(.98) contrast(1.9) brightness(.95);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="fade-generator/"] .tool-preview img {
+  filter: brightness(1.5) contrast(1.08) saturate(.86);
+}
+/* Keep the book-club workspace light and defined in Day; retain a dark Night view with a local clarity lift. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="community-book-club-discussion-kit-maker/"] .tool-preview img {
+  filter: invert(.72) hue-rotate(180deg) saturate(.98) contrast(1.9) brightness(.95);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="community-book-club-discussion-kit-maker/"] .tool-preview img {
+  filter: brightness(1.5) contrast(1.08) saturate(.86);
+}
+/* Keep this deadline preview light and defined in Day, with clearer detail on its dark Night surface. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="international-business-day-deadline-calculator/"] .tool-preview img {
+  filter: invert(.72) hue-rotate(180deg) saturate(.98) contrast(1.9) brightness(.95);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="international-business-day-deadline-calculator/"] .tool-preview img {
+  filter: brightness(1.5) contrast(1.08) saturate(.86);
+}
+/* Keep the audit workspace light with visible field labels in Day. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="manual-time-audit-analyzer/"] .tool-preview img {
+  filter: invert(.84) hue-rotate(180deg) saturate(.92) contrast(1.55) brightness(.96);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="manual-time-audit-analyzer/"] .tool-preview img {
+  filter: brightness(1.8) contrast(1.25) saturate(.9);
+}
+/* Keep the proposal draft workspace light and defined in Day, with a restrained detail lift in Night. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="proposal-scope-assumption-draft-builder/"] .tool-preview img {
+  filter: invert(.72) hue-rotate(180deg) saturate(.98) contrast(1.9) brightness(.95);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="proposal-scope-assumption-draft-builder/"] .tool-preview img {
+  filter: brightness(1.5) contrast(1.08) saturate(.86);
+}
+/* Define the wholesale form in Day and lift its dark workspace detail in Night. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="wholesale-pricing-break-even-planner/"] .tool-preview img {
+  filter: invert(.72) hue-rotate(180deg) saturate(.98) contrast(1.9) brightness(.95);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="wholesale-pricing-break-even-planner/"] .tool-preview img {
+  filter: brightness(1.5) contrast(1.08) saturate(.86);
+}
+/* Define the CSP workspace in Day and keep its controls discernible on a dark Night surface. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="csp-policy-evaluator/"] .tool-preview img {
+  filter: invert(.72) hue-rotate(180deg) saturate(.98) contrast(1.9) brightness(.95);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="csp-policy-evaluator/"] .tool-preview img {
+  filter: brightness(1.5) contrast(1.08) saturate(.86);
+}
+/* Define the Dependabot workspace in Day without changing its Night source pixels. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="dependabot-config-preview/"] .tool-preview img {
+  filter: invert(.72) hue-rotate(180deg) saturate(.98) contrast(1.9) brightness(.95);
+}
+/* Define the DoH workspace in Day while preserving a dark, lifted-detail Night preview. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="doh-query-url-builder/"] .tool-preview img {
+  filter: invert(.82) hue-rotate(180deg) saturate(.92) contrast(1.55) brightness(.96);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="doh-query-url-builder/"] .tool-preview img {
+  filter: brightness(1.65) contrast(1.15);
+}
+/* Keep the Git patch workspace defined in Day and detailed on its dark Night surface. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="git-patch-preflight/"] .tool-preview img {
+  filter: invert(.72) hue-rotate(180deg) saturate(.98) contrast(1.9) brightness(.95);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="git-patch-preflight/"] .tool-preview img {
+  filter: brightness(1.65) contrast(1.15);
+}
+/* Define the HAR preview in Day and lift detail while retaining its dark Night workspace. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="har-privacy-waterfall/"] .tool-preview img {
+  filter: invert(.72) hue-rotate(180deg) saturate(.98) contrast(1.9) brightness(.95);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="har-privacy-waterfall/"] .tool-preview img {
+  filter: brightness(1.65) contrast(1.15);
+}
+/* Keep the HAR card's entry movement without fading its content near-black or near-white. */
+@media (prefers-reduced-motion: no-preference) {
+  body.tools-page dialog #dialog-tools .featured-tool[href*="har-privacy-waterfall/"].is-in-view {
+    animation-name: har-card-enter;
+  }
+}
+@keyframes har-card-enter {
+  from { opacity: 1; translate: 0 9px; }
+  to { opacity: 1; translate: 0 0; }
+}
+html[data-theme="day"] body.tools-page dialog #dialog-tools .tool-meta b { color: #20333d; }
+html[data-theme="day"] body.tools-page dialog #dialog-tools .tool-meta small { color: #50636c; }
+html[data-theme="day"] body.tools-page dialog #dialog-tools .open-label { color: #3d665d; border-top-color: #d4dfdb; }
+html[data-theme="day"] body.tools-page dialog #dialog-tools .planned-tool {
+  border-color: #c6d3ce;
+  background: #f1f5f1;
+}
+html[data-theme="day"] body.tools-page dialog #dialog-tools .planned-icon { color: #5d7278; }
+html[data-theme="day"] body.tools-page dialog #dialog-tools .planned-tool b { color: #344e58; }
+html[data-theme="day"] body.tools-page dialog #dialog-tools .planned-tool small { color: #586d75; }
+html[data-theme="day"] body.tools-page dialog #dialog-tools .tool-note,
+html[data-theme="day"] body.tools-page dialog .tool-empty-state {
+  color: #4b626b;
+  border-left-color: #77998b;
+  background: #eef3ef;
+}
+html[data-theme="day"] body.tools-page dialog .access-policy { border-color: #d3ded9; }
+html[data-theme="day"] body.tools-page dialog .access-policy span,
+html[data-theme="day"] body.tools-page dialog .access-policy small { color: #4e636c; }
+html[data-theme="day"] body.tools-page dialog .preview-note summary { color: #50656d; }
+html[data-theme="day"] body.tools-page dialog .preview-note p { color: #4e636c; }
+html[data-theme="day"] body.tools-page dialog .panel-bottom > span { color: #51666e; }
+html[data-theme="day"] body.tools-page dialog .panel-bottom button { color: #344e58; }
 
 /* Info Desk: replace night-only hardcoded copy colors while retaining its draft cues. */
 html[data-theme="day"] body:has(#page-content) {
@@ -573,6 +840,10 @@ html[data-theme="day"] body.tools-page .hub-footer {
 html[data-theme="day"] body.tools-page .hub-footer a { color: #286f78; }
 html[data-theme="day"] body.tools-page .hub-footer small { color: #52656e; }
 html[data-theme="day"] body.tools-page input::placeholder { color: #52656e; opacity: 1; }
+
+html[data-theme="day"] body[data-slug="sentence-length-analyzer"] .planner-checkbox strong {
+  color: #f3f6fb;
+}
 
 html[data-theme="day"] body.tools-page .brand-word,
 html[data-theme="day"] body.sports-page .brand-word,
@@ -1284,4 +1555,105 @@ html[data-theme="day"] body:has(#qr-canvas) #generate:focus-visible {
 }
 html[data-theme="day"] body #motion-toggle {
   color: #286f78 !important;
+}
+
+/* Limit the balanced Day/Night contrast treatment to the GraphQL preview. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="graphql-query-validator/"] .tool-preview img {
+  filter: invert(.72) hue-rotate(180deg) saturate(.98) contrast(1.9) brightness(.95);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="graphql-query-validator/"] .tool-preview img {
+  filter: brightness(1.65) contrast(1.15);
+}
+
+/* Keep the matrix workspace light and defined in Day; lift detail on its dark Night surface. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href$="/github-actions-matrix-preview/"] .tool-preview img {
+  filter: invert(.72) hue-rotate(180deg) saturate(.98) contrast(1.9) brightness(.95);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href$="/github-actions-matrix-preview/"] .tool-preview img {
+  filter: brightness(1.65) contrast(1.15);
+}
+
+/* Restore readable contrast for this dark IPv4 workspace preview in both themes. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="ipv4-subnet-mask-converter/"] .tool-preview img {
+  filter: invert(.72) hue-rotate(180deg) saturate(.98) contrast(1.9) brightness(.95);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="ipv4-subnet-mask-converter/"] .tool-preview img {
+  filter: brightness(1.65) contrast(1.15);
+}
+
+/* Restore readable contrast only for the IPv4 CIDR & Subnet Calculator preview. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="ipv4-cidr-calculator/"] .tool-preview img {
+  filter: invert(.72) hue-rotate(180deg) saturate(.98) contrast(1.9) brightness(.95);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="ipv4-cidr-calculator/"] .tool-preview img {
+  filter: brightness(1.65) contrast(1.15);
+}
+
+/* Restore defined Day contrast for the dense Terraform lockfile workspace preview; Night keeps source pixels. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href$="/terraform-lockfile-inspector/"] .tool-preview img {
+  filter: invert(1) hue-rotate(180deg) saturate(.92) contrast(1.18);
+}
+
+/* Keep the Image Collage Maker's Day preview light and defined; Night keeps its source pixels. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="image-collage-maker/"] .tool-preview img {
+  filter: invert(.72) hue-rotate(180deg) saturate(.98) contrast(1.9) brightness(.95);
+}
+
+/* Keep the Print Bleed preview light and defined in Day; Night keeps its source pixels. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="print-bleed-safe-margin-previewer/"] .tool-preview img {
+  filter: invert(.72) hue-rotate(180deg) saturate(.98) contrast(1.9) brightness(.95);
+}
+
+/* Restore readable contrast for the JSON Schema Validator preview in both themes. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="json-schema-validator/"] .tool-preview img {
+  filter: invert(.72) hue-rotate(180deg) saturate(.98) contrast(1.9) brightness(.95);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="json-schema-validator/"] .tool-preview img {
+  filter: brightness(1.65) contrast(1.15);
+}
+/* Day-only tonal correction for Tutorial Sequence Planner's dense preview; Night stays unchanged. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href$="/tutorial-sequence-planner/"] .tool-preview img {
+  filter: invert(.84) hue-rotate(180deg) saturate(.92) contrast(1.65) brightness(.98);
+}
+
+/* Keep the Bulk-Buy workspace preview defined in Day and lift its dark controls in Night. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="bulk-buy-break-even-planner/"] .tool-preview img {
+  filter: invert(.72) hue-rotate(180deg) saturate(.98) contrast(1.9) brightness(.95);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="bulk-buy-break-even-planner/"] .tool-preview img {
+  filter: brightness(1.5) contrast(1.08) saturate(.86);
+}
+
+/* Keep the Local Price Change Log preview lighter in Day without weakening its Item-field edge; preserve the Night lift. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="price-history-change-log/"] .tool-preview img {
+  filter: invert(1) hue-rotate(180deg) saturate(.92) contrast(1.1);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="price-history-change-log/"] .tool-preview img {
+  filter: brightness(1.5) contrast(1.08) saturate(.86);
+}
+
+/* Give the Used-vs-New Total Cost Comparator preview a restrained Night lift; Day and neighboring previews stay unchanged. */
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="used-vs-new-total-cost-comparator/"] .tool-preview img {
+  filter: brightness(1.5) contrast(1.08) saturate(.86);
+}
+
+/* Tune the Document Accessibility Checker’s dark capture for Day and lift detail in Night; only its Hub preview is affected. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="document-accessibility-checker/"] .tool-preview img {
+  filter: invert(1) hue-rotate(180deg) saturate(.92) contrast(1.1);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="document-accessibility-checker/"] .tool-preview img {
+  filter: brightness(1.5) contrast(1.08) saturate(.86);
+}
+
+/* Give the DOCX Text Extractor preview a restrained Night lift; Day and neighboring previews stay unchanged. */
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="docx-to-text/"] .tool-preview img {
+  filter: brightness(1.5) contrast(1.08) saturate(.86);
+}
+
+/* Tune the Public IP Location Lookup preview in both themes; the target card only. */
+html[data-theme="day"] body.tools-page dialog #dialog-tools .featured-tool[href*="ip-geolocation-lookup/"] .tool-preview img {
+  filter: invert(1) hue-rotate(180deg) saturate(.92) contrast(1.1);
+}
+html[data-theme="night"] body.tools-page dialog #dialog-tools .featured-tool[href*="ip-geolocation-lookup/"] .tool-preview img {
+  filter: brightness(1.5) contrast(1.08) saturate(.86);
 }

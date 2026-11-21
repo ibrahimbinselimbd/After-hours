@@ -1,0 +1,20 @@
+Source-only QA snapshot: Localization Screenshot Text-Overflow QA, Night-only thumbnail clarity fix.
+Target route: /After-hours/tools/localization-screenshot-text-overflow-qa/
+Tools Hub QA route: /After-hours/tools/ (actual Image & Design dialog and theme toggle)
+Canonical exception row: 41. Current confirmed count remains 39/68 until independent Tool QA passes.
+
+Exact source baseline archive: /workspace/image-upscaler-day-fix-20261120/handoff/image-upscaler-day-preview-fix-source-only-20261120.tar.gz
+Exact source baseline SHA-256: 5d6d31c0634280d553fb56deac110adba95d4efd331a62aa53c7b500ee396d2d
+
+Changes against that exact source-only baseline:
+- site/pages-theme.css: add target-scoped Night-only image filter (brightness(1.5) contrast(1.08)) and reduce only this card's Night lower overlay from the shared 60% alpha to 40%. The Day rendering remains on the existing shared Day treatment; no Day target exception is added.
+- site/tools/index.html: cache-bust the already loaded theme stylesheet from v=3-image-upscaler-day-preview to v=4-localization-night-preview.
+- SNAPSHOT-MANIFEST.txt: record this target, exact base, changes and local QA status.
+
+The target preview asset localization-screenshot-text-overflow-qa.webp is unchanged (SHA-256 04d8e5e18b61cb52517955285b96cc9037926a9060f84391b0d1d6dcf94c9b38). Its immediate Image & Design neighbors are Accessible Text Layout Stress-Test Previewer (preview SHA-256 5fd0d059e7d87126442bd15f7788ea12f7cef0d9b3b0162f02844f3fb4e9cc6e) and Screenshot & Photo Text Editor (preview SHA-256 49e78d55a9b73a40de9174e86a57e766d89993ade1afd6ff0af5c71e7f573597); both are unchanged.
+
+Local smoke validation used isolated English GitHub Pages builds outside the source snapshot, not public/. It visited the actual generated /After-hours/tools/ route, opened the real Image & Design category dialog, used the actual Day/Night toggle, and loaded the direct target route (HTTP 200) at 320, 390 and 1280 px. The target uses its original 640 x 360 artwork in all six theme/viewport checks. Day candidate screenshots are pixel-identical to the supplied base at all widths. Night visual differences are confined to the target preview rectangle at each width; the source thumbnail is unchanged. No horizontal overflow, browser errors, console errors or failed responses were observed. Tiny thumbnail microcopy readability was not assessed.
+
+Full existing suite: exact base and candidate both report 106 passed / 2 failed out of 108. The identical pre-existing failures are the stale preview-count expectation (550 versus 562 previews) and stale category-panel.css cache-key expectation (v=8 versus the unchanged source's v=13). Test logs are kept outside this source snapshot in the task QA folder.
+
+This is local smoke validation, not independent Tool QA. The candidate remains pending independent QA and does not increase the confirmed count beyond 39/68. No publish or deployment was performed. During the full-suite run, the builder briefly produced public/ trees in task-owned base/candidate scratch copies; both task-generated trees were removed. The baseline source copy was rechecked file-by-file against the exact source archive after removal. The original candidate archive and pre-existing sibling build outputs were left untouched, and the candidate archive contains no public/ paths.
