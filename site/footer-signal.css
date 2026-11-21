@@ -35,3 +35,13 @@ footer.ah-footer{display:block;gap:normal;align-items:normal;justify-content:nor
   .ah-footer__policy-note { font-size: 12px; }
 }
 @media (prefers-reduced-motion: reduce) { .ah-footer__story { transition: none !important; } }
+
+
+/* On the narrow homepage footer layout, wrap the mini-world label inside its 145px column. */
+@media (max-width: 360px) {
+  .ah-footer__world .ah-footer__world-tag {
+    max-width: 100%;
+    white-space: normal;
+    text-align: center;
+  }
+}

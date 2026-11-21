@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
-import { readdir, readFile, stat } from 'node:fs/promises';
+import { mkdtemp, readdir, readFile, rm, stat } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { test } from 'node:test';
@@ -7,7 +8,6 @@ import { publicSportScorePages, sportScorePages } from '../scripts/sports-score-
 
 const root = path.resolve('.');
 const site = path.join(root, 'site');
-const output = path.join(root, 'public');
 const base = 'https://ibrahimbinselimbd.github.io/After-hours';
 
 async function filesUnder(directory) {
@@ -88,12 +88,14 @@ test('unknown Journal story IDs render a truthful noindex state and never fall b
   }
 });
 
-test('GitHub Pages builds the complete English site, Journal, and all 550 active tools', async () => {
+test('GitHub Pages builds the complete English site, Journal, and all 550 active tools', async t => {
+  const output = await mkdtemp(path.join(tmpdir(), 'byteafter-pages-build-'));
+  t.after(() => rm(output, { recursive: true, force: true }));
   const build = spawnSync(process.execPath, ['scripts/build-github-pages.mjs'], {
     cwd: root,
     encoding: 'utf8',
     timeout: 120_000,
-    env: { ...process.env, PAGES_BASE_PATH: '/After-hours', PAGES_SITE_URL: base },
+    env: { ...process.env, PAGES_BASE_PATH: '/After-hours', PAGES_SITE_URL: base, PAGES_OUTPUT_DIR: output },
   });
   assert.equal(build.status, 0, `${build.stdout}\n${build.stderr}`);
   assert.match(build.stdout, /published active tool routes: 550/);

@@ -3,11 +3,12 @@ import path from 'node:path';
 import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
 import { publicSportScorePages, renderSportScorePage } from './sports-score-routes.mjs';
+import { ensureThemeAssets } from './theme-assets.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const siteRoot = path.join(repoRoot, 'site');
 const toolsRoot = path.join(siteRoot, 'tools');
-const outputRoot = path.join(repoRoot, 'public');
+const outputRoot = path.resolve(process.env.PAGES_OUTPUT_DIR || path.join(repoRoot, 'public'));
 const basePath = (process.env.PAGES_BASE_PATH || '/After-hours').replace(/\/$/, '');
 const siteUrl = (process.env.PAGES_SITE_URL || `https://ibrahimbinselimbd.github.io${basePath}`).replace(/\/$/, '');
 const workerOrigin = 'https://afterhours-district.bird-timimus.workers.dev';
@@ -95,23 +96,6 @@ function ensureDocumentReferrerMeta(html) {
   if (/<meta\b(?=[^>]*\bname=["']referrer["'])[^>]*>/i.test(html)) return html;
   const tag = '<meta name="referrer" content="strict-origin-when-cross-origin">';
   return html.replace(/<head\b[^>]*>/i, head => `${head}\n  ${tag}`);
-}
-
-function insertBeforeLastBodyClose(html, markup) {
-  const closingIndex = html.toLowerCase().lastIndexOf('</body>');
-  if (closingIndex < 0) return html;
-  return `${html.slice(0, closingIndex)}${markup}${html.slice(closingIndex)}`;
-}
-
-function ensureThemeAssets(html) {
-  html = upsertMeta(html, 'name', 'theme-color', '#080a16');
-  const hasThemeStylesheet = /<link\b[^>]*\bhref=["'][^"']*theme-toggle\.css(?:[?#][^"']*)?["'][^>]*>/i.test(html);
-  const hasPagesStylesheet = /<link\b[^>]*\bhref=["'][^"']*pages-theme\.css(?:[?#][^"']*)?["'][^>]*>/i.test(html);
-  const hasThemeController = /<script\b[^>]*\bsrc=["'][^"']*theme-toggle\.js(?:[?#][^"']*)?["'][^>]*>/i.test(html);
-  if (!hasThemeStylesheet) html = html.replace(/<\/head>/i, `<link rel="stylesheet" href="${basePath}/theme-toggle.css?v=1"></head>`);
-  if (!hasPagesStylesheet) html = html.replace(/<\/head>/i, `<link rel="stylesheet" href="${basePath}/pages-theme.css?v=1"></head>`);
-  if (!hasThemeController) html = insertBeforeLastBodyClose(html, `<script defer src="${basePath}/theme-toggle.js?v=1"></script>`);
-  return html;
 }
 
 function staticFieldMarkup(field, slug) {
@@ -242,7 +226,7 @@ for (const file of await walk(outputRoot)) {
     }
     if (ext === '.html') {
       text = ensureDocumentReferrerMeta(text);
-      text = ensureThemeAssets(text);
+      text = ensureThemeAssets(text, basePath);
       if (!text.includes('byteafter-logo.css')) text = text.replace(/<\/head>/i, '<link rel="stylesheet" href="/byteafter-logo.css?v=1"></head>');
       if (!text.includes('byteafter-icon.png')) text = text.replace(/<\/head>/i, '<link rel="icon" type="image/png" sizes="128x128" href="/byteafter-icon.png"></head>');
       text = upsertMeta(text, 'property', 'og:site_name', 'ByteAfter');
@@ -268,7 +252,7 @@ for (const route of ['tools.html', '404.html']) {
   const file = path.join(outputRoot, route);
   let html = await fs.readFile(file, 'utf8');
   html = ensureDocumentReferrerMeta(html);
-  await fs.writeFile(file, ensureThemeAssets(html));
+  await fs.writeFile(file, ensureThemeAssets(html, basePath));
 }
 
 const catalog = await fs.readFile(path.join(outputRoot, 'tools', 'catalog.js'), 'utf8');

@@ -2,6 +2,7 @@ import http from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { ensureThemeAssets } from './scripts/theme-assets.mjs';
 
 const root = fileURLToPath(new URL('./site/', import.meta.url));
 const routes = new Map([
@@ -153,7 +154,9 @@ export function createAppServer({
         if (!file.startsWith(root)) { res.writeHead(403); return res.end('Forbidden'); }
         content = await readFile(file);
       }
-      res.writeHead(200, { 'Content-Type': types[path.extname(file)] || 'application/octet-stream', 'X-Content-Type-Options': 'nosniff' });
+      const contentType = types[path.extname(file)] || 'application/octet-stream';
+      if (contentType.startsWith('text/html')) content = Buffer.from(ensureThemeAssets(content.toString('utf8')));
+      res.writeHead(200, { 'Content-Type': contentType, 'X-Content-Type-Options': 'nosniff' });
       res.end(req.method === 'HEAD' ? undefined : content);
     } catch { res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' }); res.end('Not found'); }
   });

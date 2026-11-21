@@ -4,6 +4,7 @@ from fastapi import FastAPI, Header, HTTPException, Request
 from fastapi.responses import Response
 from PIL import Image, ImageOps, UnidentifiedImageError
 from rembg import new_session, remove
+from request_body import BodyTooLarge, read_limited_body
 MAX_BYTES=15*1024*1024; MAX_PIXELS=40_000_000
 Image.MAX_IMAGE_PIXELS=MAX_PIXELS
 MODEL=os.getenv("PASSPORT_MODEL_NAME","birefnet-portrait"); MODEL_DIR=Path(os.getenv("U2NET_HOME","/models")).resolve(); MODEL_PATH=MODEL_DIR/(MODEL+".onnx")
@@ -25,8 +26,9 @@ async def background_remove(req:Request,authorization:str|None=Header(default=No
  if ct not in {"image/jpeg","image/png","image/webp"}: raise HTTPException(415,detail={"code":"unsupported_image_type"})
  length=req.headers.get("content-length","")
  if length.isdigit() and int(length)>MAX_BYTES: raise HTTPException(413,detail={"code":"image_too_large"})
- body=await req.body()
- if not body or len(body)>MAX_BYTES: raise HTTPException(413,detail={"code":"image_too_large"})
+ try: body=await read_limited_body(req,MAX_BYTES)
+ except BodyTooLarge: raise HTTPException(413,detail={"code":"image_too_large"})
+ if not body: raise HTTPException(413,detail={"code":"image_too_large"})
  try:
   with Image.open(io.BytesIO(body)) as src:
    src.load(); im=ImageOps.exif_transpose(src)
