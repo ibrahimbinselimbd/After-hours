@@ -222,6 +222,36 @@ class TechnicalFixesBrowserTest(unittest.TestCase):
             context.close()
         self.assertEqual(errors, [], f'Unexpected sports browser errors: {errors}')
 
+    def test_what_is_my_ip_has_no_byteafter_credit_counter_and_discloses_before_provider_request(self):
+        context, page = self.make_page(390, 844)
+        requests = []
+        disclosure_visible_at_request = []
+
+        def mock_ipify(route):
+            requests.append(route.request.url)
+            disclosure_visible_at_request.append(page.locator('.ba-ip-disclosure').is_visible())
+            route.fulfill(status=200, content_type='application/json', body='{"ip":"198.51.100.42"}')
+
+        for host in ('api.ipify.org', 'api4.ipify.org', 'api6.ipify.org', 'api64.ipify.org'):
+            page.route(f'https://{host}/**', mock_ipify)
+        page.route('https://ipwho.is/**', lambda route: route.abort())
+        page.on('request', lambda request: requests.append(request.url) if 'ipwho.is' in request.url else None)
+        try:
+            page.goto(f'{self.base}/tools/what-is-my-ip/', wait_until='networkidle')
+            page.locator('#ba-ip-current-state').wait_for()
+            self.assertEqual(page.locator('#ba-ip-current-state').inner_text().lower(), 'detected')
+            self.assertGreater(len(requests), 0, 'the automatic provider request is made')
+            self.assertTrue(all(disclosure_visible_at_request), 'the disclosure is visible before each provider request')
+            self.assertEqual(page.locator('#credit-pill').count(), 0, 'the misleading shared-credit counter is absent')
+            self.assertEqual(page.locator('.credit-note').count(), 0, 'the generic shared-credit note is absent')
+            disclosure = page.locator('.ba-ip-disclosure').inner_text()
+            self.assertIn('byteafter does not impose a daily credit cap', disclosure.lower())
+            self.assertIn('1,000 requests per day', disclosure)
+            self.assertFalse(any('ipwho.is' in url for url in requests), 'optional details are not requested automatically')
+            self.assertIsNone(page.evaluate("localStorage.getItem('afterhours:daily-credits')"), 'automatic detection does not write the shared credit pool')
+        finally:
+            context.close()
+
     def test_generated_tool_copy_failure_is_reported_as_an_error_and_does_not_charge_again(self):
         context, page = self.make_page()
         errors = []
