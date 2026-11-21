@@ -51,3 +51,8 @@ test('Base64, fraction and tip outputs are invalidated after edits', () => {
     assert.match(code,/addEventListener\('change', (?:invalidateResult|clearResult)/, `${slug} clears output on change`);
   }
 });
+
+test('Image OCR output textarea has an accessible visible label', () => {
+  const code = source('image-ocr');
+  assert.match(code, /<label class="field"><span>Recognized text<\/span><textarea id="ocr-text"/);
+});

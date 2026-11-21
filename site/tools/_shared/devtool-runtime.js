@@ -28,7 +28,7 @@
       wrapper.append(node('span', '', field.label || field.id));
       const control = field.type === 'textarea' ? node('textarea') : node('input');
       if (field.type === 'text') control.type = field.sensitive ? 'password' : 'text';
-      control.id = `devtool-${field.id}`;
+      control.id = `devtool-input-${field.id}`;
       control.name = field.id;
       control.maxLength = MAX_INPUT_CHARS;
       control.autocomplete = field.sensitive ? 'new-password' : 'off';
@@ -50,7 +50,7 @@
     actions.append(run, copy, download);
 
     const status = node('div', 'status');
-    status.id = 'devtool-status'; status.setAttribute('role', 'status'); status.setAttribute('aria-live', 'polite'); status.hidden = true;
+    status.id = 'devtool-runtime-status'; status.setAttribute('role', 'status'); status.setAttribute('aria-live', 'polite'); status.hidden = true;
     const result = node('section', 'result'); result.hidden = true;
     const output = node('pre', 'output-text'); output.setAttribute('aria-label', 'Tool result');
     result.append(output);
@@ -61,8 +61,25 @@
     let currentFilename = 'developer-tool-result.txt';
     let currentMime = 'text/plain;charset=utf-8';
     const setStatus = (message, kind) => api.status(status, message, kind);
+    let generation = 0;
+    const invalidateResult = () => {
+      generation += 1;
+      run.disabled = false;
+      const hadResult = Boolean(currentText);
+      result.hidden = true;
+      output.textContent = '';
+      currentText = '';
+      copy.disabled = true;
+      download.disabled = true;
+      if (hadResult) setStatus('Inputs changed. Run again to refresh the result.', 'warn');
+    };
+    for (const control of controls.values()) {
+      control.addEventListener('input', invalidateResult);
+      control.addEventListener('change', invalidateResult);
+    }
 
     run.addEventListener('click', async () => {
+      invalidateResult();
       if (!credits.canRun(status)) return;
       const values = {};
       for (const [id, control] of controls) {
@@ -74,8 +91,10 @@
         values[id] = value;
       }
       run.disabled = true;
+      const runGeneration = generation;
       try {
         const raw = await engine.run(values);
+        if (runGeneration !== generation) return;
         const normalized = typeof raw === 'string' ? {text: raw} : raw;
         if (!normalized || typeof normalized.text !== 'string') throw new Error('The local tool did not return a text result.');
         if (normalized.text.length > MAX_OUTPUT_CHARS) throw new Error(`Output is too large to display safely (limit ${MAX_OUTPUT_CHARS.toLocaleString()} characters).`);
@@ -90,9 +109,9 @@
         const warningText = Array.isArray(normalized.warnings) && normalized.warnings.length ? ` ${normalized.warnings.join(' ')}` : '';
         setStatus((charged ? 'Completed locally. One shared daily credit was used.' : 'Completed locally, but no credit was deducted because the shared counter changed.') + warningText, charged ? (warningText ? 'warn' : 'success') : 'warn');
       } catch (error) {
-        setStatus(error?.message || 'The input could not be processed.', 'error');
+        if (runGeneration === generation) setStatus(error?.message || 'The input could not be processed.', 'error');
       } finally {
-        run.disabled = false;
+        if (runGeneration === generation) run.disabled = false;
       }
     });
     copy.addEventListener('click', async () => setStatus(await api.copy(currentText) ? 'Result copied.' : 'Copy failed; select the result text manually.', 'success'));
