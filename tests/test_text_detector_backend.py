@@ -103,7 +103,8 @@ class BackendTests(unittest.TestCase):
     def test_auth_and_error_mapping(self):
         self.assertTrue(authorized("secret", "secret"))
         self.assertFalse(authorized("wrong", "secret"))
-        self.assertTrue(authorized("anything", None))
+        self.assertFalse(authorized("anything", None))
+        self.assertFalse(authorized("anything", ""))
         self.assertEqual(error_code(RuntimeError("model_label_mapping_unknown")), "model_label_mapping_unknown")
         self.assertEqual(error_code(RuntimeError("database exploded")), "inference_unavailable")
 

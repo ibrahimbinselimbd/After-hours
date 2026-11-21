@@ -16,7 +16,7 @@ Routes: `/` (home), `/article?story=...` (article), `/info?page=...` (informatio
 
 ## Tools Hub status and access plan
 
-The Tools Hub is published on the English site at `/tools/` with 500 active tool routes across 20 categories. **Bulk Image Background Remover**, **Image Size Optimizer**, and **QR Code Generator & Print Checker** are linked from Tools Hub → Image & Design. The Text Signal preview remains explicitly gated; its analysis backend is not live.
+The Tools Hub is published on the English site at `/tools/` with 550 active tool routes across 20 categories. The generated Tools directory contains 552 HTML pages: its hub, 550 active routes, and one disabled Text Signal preview. **Bulk Image Background Remover**, **Image Size Optimizer**, and **QR Code Generator & Print Checker** are linked from Tools Hub → Image & Design. The Text Signal preview remains explicitly gated; its analysis backend is not live.
 
 **Text Signal frontend preview is published; real analysis is Coming soon / Not live.** Open https://afterhours-district.bird-timimus.workers.dev/tools/text-detector/ or Tools Hub → AI & Everyday Utilities → Preview tool. The responsive editor, samples, word limits, and home/back/category navigation work. Analyze is disabled through an explicit `data-analysis-enabled="false"` release gate; this preview sends neither health nor analysis API requests and shows no simulated results. The current Cloudflare static site does not run `server.mjs`, Python, FastAPI, or model inference. Its backend remains source-only for a future approved host. See [`services/text-detector/README.md`](services/text-detector/README.md) for host, cache, privacy, licensing, and real-smoke-test requirements.
 

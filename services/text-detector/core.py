@@ -107,7 +107,7 @@ def error_code(exc: Exception) -> str:
 
 def authorized(supplied: str, expected: str | None) -> bool:
     import hmac
-    return expected is None or hmac.compare_digest(supplied or "", expected)
+    return bool(expected) and hmac.compare_digest(supplied or "", expected)
 
 
 def validate_limits(words: int, chars: int, mode: str, max_words: int, max_chars: int) -> tuple[int, str | None]:

@@ -1,4 +1,3 @@
-import hmac
 import os
 import threading
 from contextlib import contextmanager
@@ -15,7 +14,7 @@ try:
     from transformers import AutoModelForSequenceClassification, AutoTokenizer
 except ImportError:  # permits dependency-free health/error tests; inference stays unavailable
     AutoModelForSequenceClassification = AutoTokenizer = None
-from core import ai_label_index, ai_score, error_code, split_segments, validate_limits, word_count
+from core import ai_label_index, ai_score, authorized, error_code, split_segments, validate_limits, word_count
 
 MODEL_ID = os.getenv("TEXT_DETECTOR_MODEL", "openai-community/roberta-base-openai-detector")
 MAX_CHARS = int(os.getenv("TEXT_DETECTOR_MAX_CHARS", "50000"))
@@ -23,7 +22,7 @@ MAX_WORDS = int(os.getenv("TEXT_DETECTOR_MAX_WORDS", "8000"))
 SEGMENT_WORDS = int(os.getenv("TEXT_DETECTOR_SEGMENT_WORDS", "180"))
 MAX_INFERENCE_CONCURRENCY = int(os.getenv("TEXT_DETECTOR_MAX_INFERENCE_CONCURRENCY", "1"))
 INFERENCE_TIMEOUT_SECONDS = float(os.getenv("TEXT_DETECTOR_INFERENCE_TIMEOUT_SECONDS", "30"))
-API_KEY = os.getenv("TEXT_DETECTOR_API_KEY")
+API_KEY = (os.getenv("TEXT_DETECTOR_API_KEY") or "").strip()
 
 if MAX_CHARS < 1 or MAX_WORDS < 1 or SEGMENT_WORDS < 1 or MAX_INFERENCE_CONCURRENCY < 1:
     raise ValueError("text detector limits must be positive")
@@ -77,11 +76,13 @@ def inference_slot():
 
 @app.middleware("http")
 async def security_and_auth(request: Request, call_next):
-    if API_KEY and request.url.path.startswith("/v1/"):
+    if request.url.path.startswith("/v1/") and not API_KEY:
+        response = JSONResponse(status_code=503, content={"ok": False, "error": "service_not_configured"})
+    elif request.url.path.startswith("/v1/"):
         supplied = request.headers.get("x-api-key", "")
-        if not hmac.compare_digest(supplied, API_KEY):
-            return JSONResponse(status_code=401, content={"ok": False, "error": "unauthorized"})
-    response = await call_next(request)
+        response = await call_next(request) if authorized(supplied, API_KEY) else JSONResponse(status_code=401, content={"ok": False, "error": "unauthorized"})
+    else:
+        response = await call_next(request)
     response.headers["Cache-Control"] = "no-store"
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["Referrer-Policy"] = "no-referrer"
