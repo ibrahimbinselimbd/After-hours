@@ -54,7 +54,14 @@ test('network manifest contains exactly 50 unique routes with one usable engine 
     const app = await read(`site/tools/${tool.slug}/app.js`);
     assert.match(page, new RegExp(`data-slug="${tool.slug}"`));
     assert.match(page, new RegExp(`canonical" href="https://ibrahimbinselimbd\\.github\\.io/After-hours/tools/${tool.slug}/`));
-    assert.match(page, /All tools are free\. Existing shared daily credit limit: 10 successful actions\. Failed actions use no credit\./);
+    if (tool.slug === 'what-is-my-ip') {
+      assert.match(page, /ipify says its public endpoint has no request limit/i);
+      assert.match(page, /1,000-requests-per-day quota shared across this domain/i);
+      assert.match(page, /no daily credit cap/i);
+      assert.doesNotMatch(page, /Existing shared daily credit limit: 10 successful actions/i);
+    } else {
+      assert.match(page, /All tools are free\. Existing shared daily credit limit: 10 successful actions\. Failed actions use no credit\./);
+    }
     assert.match(page, /id="new-tool-config"/);
     assert.match(app, /AHNetworkTools/);
   }
@@ -75,7 +82,10 @@ test('network catalog is discoverable inside twenty existing categories and page
   for (const tool of networkTools) assert.ok(routeSet.has(`/tools/${tool.slug}/`), `${tool.slug} is linked from the Tools Hub`);
 
   const remote = await read('site/tools/what-is-my-ip/index.html');
-  assert.match(remote, /The live query is not sent unless JavaScript is enabled and you press Run/);
+  assert.match(remote, /starts automatically after the disclosure is shown/i);
+  assert.match(remote, /1,000-requests-per-day quota shared across this domain/i);
+  assert.match(remote, /no daily credit cap/i);
+  assert.doesNotMatch(remote, /Existing shared daily credit limit: 10 successful actions/);
   assert.match(remote, /ipify public IP API/);
   const local = await read('site/tools/ipv4-cidr-calculator/index.html');
   assert.match(local, /This browser-only calculation requires JavaScript/);
@@ -90,6 +100,10 @@ test('network catalog is discoverable inside twenty existing categories and page
   assert.match(runtime, /DIRECT NETWORK REQUEST — This check runs only when you press Run/);
   assert.match(runtime, /response\?\.ok===false[\s\S]*?api\.status/);
   assert.match(runtime, /const charged=api\.credits\.charge\(\)/);
+  const ipApp=await read('site/tools/what-is-my-ip/app.js');
+  assert.doesNotMatch(ipApp,/api\.credits\.(?:remaining|charge)\(/, 'What Is My IP is exempt from ByteAfter’s local daily cap');
+  assert.match(ipApp,/ipify says its public endpoint has no request limit/);
+  assert.match(ipApp,/1,000 requests per day shared across traffic from this domain/);
   assert.match(runtime, /No credit was used\./);
 });
 
@@ -129,8 +143,12 @@ test('local IP, IPv4/IPv6 prefix, overlap, range-summary and hostname utilities 
   assert.match(prefix.text, /Address count: 1208925819614629174706176/);
   const idn = await handlers['hostname-idn-converter']({hostname: '例え.テスト'});
   assert.match(idn.text, /ASCII\/Punycode: xn--r8jz45g\.xn--zckzah/);
+  assert.match(idn.text, /Unicode display hostname: 例え\.テスト/);
+  const idnPunycode = await handlers['hostname-idn-converter']({hostname:'xn--r8jz45g.xn--zckzah'});
+  assert.match(idnPunycode.text, /Unicode display hostname: 例え\.テスト/);
   const doh = await handlers['doh-query-url-builder']({domain: 'example.com', recordType: 'AAAA', resolver: 'Google Public DNS'});
   assert.match(doh.text, /https:\/\/dns\.google\/resolve\?name=example\.com&amp;type=AAAA|https:\/\/dns\.google\/resolve\?name=example\.com&type=AAAA/);
+  assert.match(doh.text, /Required request header: Accept: application\/dns-json/);
   assert.match(doh.text, /does not send the query/);
 });
 

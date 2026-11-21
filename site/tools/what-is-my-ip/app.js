@@ -15,7 +15,7 @@
 
   host.innerHTML = `
     <section class="ba-ip-checker" aria-label="Public IP checker">
-      <p class="ba-ip-disclosure"><strong>NETWORK DISCLOSURE.</strong> This page automatically asks <a href="https://www.ipify.org/" target="_blank" rel="noopener noreferrer">ipify</a> for the public address it sees; ipify necessarily receives that address. If you request details below, the selected address is sent directly from your browser to <a href="https://ipwho.is/" target="_blank" rel="noopener noreferrer">IPWho.is</a>. These providers' logging and retention practices have not been verified here, so no “no logs” promise is made. Requests do not pass through ByteAfter servers.</p>
+      <p class="ba-ip-disclosure"><strong>NETWORK DISCLOSURE — BEFORE REQUEST.</strong> After this notice is visible, this page automatically asks <a href="https://www.ipify.org/" target="_blank" rel="noopener noreferrer">ipify</a> for the public address it sees; ipify necessarily receives that address. ipify says its public endpoint has no request limit, but availability and provider terms can change. If you press the optional details button, the selected address goes directly from your browser to <a href="https://ipwho.is/" target="_blank" rel="noopener noreferrer">IPWho.is</a>; its free CORS quota is 1,000 requests per day shared across traffic from this domain, so lookups may be rate-limited. ByteAfter does not impose a daily credit cap on this tool. Provider logging and retention are not independently verified here; requests do not pass through ByteAfter servers.</p>
       <section class="ba-ip-card" aria-labelledby="ba-ip-current-title">
         <div class="ba-ip-card-head"><h2 class="ba-ip-kicker" id="ba-ip-current-title">01 / Public address seen by ipify</h2><span class="ba-ip-state" id="ba-ip-current-state" aria-live="polite">Starting check</span></div>
         <p class="ba-ip-address" id="ba-ip-primary" data-empty="true">Checking your public IP…</p>
@@ -67,17 +67,12 @@
     status.dataset.kind = kind;
     status.hidden = !message;
   };
-  const hasCredits = () => {
-    if (api.credits.remaining() > 0) return true;
-    setStatus('The shared daily browser-local credit limit has been reached. No network request was made.', 'error');
-    return false;
-  };
   const isFailure = response => typeof response === 'object' && response?.ok === false;
   const responseText = response => typeof response === 'string' ? response : response?.text;
   const withoutCreditSuffix = text => String(text ?? '').replace(/(?:\s*No credit was used\.?)+$/gi, '').trim();
   const safeSourceLinkNote = () => {
     const note = document.querySelector('.workspace > .privacy-note');
-    if (note) note.textContent = 'This page automatically requests your public IP from ipify. A separate IPWho.is lookup happens only after you press “Look up details”. Both requests go directly from your browser to the named provider; their logging or retention practices are not verified here.';
+    if (note) note.textContent = 'This page automatically requests your public IP from ipify after showing the disclosure above; ipify says its public endpoint has no request limit. Optional IPWho.is lookups happen only when you press the button and share a 1,000/day CORS quota across this domain. ByteAfter applies no daily credit cap to this tool. Provider logging and retention are not independently verified.';
   };
   safeSourceLinkNote();
 
@@ -120,16 +115,16 @@
     } else if (selectedAddress) {
       currentState.textContent = v4 && !/^unavailable\b/i.test(v4) && dual && !/^unavailable\b/i.test(dual) ? 'Detected' : 'Partial response';
       currentState.dataset.kind = '';
-      setStatus('Public IP check completed. One shared daily local credit was used.');
+      setStatus('Public IP check completed; this tool has no ByteAfter-imposed daily credit cap.');
     } else {
       currentState.textContent = 'No address returned';
       currentState.dataset.kind = 'error';
-      setStatus('The providers did not return a usable public address. No credit was used.', 'error');
+      setStatus('The providers did not return a usable public address.', 'error');
     }
   }
 
   async function runCurrentCheck() {
-    if (busy || !hasCredits()) return;
+    if (busy) return;
     updateButtons(true);
     currentState.textContent = 'Checking…';
     currentState.dataset.kind = '';
@@ -144,15 +139,13 @@
         publishCurrent(isFailure(response) ? response : {ok:false,text: text || 'Neither endpoint returned a usable address. No credit was used.'});
         return;
       }
-      const charged = api.credits.charge();
       publishCurrent(response);
-      if (!charged) setStatus('The address check completed, but the shared counter changed before it could be charged. Please check the counter before running another check.', 'error');
     } catch (error) {
       currentState.textContent = 'Check failed';
       currentState.dataset.kind = 'error';
       primary.textContent = 'Could not detect your public IP';
       primary.dataset.empty = 'true';
-      setStatus(`${error?.message || 'The check could not be completed.'} No credit was used.`, 'error');
+      setStatus(`${error?.message || 'The check could not be completed.'}`, 'error');
     } finally { updateButtons(false); }
   }
 
@@ -165,7 +158,7 @@
 
   lookupForm.addEventListener('submit', async event => {
     event.preventDefault();
-    if (busy || !hasCredits()) return;
+    if (busy) return;
     const requested = lookupInput.value.trim() || selectedAddress;
     if (!requested) {
       setStatus('No detected address is available. Enter an IPv4 or IPv6 address to continue.', 'error');
@@ -181,14 +174,13 @@
       const text = responseText(response) || 'No readable result was returned.';
       lookupText.textContent = text;
       if (isFailure(response)) {
-        setStatus(`${withoutCreditSuffix(text)} No credit was used.`, 'error');
+        setStatus(`${withoutCreditSuffix(text)}`, 'error');
       } else {
-        const charged = api.credits.charge();
-        setStatus(charged ? 'Lookup completed. One shared daily local credit was used.' : 'Lookup completed, but the shared counter changed before it could be charged.', charged ? '' : 'error');
+        setStatus('Lookup completed; this tool has no ByteAfter-imposed daily credit cap. IPWho.is provider quota may still apply.');
       }
     } catch (error) {
       lookupText.textContent = error?.message || 'The lookup could not be completed.';
-      setStatus(`${withoutCreditSuffix(lookupText.textContent)} No credit was used.`, 'error');
+      setStatus(`${withoutCreditSuffix(lookupText.textContent)}`, 'error');
     } finally { updateButtons(false); }
   });
 

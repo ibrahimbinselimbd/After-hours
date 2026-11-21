@@ -30,7 +30,17 @@ test('F02: Day mode gives dark media cards readable light text', () => {
   for (const title of ['Animated GIF Optimizer', 'Audio Format Converter', 'Speech to Text', 'Video Compressor', 'Video to GIF']) {
     assert.ok(css.includes(`body[data-title="${title}"] .tool-main .workspace .card`), `missing selector for ${title}`);
   }
-  assert.ok(contrast('#f3f5f8', '#101a29') >= 4.5);
+  const textRoles = ['p','small','label','strong','span','div','li','th','td','code','pre','output','.status','.metric','.network-consent','.result','.output-text','.hint','.notice','.drop-zone'];
+  const start = css.indexOf('/* These five media workspaces intentionally retain dark cards');
+  const end = css.indexOf('/* Sports score pages', start);
+  const roleRules = css.slice(start, end);
+  for (const title of ['Animated GIF Optimizer', 'Audio Format Converter', 'Speech to Text', 'Video Compressor', 'Video to GIF']) {
+    assert.ok(roleRules.includes(`body[data-title="${title}"] .tool-main .workspace .card :is(`), `${title} targets its actual dark card text`);
+  }
+  for (const role of textRoles) assert.ok(roleRules.includes(role), `Day override covers descendant text role ${role}`);
+  assert.match(roleRules,/color: #cbd6e3 !important/);
+  assert.match(roleRules,/background-color: #1a2738; border-color: #42536a/);
+  assert.ok(contrast('#cbd6e3', '#101a29') >= 4.5);
 });
 
 test('F03: the two image-tool heroes use a readable Day-theme foreground', () => {

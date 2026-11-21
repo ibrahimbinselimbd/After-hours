@@ -391,3 +391,8 @@ html[data-theme="day"] body #category-detail .allocation-badge small,
 html[data-theme="day"] body #category-detail .subtopic-head span:last-child {
   color: #52616c;
 }
+
+/* Expanded directory labels need a stable foreground; district accent colors are too pale on the Day surface. */
+html[data-theme="day"] body .directory-card .card-code,
+html[data-theme="day"] body .directory-card .directory-share { color: #405861 !important; }
+html[data-theme="day"] body .directory-card .directory-share small { color: #52616c !important; }

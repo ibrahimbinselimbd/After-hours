@@ -78,7 +78,7 @@ test('each new route has unique aligned metadata, a category handler, and the sh
   const hub = await fs.readFile(path.join(toolsRoot, 'index.html'), 'utf8');
   const hubCanonical = hub.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i)?.[1];
   assert.ok(hubCanonical);
-  const origin = new URL(hubCanonical).origin;
+  const origin = 'https://ibrahimbinselimbd.github.io/After-hours';
   const titles = new Set();
   const descriptions = new Set();
   const indices = new Set();
@@ -190,4 +190,23 @@ test('every route has a real local handler that returns a distinct, bounded resu
     }
   }
   assert.equal(summaries.size, 244);
+});
+
+
+test('hydration schedule appears once, installment cadence is explicitly unspecified, and neighborhood trade-offs compare all candidates', async () => {
+  const handlerWindow = {AHNewToolHandlers:{}}; const sandbox = {window:handlerWindow}; vm.createContext(sandbox);
+  for (const id of ['wellbeing-fitness','money-shopping','travel-relocation']) vm.runInContext(await fs.readFile(path.join(newRoot,'handlers',`${id}.js`),'utf8'),sandbox);
+  const handlers=handlerWindow.AHNewToolHandlers;
+  const hydration=handlers['hydration-rhythm-planner']({targetMl:2000,wakeTime:'07:00',bedTime:'23:00',checkpoints:8});
+  assert.match(hydration.summary,/Daily target: 2000 mL across 8 checkpoints/);
+  assert.match(hydration.details,/Schedule: 07:00/);
+  assert.equal((hydration.summary+hydration.details).match(/07:00/g)?.length,1,'the schedule is not duplicated');
+  const installment=handlers['installment-plan-cost-breakdown']({cashPrice:900,paymentAmount:160,numberOfPayments:6,setupFee:15,currency:'$'});
+  assert.match(installment.details,/frequency\/cadence is unspecified/i);
+  const neighborhoods=handlers['neighborhood-scorecard-calculator']({criteria:'Transit | 2\nParks | 1',neighborhoods:'North | 5,2\nSouth | 2,5',ratingScale:5});
+  assert.match(neighborhoods.summary,/North/);
+  assert.match(neighborhoods.details.join('\n'),/North: 80\.0%/);
+  assert.match(neighborhoods.details.join('\n'),/South: 60\.0%/);
+  assert.match(neighborhoods.details.join('\n'),/Transit \(weight 2\): North 5\/5 vs South 2\/5 — stronger for North/);
+  assert.match(neighborhoods.details.join('\n'),/Parks \(weight 1\): South 5\/5 vs North 2\/5 — stronger for South/);
 });

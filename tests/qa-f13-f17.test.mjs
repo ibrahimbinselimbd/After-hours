@@ -25,3 +25,13 @@ test('sports match tabs support arrow navigation and retain normal Tab focusabil
   const routes = read('scripts/sports-score-routes.mjs');
   assert.match(routes, /role="tab"/);
 });
+
+
+test('F16 expanded directory code and share text retain WCAG AA Day contrast', () => {
+  const css=read('site/districts.css');
+  assert.match(css,/html\[data-theme="day"\] body \.directory-card \.card-code,[\s\S]*?\.directory-share \{ color: #405861 !important; \}/);
+  assert.match(css,/html\[data-theme="day"\] body \.directory-card \.directory-share small \{ color: #52616c !important; \}/);
+  const contrast=(fg,bg)=>{const lum=h=>{const a=h.match(/[0-9a-f]{2}/gi).map(x=>parseInt(x,16)/255).map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4);return .2126*a[0]+.7152*a[1]+.0722*a[2]};const [a,b]=[lum(fg),lum(bg)].sort((x,y)=>y-x);return (a+.05)/(b+.05)};
+  assert.ok(contrast('#405861','#f8faf7')>=4.5);
+  assert.ok(contrast('#52616c','#f8faf7')>=4.5);
+});

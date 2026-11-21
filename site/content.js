@@ -390,9 +390,9 @@ window.STORIES = [
     "publishedAt": "2026-10-19",
     "updated": true,
     "headings": [
-      "Default provider changes",
       "Claude remains available",
-      "Report includes an update"
+      "Publication and update dates",
+      "What the shift means"
     ],
     "body": [
       "Replit has made OpenAI its default model provider, replacing Anthropic in that position, TechCrunch reported in an article updated Oct. 17. The change concerns the platform’s automatic default; it does not mean Claude has been removed from Replit.",

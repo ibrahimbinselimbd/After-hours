@@ -87,6 +87,12 @@
   if (sourceLinks.childElementCount) workspace.append(sourceLinks);
   host.replaceChildren(workspace);
   let currentText='';
+  function invalidateResult() {
+    const hadResult=Boolean(currentText);
+    resultBox.hidden=true; output.textContent=''; currentText=''; copy.disabled=true; download.disabled=true;
+    if(hadResult) api.status(status,'Inputs changed. Run again to refresh the result.','warn');
+  }
+  for(const {input} of controls){input.addEventListener('input',invalidateResult);input.addEventListener('change',invalidateResult);}
   const readValues = () => {
     const values={};
     for (const control of controls) {
@@ -99,6 +105,7 @@
     return values;
   };
   run.addEventListener('click',async()=>{
+    invalidateResult();
     if (!api.credits.canRun(status)) return;
     let values;
     try { values=readValues(); } catch(error) { api.status(status,error.message,'error'); return; }

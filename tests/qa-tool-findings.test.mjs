@@ -7,18 +7,21 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const source = slug => fs.readFileSync(path.join(root, `site/tools/${slug}/app.js`), 'utf8');
 
-test('age calculator normalizes completed-age day borrowing', () => {
+test('age calculator uses calendar-month clamping and a browser-local today date', () => {
   const code = source('age-calculator');
-  assert.match(code, /anchorDay=Math\.min\(bd\.getDate\(\),dim\(/);
-  assert.match(code, /d=Math\.floor\(\(ad-prevMonth\)\/86400000\)/);
+  assert.match(code, /const localToday = \(\) =>/);
+  assert.match(code, /getFullYear\(\).*getMonth\(\).*getDate\(\)/s);
+  assert.match(code, /const addMonthsFromBirth = \(birth, offset\) =>/);
+  assert.match(code, /Math\.min\(birth\.day, daysInMonth\(year, monthIndex\)\)/);
 });
 
 test('fraction calculator performs integer operations with BigInt', () => {
   const code = source('fraction-calculator');
-  assert.match(code, /BigInt\(p\[0\]\)/);
-  assert.match(code, /BigInt\(p\[1\]\)/);
-  assert.match(code, /b\[0\]===0n/);
-  assert.match(code, /n\/=g;d\/=g/);
+  assert.match(code, /BigInt\(parts\[0\]\)/);
+  assert.match(code, /BigInt\(parts\[1\]\)/);
+  assert.match(code, /b\[0\]\s*===\s*0n/);
+  assert.match(code, /numerator\s*\/\=\s*divisor/);
+  assert.match(code, /denominator\s*\/\=\s*divisor/);
 });
 
 test('palette CSS copy uses actual line breaks and swatch labels choose a contrast color', () => {
@@ -39,4 +42,12 @@ test('XLSX extractor reads inline and plain string cells', () => {
   assert.match(code, /type==='inlineStr'/);
   assert.match(code, /querySelectorAll\('is t'\)/);
   assert.match(code, /type==='str'/);
+});
+
+test('Base64, fraction and tip outputs are invalidated after edits', () => {
+  for (const slug of ['base64-encoder-decoder','fraction-calculator','tip-split-calculator']) {
+    const code=source(slug);
+    assert.match(code,/addEventListener\('input', (?:invalidateResult|clearResult)/, `${slug} clears output on edits`);
+    assert.match(code,/addEventListener\('change', (?:invalidateResult|clearResult)/, `${slug} clears output on change`);
+  }
 });

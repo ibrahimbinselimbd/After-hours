@@ -165,7 +165,8 @@ test('hub catalog data, ItemList schema, and screenshot editor route reflect exa
     assert.ok(card, `${category.title} has a static category card`);
     const count = category.availableTools.length;
     assert.match(card, new RegExp(`aria-label="[^"]* — ${count} available tools"`));
-    assert.match(card, new RegExp(`${String(index + 1).padStart(2, '0')} / CATEGORY`));
+    const categoryLabel = index < 10 ? `${String(index + 1).padStart(2, '0')} / CATEGORY` : `${index + 1} / DISTRICT`;
+    assert.match(card, new RegExp(categoryLabel));
     assert.match(card, new RegExp(`${count} TOOLS AVAILABLE`));
     assert.match(card, new RegExp(`${count} TOOLS READY`));
   }
@@ -196,4 +197,31 @@ test('hub catalog data, ItemList schema, and screenshot editor route reflect exa
   assert.doesNotMatch(editorApp, /fetch\s*\(|XMLHttpRequest|WebSocket|\beval\s*\(/);
   assert.match(editorApp, /manual old-text repair/i);
   assert.match(editorApp, /not automatic inpainting/i);
+});
+
+
+test('travel card, visa checklist and transfer buffers return reviewable details; freelance quote exposes its math', () => {
+  const emergency=handlers['offline-travel-emergency-card-generator']({traveler:'Ari',contacts:'Nora +1 555 0100',medical:'allergy',insurance:'POL-7',localNumbers:'112',notes:'hotel desk'});
+  const emergencyText=[emergency.summary,...emergency.details].join('\n');
+  for (const value of ['Ari','Nora +1 555 0100','allergy','POL-7','112','hotel desk']) assert.ok(emergencyText.includes(value),`emergency card includes ${value}`);
+  const visa=handlers['visa-entry-document-checklist-planner']({destination:'Japan',travelerStatus:'Bangladeshi passport',tripPurpose:'tourism',items:'Transit visa check',notes:'confirm embassy'});
+  const visaText=[visa.summary,...visa.details].join('\n');
+  for (const value of ['Japan','Bangladeshi passport','tourism','Transit visa check','confirm embassy']) assert.ok(visaText.includes(value),`visa details include ${value}`);
+  const transfer=handlers['travel-itinerary-transfer-buffer-planner']({defaultMinimum:60,segments:'09:00 | 10:15 | 60 | Airport connection'});
+  assert.match([transfer.summary,...transfer.details].join('\n'),/available 75 min, required 60 min, buffer 15 min/);
+  const quote=handlers['freelance-quote-margin-planner']({currency:'USD',hours:10,hourlyRate:50,materials:100,otherCosts:0,targetMargin:20});
+  assert.match(quote.summary,/Suggested quote: 750\.00 USD/);
+  assert.match(quote.details.join('\n'),/Cost basis: 600\.00 USD \(500\.00 labor plus entered non-labor costs\)/);
+  assert.match(quote.details.join('\n'),/Target markup on cost: 25\.0%/);
+  assert.match(quote.details.join('\n'),/Formula: quote = cost basis ÷ \(1 − target margin\)/);
+});
+
+
+test('valid eDPI and phishing explanation return informative bounded results', () => {
+  const edpi=handlers['edpi-cm-360-sensitivity-converter']({dpi:800,sensitivity:.5,yaw:.022});
+  assert.match(edpi.summary,/eDPI: 400/); assert.match(edpi.summary,/estimated cm\/360: 103\.91 cm/);
+  const phishing=handlers['phishing-message-explainer']({message:'URGENT: Your account will be suspended. Click https://example.invalid to verify your password immediately.'});
+  assert.match(phishing.summary,/untrusted/i);
+  assert.match(phishing.details,/Signals found/);
+  assert.match(phishing.details,/known-good app/);
 });

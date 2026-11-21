@@ -87,8 +87,20 @@
   const downloadButton = document.getElementById('new-tool-download');
   const clearButton = document.getElementById('new-tool-clear');
   let currentText = '';
+  let generation = 0;
   const storageKey = `afterhours:new-tool-draft:${slug}`;
   let filename = `${slug}-result.txt`;
+  function invalidateResult() {
+    generation += 1;
+    runButton.disabled = false;
+    const hadResult = Boolean(currentText);
+    result.hidden = true;
+    output.textContent = '';
+    currentText = '';
+    copyButton.disabled = true;
+    downloadButton.disabled = true;
+    if (hadResult) api.status(status, 'Inputs changed. Run again to refresh the result.', 'warn');
+  }
 
   for (const field of fields) {
     const key = fieldKey(field);
@@ -134,22 +146,28 @@
     }
   } catch (_) { api.status(status, 'Browser storage is unavailable; this draft will not be saved automatically.', 'warn'); }
   for (const control of controls.values()) {
-    control.addEventListener('input', saveDraft);
-    control.addEventListener('change', saveDraft);
+    control.addEventListener('input', () => { saveDraft(); invalidateResult(); });
+    control.addEventListener('change', () => { saveDraft(); invalidateResult(); });
   }
 
   runButton.addEventListener('click', async () => {
+    invalidateResult();
     if (!api.credits.canRun(status)) return;
     let values;
     try { values = readValues(true); }
     catch (error) { api.status(status, error.message, 'error'); return; }
     runButton.disabled = true;
+    const runGeneration = generation;
     try {
       const raw = await handler(values);
+      if (runGeneration !== generation) return;
       const normalized = typeof raw === 'string' ? {summary: raw} : raw;
       const summary = normalized?.summary ?? normalized?.text ?? normalized?.output ?? normalized?.result;
       if (typeof summary !== 'string' || !summary.trim()) throw new Error('No readable result was produced. Check the inputs and try again.');
-      const parts = [summary, typeof normalized.details === 'string' ? normalized.details : ''];
+      const detailRows = Array.isArray(normalized.details)
+        ? normalized.details.map(String)
+        : typeof normalized.details === 'string' ? [normalized.details] : [];
+      const parts = [summary, ...detailRows];
       if (Array.isArray(normalized.warnings)) parts.push(...normalized.warnings.map(String));
       currentText = parts.filter(Boolean).join('\n\n');
       if (currentText.length > maxOutputChars) throw new Error(`The result exceeds the ${maxOutputChars.toLocaleString()} character display limit.`);
@@ -176,8 +194,7 @@
       else control.value = '';
     }
     try { localStorage.removeItem(storageKey); } catch (_) {}
-    result.hidden = true;
-    currentText = '';
+    invalidateResult();
     copyButton.disabled = true;
     downloadButton.disabled = true;
     api.status(status, 'Saved draft cleared from this browser.', 'success');

@@ -71,6 +71,8 @@ function openCategory(id, trigger) {
   document.querySelector('#district-number').textContent = String(categories.indexOf(data) + 1).padStart(2, '0');
   document.querySelector('#dialog-title').textContent = data.title;
   document.querySelector('#dialog-description').textContent = data.description;
+  const aboutDescription = document.querySelector('#about-description');
+  if (aboutDescription) aboutDescription.textContent = data.description;
   const accent = opener ? getComputedStyle(opener).getPropertyValue('--accent').trim() : '';
   dialog.style.setProperty('--category-accent', accent || '#d3fb56');
   if (categorySearch) categorySearch.value = '';

@@ -154,6 +154,13 @@ test('GitHub Pages builds the complete English site, Journal, and all 550 active
     const visibleText = beforeScripts.replace(/<[^>]+>/g, ' ').replace(/&(?:amp|lt|gt|quot|#39);/g, ' ').replace(/\s+/g, ' ').trim();
     assert.ok(visibleText.length > 200, `${slug} needs useful primary content before JavaScript runs`);
     assert.match(beforeScripts, /<(?:input|textarea|select|button)\b/i, `${slug} needs initial controls before JavaScript runs`);
+    if (slug === 'what-is-my-ip') {
+      assert.match(beforeScripts, /automatic public-IP check starts only after this provider disclosure is visible/i);
+      assert.match(beforeScripts, /ipify says its public endpoint has no request limit/i);
+      assert.match(beforeScripts, /1,000 requests per day quota shared across traffic from this domain/i);
+      assert.match(beforeScripts, /no daily credit cap/i);
+      assert.doesNotMatch(beforeScripts, /The live query runs only after you press Run/i);
+    }
     if (/\bid=["']tool-shell["']/i.test(page)) {
       assert.match(page, /class=["']tool-static-description["']/, `${slug} needs a static primary description`);
       assert.match(page, /Enable JavaScript to run this tool/, `${slug} needs an honest non-JavaScript fallback state`);

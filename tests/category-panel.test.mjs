@@ -143,3 +143,11 @@ test('card behavior preserves click-through, responsive columns, reduced motion 
   assert.match(index, /category-panel\.css\?v=13-shared-space-night-contrast/);
   assert.match(index, /category-panel\.js\?v=16-meme-maker-day-preview/);
 });
+
+
+test('Tools Hub About panel uses the selected category description instead of image-tool copy', async () => {
+  const hub=await read('site/tools/index.html'); const panel=await read('site/tools/category-panel.js');
+  assert.match(hub,/<p id="about-description">/);
+  assert.match(panel,/aboutDescription\.textContent = data\.description/);
+  assert.match(panel,/document\.querySelector\('#dialog-description'\)\.textContent = data\.description/);
+});

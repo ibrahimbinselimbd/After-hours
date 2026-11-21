@@ -199,12 +199,13 @@ for (let index = 0; index < catalogTools.length; index++) {
   const manifest = manifests.find(item => item.category.id === tool.categoryId);
   const definition = manifest.tools.find(item => item.slug === tool.slug);
   const canonical = `${sourceOrigin}${tool.href}`;
-  const pageTitle = `${tool.title} | ByteAfter`;
+  const pageBrand = 'AFTERHOURS';
+  const pageTitle = `${tool.title} | ${pageBrand}`;
   const description = String(tool.description).replace(/\s+/g, ' ').trim().slice(0, 220);
   const structuredData = {
     '@context': 'https://schema.org',
     '@graph': [
-      { '@type': 'WebPage', '@id': `${canonical}#webpage`, url: canonical, name: pageTitle, description, inLanguage: 'en', isPartOf: { '@type': 'WebSite', name: 'ByteAfter', url: `${sourceOrigin}/` }, mainEntity: { '@id': `${canonical}#application` } },
+      { '@type': 'WebPage', '@id': `${canonical}#webpage`, url: canonical, name: pageTitle, description, inLanguage: 'en', isPartOf: { '@type': 'WebSite', name: pageBrand, url: `${sourceOrigin}/` }, mainEntity: { '@id': `${canonical}#application` } },
       { '@type': 'WebApplication', '@id': `${canonical}#application`, name: tool.title, url: canonical, description, applicationCategory: 'UtilitiesApplication', isAccessibleForFree: true, browserRequirements: 'JavaScript enabled; modern browser with local storage' },
     ],
   };
@@ -212,7 +213,7 @@ for (let index = 0; index < catalogTools.length; index++) {
   const html = `<!doctype html>\n<html lang="en"><head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<meta name="theme-color" content="#080b12">\n<meta http-equiv="Content-Security-Policy" content="${esc(csp)}">\n<link rel="stylesheet" href="/tools/_shared/toolkit.css">\n<link rel="stylesheet" href="/tools/_shared/planner.css">\n<script defer src="/tools/_shared/toolkit.js"></script>\n<script defer src="/tools/_shared/new-tools/handlers/${tool.categoryId}.js"></script>\n<script defer src="/tools/_shared/new-tools/runtime.js"></script>\n<title>${esc(pageTitle)}</title>\n<meta name="description" content="${esc(description)}">\n<meta name="robots" content="index,follow">\n<link rel="canonical" href="${esc(canonical)}">\n<meta property="og:site_name" content="ByteAfter">\n<meta property="og:type" content="website">\n<meta property="og:title" content="${esc(pageTitle)}">\n<meta property="og:description" content="${esc(description)}">\n<meta property="og:url" content="${esc(canonical)}">\n<meta property="og:locale" content="en_US">\n<meta name="twitter:card" content="summary">\n<meta name="twitter:title" content="${esc(pageTitle)}">\n<meta name="twitter:description" content="${esc(description)}">\n<script type="application/ld+json">${safeJson(structuredData)}</script>\n</head><body data-title="${esc(tool.title)}" data-category="${esc(manifest.category.title)}" data-index="${257 + index}" data-description="${esc(description)}" data-slug="${esc(tool.slug)}"><div id="tool-shell"></div><script id="new-tool-config" type="application/json">${safeJson(config)}</script><noscript><main><h1>${esc(tool.title)}</h1><p>${esc(description)}</p><p>This free utility runs in your browser. Its inputs are not sent to a server.</p></main></noscript></body></html>\n`;
   const directory = path.join(toolsRoot, tool.slug);
   await fs.mkdir(directory, { recursive: true });
-  await fs.writeFile(path.join(directory, 'index.html'), html);
+  await fs.writeFile(path.join(directory, 'index.html'), html.replace('property="og:site_name" content="ByteAfter"', `property="og:site_name" content="${pageBrand}"`));
 }
 
 const catalogFile = path.join(toolsRoot, 'catalog.js');

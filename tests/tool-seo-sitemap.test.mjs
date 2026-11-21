@@ -108,3 +108,17 @@ test('the 101 newly added tool pages have unique, aligned metadata and valid app
     if (dataIndex < 256) assert.doesNotMatch(application.browserRequirements || '', /canvas/i, `${slug} should not claim a canvas requirement`);
   }
 });
+
+
+test('Replit story headings align with the rendered body-section order', async () => {
+  const content=await readFile(path.join(root,'site/content.js'),'utf8');
+  const start=content.indexOf('"id": "replit-openai-default-model-provider"');
+  const end=content.indexOf('"minutes"',start); const story=content.slice(start,end);
+  const headings=[...story.matchAll(/"headings": \[([\s\S]*?)\]/g)][0]?.[1];
+  const bodies=[...story.matchAll(/"body": \[([\s\S]*?)\]/g)][0]?.[1];
+  assert.ok(headings && bodies);
+  assert.match(headings,/"Claude remains available"[\s\S]*"Publication and update dates"[\s\S]*"What the shift means"/);
+  assert.match(bodies,/Claude remains available to Replit users[\s\S]*originally published Oct\. 16 and updated the following day[\s\S]*immediate shift is therefore a change in default status/);
+  const article=await readFile(path.join(root,'site/article.js'),'utf8');
+  assert.match(article,/story\.body\.slice\(1\)\.map\(\(p,i\)=>[\s\S]*headings\[i\]/);
+});

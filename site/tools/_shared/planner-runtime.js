@@ -74,7 +74,19 @@
   const downloadButton = document.getElementById('planner-download');
   const clearButton = document.getElementById('planner-clear');
   let currentText = '';
+  let generation = 0;
   let currentFilename = `${slug}-result.txt`;
+  function invalidateResult() {
+    generation += 1;
+    runButton.disabled = false;
+    const hadResult = Boolean(currentText);
+    result.hidden = true;
+    output.textContent = '';
+    currentText = '';
+    copyButton.disabled = true;
+    downloadButton.disabled = true;
+    if (hadResult) api.status(status, 'Inputs changed. Run again to refresh the result.', 'warn');
+  }
   for (const field of fields) {
     const key = fieldKey(field);
     if (!/^[a-zA-Z][\w-]{0,40}$/.test(key)) continue;
@@ -118,21 +130,27 @@
     }
   } catch (_) { api.status(status, 'Browser storage is unavailable; this draft will not be saved automatically.', 'warn'); }
   for (const control of controls.values()) {
-    control.addEventListener('input', saveDraft);
-    control.addEventListener('change', saveDraft);
+    control.addEventListener('input', () => { saveDraft(); invalidateResult(); });
+    control.addEventListener('change', () => { saveDraft(); invalidateResult(); });
   }
   runButton.addEventListener('click', async () => {
+    invalidateResult();
     if (!api.credits.canRun(status)) return;
     let values;
     try { values = readValues(true); }
     catch (error) { api.status(status, error.message, 'error'); return; }
     runButton.disabled = true;
+    const runGeneration = generation;
     try {
       const raw = await handler(values);
+      if (runGeneration !== generation) return;
       const normalized = typeof raw === 'string' ? {summary: raw} : raw;
       const summary = normalized?.summary ?? normalized?.text ?? normalized?.output ?? normalized?.result;
       if (typeof summary !== 'string') throw new Error('This planner did not return readable plain text.');
-      const parts = [summary, typeof normalized.details === 'string' ? normalized.details : ''];
+      const detailRows = Array.isArray(normalized.details)
+        ? normalized.details.map(String)
+        : typeof normalized.details === 'string' ? [normalized.details] : [];
+      const parts = [summary, ...detailRows];
       if (Array.isArray(normalized.warnings)) parts.push(...normalized.warnings.map(String));
       currentText = parts.filter(Boolean).join('\n\n');
       if (!currentText.trim()) throw new Error('No result was produced. Add more information and try again.');
@@ -144,8 +162,8 @@
       downloadButton.disabled = false;
       const charged = api.credits.charge();
       api.status(status, charged ? 'Completed locally. One shared daily credit was used.' : 'Completed locally; the shared credit counter changed before the result could be charged.', charged ? 'success' : 'warn');
-    } catch (error) { api.status(status, error?.message || 'The local planner could not process these inputs.', 'error'); }
-    finally { runButton.disabled = false; }
+    } catch (error) { if (runGeneration === generation) api.status(status, error?.message || 'The local planner could not process these inputs.', 'error'); }
+    finally { if (runGeneration === generation) runButton.disabled = false; }
   });
   copyButton.addEventListener('click', async () => { api.status(status, await api.copy(currentText) ? 'Result copied.' : 'Copy failed; select the result text manually.', 'success'); });
   downloadButton.addEventListener('click', () => api.downloadText(currentText, currentFilename));
@@ -156,8 +174,7 @@
       else control.value = '';
     }
     try { localStorage.removeItem(storageKey); } catch (_) {}
-    result.hidden = true;
-    currentText = '';
+    invalidateResult();
     copyButton.disabled = true;
     downloadButton.disabled = true;
     api.status(status, 'Saved draft cleared from this browser.', 'success');

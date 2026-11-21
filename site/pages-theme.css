@@ -303,6 +303,22 @@ html[data-theme="day"] body[data-title="Video to GIF"] .tool-main .workspace .ca
   --text: #f3f5f8;
   color: #f3f5f8;
 }
+/* These five media workspaces intentionally retain dark cards in Day mode; restore readable text on their dark surfaces. */
+html[data-theme="day"] body[data-title="Animated GIF Optimizer"] .tool-main .workspace .card :is(p,small,label,strong,span,div,li,th,td,code,pre,output,.status,.metric,.network-consent,.result,.output-text,.hint,.notice,.drop-zone),
+html[data-theme="day"] body[data-title="Audio Format Converter"] .tool-main .workspace .card :is(p,small,label,strong,span,div,li,th,td,code,pre,output,.status,.metric,.network-consent,.result,.output-text,.hint,.notice,.drop-zone),
+html[data-theme="day"] body[data-title="Speech to Text"] .tool-main .workspace .card :is(p,small,label,strong,span,div,li,th,td,code,pre,output,.status,.metric,.network-consent,.result,.output-text,.hint,.notice,.drop-zone),
+html[data-theme="day"] body[data-title="Video Compressor"] .tool-main .workspace .card :is(p,small,label,strong,span,div,li,th,td,code,pre,output,.status,.metric,.network-consent,.result,.output-text,.hint,.notice,.drop-zone),
+html[data-theme="day"] body[data-title="Video to GIF"] .tool-main .workspace .card :is(p,small,label,strong,span,div,li,th,td,code,pre,output,.status,.metric,.network-consent,.result,.output-text,.hint,.notice,.drop-zone) { color: #cbd6e3 !important; }
+html[data-theme="day"] body[data-title="Animated GIF Optimizer"] .tool-main .workspace .card :is(.status,.metric,.network-consent,.result,.notice,.drop-zone),
+html[data-theme="day"] body[data-title="Audio Format Converter"] .tool-main .workspace .card :is(.status,.metric,.network-consent,.result,.notice,.drop-zone),
+html[data-theme="day"] body[data-title="Speech to Text"] .tool-main .workspace .card :is(.status,.metric,.network-consent,.result,.notice,.drop-zone),
+html[data-theme="day"] body[data-title="Video Compressor"] .tool-main .workspace .card :is(.status,.metric,.network-consent,.result,.notice,.drop-zone),
+html[data-theme="day"] body[data-title="Video to GIF"] .tool-main .workspace .card :is(.status,.metric,.network-consent,.result,.notice,.drop-zone) { background-color: #1a2738; border-color: #42536a; }
+html[data-theme="day"] body[data-title="Animated GIF Optimizer"] .tool-main .workspace .card :is(button,a),
+html[data-theme="day"] body[data-title="Audio Format Converter"] .tool-main .workspace .card :is(button,a),
+html[data-theme="day"] body[data-title="Speech to Text"] .tool-main .workspace .card :is(button,a),
+html[data-theme="day"] body[data-title="Video Compressor"] .tool-main .workspace .card :is(button,a),
+html[data-theme="day"] body[data-title="Video to GIF"] .tool-main .workspace .card :is(button,a) { color: #f3f5f8 !important; }
 html[data-theme="day"] body[data-title="Animated GIF Optimizer"] .tool-main .workspace .card h2,
 html[data-theme="day"] body[data-title="Audio Format Converter"] .tool-main .workspace .card h2,
 html[data-theme="day"] body[data-title="Speech to Text"] .tool-main .workspace .card h2,
