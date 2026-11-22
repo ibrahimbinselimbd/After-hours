@@ -152,7 +152,9 @@ export function createAppServer({
       const scorePage = publicScorePagesByPath.get(requestPath);
       if (scorePage) {
         const canonicalUrl = `https://byteafter.tech/sports-scores/${scorePage.slug}/`;
-        const html = renderSportScorePage(scorePage, canonicalUrl);
+        let html = ensureThemeAssets(renderSportScorePage(scorePage, canonicalUrl));
+        if (!html.includes('byteafter-logo.css')) html = html.replace(/<\/head>/i, '<link rel="stylesheet" href="/byteafter-logo.css?v=1"></head>');
+        if (!html.includes('byteafter-icon.png')) html = html.replace(/<\/head>/i, '<link rel="icon" type="image/png" sizes="128x128" href="/byteafter-icon.png"></head>');
         res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'X-Content-Type-Options': 'nosniff' });
         return res.end(req.method === 'HEAD' ? undefined : html);
       }
