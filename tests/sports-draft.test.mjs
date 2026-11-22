@@ -27,6 +27,29 @@ test('draft script calls only a same-origin local snapshot and restricts sports 
   assert.doesNotMatch(script, /setInterval/);
 });
 
+test('production server renders both offline sports routes without an external score feed', async t => {
+  const { createAppServer } = await import('../server.mjs');
+  const server = createAppServer();
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  t.after(() => new Promise((resolve, reject) => server.close(error => error ? reject(error) : resolve())));
+  const origin = `http://127.0.0.1:${server.address().port}`;
+  for (const [slug, title] of [['football', 'Football'], ['cricket', 'Cricket']]) {
+    const response = await fetch(`${origin}/sports-scores/${slug}/`);
+    const html = await response.text();
+    assert.equal(response.status, 200);
+    assert.ok(html.includes(`<title>${title} Scores &amp; Fixtures | ByteAfter — Draft</title>`));
+    assert.equal((html.match(/<h1\b/gi) || []).length, 1);
+    assert.match(html, /Draft — provider feed not connected/);
+    assert.match(html, /No provider API request is made here/);
+    assert.ok(html.includes(`https://byteafter.tech/sports-scores/${slug}/`));
+    assert.equal(html.includes('afterhours-district.bird-timimus'), false);
+    assert.equal(html.includes('https://api.sportmonks.com'), false);
+  }
+  const head = await fetch(`${origin}/sports-scores/cricket`, { method: 'HEAD' });
+  assert.equal(head.status, 200);
+  assert.equal(await head.text(), '');
+});
+
 test('detail controls label each panel unavailable without sample score data', async () => {
   const {renderSportScorePage, publicSportScorePages} = await import('../scripts/sports-score-routes.mjs');
   for (const page of publicSportScorePages) {
