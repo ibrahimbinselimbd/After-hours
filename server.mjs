@@ -1,5 +1,6 @@
 import http from 'node:http';
 import { readFile } from 'node:fs/promises';
+import { gzipSync } from 'node:zlib';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { publicSportScorePages, renderSportScorePage } from './scripts/sports-score-routes.mjs';
@@ -22,6 +23,21 @@ const publicScorePagesByPath = new Map(publicSportScorePages.flatMap(page => [
   [`/sports-scores/${page.slug}`, page], [`/sports-scores/${page.slug}/`, page]
 ]));
 const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.json': 'application/json', '.txt': 'text/plain; charset=utf-8', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.png': 'image/png', '.ttf': 'font/ttf', '.svg': 'image/svg+xml' };
+function parseAcceptEncoding(header = '') {
+  const encodings = new Map();
+  for (const item of String(header).split(',')) {
+    const [rawCoding, ...params] = item.split(';');
+    const coding = rawCoding.trim().toLowerCase();
+    if (!coding) continue;
+    const q = params.find(parameter => /^q\s*=/i.test(parameter.trim()));
+    const rawQuality = q?.trim().slice(q.indexOf('=') + 1).trim();
+    const quality = rawQuality === undefined ? 1 : Number(rawQuality);
+    encodings.set(coding, Number.isFinite(quality) && quality >= 0 && quality <= 1 ? quality : 0);
+  }
+  return encodings;
+}
+const encodingQuality = (encodings, coding) => encodings.has(coding) ? encodings.get(coding) : encodings.get('*') ?? 0;
+const identityQuality = encodings => encodings.has('identity') ? encodings.get('identity') : encodings.has('*') ? encodings.get('*') : 1;
 const MAX_BODY_BYTES = 320 * 1024;
 const countWords = value => (value.match(/[\p{L}\p{N}]+(?:['’_-][\p{L}\p{N}]+)*/gu) || []).length;
 
@@ -169,8 +185,25 @@ export function createAppServer({
       }
       const contentType = types[path.extname(file)] || 'application/octet-stream';
       if (contentType.startsWith('text/html')) content = Buffer.from(ensureThemeAssets(content.toString('utf8')));
-      res.writeHead(200, { 'Content-Type': contentType, 'X-Content-Type-Options': 'nosniff' });
-      res.end(req.method === 'HEAD' ? undefined : content);
+      const headers = { 'Content-Type': contentType, 'X-Content-Type-Options': 'nosniff' };
+      let responseBody = content;
+      if (contentType === types['.js'] && content.length >= 1024) {
+        headers.Vary = 'Accept-Encoding';
+        const encodings = parseAcceptEncoding(req.headers['accept-encoding']);
+        const gzipQuality = encodingQuality(encodings, 'gzip');
+        if (gzipQuality <= 0 && identityQuality(encodings) <= 0) {
+          headers['Content-Length'] = 0;
+          res.writeHead(406, headers);
+          return res.end();
+        }
+        if (gzipQuality > 0) {
+          responseBody = gzipSync(content, { level: 6 });
+          headers['Content-Encoding'] = 'gzip';
+        }
+        headers['Content-Length'] = responseBody.length;
+      }
+      res.writeHead(200, headers);
+      res.end(req.method === 'HEAD' ? undefined : responseBody);
     } catch { res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' }); res.end('Not found'); }
   });
 }
