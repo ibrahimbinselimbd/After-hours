@@ -1,1 +1,32 @@
-(()=>{const r=AHToolkit.mount(`<h2>Generate fades</h2><p>Apply linear fades without uploading audio.</p><label class=drop-zone>Choose audio<input id=f type=file accept=audio/*></label><div class=controls><label>Fade in seconds<input id=i type=number min=0 step=.1 value=1></label><label>Fade out seconds<input id=o type=number min=0 step=.1 value=1></label></div><button class="button button-main" id=g>Apply fades</button><div id=s class=status role=status hidden></div>`),f=r.querySelector('#f'),s=r.querySelector('#s');r.querySelector('#g').onclick=async()=>{let x=f.files[0];if(!x)return AHToolkit.status(s,'Choose audio first.','warn');if(!AHToolkit.credits.canRun(s))return;try{let b=await new AudioContext().decodeAudioData(await x.arrayBuffer()),fi=Math.floor(+r.querySelector('#i').value*b.sampleRate),fo=Math.floor(+r.querySelector('#o').value*b.sampleRate),n=b.numberOfChannels,L=b.length*2*n,h=new ArrayBuffer(44),d=new DataView(h),w=(p,z)=>[...z].forEach((q,j)=>d.setUint8(p+j,q.charCodeAt(0)));w(0,'RIFF');d.setUint32(4,36+L,true);w(8,'WAVEfmt ');d.setUint32(16,16,true);d.setUint16(20,1,true);d.setUint16(22,n,true);d.setUint32(24,b.sampleRate,true);d.setUint32(28,b.sampleRate*n*2,true);d.setUint16(32,n*2,true);d.setUint16(34,16,true);w(36,'data');d.setUint32(40,L,true);let p=44;for(let j=0;j<b.length;j++)for(let c=0;c<n;c++){let g=fi?Math.min(1,j/fi):1,hx=fo?Math.min(1,(b.length-j)/fo):1,q=b.getChannelData(c)[j]*Math.min(g,hx);d.setInt16(p,Math.max(-1,Math.min(1,q))*32767,true);p+=2}AHToolkit.download(new Blob([h],{type:'audio/wav'}),'faded-audio.wav');AHToolkit.credits.charge();AHToolkit.status(s,'Faded audio downloaded.','success')}catch(e){AHToolkit.status(s,'Could not decode audio.','error')}};})();
+(()=>{
+  const root=AHToolkit.mount(`<h2>Generate fades</h2><p>Apply linear fades without uploading audio.</p><label class=drop-zone>Choose audio<input id=f type=file accept=audio/*></label><div class=controls><label>Fade in seconds<input id=i type=number min=0 step=.1 value=1></label><label>Fade out seconds<input id=o type=number min=0 step=.1 value=1></label></div><button class="button button-main" id=g>Apply fades</button><div id=s class=status role=status hidden></div>`);
+  const fileInput=root.querySelector('#f'),status=root.querySelector('#s');
+  root.querySelector('#g').onclick=async()=>{
+    const file=fileInput.files[0];
+    if(!file)return AHToolkit.status(status,'Choose audio first.','warn');
+    if(!AHToolkit.credits.canRun(status))return;
+    try{
+      const audio=await new AudioContext().decodeAudioData(await file.arrayBuffer());
+      const fadeIn=Math.floor(+root.querySelector('#i').value*audio.sampleRate);
+      const fadeOut=Math.floor(+root.querySelector('#o').value*audio.sampleRate);
+      const channels=audio.numberOfChannels;
+      const dataLength=audio.length*2*channels;
+      const buffer=new ArrayBuffer(44+dataLength);
+      const view=new DataView(buffer);
+      const write=(offset,text)=>[...text].forEach((char,index)=>view.setUint8(offset+index,char.charCodeAt(0)));
+      write(0,'RIFF');view.setUint32(4,36+dataLength,true);write(8,'WAVEfmt ');
+      view.setUint32(16,16,true);view.setUint16(20,1,true);view.setUint16(22,channels,true);
+      view.setUint32(24,audio.sampleRate,true);view.setUint32(28,audio.sampleRate*channels*2,true);
+      view.setUint16(32,channels*2,true);view.setUint16(34,16,true);write(36,'data');view.setUint32(40,dataLength,true);
+      let offset=44;
+      for(let frame=0;frame<audio.length;frame++)for(let channel=0;channel<channels;channel++){
+        const inGain=fadeIn?Math.min(1,frame/fadeIn):1;
+        const outGain=fadeOut?Math.min(1,(audio.length-frame)/fadeOut):1;
+        const sample=Math.max(-1,Math.min(1,audio.getChannelData(channel)[frame]*Math.min(inGain,outGain)));
+        view.setInt16(offset,sample<0?sample*32768:sample*32767,true);offset+=2;
+      }
+      AHToolkit.download(new Blob([buffer],{type:'audio/wav'}),'faded-audio.wav');
+      AHToolkit.credits.charge();AHToolkit.status(status,'Faded audio downloaded.','success');
+    }catch(error){AHToolkit.status(status,error?.message||'Could not process audio.','error')}
+  };
+})();
