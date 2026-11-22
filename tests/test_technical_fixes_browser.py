@@ -278,6 +278,36 @@ class TechnicalFixesBrowserTest(unittest.TestCase):
             context.close()
         self.assertEqual(errors, [], f'Unexpected generated-tool browser errors: {errors}')
 
+    def test_passport_photo_profile_search_filters_groups_without_browser_error(self):
+        context, page = self.make_page(390, 844)
+        errors = []
+        page.on('pageerror', lambda error: errors.append(str(error)))
+        try:
+            page.goto(f'{self.base}/tools/passport-photo-studio/', wait_until='domcontentloaded')
+            search = page.locator('#search')
+            profile = page.locator('#profile')
+
+            search.fill('Japan')
+            japan = page.locator('#profile option[value="japan"]')
+            self.assertTrue(japan.evaluate('(option) => !option.hidden'))
+            self.assertEqual(japan.evaluate('(option) => option.parentElement.label'), 'Passport')
+            self.assertFalse(japan.evaluate('(option) => option.parentElement.hidden'))
+            self.assertEqual(page.locator('#profile option:not([hidden])').count(), 1)
+
+            profile.select_option('japan')
+            self.assertEqual(page.locator('#size').inner_text(), '35 × 45 mm')
+
+            search.fill('not-a-profile')
+            self.assertEqual(page.locator('#profile option:not([hidden])').count(), 0)
+            self.assertTrue(all(group.evaluate('(el) => el.hidden') for group in page.locator('#profile optgroup').all()))
+
+            search.fill('')
+            self.assertEqual(page.locator('#profile option:not([hidden])').count(), page.locator('#profile option').count())
+            self.assertEqual(page.locator('#profile optgroup:not([hidden])').count(), page.locator('#profile optgroup').count())
+        finally:
+            context.close()
+        self.assertEqual(errors, [], f'Unexpected Passport Photo Studio browser errors: {errors}')
+
 
 if __name__ == '__main__':
     unittest.main()
