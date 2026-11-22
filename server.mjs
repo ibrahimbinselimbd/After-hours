@@ -2,6 +2,7 @@ import http from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { publicSportScorePages, renderSportScorePage } from './scripts/sports-score-routes.mjs';
 import { ensureThemeAssets } from './scripts/theme-assets.mjs';
 
 const root = fileURLToPath(new URL('./site/', import.meta.url));
@@ -17,6 +18,9 @@ const routes = new Map([
   ['/article', 'article.html'], ['/article/', 'article.html'],
   ['/info', 'info.html'], ['/info/', 'info.html']
 ]);
+const publicScorePagesByPath = new Map(publicSportScorePages.flatMap(page => [
+  [`/sports-scores/${page.slug}`, page], [`/sports-scores/${page.slug}/`, page]
+]));
 const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.json': 'application/json', '.txt': 'text/plain; charset=utf-8', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.png': 'image/png', '.ttf': 'font/ttf', '.svg': 'image/svg+xml' };
 const MAX_BODY_BYTES = 320 * 1024;
 const countWords = value => (value.match(/[\p{L}\p{N}]+(?:['’_-][\p{L}\p{N}]+)*/gu) || []).length;
@@ -144,8 +148,15 @@ export function createAppServer({
     }
     if (!['GET', 'HEAD'].includes(req.method)) { res.writeHead(405, { Allow: 'GET, HEAD' }); return res.end(); }
     try {
-      const pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
-      let file = path.resolve(root, routes.get(pathname) || pathname.replace(/^\/+/, ''));
+      const requestPath = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
+      const scorePage = publicScorePagesByPath.get(requestPath);
+      if (scorePage) {
+        const canonicalUrl = `https://byteafter.tech/sports-scores/${scorePage.slug}/`;
+        const html = renderSportScorePage(scorePage, canonicalUrl);
+        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'X-Content-Type-Options': 'nosniff' });
+        return res.end(req.method === 'HEAD' ? undefined : html);
+      }
+      let file = path.resolve(root, routes.get(requestPath) || requestPath.replace(/^\/+/, ''));
       if (!file.startsWith(root)) { res.writeHead(403); return res.end('Forbidden'); }
       let content;
       try { content = await readFile(file); }
