@@ -30,7 +30,7 @@ function parseAcceptEncoding(header = '') {
     const coding = rawCoding.trim().toLowerCase();
     if (!coding) continue;
     const q = params.find(parameter => /^q\s*=/i.test(parameter.trim()));
-    const rawQuality = q?.trim().slice(q.indexOf('=') + 1).trim();
+    const rawQuality = q?.slice(q.indexOf('=') + 1).trim();
     const quality = rawQuality === undefined ? 1 : Number(rawQuality);
     encodings.set(coding, Number.isFinite(quality) && quality >= 0 && quality <= 1 ? quality : 0);
   }

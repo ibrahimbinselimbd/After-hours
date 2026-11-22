@@ -45,6 +45,13 @@ test('static HEIC engine JavaScript negotiates gzip without changing its content
   assert.equal(spaced.headers['content-encoding'], 'gzip');
   assert.deepEqual(gunzipSync(spaced.body), original);
 
+  for (const header of ['gzip; q=1, identity;q=0', 'gzip;   q=0.5, identity;q=0']) {
+    const leadingSpace = await request(port, { acceptEncoding: header });
+    assert.equal(leadingSpace.status, 200, header);
+    assert.equal(leadingSpace.headers['content-encoding'], 'gzip', header);
+    assert.deepEqual(gunzipSync(leadingSpace.body), original);
+  }
+
   const identity = await request(port, { acceptEncoding: 'gzip;Q=0, *;Q=1' });
   assert.equal(identity.status, 200);
   assert.equal(identity.headers['content-encoding'], undefined);
