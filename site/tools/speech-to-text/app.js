@@ -6,6 +6,7 @@
   const $ = id => document.getElementById(id);
   const MAX_FILE_BYTES = 25 * 1024 * 1024;
   const MAX_DURATION_SECONDS = 180;
+  const WHISPER_SAMPLE_RATE = 16000;
 
   A.mount(`<div class="tool-form">
     <div class="notice"><strong>Local Whisper transcription</strong><p>Model files are loaded on first use; transcription runs only in this browser. Audio is not uploaded. Limit: 25 MB or 3 minutes.</p></div>
@@ -122,8 +123,20 @@
         throw new Error('Decoded audio exceeds the 3-minute memory-safety limit. No model was loaded.');
       }
       const duration = decoded.duration;
-      const rate = decoded.sampleRate;
-      const channel = decoded.getChannelData(0).slice();
+      let modelBuffer = decoded;
+      if (modelBuffer.sampleRate !== WHISPER_SAMPLE_RATE) {
+        const OfflineAudioContextClass = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+        if (!OfflineAudioContextClass) throw new Error('This browser cannot resample audio to Whisper’s 16 kHz input rate.');
+        const frameCount = Math.max(1, Math.ceil(duration * WHISPER_SAMPLE_RATE));
+        const offlineContext = new OfflineAudioContextClass(1, frameCount, WHISPER_SAMPLE_RATE);
+        const sourceNode = offlineContext.createBufferSource();
+        sourceNode.buffer = modelBuffer;
+        sourceNode.connect(offlineContext.destination);
+        sourceNode.start(0);
+        modelBuffer = await offlineContext.startRendering();
+      }
+      const rate = modelBuffer.sampleRate;
+      const channel = modelBuffer.getChannelData(0).slice();
       decoded = null;
       if (!alive(id)) throw new Error('Cancelled.');
 
