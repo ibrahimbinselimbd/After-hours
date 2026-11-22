@@ -3,9 +3,11 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const source = slug => fs.readFileSync(path.join(root, `site/tools/${slug}/app.js`), 'utf8');
+const paletteContrast = createRequire(import.meta.url)(path.join(root, 'site/tools/color-palette-generator/contrast.js'));
 
 test('age calculator uses calendar-month clamping and a browser-local today date', () => {
   const code = source('age-calculator');
@@ -29,6 +31,18 @@ test('palette CSS copy uses actual line breaks and swatch labels choose a contra
   assert.match(code, /const css=`:root \{\\n/);
   assert.doesNotMatch(code, /const css=`:root \{\\\\n/);
   assert.match(code, /style="background:\$\{c\};color:/);
+});
+
+test('palette swatch label colors meet WCAG AA across every grayscale background', () => {
+  const code = source('color-palette-generator');
+  assert.match(code, /AHPaletteContrast\.foregroundForSwatch\(c\)/);
+  assert.equal(paletteContrast.foregroundForSwatch('#808080'), '#000000');
+  for (let value = 0; value <= 255; value += 1) {
+    const channel = value.toString(16).padStart(2, '0');
+    const background = `#${channel}${channel}${channel}`;
+    const foreground = paletteContrast.foregroundForSwatch(background);
+    assert.ok(paletteContrast.contrastRatio(foreground, background) >= 4.5, `${foreground} on ${background}`);
+  }
 });
 
 test('contrast checker applies selected foreground to preview text and paragraph', () => {
