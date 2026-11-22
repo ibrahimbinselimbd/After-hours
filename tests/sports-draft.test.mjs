@@ -41,6 +41,11 @@ test('production server renders both offline sports routes without an external s
     assert.equal((html.match(/<h1\b/gi) || []).length, 1);
     assert.match(html, /Draft — provider feed not connected/);
     assert.match(html, /No provider API request is made here/);
+    assert.match(html, /href="\/byteafter-logo\.css\?v=1"/);
+    assert.match(html, /href="\/theme-toggle\.css\?v=1"/);
+    assert.match(html, /href="\/pages-theme\.css\?v=1"/);
+    assert.match(html, /src="\/theme-toggle\.js\?v=1"/);
+    assert.match(html, /href="\/byteafter-icon\.png"/);
     assert.ok(html.includes(`https://byteafter.tech/sports-scores/${slug}/`));
     assert.equal(html.includes('afterhours-district.bird-timimus'), false);
     assert.equal(html.includes('https://api.sportmonks.com'), false);
