@@ -9,11 +9,21 @@ test('shared theme injection emits root-relative assets for Cloudflare routes', 
   const html = ensureThemeAssets('<html><head></head><body></body></html>');
   assert.equal(count(html, /theme-toggle\.css/g), 1);
   assert.equal(count(html, /pages-theme\.css/g), 1);
+  assert.equal(count(html, /display-settings\.css/g), 1);
   assert.equal(count(html, /theme-toggle\.js/g), 1);
   assert.match(html, /href="\/theme-toggle\.css\?v=1"/);
   assert.match(html, /href="\/pages-theme\.css\?v=1"/);
+  assert.match(html, /href="\/display-settings\.css\?v=6"/);
   assert.match(html, /src="\/theme-toggle\.js\?v=1"/);
   assert.match(html, /name="theme-color" content="#080a16"/);
+});
+
+test('display settings stylesheet is cache-busted but remains absent from the standalone analytics preview', () => {
+  const existing = '<html><head><link rel="stylesheet" href="/display-settings.css?v=5"></head><body></body></html>';
+  const html = ensureThemeAssets(existing);
+  assert.match(html, /href="\/display-settings\.css\?v=6"/);
+  const preview = ensureThemeAssets('<html><head></head><body></body></html>', '/admin/analytics-preview/assets');
+  assert.doesNotMatch(preview, /display-settings\.css/);
 });
 
 test('shared theme injection preserves GitHub Pages base paths and existing assets', () => {
