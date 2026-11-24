@@ -1,0 +1,7 @@
+IP prefixes: ipverse/geo-ip-blocks, CC0 1.0 Universal. Snapshot retrieved 2026-11-24.
+https://github.com/ipverse/geo-ip-blocks
+
+Country label points: Natural Earth, Admin-0 Countries 1:10m, public domain.
+https://www.naturalearthdata.com/about/terms-of-use/
+
+The IP-prefix lookup runs locally on the ByteAfter Hostinger server. No runtime geolocation API is used.

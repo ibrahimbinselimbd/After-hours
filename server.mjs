@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { publicSportScorePages, renderSportScorePage } from './scripts/sports-score-routes.mjs';
 import { ensureThemeAssets } from './scripts/theme-assets.mjs';
+import { loadVisitorCountryLookup } from './services/visitor-country/lookup.mjs';
 
 const root = fileURLToPath(new URL('./site/', import.meta.url));
 const routes = new Map([
@@ -72,6 +73,7 @@ export function createAppServer({
   detectorApiKey = process.env.TEXT_DETECTOR_API_KEY || '',
   passportPhotoOrigin = process.env.PASSPORT_PHOTO_SERVICE_ORIGIN || '',
   passportPhotoToken = process.env.PASSPORT_PHOTO_SERVICE_TOKEN || '',
+  visitorCountryLookup = null,
   upstreamTimeoutMs = 120000
 } = {}) {
   detectorOrigin = detectorOrigin.replace(/\/$/, '');
@@ -154,8 +156,35 @@ export function createAppServer({
       return writeJson(res, 502, { ok: false, code: 'model_unreachable', message: 'The self-hosted photo model is not reachable.' });
     }
   }
+  let visitorCountryLookupPromise;
+  async function getVisitorCountryLookup() {
+    if (typeof visitorCountryLookup === 'function') return visitorCountryLookup;
+    visitorCountryLookupPromise ??= loadVisitorCountryLookup();
+    return visitorCountryLookupPromise;
+  }
+  async function visitorCountryRequest(req, res) {
+    try {
+      const lookup = await getVisitorCountryLookup();
+      const forwardedIp = req.headers['x-real-ip'];
+      const clientIp = typeof forwardedIp === 'string' ? forwardedIp : (req.socket.remoteAddress || '');
+      const result = await lookup(clientIp);
+      const countryCode = /^[A-Z]{2}$/.test(result?.countryCode || '') ? result.countryCode : null;
+      const latitude = Number(result?.latitude);
+      const longitude = Number(result?.longitude);
+      if (!countryCode || !Number.isFinite(latitude) || Math.abs(latitude) > 90 || !Number.isFinite(longitude) || Math.abs(longitude) > 180) {
+        return writeJson(res, 200, { countryCode: null, latitude: null, longitude: null });
+      }
+      return writeJson(res, 200, { countryCode, latitude, longitude });
+    } catch {
+      return writeJson(res, 503, { countryCode: null, latitude: null, longitude: null });
+    }
+  }
   return http.createServer(async (req, res) => {
     const pathname = req.url?.split('?')[0];
+    if (pathname === '/api/v1/visitor-country') {
+      if (req.method !== 'GET') return writeJson(res, 405, { ok: false, code: 'method_not_allowed' });
+      return visitorCountryRequest(req, res);
+    }
     if (pathname === '/api/v1/passport-photo/background-remove' && req.method === 'POST') return passportPhotoRequest(req, res);
     if (pathname?.startsWith('/api/')) {
       if (req.method === 'POST' && pathname === '/api/v1/text/analyze') return detectorRequest(pathname, req, res);
